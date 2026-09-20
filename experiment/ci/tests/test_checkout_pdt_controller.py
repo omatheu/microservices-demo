@@ -9,7 +9,7 @@ import unittest
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
 CONTROLLER_PATH = REPO_ROOT / "experiment/pdt/controller/checkout_pdt_controller.py"
 CANDIDATE_PATH = REPO_ROOT / "experiment/pdt/candidates/engineering-artifact-binding-v2.json"
-SNAPSHOT_PATH = REPO_ROOT / "experiment/evidence/pdt-state/operational-state-20260920T070700Z/pdt-input-state.json"
+SNAPSHOT_PATH = REPO_ROOT / "experiment/ci/fixtures/pdt-input-state.json"
 THRESHOLDS_PATH = REPO_ROOT / "experiment/staging/safety-thresholds.json"
 MODEL_POLICY_PATH = REPO_ROOT / "experiment/pdt/model-policy.json"
 SPEC = importlib.util.spec_from_file_location("checkout_pdt_controller", CONTROLLER_PATH)
