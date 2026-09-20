@@ -23,12 +23,12 @@ The second workflow does not deploy to the operational namespace. It is not
 active until both workflow files exist on the default branch and the
 `tcc-experiment` GitHub Environment has been configured.
 
-The upstream `Deploy Staging - Pull Request` and `Clean up deployment`
-workflows were retired in this fork because they referenced the upstream
-`online-boutique-ci` project. The `deployment-tests` job was also removed from
-the main-branch workflow. Cloud staging for this repository is owned only by
-the guarded TCC workflow above; the main-branch workflow retains code tests and
-has no Google Cloud identity.
+The upstream `Deploy Staging - Pull Request`, `Clean up deployment` and manual
+release workflows were retired in this fork because they referenced the
+upstream `online-boutique-ci` project. The `deployment-tests` job was also
+removed from the main-branch workflow. The guarded TCC workflow above is the
+only GitHub Actions path with a Google Cloud identity; the main-branch workflow
+retains code tests and has no cloud identity.
 
 **Note**: In order for the current CI/CD setup to work on your pull request, you must branch directly off the repo (no forks). This is because the Github secrets necessary for these tests aren't copied over when you fork.
 
@@ -43,13 +43,3 @@ the repository's Go and C# unit tests without a cloud identity.
 This workflow repeats the Go and C# unit tests after a push to `main` or a
 `release/*` branch. It deliberately has no image publication, GKE deployment,
 Google Cloud credential or operational mutation.
-
-### Manual Release Builder - [make-release.yaml](make-release.yaml)
-
-This workflow is manually triggered via the `workflow_dispatch` event to automate the release process. When run, it:
-1. Validates the release version format.
-2. Automates the build and push of container images to Google Cloud Build.
-3. Automatically regenerates Kubernetes manifests and Kustomize bases.
-4. Packages and pushes the Helm chart.
-5. Branches and tags the repository.
-6. Opens a new Pull Request targeting `main` with the release checklist.
