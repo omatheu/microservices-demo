@@ -110,6 +110,14 @@ Depois que os dois workflows estiverem na branch padrão:
 5. tornar o check `TCC Conventional CI / Conventional pre-staging gates`
    obrigatório na proteção da branch `main`.
 
+Em execuções de engenharia autorizadas, o job protegido reconstrói as três
+imagens experimentais, gera SBOM, bloqueia vulnerabilidades altas ou críticas,
+publica e registra o digest retornado pelo Artifact Registry antes de iniciar o
+staging. Em modo confirmatório ele não reconstrói runtimes: exige os manifests
+PDT e oráculo congelados e verifica que os três digests imutáveis ainda existem.
+Assim, o controlador executado em `pdt-system` é exatamente o artefato atestado
+na mesma janela autorizada ou o artefato previamente congelado.
+
 Aplicar os dois rótulos não substitui a aprovação do ambiente nem a chave
 financeira. O job cloud é serializado globalmente e não cancela uma execução em
 andamento, para não interromper o cleanup. Ele usa o projeto

@@ -39,6 +39,7 @@ class RunPdtControllerRuntimeTests(unittest.TestCase):
         paths = {item["path"] for item in manifest["files"]}
 
         self.assertIn("infra/terraform/github-actions.tf", paths)
+        self.assertIn("experiment/scripts/publish-experiment-runtimes.sh", paths)
 
 
 if __name__ == "__main__":

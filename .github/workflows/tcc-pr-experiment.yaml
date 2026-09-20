@@ -146,6 +146,71 @@ jobs:
             --region us-central1 \
             --project microservices-demo-tcc
 
+      - name: Publish and attest the exact engineering runtime images
+        id: publish_runtimes
+        if: steps.candidate.outputs.mode == 'engineering'
+        shell: bash
+        env:
+          SOURCE_COMMIT: ${{ needs.authorize.outputs.head_sha }}
+          PULL_REQUEST_NUMBER: ${{ needs.authorize.outputs.pull_request_number }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          ARTIFACT_REGISTRY_PREFIX: us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment
+          OUTPUT_DIR: ${{ runner.temp }}/published-experiment-runtimes
+          ALLOW_EXPERIMENTAL_CLOUD_EXECUTION: "true"
+          COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
+        run: |
+          set -euo pipefail
+          export SOURCE_TREE
+          SOURCE_TREE=$(git rev-parse 'HEAD^{tree}')
+          ./experiment/scripts/publish-experiment-runtimes.sh
+          controller_image=$(jq -er '.images[] | select(.name == "checkout-pdt-controller") | .immutable_reference' "${OUTPUT_DIR}/summary.json")
+          echo "controller_image=${controller_image}" >> "${GITHUB_OUTPUT}"
+
+      - name: Validate frozen runtime bindings without rebuilding
+        id: frozen_runtimes
+        if: steps.candidate.outputs.mode == 'confirmatory'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 experiment/scripts/validate-pdt-runtime.py \
+            --repo-root . --manifest experiment/pdt/runtime-manifest.json --require-frozen
+          python3 experiment/scripts/validate-oracle-suite.py \
+            --repo-root . --manifest experiment/oracle/suite-manifest.json --require-frozen
+          controller_image=$(jq -er '.controller_image' experiment/pdt/runtime-manifest.json)
+          for image in \
+            "${controller_image}" \
+            "$(jq -er '.images.oracle_harness' experiment/oracle/suite-manifest.json)" \
+            "$(jq -er '.images.currency_reference' experiment/oracle/suite-manifest.json)"; do
+            gcloud artifacts docker images describe "${image}" --format=json >/dev/null
+          done
+          echo "controller_image=${controller_image}" >> "${GITHUB_OUTPUT}"
+
+      - name: Resolve the controller digest for this execution
+        id: runtime
+        shell: bash
+        env:
+          MODE: ${{ steps.candidate.outputs.mode }}
+          ENGINEERING_IMAGE: ${{ steps.publish_runtimes.outputs.controller_image }}
+          CONFIRMATORY_IMAGE: ${{ steps.frozen_runtimes.outputs.controller_image }}
+        run: |
+          set -euo pipefail
+          if [[ "${MODE}" == "engineering" ]]; then
+            controller_image="${ENGINEERING_IMAGE}"
+          else
+            controller_image="${CONFIRMATORY_IMAGE}"
+          fi
+          [[ "${controller_image}" =~ @sha256:[a-f0-9]{64}$ ]]
+          echo "controller_image=${controller_image}" >> "${GITHUB_OUTPUT}"
+
+      - name: Upload runtime publication evidence
+        if: always() && steps.candidate.outputs.mode == 'engineering'
+        uses: actions/upload-artifact@v7
+        with:
+          name: published-experiment-runtimes-pr-${{ needs.authorize.outputs.pull_request_number }}-${{ needs.authorize.outputs.head_sha }}
+          path: ${{ runner.temp }}/published-experiment-runtimes
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Run the paired conventional and PDT pipeline
         id: paired
         shell: bash
@@ -156,6 +221,7 @@ jobs:
           CANDIDATE_BASE_REF: ${{ needs.authorize.outputs.base_sha }}
           CANDIDATE_HEAD_REF: ${{ needs.authorize.outputs.head_sha }}
           ARTIFACT_REGISTRY_PREFIX: us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment
+          PDT_CONTROLLER_IMAGE: ${{ steps.runtime.outputs.controller_image }}
           REPETITION: "1"
           ALLOW_EXPERIMENTAL_CLOUD_EXECUTION: "true"
           COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}

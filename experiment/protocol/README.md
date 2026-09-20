@@ -223,6 +223,10 @@ confere estrutura e hashes do protocolo, operadores, estados das políticas,
 arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
 explícita do pesquisador:
 
+Os dois workflows GitHub também são inputs selados. Qualquer mudança no
+gatilho do pull request, nas travas financeiras, na identidade cloud ou na
+ordem de publicação invalida o hash do protocolo.
+
 ```bash
 python3 experiment/scripts/audit-protocol-freeze.py \
   --repo-root . \

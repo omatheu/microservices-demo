@@ -21,7 +21,7 @@ class ValidateProtocolInputsTests(unittest.TestCase):
     def test_all_declared_inputs_match_their_files(self):
         result = MODULE.validate(REPO_ROOT, protocol())
 
-        self.assertEqual(result["input_count"], 6)
+        self.assertEqual(result["input_count"], 8)
         self.assertTrue(result["all_hashes_match"])
 
     def test_missing_required_input_is_rejected(self):

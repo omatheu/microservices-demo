@@ -55,6 +55,11 @@ class TccGithubWorkflowTests(unittest.TestCase):
         self.assertIn("tcc-experiment-cloud", rendered)
         self.assertIn("tcc-cost-reviewed", rendered)
         self.assertIn("TCC_COST_REVIEW_ACKNOWLEDGED", rendered)
+        self.assertIn("publish-experiment-runtimes.sh", rendered)
+        self.assertIn("PDT_CONTROLLER_IMAGE", rendered)
+        self.assertIn("published-experiment-runtimes-pr-", rendered)
+        self.assertIn("validate-pdt-runtime.py", rendered)
+        self.assertIn("--require-frozen", rendered)
         self.assertIn("run-comparative-candidate.sh", rendered)
 
     def test_cloud_auth_is_after_financial_and_candidate_guards(self):
@@ -63,8 +68,10 @@ class TccGithubWorkflowTests(unittest.TestCase):
         financial = rendered.index("Require the per-block financial kill switch")
         candidate = rendered.index("Resolve and require one public experimental candidate")
         cloud_auth = rendered.index("Authenticate with Google Cloud")
+        publication = rendered.index("publish-experiment-runtimes.sh")
         self.assertLess(financial, cloud_auth)
         self.assertLess(candidate, cloud_auth)
+        self.assertLess(financial, publication)
 
 
 if __name__ == "__main__":

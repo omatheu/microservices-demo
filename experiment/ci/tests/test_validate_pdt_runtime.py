@@ -23,7 +23,7 @@ class ValidatePdtRuntimeTests(unittest.TestCase):
         result = MODULE.validate(REPO_ROOT, manifest())
 
         self.assertEqual(result["runtime_id"], "checkout-pdt-controller-v1")
-        self.assertEqual(result["file_count"], 10)
+        self.assertEqual(result["file_count"], 11)
         self.assertFalse(result["image_ready"])
         self.assertFalse(result["frozen"])
 

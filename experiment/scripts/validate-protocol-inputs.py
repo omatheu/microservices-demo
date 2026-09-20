@@ -10,6 +10,8 @@ import re
 DIGEST_PATTERN = re.compile(r"^[a-f0-9]{64}$")
 REQUIRED_INPUTS = {
     "ci_policy",
+    "pull_request_workflow",
+    "cloud_experiment_workflow",
     "staging_thresholds",
     "pdt_model_policy",
     "pdt_runtime_manifest",

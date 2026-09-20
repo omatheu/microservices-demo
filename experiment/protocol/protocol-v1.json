@@ -288,6 +288,14 @@
       "path": "experiment/ci/policy.json",
       "sha256": "76b60adcd54ea649609a25ba64c8ce159e82dbafef4562912d4e9932944d4656"
     },
+    "pull_request_workflow": {
+      "path": ".github/workflows/tcc-pr-ci.yaml",
+      "sha256": "ec5d3293594aceb2486e816f20321dc7ccaf25cf9a44c6bae0a5fbdce3a645dd"
+    },
+    "cloud_experiment_workflow": {
+      "path": ".github/workflows/tcc-pr-experiment.yaml",
+      "sha256": "b4a007668c6404f6ab801f9ab9a281f78348bb8b0ef9acd4f93a8e739ffc4fc5"
+    },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
       "sha256": "feed9981bbb28ee70789b9a647f1da0c9cbf2b77804af84e35e960b6885e1272"
@@ -298,7 +306,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "43e58d3c7aee7e125d9c01ea06b238ee95df4f391b9acc012779d7bc53766322"
+      "sha256": "6ffb62c51671faa92d1fe2024d024f8507f191a1027c7ab21ae6f03c848c976c"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
