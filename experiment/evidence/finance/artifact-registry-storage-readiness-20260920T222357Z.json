@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "observed_at": "2026-09-20T22:23:57Z",
+  "observation_mode": "read-only",
+  "project_id": "microservices-demo-tcc",
+  "billing_account_reference": "016329-9946EB-FE858E",
+  "billing_account_inventory": {
+    "linked_projects_returned": [
+      "microservices-demo-tcc"
+    ],
+    "linked_project_count": 1,
+    "artifact_registry_repositories_returned": [
+      {
+        "location": "us-central1",
+        "repository": "online-boutique-experiment",
+        "format": "DOCKER",
+        "size_bytes": 7843495
+      }
+    ],
+    "repository_count": 1,
+    "account_visible_artifact_registry_storage_bytes": 7843495
+  },
+  "planned_runtime_publication": {
+    "source_workflow_run_id": "35540876565",
+    "source_artifact_id": "10614194461",
+    "runtime_image_count": 3,
+    "additional_uncompressed_upper_bound_bytes": 228176148,
+    "projected_account_visible_upper_bound_bytes": 236019643
+  },
+  "storage_allowance_assumption": {
+    "artifact_registry_free_tier_bytes": 500000000,
+    "official_pricing_reference": "https://cloud.google.com/artifact-registry/pricing",
+    "projected_headroom_bytes": 263980357,
+    "fits_account_visible_allowance": true
+  },
+  "financial_clearance": {
+    "detailed_current_cost_available": false,
+    "current_spend_brl": null,
+    "approved_for_publication": false,
+    "cloud_execution_authorized": false,
+    "blocking_reason": "Detailed current billing cost is still unavailable; storage fit alone is not financial approval."
+  }
+}

@@ -30,3 +30,12 @@ repositório da franquia compartilhada na conta de faturamento. Sem o consumo
 total da conta e o custo corrente detalhado, ele permanece como
 `review-required-no-publication-authorized`: o plano nunca autoriza escrita no
 GCP, aprovação financeira ou execução cloud.
+
+Uma leitura posterior da conta de faturamento retornou somente o projeto
+`microservices-demo-tcc` e somente o repositório Docker do experimento, com
+7.843.495 bytes. A projeção conservadora após as três imagens é 236.019.643
+bytes, abaixo dos 500.000.000 bytes considerados para a franquia. A evidência
+está em
+[`artifact-registry-storage-readiness-20260920T222357Z.json`](./artifact-registry-storage-readiness-20260920T222357Z.json).
+Isso resolve a incerteza de armazenamento visível na conta, mas não substitui a
+exportação do custo corrente: publicação e execução continuam bloqueadas.
