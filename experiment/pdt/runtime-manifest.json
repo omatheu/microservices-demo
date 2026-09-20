@@ -10,7 +10,7 @@
     },
     {
       "path": "experiment/pdt/controller/Dockerfile",
-      "sha256": "3c3986b3b908070de50ca908244feb046536b99092044a21a54044822a31c8e0"
+      "sha256": "896ad7b41399a2a5eb0655b060339006b1bd90147604fb9b2aac09e615d2d113"
     },
     {
       "path": "experiment/scripts/prepare-pdt-controller-job.py",
