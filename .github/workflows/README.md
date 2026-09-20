@@ -23,35 +23,26 @@ The second workflow does not deploy to the operational namespace. It is not
 active until both workflow files exist on the default branch and the
 `tcc-experiment` GitHub Environment has been configured.
 
+The upstream `Deploy Staging - Pull Request` and `Clean up deployment`
+workflows were retired in this fork because they referenced the upstream
+`online-boutique-ci` project. The `deployment-tests` job was also removed from
+the main-branch workflow. Cloud staging for this repository is owned only by
+the guarded TCC workflow above; the main-branch workflow retains code tests and
+has no Google Cloud identity.
+
 **Note**: In order for the current CI/CD setup to work on your pull request, you must branch directly off the repo (no forks). This is because the Github secrets necessary for these tests aren't copied over when you fork.
 
 ### Code Tests - [ci-pr.yaml](ci-pr.yaml)
 
-These tests run on every commit for every open PR, as well as any commit to main / any release branch. Currently, this workflow runs only Go unit tests.
+These tests run on every commit for every open PR. The upstream workflow runs
+the repository's Go and C# unit tests without a cloud identity.
 
 
-### Deploy Tests- [ci-pr.yaml](ci-pr.yaml)
+### Main/release tests - [ci-main.yaml](ci-main.yaml)
 
-These tests run on every commit for every open PR, as well as any commit to main / any release branch. This workflow:
-
-1. Creates a dedicated GKE namespace for that PR, if it doesn't already exist, in the PR GKE cluster.
-2. Uses `skaffold run` to build and push the images specific to that PR commit. Then skaffold deploys those images, via `kubernetes-manifests`, to the PR namespace in the test cluster.
-3. Tests to make sure all the pods start up and become ready.
-4. Gets the LoadBalancer IP for the frontend service.
-5. Comments that IP in the pull request, for staging.
-
-### Push and Deploy Latest - [push-deploy](push-deploy.yml)
-
-This is the Continuous Deployment workflow, and it runs on every commit to the main branch. This workflow:
-
-1. Builds the container images for every service, tagging as `latest`.
-2. Pushes those images to Google Container Registry.
-
-Note that this workflow does not update the image tags used in `release/kubernetes-manifests.yaml` - these release manifests are tied to a stable `v0.x.x` release.
-
-### Cleanup - [cleanup.yaml](cleanup.yaml)
-
-This workflow runs when a PR closes, regardless of whether it was merged into main. This workflow deletes the PR-specific GKE namespace in the test cluster.
+This workflow repeats the Go and C# unit tests after a push to `main` or a
+`release/*` branch. It deliberately has no image publication, GKE deployment,
+Google Cloud credential or operational mutation.
 
 ### Manual Release Builder - [make-release.yaml](make-release.yaml)
 

@@ -90,6 +90,11 @@ deve introduzir exatamente um arquivo
 corresponde ao ID, que existe uma única alternativa `deploy-as-is` e que a
 definição pública não contém operador, parâmetros ou rótulo esperado.
 
+Os workflows legados do upstream que implantavam automaticamente no projeto
+`online-boutique-ci` foram removidos desta variante. Assim, não há uma segunda
+esteira de staging paralela e não controlada: o único caminho cloud disparado a
+partir de um PR é o `TCC Paired Staging and PDT`, sujeito às travas acima.
+
 ### Configuração única no repositório GitHub
 
 Depois que os dois workflows estiverem na branch padrão:
