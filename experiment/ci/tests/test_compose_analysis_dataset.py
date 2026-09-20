@@ -1,0 +1,162 @@
+import hashlib
+import importlib.util
+import json
+import pathlib
+import tempfile
+import unittest
+
+
+ROOT = pathlib.Path(__file__).parents[2]
+SCRIPT = ROOT / "scripts" / "compose-analysis-dataset.py"
+SPEC = importlib.util.spec_from_file_location("compose_analysis_dataset", SCRIPT)
+MODULE = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(MODULE)
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def write(root, name, value):
+    path = root / name
+    path.write_text(json.dumps(value), encoding="utf-8")
+    return {"path": name, "sha256": digest(path)}
+
+
+def protocol():
+    return {
+        "protocol_id": "test-protocol",
+        "status": "pre-registration-candidate",
+        "frozen_at": None,
+        "confirmatory_collection_allowed": False,
+        "research_design": {"candidate_count": 2},
+    }
+
+
+def oracle(candidate_id, actual):
+    return {
+        "candidate_id": candidate_id,
+        "observed_deploy_as_is_label": actual,
+        "eligible_for_primary_analysis": False,
+        "selected_alternative": "block" if actual == "harmful" else "deploy-as-is",
+        "alternatives": [{"id": "deploy-as-is", "label": actual, "change_cost": 0}],
+    }
+
+
+class ComposeAnalysisDatasetTests(unittest.TestCase):
+    def fixture(self):
+        temporary = tempfile.TemporaryDirectory()
+        root = pathlib.Path(temporary.name)
+        proto = protocol()
+        proto_sha = hashlib.sha256(b"protocol").hexdigest()
+        public = {
+            "protocol_id": proto["protocol_id"],
+            "protocol_sha256": proto_sha,
+            "corpus_id": "corpus-test",
+            "confirmatory_eligible": False,
+            "execution_order": [
+                {"sequence": 1, "candidate_id": "cand-0001", "repetitions": [1, 2, 3]},
+                {"sequence": 2, "candidate_id": "cand-0002", "repetitions": [1, 2, 3]},
+            ],
+        }
+        public_path = root / "public.json"
+        public_path.write_text(json.dumps(public), encoding="utf-8")
+        artifacts = [{"component": "checkoutservice", "remote_reference": "image@sha256:" + "a" * 64}]
+        definition_sha = "b" * 64
+        control_approved = {
+            "candidate_id": "cand-0001",
+            "mechanism": "conventional-ci-cd-with-staging",
+            "decision": "approve",
+            "control_decision_sealed": True,
+            "operational_mutation_performed": False,
+            "immutable_artifacts": artifacts,
+            "candidate_definition_sha256": definition_sha,
+        }
+        pdt = {
+            "candidate": "cand-0001",
+            "decision": "block",
+            "selected_alternative": "block",
+            "artifact_binding": {
+                "immutable_artifacts": artifacts,
+                "candidate_definition_sha256": definition_sha,
+            },
+        }
+        gate = {
+            "candidate_id": "cand-0001",
+            "gate_state": "blocked",
+            "operational_mutation_performed": False,
+        }
+        control_blocked = {
+            "candidate_id": "cand-0002",
+            "mechanism": "conventional-ci-cd-with-staging",
+            "decision": "block",
+            "control_decision_sealed": True,
+            "operational_mutation_performed": False,
+            "immutable_artifacts": [],
+            "candidate_definition_sha256": "c" * 64,
+        }
+        manifest = {
+            "protocol_id": proto["protocol_id"],
+            "protocol_sha256": proto_sha,
+            "public_corpus_sha256": digest(public_path),
+            "collection_complete": True,
+            "candidates": [
+                {
+                    "candidate_id": "cand-0001",
+                    "exclusion": None,
+                    "conventional_decision": write(root, "control-1.json", control_approved),
+                    "pdt_decision": write(root, "pdt-1.json", pdt),
+                    "deployment_gate": write(root, "gate-1.json", gate),
+                    "oracle_adjudication": write(root, "oracle-1.json", oracle("cand-0001", "harmful")),
+                },
+                {
+                    "candidate_id": "cand-0002",
+                    "exclusion": None,
+                    "conventional_decision": write(root, "control-2.json", control_blocked),
+                    "pdt_decision": None,
+                    "deployment_gate": None,
+                    "oracle_adjudication": write(root, "oracle-2.json", oracle("cand-0002", "safe")),
+                },
+            ],
+        }
+        return temporary, root, proto, proto_sha, public, digest(public_path), manifest
+
+    def test_composes_approved_and_inherited_control_paths(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        result = MODULE.compose(proto, proto_sha, public, public_sha, manifest, root, allow_draft=True)
+        self.assertEqual("block", result["candidates"][0]["treatment"]["decision"])
+        self.assertEqual("block", result["candidates"][1]["treatment"]["decision"])
+        self.assertEqual("engineering-dry-run", result["composition_mode"])
+        self.assertFalse(result["confirmatory_eligible"])
+
+    def test_evidence_hash_substitution_is_rejected(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        manifest["candidates"][0]["pdt_decision"]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "hash differs"):
+            MODULE.compose(proto, proto_sha, public, public_sha, manifest, root, allow_draft=True)
+
+    def test_control_approval_requires_pdt_and_gate(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        manifest["candidates"][0]["pdt_decision"] = None
+        with self.assertRaisesRegex(ValueError, "must contain only path"):
+            MODULE.compose(proto, proto_sha, public, public_sha, manifest, root, allow_draft=True)
+
+    def test_candidate_set_must_match_public_corpus(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        manifest["candidates"][1]["candidate_id"] = "cand-other"
+        with self.assertRaisesRegex(ValueError, "candidate set"):
+            MODULE.compose(proto, proto_sha, public, public_sha, manifest, root, allow_draft=True)
+
+    def test_draft_protocol_is_fail_closed_by_default(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        with self.assertRaisesRegex(ValueError, "frozen protocol"):
+            MODULE.compose(proto, proto_sha, public, public_sha, manifest, root)
+
+
+if __name__ == "__main__":
+    unittest.main()

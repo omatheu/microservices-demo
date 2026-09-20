@@ -420,6 +420,7 @@ seladas.
 
 ### Fase 8 — Análise final
 
+- [x] implementar composição do dataset a partir de evidências seladas;
 - [x] implementar analisador confirmatório fail-closed no nível da candidata;
 - [ ] construir matriz de confusão para aprovar e bloquear;
 - [ ] calcular taxa de aprovação insegura;
@@ -441,13 +442,15 @@ seladas.
 **Critério de saída:** resultados suficientes para responder à questão de
 pesquisa e sustentar ou rejeitar as hipóteses.
 
-**Estado:** o analisador reproduzível está implementado e protegido por hash no
-protocolo. Ele calcula intervalos binomiais exatos, diferença pareada de risco,
-teste exato de McNemar, matrizes de confusão, utilidade incremental, qualidade
-prescritiva e resumos contínuos. O modo normal falha enquanto o protocolo não
-estiver congelado; o modo de autoteste produz saída explicitamente inelegível.
-Os valores experimentais e sua interpretação continuam pendentes da coleta
-confirmatória e do oráculo.
+**Estado:** o compositor do dataset e o analisador reproduzível estão
+implementados e protegidos por hash no protocolo. O compositor confere o
+conjunto completo de IDs opacos e os hashes das decisões convencionais, PDT,
+gate e oráculo. O analisador calcula intervalos binomiais exatos, diferença
+pareada de risco, teste exato de McNemar, matrizes de confusão, utilidade
+incremental, qualidade prescritiva e resumos contínuos. O modo normal falha
+enquanto o protocolo não estiver congelado; o modo de autoteste produz saída
+explicitamente inelegível. Os valores experimentais e sua interpretação
+continuam pendentes da coleta confirmatória e do oráculo.
 
 ## Métricas e fórmulas a registrar
 

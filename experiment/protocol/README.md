@@ -230,9 +230,10 @@ O runner pareado, o preparador da ação selecionada e o registrador do gate
 humano também são inputs selados. Assim, a fronteira do `checkoutservice`, o
 rollback efêmero e a separação entre aprovação humana e autorização cloud não
 podem ser alterados depois da observação dos resultados.
-O analisador confirmatório também é selado e aplica a unidade de análise no
-nível da candidata, intervalos binomiais exatos e McNemar pareado definidos
-nesta versão do protocolo.
+O compositor do dataset e o analisador confirmatório também são selados. O
+primeiro verifica os hashes de cada decisão e adjudicação; o segundo aplica a
+unidade de análise no nível da candidata, intervalos binomiais exatos e McNemar
+pareado definidos nesta versão do protocolo.
 O dataset declarativo e a consulta de custo limitada a 100 MB também são
 selados, impedindo que a regra de contabilização seja alterada depois da
 observação dos resultados.

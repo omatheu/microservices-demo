@@ -15,6 +15,7 @@ REQUIRED_INPUTS = {
     "deployment_action_preparer",
     "human_gate_recorder",
     "confirmatory_analyzer",
+    "analysis_dataset_composer",
     "pull_request_workflow",
     "cloud_experiment_workflow",
     "billing_export_infrastructure",

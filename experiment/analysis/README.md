@@ -4,6 +4,12 @@
 sem depender de bibliotecas externas. A unidade de análise é a candidata depois
 da agregação das repetições pelo oráculo.
 
+`compose-analysis-dataset.py` precede o analisador. Ele exige um manifesto de
+coleta completo, confere o conjunto de IDs do corpus público e valida por
+SHA-256 cada decisão convencional, decisão PDT, gate e adjudicação do oráculo.
+Candidatas bloqueadas pelo controle herdam corretamente o bloqueio no
+tratamento sem fabricar uma execução PDT.
+
 O analisador calcula:
 
 - taxa de aprovação insegura do controle e do tratamento;
@@ -30,6 +36,13 @@ Candidatas inconclusivas ou excluídas são relatadas e não substituídas.
 Uso após o congelamento e a coleta completa:
 
 ```bash
+./experiment/scripts/compose-analysis-dataset.py \
+  --repo-root . \
+  --protocol experiment/protocol/protocol-v1.json \
+  --public-corpus <public-corpus.json> \
+  --collection-manifest <collection-manifest.json> \
+  --output <candidate-level-dataset.json>
+
 ./experiment/scripts/analyze-confirmatory-results.py \
   --protocol experiment/protocol/protocol-v1.json \
   --dataset <candidate-level-dataset.json> \
@@ -41,3 +54,8 @@ e exatamente uma entrada por candidata declarada. Cada entrada reúne as
 decisões de controle e tratamento e a adjudicação do oráculo; métricas contínuas
 opcionais ficam em `control.continuous_metrics` e
 `treatment.continuous_metrics`.
+
+No manifesto de coleta, cada evidência é declarada como
+`{"path":"caminho/relativo.json","sha256":"..."}`. Caminhos absolutos,
+travessia com `..`, hashes divergentes, candidatos ausentes ou evidência PDT
+para uma candidata já bloqueada pelo controle são recusados.
