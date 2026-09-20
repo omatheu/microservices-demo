@@ -46,6 +46,10 @@ class ResolvePullRequestCandidateTests(unittest.TestCase):
         self.assertEqual(result["candidate_id"], "pr-42-aaaaaaaaaaaa")
         self.assertIsNone(result["candidate_definition"])
         self.assertFalse(result["experimental_cloud_eligible"])
+        self.assertEqual(
+            result["experimental_cloud_ineligibility_reason"],
+            "no-candidate-definition",
+        )
 
     def test_single_public_candidate_definition_enables_experimental_job(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -58,18 +62,26 @@ class ResolvePullRequestCandidateTests(unittest.TestCase):
         self.assertEqual(result["candidate_id"], "cand-opaque")
         self.assertEqual(result["candidate_definition"], relative)
         self.assertTrue(result["experimental_cloud_eligible"])
+        self.assertIsNone(result["experimental_cloud_ineligibility_reason"])
 
-    def test_multiple_candidate_definitions_are_rejected(self):
-        with self.assertRaisesRegex(ValueError, "exactly one"):
-            MODULE.resolve(
-                pathlib.Path("/unused"),
-                [
-                    "experiment/pdt/candidates/cand-a.json",
-                    "experiment/pdt/candidates/cand-b.json",
-                ],
-                "42",
-                "c" * 40,
-            )
+    def test_multiple_candidate_definitions_are_not_cloud_eligible(self):
+        result = MODULE.resolve(
+            pathlib.Path("/unused"),
+            [
+                "experiment/pdt/candidates/cand-a.json",
+                "experiment/pdt/candidates/cand-b.json",
+            ],
+            "42",
+            "c" * 40,
+        )
+
+        self.assertEqual(result["candidate_id"], "pr-42-cccccccccccc")
+        self.assertIsNone(result["candidate_definition"])
+        self.assertFalse(result["experimental_cloud_eligible"])
+        self.assertEqual(
+            result["experimental_cloud_ineligibility_reason"],
+            "multiple-candidate-definitions",
+        )
 
     def test_private_oracle_keys_are_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

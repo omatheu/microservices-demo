@@ -66,21 +66,7 @@ def validate_definition(repo_root, relative_path):
     return candidate_id
 
 
-def resolve(repo_root, changed_paths, pull_request_number, head_sha):
-    candidate_paths = sorted(
-        path
-        for path in set(changed_paths)
-        if pathlib.PurePosixPath(path).match("experiment/pdt/candidates/*.json")
-    )
-    if len(candidate_paths) > 1:
-        raise ValueError("a pull request may introduce exactly one candidate definition")
-    if candidate_paths:
-        candidate_id = validate_definition(repo_root, candidate_paths[0])
-        return {
-            "candidate_id": candidate_id,
-            "candidate_definition": candidate_paths[0],
-            "experimental_cloud_eligible": True,
-        }
+def regular_pull_request_identity(pull_request_number, head_sha, reason):
     if not re.fullmatch(r"[1-9][0-9]*", str(pull_request_number)):
         raise ValueError("pull request number is invalid")
     if not re.fullmatch(r"[a-fA-F0-9]{12,64}", head_sha):
@@ -89,7 +75,35 @@ def resolve(repo_root, changed_paths, pull_request_number, head_sha):
         "candidate_id": f"pr-{pull_request_number}-{head_sha[:12].lower()}",
         "candidate_definition": None,
         "experimental_cloud_eligible": False,
+        "experimental_cloud_ineligibility_reason": reason,
     }
+
+
+def resolve(repo_root, changed_paths, pull_request_number, head_sha):
+    candidate_paths = sorted(
+        path
+        for path in set(changed_paths)
+        if pathlib.PurePosixPath(path).match("experiment/pdt/candidates/*.json")
+    )
+    if len(candidate_paths) > 1:
+        return regular_pull_request_identity(
+            pull_request_number,
+            head_sha,
+            "multiple-candidate-definitions",
+        )
+    if candidate_paths:
+        candidate_id = validate_definition(repo_root, candidate_paths[0])
+        return {
+            "candidate_id": candidate_id,
+            "candidate_definition": candidate_paths[0],
+            "experimental_cloud_eligible": True,
+            "experimental_cloud_ineligibility_reason": None,
+        }
+    return regular_pull_request_identity(
+        pull_request_number,
+        head_sha,
+        "no-candidate-definition",
+    )
 
 
 def changed_paths(repo_root, base_ref, head_ref):
