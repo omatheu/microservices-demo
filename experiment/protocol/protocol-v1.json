@@ -1,0 +1,321 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_id": "checkout-pdt-comparison-v1",
+  "status": "pre-registration-candidate",
+  "confirmatory_collection_allowed": false,
+  "frozen_at": null,
+  "twin_object": "checkoutservice",
+  "research_design": {
+    "experimental_unit": "opaque release candidate",
+    "candidate_count": 18,
+    "technical_repetitions_per_candidate": 3,
+    "block_size": 3,
+    "block_count": 6,
+    "execution": "sequential",
+    "conditions": [
+      "conventional-ci-cd-with-staging",
+      "same-pipeline-plus-pdt"
+    ],
+    "primary_outcome": "candidate-level unsafe approval rate",
+    "primary_estimand": "paired risk difference in unsafe approvals between control and treatment",
+    "unit_of_analysis": "candidate after aggregation of technical repetitions",
+    "sample_size_rationale": "Fixed feasibility corpus sized before evaluation results; estimates use exact intervals and no minimum-effect claim."
+  },
+  "randomization": {
+    "public_seed_label": "checkout-pdt-v1-fixed-before-corpus",
+    "algorithm": "HMAC-SHA256 keyed deterministic sampling and Fisher-Yates order",
+    "candidate_identifier_prefix": "cand-",
+    "blinding_key_minimum_bytes": 32,
+    "blinding_key_location": "outside tracked repository content",
+    "human_blinding": "partial",
+    "mechanism_blinding": "required"
+  },
+  "operators": [
+    {
+      "id": "CTRL-SAFE-01",
+      "count": 3,
+      "stratum": "safe-control",
+      "intended_label": "safe",
+      "target_component": "checkoutservice",
+      "context_dependency": "independent",
+      "parameter_space": {
+        "variant": [
+          "equivalent-refactor",
+          "log-message-only",
+          "comment-only-runtime-neutral"
+        ]
+      }
+    },
+    {
+      "id": "CTRL-SAFE-OUTSIDE-01",
+      "count": 1,
+      "stratum": "pdt-boundary-control",
+      "intended_label": "safe",
+      "target_component": "recommendationservice",
+      "context_dependency": "outside-twin-boundary",
+      "parameter_space": {
+        "variant": [
+          "log-message-only",
+          "equivalent-refactor"
+        ]
+      }
+    },
+    {
+      "id": "CTRL-CI-01",
+      "count": 2,
+      "stratum": "conventional-ci-detectable",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "independent",
+      "parameter_space": {
+        "failure_kind": [
+          "compile-error",
+          "unit-test-regression"
+        ]
+      }
+    },
+    {
+      "id": "CTRL-SEC-01",
+      "count": 2,
+      "stratum": "conventional-security-detectable",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "independent",
+      "parameter_space": {
+        "failure_kind": [
+          "synthetic-secret-canary",
+          "prohibited-container-privilege"
+        ]
+      }
+    },
+    {
+      "id": "INF-CPU-01",
+      "count": 2,
+      "stratum": "nonfunctional-infrastructure",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "load-dependent",
+      "parameter_space": {
+        "cpu_limit": [
+          "50m",
+          "75m",
+          "100m"
+        ]
+      }
+    },
+    {
+      "id": "INF-REPLICA-01",
+      "count": 1,
+      "stratum": "conventional-staging-detectable",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "independent",
+      "parameter_space": {
+        "replicas": [
+          0
+        ]
+      }
+    },
+    {
+      "id": "INF-TIMEOUT-01",
+      "count": 1,
+      "stratum": "nonfunctional-configuration",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "dependency-tail-dependent",
+      "parameter_space": {
+        "dependency": [
+          "paymentservice",
+          "shippingservice"
+        ],
+        "timeout_ms": [
+          50,
+          100,
+          150
+        ]
+      }
+    },
+    {
+      "id": "FUNC-AMOUNT-01",
+      "count": 1,
+      "stratum": "functional-business-rule",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "input-class-dependent",
+      "parameter_space": {
+        "omitted_component": [
+          "shipping-cost",
+          "quantity",
+          "fractional-nanos"
+        ]
+      }
+    },
+    {
+      "id": "FUNC-ERROR-01",
+      "count": 1,
+      "stratum": "functional-error-propagation",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "dependency-failure-dependent",
+      "parameter_space": {
+        "dependency": [
+          "paymentservice",
+          "shippingservice"
+        ],
+        "fail_every_n": [
+          5,
+          7
+        ]
+      }
+    },
+    {
+      "id": "FUNC-COND-01",
+      "count": 1,
+      "stratum": "functional-conditional",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "input-distribution-dependent",
+      "parameter_space": {
+        "currency": [
+          "EUR",
+          "GBP",
+          "JPY"
+        ],
+        "minimum_cart_items": [
+          2,
+          3,
+          4
+        ]
+      }
+    },
+    {
+      "id": "FUNC-DEGRADE-01",
+      "count": 1,
+      "stratum": "nonfunctional-code-degradation",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "concurrency-dependent",
+      "parameter_space": {
+        "trigger_concurrency": [
+          6,
+          8,
+          10
+        ],
+        "bounded_cpu_work_ms": [
+          100,
+          150,
+          200
+        ]
+      }
+    },
+    {
+      "id": "DEP-CURRENCY-01",
+      "count": 1,
+      "stratum": "dependency-semantics",
+      "intended_label": "harmful",
+      "target_component": "currencyservice",
+      "context_dependency": "input-class-dependent",
+      "parameter_space": {
+        "currency": [
+          "EUR",
+          "JPY",
+          "CAD"
+        ],
+        "rounding_mode": [
+          "truncate",
+          "ceil"
+        ]
+      }
+    },
+    {
+      "id": "DEP-TAIL-01",
+      "count": 1,
+      "stratum": "dependency-tail-latency",
+      "intended_label": "harmful",
+      "target_component": "paymentservice",
+      "context_dependency": "concurrency-dependent",
+      "parameter_space": {
+        "bounded_delay_ms": [
+          200,
+          300,
+          400
+        ],
+        "percentile_trigger": [
+          90,
+          95
+        ]
+      }
+    }
+  ],
+  "aggregation": {
+    "functional_rule": "Any reproducible contract violation in a valid repetition marks that repetition harmful.",
+    "nonfunctional_rule": "At least two of three valid repetitions must violate a frozen SLO for candidate-level harm.",
+    "minimum_valid_repetitions": 2,
+    "infrastructure_retry_rule": "One replacement attempt is allowed for a repetition classified as infrastructure-invalid before opening the oracle label.",
+    "candidate_exclusion_rule": "Exclude without replacement when fewer than two repetitions remain valid; report identity and reason."
+  },
+  "analysis": {
+    "primary_comparison": "exact paired McNemar analysis of unsafe approval discordance",
+    "rate_intervals": "two-sided 95 percent exact binomial intervals",
+    "continuous_summary": [
+      "median",
+      "interquartile-range",
+      "range"
+    ],
+    "multiplicity": "Secondary outcomes are descriptive and explicitly labeled exploratory.",
+    "early_stopping": "No efficacy stopping; only financial, safety or unrecoverable infrastructure stops are permitted.",
+    "power_claim": "No confirmatory minimum-effect or population-generalization claim is made for this fixed feasibility corpus."
+  },
+  "execution_limits": {
+    "cloud_execution_authorization": "explicit-user-authorization-required-after-freeze",
+    "proposed_incremental_spend_ceiling_brl": 200,
+    "mandatory_cost_review_at_brl": 150,
+    "billing_alert_is_hard_cap": false,
+    "candidate_block_size": 3,
+    "cost_review_after_every_block": true,
+    "maximum_staging_minutes_per_repetition": 15,
+    "maximum_pdt_minutes_per_alternative": 15,
+    "maximum_pdt_deployable_alternatives": 2,
+    "maximum_oracle_minutes_per_repetition": 20,
+    "maximum_total_experimental_cpu_request_hours": 180,
+    "public_load_balancers_created": 0,
+    "concurrent_experimental_namespaces": 1,
+    "stop_when_cost_data_unavailable_after_block": true,
+    "cleanup_required_before_next_condition": true
+  },
+  "frozen_inputs": {
+    "ci_policy": {
+      "path": "experiment/ci/policy.json",
+      "sha256": "441835b3e8c269bdcebc4f38b462cc31b0baeea310242d9d6f7ea65fbfdbbe55"
+    },
+    "staging_thresholds": {
+      "path": "experiment/staging/safety-thresholds.json",
+      "sha256": "97fd476341ea90ff7e9fe9622ef15852599225f508914396896b9d36ffb843e6"
+    },
+    "pdt_model_policy": {
+      "path": "experiment/pdt/model-policy.json",
+      "sha256": "e2ab249a65d80e670fec82a27adab2dd942307b2ed127c88c1e2b107b5c8d578"
+    },
+    "mutation_registry": {
+      "path": "experiment/mutations/registry.json",
+      "sha256": "aa1fc1a2405eb7f048072c786dbfc1ecbfc0822605ca3d93d67a4c3326f9acb7"
+    },
+    "oracle_suite_manifest": {
+      "path": "experiment/oracle/suite-manifest.json",
+      "sha256": "a9ff9915f8818647cdb035c78a19fff27a7e554776ab7d8b91103a266c8b3341"
+    }
+  },
+  "required_before_freeze": [
+    "implement and hash every mutation operator",
+    "implement and hash the independent oracle suite",
+    "freeze functional invariants and final SLOs",
+    "validate the proposed BRL ceiling against current billing data",
+    "record researcher approval of the preregistration candidate",
+    "change status to frozen and set frozen_at without changing evaluated outcomes"
+  ],
+  "excluded_evidence": [
+    "current engineering pilots",
+    "checkout-cpu-restriction-v1",
+    "engineering-artifact-binding-v2"
+  ]
+}

@@ -1,0 +1,139 @@
+name: TCC Conventional CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tcc-conventional-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  conventional-ci:
+    name: Conventional pre-staging gates
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    outputs:
+      candidate_id: ${{ steps.candidate.outputs.candidate_id }}
+      candidate_definition: ${{ steps.candidate.outputs.candidate_definition }}
+      experimental_cloud_eligible: ${{ steps.candidate.outputs.experimental_cloud_eligible }}
+    steps:
+      - name: Check out the exact pull request revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.16.3
+          terraform_wrapper: false
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.37.0
+
+      - name: Install versioned CI prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install --yes jq protobuf-compiler python3-venv shellcheck
+          python3 -m venv "${RUNNER_TEMP}/tcc-ci-venv"
+          "${RUNNER_TEMP}/tcc-ci-venv/bin/python" -m pip install --disable-pip-version-check PyYAML==6.0.1
+          echo "${RUNNER_TEMP}/tcc-ci-venv/bin" >> "${GITHUB_PATH}"
+
+      - name: Resolve the opaque candidate represented by the PR
+        id: candidate
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          result=$(python3 experiment/scripts/resolve-pr-candidate.py \
+            --repo-root . \
+            --base-ref "${BASE_SHA}" \
+            --head-ref "${HEAD_SHA}" \
+            --pull-request-number "${PR_NUMBER}")
+          candidate_id=$(jq -er '.candidate_id' <<< "${result}")
+          candidate_definition=$(jq -r '.candidate_definition // ""' <<< "${result}")
+          experimental_cloud_eligible=$(jq -r '.experimental_cloud_eligible' <<< "${result}")
+          echo "candidate_id=${candidate_id}" >> "${GITHUB_OUTPUT}"
+          echo "candidate_definition=${candidate_definition}" >> "${GITHUB_OUTPUT}"
+          echo "experimental_cloud_eligible=${experimental_cloud_eligible}" >> "${GITHUB_OUTPUT}"
+          jq . <<< "${result}"
+
+      - name: Run all conventional pre-staging gates
+        id: local_ci
+        shell: bash
+        env:
+          CANDIDATE_ID: ${{ steps.candidate.outputs.candidate_id }}
+          CANDIDATE_BASE_REF: ${{ github.event.pull_request.base.sha }}
+          CANDIDATE_HEAD_REF: ${{ github.event.pull_request.head.sha }}
+          MODE: engineering
+          PUBLISH_ARTIFACTS: "false"
+        run: |
+          set -uo pipefail
+          log_file="${RUNNER_TEMP}/tcc-local-ci.log"
+          set +e
+          ./experiment/scripts/run-conventional-ci-local.sh 2>&1 | tee "${log_file}"
+          exit_code=${PIPESTATUS[0]}
+          set -e
+          evidence_dir=$(awk -F'Evidence: ' '/^Evidence: / {path=$2} END {print path}' "${log_file}")
+          if [[ -n "${evidence_dir}" && -f "${evidence_dir}/ci-local-decision.json" ]]; then
+            echo "evidence_dir=${evidence_dir}" >> "${GITHUB_OUTPUT}"
+            echo "decision_file=${evidence_dir}/ci-local-decision.json" >> "${GITHUB_OUTPUT}"
+          fi
+          echo "runner_exit_code=${exit_code}" >> "${GITHUB_OUTPUT}"
+
+      - name: Seal an experimental candidate blocked before staging
+        if: steps.candidate.outputs.experimental_cloud_eligible == 'true' && steps.local_ci.outputs.decision_file != ''
+        shell: bash
+        env:
+          CANDIDATE_DEFINITION: ${{ steps.candidate.outputs.candidate_definition }}
+          LOCAL_DECISION: ${{ steps.local_ci.outputs.decision_file }}
+          EVIDENCE_DIR: ${{ steps.local_ci.outputs.evidence_dir }}
+        run: |
+          set -euo pipefail
+          if [[ $(jq -er '.local_decision' "${LOCAL_DECISION}") == "block" ]]; then
+            python3 experiment/scripts/compose-conventional-decision.py \
+              --candidate-definition "${CANDIDATE_DEFINITION}" \
+              --local-ci-decision "${LOCAL_DECISION}" \
+              --output "${EVIDENCE_DIR}/conventional-decision.json"
+          fi
+
+      - name: Upload conventional evidence
+        if: always() && steps.local_ci.outputs.evidence_dir != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: conventional-ci-pr-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+          path: ${{ steps.local_ci.outputs.evidence_dir }}
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce the conventional release decision
+        if: always()
+        shell: bash
+        env:
+          DECISION_FILE: ${{ steps.local_ci.outputs.decision_file }}
+          RUNNER_EXIT_CODE: ${{ steps.local_ci.outputs.runner_exit_code }}
+        run: |
+          set -euo pipefail
+          [[ -n "${DECISION_FILE}" && -f "${DECISION_FILE}" ]]
+          [[ "${RUNNER_EXIT_CODE}" == "0" ]]
+          jq -e '.local_decision == "pass" and .eligible_for_staging == true' "${DECISION_FILE}" >/dev/null

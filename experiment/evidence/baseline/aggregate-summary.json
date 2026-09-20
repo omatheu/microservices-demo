@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-09-20T02:29:12Z",
+  "completed_runs": 3,
+  "run_ids": [
+    "baseline-20260920T022124Z",
+    "baseline-20260920T022349Z",
+    "baseline-20260920T022612Z"
+  ],
+  "probe": {
+    "total_samples": 180,
+    "total_successes": 180,
+    "total_failures": 0,
+    "success_rate": 1,
+    "latency_ms_across_runs": {
+      "mean": {
+        "min": 411.972,
+        "mean": 426.07366666666667,
+        "max": 436.368,
+        "standard_deviation": 10.317074660753194
+      },
+      "p50": {
+        "min": 412.649,
+        "mean": 420.46566666666666,
+        "max": 426.670,
+        "standard_deviation": 5.8364843489514815
+      },
+      "p95": {
+        "min": 483.328,
+        "mean": 506.872,
+        "max": 533.689,
+        "standard_deviation": 20.689642771203175
+      },
+      "p99": {
+        "min": 631.172,
+        "mean": 889.166,
+        "max": 1283.284,
+        "standard_deviation": 283.0898828617277
+      },
+      "max": {
+        "min": 631.172,
+        "mean": 889.166,
+        "max": 1283.284,
+        "standard_deviation": 283.0898828617277
+      }
+    }
+  },
+  "locust": {
+    "total_requests_during_windows": 818,
+    "total_failures_during_windows": 0
+  }
+}

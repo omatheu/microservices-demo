@@ -6,7 +6,8 @@
 .project
 .skaffold-*.yaml
 .terraform.lock.hcl
-.terraform/*
+!infra/terraform/.terraform.lock.hcl
+**/.terraform/
 .venv/
 .vs/
 .vscode/
@@ -27,3 +28,14 @@ pkg/
 release/wi-kubernetes-manifests.yaml
 vendor/
 gha-creds-*.json
+experiment/evidence/ci-cd/ci-*/
+experiment/evidence/baseline/baseline-*/
+experiment/evidence/checkout-baseline/checkout-baseline-*/
+experiment/evidence/observability/obs-*/
+experiment/evidence/oracle/oracle-*/
+experiment/evidence/pdt-cycles/pdt-*/
+experiment/evidence/pdt-state/operational-state-*/
+experiment/evidence/pipeline/gate-*/
+experiment/evidence/pipeline/paired-*/
+experiment/evidence/staging/staging-*/
+experiment/protocol/.private*/

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "status": "engineering-calibration-only",
+  "safe_candidate_id": "engineering-artifact-binding-v2",
+  "required_repetitions": 3,
+  "included_repetitions": [1, 2, 3],
+  "performance_rule": {
+    "source": "maximum observed percentile across safe staging repetitions",
+    "safety_margin_fraction": 0.25,
+    "round_up_increment_ms": 50
+  },
+  "functional_rule": {
+    "minimum_success_rate": 0.99,
+    "maximum_functional_failures": 0,
+    "maximum_unavailable_deployments": 0,
+    "maximum_restart_increase": 0
+  },
+  "eligibility": {
+    "required_mode": "engineering",
+    "required_http_success_rate": 1.0,
+    "required_checkout_failures": 0,
+    "required_negative_path_failures": 0,
+    "allow_as_confirmatory_evidence": false
+  },
+  "rationale": "Calibrate staging against the same transport, workload and ephemeral topology used by the control mechanism; do not derive its latency limits from the operational LoadBalancer path."
+}

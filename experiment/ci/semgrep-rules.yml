@@ -1,0 +1,79 @@
+rules:
+  - id: tcc.python.dynamic-code-execution
+    message: Dynamic Python code execution is forbidden in release candidates.
+    languages: [python]
+    severity: ERROR
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: exec(...)
+
+  - id: tcc.python.subprocess-shell
+    message: Python subprocesses must not enable shell interpretation.
+    languages: [python]
+    severity: ERROR
+    patterns:
+      - pattern-either:
+          - pattern: subprocess.call(..., shell=True, ...)
+          - pattern: subprocess.run(..., shell=True, ...)
+          - pattern: subprocess.Popen(..., shell=True, ...)
+
+  - id: tcc.python.tls-verification-disabled
+    message: HTTP client TLS verification must remain enabled.
+    languages: [python]
+    severity: ERROR
+    pattern-either:
+      - pattern: requests.get(..., verify=False, ...)
+      - pattern: requests.post(..., verify=False, ...)
+      - pattern: requests.request(..., verify=False, ...)
+
+  - id: tcc.python.unsafe-pickle
+    message: Untrusted pickle deserialization is not allowed.
+    languages: [python]
+    severity: ERROR
+    pattern-either:
+      - pattern: pickle.load(...)
+      - pattern: pickle.loads(...)
+
+  - id: tcc.javascript.dynamic-code-execution
+    message: Dynamic JavaScript code execution is forbidden in release candidates.
+    languages: [javascript, typescript]
+    severity: ERROR
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)
+
+  - id: tcc.javascript.command-shell
+    message: Node.js child-process shell execution requires explicit security review.
+    languages: [javascript, typescript]
+    severity: ERROR
+    pattern-either:
+      - pattern: child_process.exec(...)
+      - pattern: child_process.execSync(...)
+
+  - id: tcc.javascript.tls-verification-disabled
+    message: Node.js TLS certificate verification must remain enabled.
+    languages: [javascript, typescript]
+    severity: ERROR
+    pattern: '{..., rejectUnauthorized: false, ...}'
+
+  - id: tcc.go.tls-verification-disabled
+    message: Go TLS certificate verification must remain enabled.
+    languages: [go]
+    severity: ERROR
+    pattern: 'tls.Config{..., InsecureSkipVerify: true, ...}'
+
+  - id: tcc.go.command-shell
+    message: Go shell command execution requires explicit security review.
+    languages: [go]
+    severity: ERROR
+    pattern-either:
+      - pattern: exec.Command("sh", "-c", ...)
+      - pattern: exec.Command("bash", "-c", ...)
+
+  - id: tcc.csharp.command-shell
+    message: Starting a system shell from the cart service requires explicit review.
+    languages: [csharp]
+    severity: ERROR
+    pattern-either:
+      - pattern: Process.Start("cmd.exe", ...)
+      - pattern: Process.Start("/bin/sh", ...)

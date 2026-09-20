@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0.0",
+  "scope": "checkout-path-conventional-ci",
+  "components": {
+    "checkoutservice": {
+      "kind": "service",
+      "role": "pdt-twin-target",
+      "paths": ["src/checkoutservice/**"],
+      "docker_context": "src/checkoutservice",
+      "source_image_name": "us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/checkoutservice",
+      "validation_profile": "go-checkout",
+      "validation_status": "implemented"
+    },
+    "cartservice": {
+      "kind": "service",
+      "role": "checkout-dependency",
+      "paths": ["src/cartservice/**"],
+      "docker_context": "src/cartservice/src",
+      "source_image_name": "us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/cartservice",
+      "validation_profile": "dotnet-service",
+      "validation_status": "implemented"
+    },
+    "currencyservice": {
+      "kind": "service",
+      "role": "checkout-dependency",
+      "paths": ["src/currencyservice/**"],
+      "docker_context": "src/currencyservice",
+      "source_image_name": "us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/currencyservice",
+      "validation_profile": "node-service",
+      "validation_status": "implemented"
+    },
+    "paymentservice": {
+      "kind": "service",
+      "role": "checkout-dependency",
+      "paths": ["src/paymentservice/**"],
+      "docker_context": "src/paymentservice",
+      "source_image_name": "us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/paymentservice",
+      "validation_profile": "node-service",
+      "validation_status": "implemented"
+    },
+    "shippingservice": {
+      "kind": "service",
+      "role": "checkout-dependency",
+      "paths": ["src/shippingservice/**"],
+      "docker_context": "src/shippingservice",
+      "source_image_name": "us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/shippingservice",
+      "validation_profile": "go-service",
+      "validation_status": "implemented"
+    },
+    "productcatalogservice": {
+      "kind": "service",
+      "role": "checkout-dependency",
+      "paths": ["src/productcatalogservice/**"],
+      "docker_context": "src/productcatalogservice",
+      "source_image_name": "us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/productcatalogservice",
+      "validation_profile": "go-service",
+      "validation_status": "implemented"
+    },
+    "emailservice": {
+      "kind": "service",
+      "role": "checkout-dependency",
+      "paths": ["src/emailservice/**"],
+      "docker_context": "src/emailservice",
+      "source_image_name": "us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/emailservice",
+      "validation_profile": "python-service",
+      "validation_status": "implemented"
+    },
+    "frontend": {
+      "kind": "service",
+      "role": "checkout-entrypoint",
+      "paths": ["src/frontend/**"],
+      "docker_context": "src/frontend",
+      "source_image_name": "us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/frontend",
+      "validation_profile": "go-service",
+      "validation_status": "implemented"
+    },
+    "recommendationservice": {
+      "kind": "service",
+      "role": "outside-pdt-boundary-control",
+      "paths": ["src/recommendationservice/**"],
+      "docker_context": "src/recommendationservice",
+      "source_image_name": "us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/recommendationservice",
+      "validation_profile": "python-service",
+      "validation_status": "implemented"
+    },
+    "infrastructure": {
+      "kind": "configuration",
+      "role": "checkout-runtime-environment",
+      "paths": [
+        "infra/**",
+        "kubernetes-manifests/**",
+        "kustomize/**",
+        "terraform/**",
+        "skaffold.yaml"
+      ],
+      "validation_profile": "terraform-kustomize",
+      "validation_status": "implemented"
+    },
+    "experiment-control": {
+      "kind": "pipeline",
+      "role": "experimental-control-plane",
+      "paths": ["experiment/**", ".github/workflows/**"],
+      "validation_profile": "experiment-pipeline",
+      "validation_status": "implemented"
+    },
+    "protocol-contracts": {
+      "kind": "contract",
+      "role": "canonical-protobuf-source",
+      "paths": ["protos/**"],
+      "validation_profile": "protobuf-contract",
+      "validation_status": "implemented"
+    }
+  },
+  "shared_path_rules": [
+    {
+      "id": "canonical-protobuf-contract",
+      "paths": ["protos/**"],
+      "components": [
+        "checkoutservice",
+        "cartservice",
+        "currencyservice",
+        "paymentservice",
+        "shippingservice",
+        "productcatalogservice",
+        "emailservice",
+        "frontend",
+        "recommendationservice"
+      ]
+    },
+    {
+      "id": "candidate-definition-binds-twin-artifact",
+      "paths": ["experiment/pdt/candidates/*.json"],
+      "components": [
+        "checkoutservice"
+      ]
+    }
+  ],
+  "ignored_patterns": [
+    "docs/**",
+    "README.md",
+    "LICENSE",
+    ".gitignore",
+    ".gitattributes",
+    ".github/ISSUE_TEMPLATE/**",
+    ".github/PULL_REQUEST_TEMPLATE.md"
+  ],
+  "critical_prefixes": [
+    "src/",
+    "protos/",
+    "infra/",
+    "kubernetes-manifests/",
+    "kustomize/",
+    "terraform/",
+    "experiment/",
+    ".github/workflows/"
+  ]
+}

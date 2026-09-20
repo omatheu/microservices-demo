@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "provider": "google-cloud-monitoring",
+  "resource_type": "k8s_container",
+  "metrics": [
+    {
+      "id": "cpu_request_utilization",
+      "type": "kubernetes.io/container/cpu/request_utilization",
+      "kind": "GAUGE",
+      "unit": "1",
+      "purpose": "CPU usada como proporcao do request"
+    },
+    {
+      "id": "cpu_limit_utilization",
+      "type": "kubernetes.io/container/cpu/limit_utilization",
+      "kind": "GAUGE",
+      "unit": "1",
+      "purpose": "CPU usada como proporcao do limite"
+    },
+    {
+      "id": "memory_used_bytes",
+      "type": "kubernetes.io/container/memory/used_bytes",
+      "kind": "GAUGE",
+      "unit": "By",
+      "purpose": "Memoria usada por container"
+    },
+    {
+      "id": "memory_request_utilization",
+      "type": "kubernetes.io/container/memory/request_utilization",
+      "kind": "GAUGE",
+      "unit": "1",
+      "purpose": "Memoria usada como proporcao do request"
+    },
+    {
+      "id": "restart_count",
+      "type": "kubernetes.io/container/restart_count",
+      "kind": "CUMULATIVE",
+      "unit": "1",
+      "purpose": "Reinicios acumulados do container"
+    },
+    {
+      "id": "uptime_seconds",
+      "type": "kubernetes.io/container/uptime",
+      "kind": "GAUGE",
+      "unit": "s",
+      "purpose": "Tempo ativo do container"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0.0",
+  "suite_id": "checkout-independent-oracle-v1",
+  "status": "pre-registration-candidate",
+  "files": [
+    {
+      "path": "experiment/oracle/policy-v1.json",
+      "sha256": "65926c78513d5d569d0b08fafed3a7d2cc1da9159308c7dd928a7ae177207151"
+    },
+    {
+      "path": "experiment/oracle/harness/Dockerfile",
+      "sha256": "ac68a4709ac7d001a071643d0f5132fcba5705cbe41204c12a048c3c3f8e8c9c"
+    },
+    {
+      "path": "src/checkoutservice/cmd/oracleharness/main.go",
+      "sha256": "1e2894ee06d472817bf807bb1cef03f8b7463c8306094df5b0f7a548cf812eb4"
+    },
+    {
+      "path": "src/checkoutservice/cmd/oracleharness/main_test.go",
+      "sha256": "88bea44675ba18ec2becd5658d1df784258d1f01e08e3fc899933f987bbd69c2"
+    },
+    {
+      "path": "src/checkoutservice/go.mod",
+      "sha256": "2491e02978e9d70a0bea3306e64ddc03a9dba30e7ab65898ff64a74cf1e1911b"
+    },
+    {
+      "path": "src/checkoutservice/go.sum",
+      "sha256": "6aca98e3d1d9f23d61e5bc9e23ced3d0032ea6b4c59e18d51c8042077c370baa"
+    },
+    {
+      "path": "src/checkoutservice/genproto/demo.pb.go",
+      "sha256": "799971d468d1e66e0d7fce8930ce74f8f1c894bf8425c50cad44c2a9b40cd9af"
+    },
+    {
+      "path": "src/checkoutservice/genproto/demo_grpc.pb.go",
+      "sha256": "70bb93b42e93399bf30d9971b6568244d0fa2eb1cb4757f967354810601dc916"
+    },
+    {
+      "path": "experiment/scripts/adjudicate-oracle.py",
+      "sha256": "b1564fc7e6d5038488825c73d4c9b60171358b39e3b287378aa6c0d81625428c"
+    },
+    {
+      "path": "experiment/scripts/compose-oracle-observation.py",
+      "sha256": "58c8000685f03906e42d14dc671f507605e28955e2b7285ea8c93b58f352fb3d"
+    },
+    {
+      "path": "experiment/scripts/evaluate-oracle-functional.py",
+      "sha256": "f45a2327ac54ce427648b34b71fb9adcae317f1284198cf5641448b2a6275cd3"
+    },
+    {
+      "path": "experiment/scripts/evaluate-oracle-health.py",
+      "sha256": "a68b1a7db595a4a542577088b3f0ab3bede8703b3c395cd5ae50be66209682f5"
+    },
+    {
+      "path": "experiment/scripts/evaluate-oracle-preartifact.py",
+      "sha256": "49d2c45067e7799ae49de23efcaaa41f261a23a4a623a7bfe8a6152dd84ac1e4"
+    },
+    {
+      "path": "experiment/scripts/prepare-oracle-runtime.py",
+      "sha256": "fe9e18597488fefa85bb296e2a3717ba2dab8d624a7ec0c814354d8e82cc07af"
+    },
+    {
+      "path": "experiment/scripts/run-oracle-functional-suite.py",
+      "sha256": "acffaacdb91691eda88294b0de64aed4ed312d8aed0cf6a0f5604a6601d743f2"
+    },
+    {
+      "path": "experiment/scripts/run-oracle-performance-profile.py",
+      "sha256": "55027ccfb53590f76212514b2d3b638ad147b247b2b6bf95dd2e7b458a857467"
+    },
+    {
+      "path": "experiment/scripts/run-oracle-repetition.sh",
+      "sha256": "af5feabf20cca912e5fe4668eb9f2390b076ab22a98ea9cd2c994a90b233d476"
+    },
+    {
+      "path": "experiment/scripts/unlock-oracle-candidate.py",
+      "sha256": "bddb3b9131a7a1ec9f42781551ff813315459696855b1dd2f671788277cca33d"
+    }
+  ],
+  "images": {
+    "oracle_harness": null,
+    "currency_reference": null
+  },
+  "freeze_rule": "Every file hash and both immutable image digests must be verified before the suite status can become frozen."
+}

@@ -1,0 +1,136 @@
+# Oráculo independente do experimento
+
+O oráculo não é parte do PDT e não participa da decisão pré-deployment. Sua
+função é produzir o resultado observado usado para avaliar, depois do fato,
+tanto a esteira convencional quanto a mesma esteira acrescida do PDT.
+
+## Ordem obrigatória
+
+```text
+CI/CD convencional + staging -> decisão de controle selada
+                             -> PDT -> decisão de tratamento selada
+                                    -> gate sem mutação operacional
+                                           -> liberação do item privado
+                                                  -> execução no oracle
+                                                         -> adjudicação
+```
+
+Se o controle bloquear a candidata, o tratamento herda o bloqueio e o PDT não
+é executado. A liberação ainda ocorre somente depois de a decisão convencional
+estar selada. Se o controle aprovar, a liberação exige a decisão PDT, o gate
+terminal e identidade exata de artefato e configuração entre as condições.
+
+Um bloqueio anterior ao build não elimina a candidata do corpus. Como não há
+imagem que possa ser implantada, ele segue um caminho de oráculo pré-artefato:
+o commit candidato, a árvore Git, o patch privado e as decisões já seladas são
+conferidos por hash; em seguida, uma verificação independente reproduz a
+propriedade violada. O tratamento herda o bloqueio convencional, portanto esse
+caso mede se a esteira básica detecta o que deveria detectar — não um ganho do
+PDT.
+
+O script `unlock-oracle-candidate.py` implementa essa barreira. O recibo
+público não contém operador, parâmetros ou rótulo. O item privado tem permissão
+`0600` e só pode ser usado pelo executor do oráculo depois do fechamento das
+decisões.
+
+## Ambiente
+
+O overlay [`../../infra/kustomize/oracle/`](../../infra/kustomize/oracle/)
+renderiza a Online Boutique em um namespace próprio, sem `LoadBalancer` e sem
+carga contínua. A configuração Terraform atribui quota máxima de 3 vCPU de
+requests, 6 GiB de memória de requests e 20 pods; são limites, não reservas.
+Essa configuração ainda não foi aplicada ao cluster.
+
+Cada repetição deve:
+
+1. limpar o namespace;
+2. implantar exatamente os mesmos digests e a mesma definição candidata
+   selados pelo controle;
+3. executar a matriz funcional independente e os três perfis definidos em
+   `policy-v1.json`;
+4. coletar disponibilidade, reinícios e duplicidade de efeitos;
+5. persistir uma observação por alternativa e repetição;
+6. limpar todos os workloads antes da execução seguinte.
+
+O runner [`../scripts/run-oracle-repetition.sh`](../scripts/run-oracle-repetition.sh)
+implementa esse ciclo para uma alternativa implantável. Isso inclui candidatas
+aprovadas pelo controle e candidatas bloqueadas somente depois de staging,
+desde que estas ainda possuam os artefatos imutáveis selados. Ele verifica a identidade da candidata, a
+permissão `0600` do item privado, o hash da definição, os digests imutáveis, o
+snapshot do cluster e o namespace vazio antes de aplicar o runtime mínimo.
+Falhas funcionais da candidata não encerram o runner: o harness permanece
+disponível e as transforma em observações. Falhas do harness ou da referência
+independente invalidam a execução.
+
+Exemplo de invocação, somente depois do congelamento e da revisão financeira:
+
+```bash
+MODE=confirmatory \
+CANDIDATE_ID=cand-exemplo \
+CANDIDATE_DEFINITION=/caminho/candidate-definition.json \
+CONVENTIONAL_DECISION=/caminho/conventional-decision.json \
+PRIVATE_WORK_ITEM=/caminho/private-work-item.json \
+SNAPSHOT_FILE=/caminho/pdt-input-state.json \
+ALTERNATIVE_ID=deploy-as-is REPETITION=1 \
+ORACLE_HARNESS_IMAGE='REGISTRY/oracle-harness@sha256:DIGEST' \
+CURRENCY_REFERENCE_IMAGE='REGISTRY/currency-reference@sha256:DIGEST' \
+ALLOW_EXPERIMENTAL_CLOUD_EXECUTION=true \
+COST_REVIEW_ACKNOWLEDGED=true \
+ALLOW_ORACLE_CLOUD_EXECUTION=true \
+  ./experiment/scripts/run-oracle-repetition.sh
+```
+
+As três travas são obrigatórias. A existência do comando acima não constitui
+autorização de execução. Em modo de engenharia, duração e usuários podem ser
+reduzidos com `ENGINEERING_DURATION_SECONDS` e `ENGINEERING_USERS`; esses
+overrides são rejeitados em modo confirmatório.
+
+## Independência e não vazamento
+
+- staging e PDT recebem as mesmas invariantes públicas;
+- nenhum deles recebe o operador, seus parâmetros ou o rótulo pretendido;
+- o oráculo pode usar os parâmetros revelados para ativar entradas e falhas,
+  mas sua classificação é calculada exclusivamente pelas asserções e métricas;
+- `intended_label` aparece somente depois da adjudicação, para verificar se a
+  mutação produziu o efeito previsto pelo desenho;
+- uma discordância entre intenção e observação não é reclassificada
+  manualmente: é registrada como resultado do operador.
+
+## Política e estado atual
+
+[`policy-v1.json`](./policy-v1.json) define nove invariantes funcionais, três
+perfis de desempenho, limites de saúde e a regra de duas repetições prejudiciais
+entre pelo menos duas válidas. `adjudicate-oracle.py` já implementa e testa essa
+regra sem usar o rótulo pretendido como entrada da classificação.
+
+[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 18
+arquivos que definem a política, o harness, os avaliadores e o runner. O
+validador `validate-oracle-suite.py` falha se qualquer arquivo mudar. O
+manifesto permanece `pre-registration-candidate` e seus dois digests de imagem
+permanecem nulos até o build, publicação e validação deliberados; ele não pode
+ser marcado como `frozen` nesse estado.
+
+O harness independente em [`harness/`](./harness/) já fornece doubles gRPC,
+proxies opcionais para dependências candidatas, matriz funcional, perfis de
+carga e coleta de efeitos. Os scripts `run-oracle-functional-suite.py`,
+`evaluate-oracle-functional.py`, `run-oracle-performance-profile.py` e
+`compose-oracle-observation.py` produzem a observação no schema consumido pelo
+adjudicador. `prepare-oracle-runtime.py` gera um runtime Kubernetes mínimo,
+privado e vinculado aos mesmos artefatos selados pelo controle, e
+`run-oracle-repetition.sh` encadeia deployment, medições, composição e cleanup.
+
+Para candidatas bloqueadas antes de existir artefato,
+[`../scripts/evaluate-oracle-preartifact.py`](../scripts/evaluate-oracle-preartifact.py)
+confere a ligação exata entre definição, item privado, ordem de trabalho, patch,
+commit/árvore e evidência da CI. Depois executa uma verificação independente:
+`go test` em imagem fixada para falhas de compilação/teste, busca redigida do
+canário sintético de segredo ou inspeção do manifesto renderizado para
+privilégio proibido. Falha da ferramenta é classificada como execução inválida,
+nunca como dano. O rótulo pretendido só é comparado depois de calculado o
+rótulo observado.
+
+Ainda falta validar o runner no cluster contra todas as imagens materializadas,
+validar o caminho pré-artefato contra as candidatas materializadas, publicar e
+congelar os digests do harness e da referência. Até isso acontecer, a política
+permanece `pre-registration-candidate` e nenhuma observação pode ser incluída
+na análise principal.

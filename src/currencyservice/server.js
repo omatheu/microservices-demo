@@ -142,6 +142,12 @@ function convert (call, callback) {
 
       // Convert: from_currency --> EUR
       const from = request.from;
+      if (!Object.prototype.hasOwnProperty.call(data, from.currency_code)) {
+        throw new Error(`unsupported source currency: ${from.currency_code}`);
+      }
+      if (!Object.prototype.hasOwnProperty.call(data, request.to_code)) {
+        throw new Error(`unsupported destination currency: ${request.to_code}`);
+      }
       const euros = _carry({
         units: from.units / data[from.currency_code],
         nanos: from.nanos / data[from.currency_code]
@@ -195,4 +201,12 @@ function main () {
    );
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  _carry,
+  getSupportedCurrencies,
+  convert
+};

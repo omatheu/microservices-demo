@@ -10,6 +10,19 @@ We also host a test GKE cluster, which is where the deploy tests run. Every PR h
 
 ## Workflows
 
+### TCC experiment workflows
+
+- `tcc-pr-ci.yaml` runs the complete local conventional gate set for every
+  non-draft pull request targeting `main`. It has no Google Cloud identity;
+- `tcc-pr-experiment.yaml` is chained with `workflow_run` and can run staging
+  plus the PDT only for same-repository PRs that passed the first workflow and
+  satisfy the protected-environment, label and financial gates documented in
+  `experiment/pipeline/README.md`.
+
+The second workflow does not deploy to the operational namespace. It is not
+active until both workflow files exist on the default branch and the
+`tcc-experiment` GitHub Environment has been configured.
+
 **Note**: In order for the current CI/CD setup to work on your pull request, you must branch directly off the repo (no forks). This is because the Github secrets necessary for these tests aren't copied over when you fork.
 
 ### Code Tests - [ci-pr.yaml](ci-pr.yaml)

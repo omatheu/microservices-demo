@@ -138,6 +138,13 @@ Find **Protocol Buffers Descriptions** at the [`./protos` directory](/protos).
 ## Documentation
 
 - [Development](/docs/development-guide.md) to learn how to run and develop this app locally.
+- [TCC experiment plan](/docs/tcc-experiment-plan.md), the primary reference for the Partial Digital Twin experiment in this fork.
+- [TCC experiment roadmap](/docs/tcc-experiment-roadmap.md), the live implementation checklist and experiment completion criteria.
+- [Conventional CI/CD reference](/docs/tcc-ci-cd-baseline.md), the control condition used to measure the PDT's incremental value.
+- [Candidate scenario catalog](/docs/tcc-candidate-scenarios.md), the safe controls and controlled functional, security, and infrastructure mutations.
+- [Local experimental CI](/experiment/ci), the no-cloud pre-staging gates and auditable decision contract.
+- [Experimental infrastructure](/infra), the reproducible GKE foundation for the TCC environments.
+- [Reproducible experiment tooling and evidence](/experiment), including baseline, staging, observability, and PDT state capture.
 
 ## Demos featuring Online Boutique
 

@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0.0",
+  "status": "engineering-calibrated",
+  "method": "predeclared-safe-staging-calibration",
+  "decision_values": ["PASS", "FAIL"],
+  "thresholds": {
+    "minimum_success_rate": 0.99,
+    "maximum_latency_p95_ms": 1200,
+    "maximum_latency_p99_ms": 1550,
+    "maximum_checkout_latency_p95_ms": 1150,
+    "maximum_checkout_latency_p99_ms": 1150,
+    "maximum_functional_failures": 0,
+    "maximum_unavailable_deployments": 0,
+    "maximum_restart_increase": 0
+  },
+  "workload": {
+    "warmup_seconds": 60,
+    "sample_count": 120,
+    "sample_interval_seconds": 0.5,
+    "request_profile": "fixed-round-robin-v1"
+  },
+  "checkoutservice_baseline": {
+    "evidence": "experiment/evidence/checkout-baseline/aggregate-summary.json",
+    "tests": 60,
+    "failures": 0,
+    "worst_run_p95_ms": 473.353,
+    "worst_run_p99_ms": 522.877,
+    "margin_rule": "ceil worst observed run percentile plus 25 percent to a conservative round boundary"
+  },
+  "calibration": {
+    "candidate_id": "engineering-artifact-binding-v2",
+    "confirmatory_eligible": false,
+    "rule": {
+      "source": "maximum observed percentile across safe staging repetitions",
+      "safety_margin_fraction": 0.25,
+      "round_up_increment_ms": 50
+    },
+    "observed_maxima_ms": {
+      "latency_p95_ms": 942.685,
+      "latency_p99_ms": 1232.439,
+      "checkout_latency_p95_ms": 903.314,
+      "checkout_latency_p99_ms": 903.314
+    },
+    "evidence": [
+      {
+        "run_id": "staging-engineering-artifact-binding-v2-r1-20260920T063620Z",
+        "repetition": 1,
+        "path": "experiment/evidence/staging/staging-engineering-artifact-binding-v2-r1-20260920T063620Z/decision.json",
+        "sha256": "7725f8b4da8100e8596c3e60f9cbd18bce141047d1b94fd55af81f3945af24ea"
+      },
+      {
+        "run_id": "staging-engineering-artifact-binding-v2-r2-20260920T064457Z",
+        "repetition": 2,
+        "path": "experiment/evidence/staging/staging-engineering-artifact-binding-v2-r2-20260920T064457Z/decision.json",
+        "sha256": "87d800a422792e9f904f2f6e7004240825cb5a8db036489341e65caacd0f2c6c"
+      },
+      {
+        "run_id": "staging-engineering-artifact-binding-v2-r3-20260920T065253Z",
+        "repetition": 3,
+        "path": "experiment/evidence/staging/staging-engineering-artifact-binding-v2-r3-20260920T065253Z/decision.json",
+        "sha256": "5a33d6dd086999f2b032891838a861b3264bbf2a57edb0f0e83293db9acb80f2"
+      }
+    ]
+  }
+}

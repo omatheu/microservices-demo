@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_id": "checkout-pdt-comparison-v1",
+  "materializer": {
+    "path": "experiment/scripts/materialize-candidate.py",
+    "sha256": "160ce4ce84390c5a568a99a1cb1cafa30a290541b19cf0f7e784efa08f7b0af2"
+  },
+  "operators": [
+    {
+      "id": "CTRL-SAFE-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "CTRL-SAFE-OUTSIDE-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "CTRL-CI-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "CTRL-SEC-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "INF-CPU-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "INF-REPLICA-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "INF-TIMEOUT-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "FUNC-AMOUNT-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "FUNC-ERROR-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "FUNC-COND-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "FUNC-DEGRADE-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "DEP-CURRENCY-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    },
+    {
+      "id": "DEP-TAIL-01",
+      "status": "implemented",
+      "evidence": "experiment/ci/tests/test_materialize_candidate.py"
+    }
+  ],
+  "freeze_rule": "Every protocol operator must be implemented and pass parameter-space coverage before status can become frozen."
+}

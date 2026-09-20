@@ -1,0 +1,179 @@
+name: TCC Paired Staging and PDT
+
+on:
+  workflow_run:
+    workflows:
+      - TCC Conventional CI
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  authorize:
+    name: Authorize same-repository experimental PR
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      authorized: ${{ steps.pr.outputs.authorized }}
+      pull_request_number: ${{ steps.pr.outputs.pull_request_number }}
+      base_sha: ${{ steps.pr.outputs.base_sha }}
+      head_sha: ${{ steps.pr.outputs.head_sha }}
+    steps:
+      - name: Check PR origin, revision and explicit cloud labels
+        id: pr
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+        run: |
+          set -euo pipefail
+          echo "authorized=false" >> "${GITHUB_OUTPUT}"
+          [[ "${PR_NUMBER}" =~ ^[1-9][0-9]*$ ]] || exit 0
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > "${RUNNER_TEMP}/pull-request.json"
+          same_repository=$(jq -r --arg repository "${GITHUB_REPOSITORY}" '.head.repo.full_name == $repository' "${RUNNER_TEMP}/pull-request.json")
+          current_revision=$(jq -r --arg sha "${EXPECTED_HEAD_SHA}" '.head.sha == $sha' "${RUNNER_TEMP}/pull-request.json")
+          draft=$(jq -r '.draft' "${RUNNER_TEMP}/pull-request.json")
+          experiment_label=$(jq -r 'any(.labels[]; .name == "tcc-experiment-cloud")' "${RUNNER_TEMP}/pull-request.json")
+          cost_label=$(jq -r 'any(.labels[]; .name == "tcc-cost-reviewed")' "${RUNNER_TEMP}/pull-request.json")
+          if [[ "${same_repository}" != "true" || "${current_revision}" != "true" || "${draft}" == "true" || "${experiment_label}" != "true" || "${cost_label}" != "true" ]]; then
+            exit 0
+          fi
+          echo "pull_request_number=${PR_NUMBER}" >> "${GITHUB_OUTPUT}"
+          echo "base_sha=$(jq -er '.base.sha' "${RUNNER_TEMP}/pull-request.json")" >> "${GITHUB_OUTPUT}"
+          echo "head_sha=$(jq -er '.head.sha' "${RUNNER_TEMP}/pull-request.json")" >> "${GITHUB_OUTPUT}"
+          echo "authorized=true" >> "${GITHUB_OUTPUT}"
+
+  paired-experiment:
+    name: Conventional staging plus PDT
+    needs:
+      - authorize
+    if: needs.authorize.outputs.authorized == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    environment: tcc-experiment
+    concurrency:
+      group: tcc-experiment-cloud
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Require the per-block financial kill switch
+        shell: bash
+        env:
+          COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
+        run: |
+          set -euo pipefail
+          [[ "${COST_REVIEW_ACKNOWLEDGED}" == "true" ]]
+
+      - name: Check out the already validated PR revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.authorize.outputs.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.16.3
+          terraform_wrapper: false
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.37.0
+
+      - name: Install versioned CI prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install --yes jq protobuf-compiler python3-venv shellcheck
+          python3 -m venv "${RUNNER_TEMP}/tcc-ci-venv"
+          "${RUNNER_TEMP}/tcc-ci-venv/bin/python" -m pip install --disable-pip-version-check PyYAML==6.0.1
+          echo "${RUNNER_TEMP}/tcc-ci-venv/bin" >> "${GITHUB_PATH}"
+
+      - name: Resolve and require one public experimental candidate
+        id: candidate
+        shell: bash
+        env:
+          BASE_SHA: ${{ needs.authorize.outputs.base_sha }}
+          HEAD_SHA: ${{ needs.authorize.outputs.head_sha }}
+          PR_NUMBER: ${{ needs.authorize.outputs.pull_request_number }}
+        run: |
+          set -euo pipefail
+          result=$(python3 experiment/scripts/resolve-pr-candidate.py \
+            --repo-root . \
+            --base-ref "${BASE_SHA}" \
+            --head-ref "${HEAD_SHA}" \
+            --pull-request-number "${PR_NUMBER}")
+          jq -e '.experimental_cloud_eligible == true and (.candidate_definition | type == "string")' <<< "${result}" >/dev/null
+          echo "candidate_id=$(jq -er '.candidate_id' <<< "${result}")" >> "${GITHUB_OUTPUT}"
+          echo "candidate_definition=$(jq -er '.candidate_definition' <<< "${result}")" >> "${GITHUB_OUTPUT}"
+          protocol_status=$(jq -er '.status' experiment/protocol/protocol-v1.json)
+          mode=engineering
+          if [[ "${protocol_status}" == "frozen" ]]; then
+            mode=confirmatory
+          fi
+          echo "mode=${mode}" >> "${GITHUB_OUTPUT}"
+
+      - name: Authenticate with Google Cloud through Workload Identity Federation
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_EXPERIMENT_SERVICE_ACCOUNT }}
+
+      - name: Install Google Cloud SDK and GKE auth plugin
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: gke-gcloud-auth-plugin
+
+      - name: Bind Docker and kubectl to the experiment project
+        shell: bash
+        run: |
+          set -euo pipefail
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+          gcloud container clusters get-credentials online-boutique-experiment \
+            --region us-central1 \
+            --project microservices-demo-tcc
+
+      - name: Run the paired conventional and PDT pipeline
+        id: paired
+        shell: bash
+        env:
+          MODE: ${{ steps.candidate.outputs.mode }}
+          CANDIDATE_ID: ${{ steps.candidate.outputs.candidate_id }}
+          CANDIDATE_DEFINITION: ${{ steps.candidate.outputs.candidate_definition }}
+          CANDIDATE_BASE_REF: ${{ needs.authorize.outputs.base_sha }}
+          CANDIDATE_HEAD_REF: ${{ needs.authorize.outputs.head_sha }}
+          ARTIFACT_REGISTRY_PREFIX: us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment
+          REPETITION: "1"
+          ALLOW_EXPERIMENTAL_CLOUD_EXECUTION: "true"
+          COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
+        run: |
+          set -euo pipefail
+          ./experiment/scripts/run-comparative-candidate.sh 2>&1 | tee "${RUNNER_TEMP}/paired-experiment.log"
+          pipeline_dir=$(tail -n 1 "${RUNNER_TEMP}/paired-experiment.log")
+          [[ -d "${pipeline_dir}" && -f "${pipeline_dir}/summary.json" ]]
+          echo "pipeline_dir=${pipeline_dir}" >> "${GITHUB_OUTPUT}"
+
+      - name: Upload paired experimental evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: paired-experiment-pr-${{ needs.authorize.outputs.pull_request_number }}-${{ needs.authorize.outputs.head_sha }}
+          path: |
+            experiment/evidence/ci-cd/ci-${{ steps.candidate.outputs.candidate_id }}-*/
+            experiment/evidence/staging/staging-${{ steps.candidate.outputs.candidate_id }}-*/
+            experiment/evidence/pdt-state/operational-state-*/
+            experiment/evidence/pdt-cycles/pdt-${{ steps.candidate.outputs.candidate_id }}-*/
+            experiment/evidence/pipeline/paired-${{ steps.candidate.outputs.candidate_id }}-*/
+          if-no-files-found: warn
+          retention-days: 14
