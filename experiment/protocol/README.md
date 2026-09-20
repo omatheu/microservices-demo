@@ -203,6 +203,12 @@ ainda não significa congelamento: o manifesto do oráculo só poderá ser
 congelado depois de registrar e validar os digests imutáveis de suas imagens,
 e o runtime PDT exige o digest imutável de sua própria imagem.
 
+Antes da publicação, o job `Validate experiment runtime images` do workflow de
+pull request constrói localmente `checkout-pdt-controller`, `oracle-harness` e
+`currency-reference`, gera SBOMs, bloqueia vulnerabilidades HIGH/CRITICAL
+corrigíveis e registra o tamanho. Esse job não possui identidade GCP e define
+explicitamente `published_to_registry: false`.
+
 O teto proposto para a coleta é R$200 de custo incremental, com parada para
 revisão em R$150 e ao final de cada bloco de três candidatas. Isso ainda não é
 uma autorização de gasto: orçamento do GCP gera alertas, não um bloqueio rígido,

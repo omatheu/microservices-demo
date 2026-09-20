@@ -25,6 +25,19 @@ class TccGithubWorkflowTests(unittest.TestCase):
         self.assertIn("run-conventional-ci-local.sh", rendered)
         self.assertIn("compose-conventional-decision.py", rendered)
 
+    def test_pull_request_builds_runtime_images_without_publishing(self):
+        workflow = load(CI_WORKFLOW)
+        rendered = CI_WORKFLOW.read_text(encoding="utf-8")
+        job = workflow["jobs"]["runtime-images"]
+
+        self.assertEqual(job["permissions"], {"contents": "read"})
+        self.assertNotIn("id-token", job["permissions"])
+        self.assertIn("experiment/pdt/controller/Dockerfile", rendered)
+        self.assertIn("experiment/oracle/harness/Dockerfile", rendered)
+        self.assertIn("src/currencyservice/Dockerfile", rendered)
+        self.assertIn("published_to_registry:false", rendered)
+        self.assertNotIn("docker push", rendered)
+
     def test_cloud_workflow_is_chained_and_protected(self):
         workflow = load(CLOUD_WORKFLOW)
         rendered = CLOUD_WORKFLOW.read_text(encoding="utf-8")
