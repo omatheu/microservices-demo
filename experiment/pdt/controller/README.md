@@ -27,9 +27,12 @@ python3 experiment/pdt/controller/checkout_pdt_controller.py plan \
   --output controller-plan.json
 ```
 
-O `Dockerfile` fornece o mesmo runtime para execução futura como Job sob
-demanda no namespace `pdt-system`. A publicação da imagem e a aplicação do Job
-continuam bloqueadas até revisão de custo e autorização explícita.
+O `Dockerfile` fornece o mesmo runtime para execução como Job sob demanda no
+namespace `pdt-system`. O runner pareado exige uma imagem publicada por digest,
+aplica o Job antes das alternativas, captura o plano emitido pelo runtime,
+compara-o com o preflight normalizado e remove todos os recursos do controlador.
+A publicação da imagem e a primeira aplicação do Job continuam bloqueadas até
+revisão de custo e autorização explícita.
 
 [`../../scripts/prepare-pdt-controller-job.py`](../../scripts/prepare-pdt-controller-job.py)
 gera esse Job a partir de uma imagem imutável e dos mesmos inputs selados. O

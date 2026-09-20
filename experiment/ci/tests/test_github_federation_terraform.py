@@ -31,7 +31,7 @@ class GithubFederationTerraformTests(unittest.TestCase):
             self.assertIn(f"assertion.{claim}", federation)
         self.assertIn("assertion.event_name == 'workflow_run'", federation)
 
-    def test_cloud_identity_can_mutate_only_staging_and_pdt(self):
+    def test_cloud_identity_has_general_mutation_only_in_staging_and_pdt(self):
         federation = FEDERATION.read_text(encoding="utf-8")
 
         mutable = federation.split(
@@ -42,6 +42,21 @@ class GithubFederationTerraformTests(unittest.TestCase):
         self.assertNotIn('"operational"', mutable)
         self.assertNotIn('"oracle"', mutable)
         self.assertIn("github_experiment_operational_reader", federation)
+
+    def test_pdt_system_permission_is_limited_to_on_demand_controller_jobs(self):
+        federation = FEDERATION.read_text(encoding="utf-8")
+        controller = federation.split(
+            'resource "kubernetes_role_v1" "github_experiment_pdt_controller"', 1
+        )[1].split('resource "kubernetes_role_binding_v1"', 1)[0]
+
+        self.assertIn('["batch"]', controller)
+        self.assertIn('["jobs"]', controller)
+        self.assertIn('["configmaps", "serviceaccounts"]', controller)
+        self.assertIn('["networkpolicies"]', controller)
+        self.assertIn('["pods/log"]', controller)
+        self.assertNotIn('["deployments"]', controller)
+        self.assertNotIn('["services"]', controller)
+        self.assertNotIn('["secrets"]', controller)
 
     def test_project_roles_remain_the_declared_minimum(self):
         federation = FEDERATION.read_text(encoding="utf-8")

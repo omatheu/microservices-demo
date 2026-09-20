@@ -256,6 +256,13 @@ Os pilotos não serão usados como evidência da comparação principal, pois as
 candidatas e hipóteses eram conhecidas durante a construção. Fidelidade ainda
 depende do oráculo controlado na Fase 7.
 
+O runner agora também prepara e executa o `checkout-pdt-controller` como Job
+efêmero no namespace `pdt-system`, compara o plano emitido pelo container com o
+preflight e exige uma imagem imutável. A identidade GitHub possui um papel
+dedicado que permite apenas os recursos necessários a esse Job. O item
+“executar o controlador sob demanda” permanece pendente até a publicação por
+digest e um piloto cloud explicitamente autorizado comprovarem esse caminho.
+
 ### Fase 5 — Gate PDT incremental e semiautônomo
 
 Objetivo: acrescentar a previsão à esteira convencional e orientar uma ação

@@ -93,6 +93,8 @@ resources by default. When enabled after plan review, it creates:
 - repository-scoped Artifact Registry writer access;
 - project read access for the GKE cluster and Cloud Monitoring;
 - Kubernetes mutation rights only in `staging` and `pdt`;
+- direitos específicos em `pdt-system` apenas para executar e remover o Job,
+  ConfigMap, ServiceAccount e NetworkPolicy do controlador sob demanda;
 - read-only Kubernetes access to `operational` and namespace-name discovery.
 
 It grants no mutation permission to `operational` or `oracle`. After applying a

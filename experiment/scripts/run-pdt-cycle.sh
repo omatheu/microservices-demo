@@ -9,6 +9,8 @@ mode=${MODE:-engineering}
 snapshot_file=${SNAPSHOT_FILE:-$(find "${repo_root}/experiment/evidence/pdt-state" -mindepth 2 -maxdepth 2 -name pdt-input-state.json -print | sort | tail -1)}
 thresholds_file=${THRESHOLDS_FILE:-${repo_root}/experiment/staging/safety-thresholds.json}
 model_policy_file=${MODEL_POLICY_FILE:-${repo_root}/experiment/pdt/model-policy.json}
+pdt_runtime_manifest=${PDT_RUNTIME_MANIFEST:-${repo_root}/experiment/pdt/runtime-manifest.json}
+controller_image=${PDT_CONTROLLER_IMAGE:-$(jq -r '.controller_image // empty' "$pdt_runtime_manifest")}
 pdt_overlay=${PDT_OVERLAY:-${repo_root}/infra/kustomize/pdt}
 namespace=${NAMESPACE:-pdt}
 repetition=${REPETITION:-1}
@@ -22,11 +24,13 @@ cycle_timestamp=$(date -u +%Y%m%dT%H%M%SZ)
 cycle_id="pdt-${candidate_id}-r${repetition}-${cycle_timestamp}"
 cycle_dir="${repo_root}/experiment/evidence/pdt-cycles/${cycle_id}"
 port_forward_pid=""
+controller_manifest=""
+controller_job=""
 
 require_command() {
   command -v "$1" >/dev/null 2>&1 || { echo "Required command not found: $1" >&2; exit 1; }
 }
-for command_name in awk base64 curl gcloud git jq kubectl python3 sha256sum sort; do require_command "$command_name"; done
+for command_name in awk base64 cmp curl gcloud git jq kubectl python3 sha256sum sort; do require_command "$command_name"; done
 [[ -n "$snapshot_file" && -f "$snapshot_file" ]] || { echo "No PDT input snapshot found." >&2; exit 1; }
 [[ "$mode" == "engineering" || "$mode" == "confirmatory" ]] || { echo "MODE must be engineering or confirmatory." >&2; exit 1; }
 [[ -n "$conventional_decision_file" && -f "$conventional_decision_file" ]] || { echo "CONVENTIONAL_DECISION must point to the sealed control decision." >&2; exit 1; }
@@ -56,6 +60,10 @@ if [[ -z "$control_candidate_definition_sha256" ]]; then
 fi
 [[ "$warmup_seconds" =~ ^[0-9]+$ && "$sample_count" =~ ^[1-9][0-9]*$ ]] || { echo "Invalid sampling parameters." >&2; exit 1; }
 [[ "$repetition" =~ ^[1-9][0-9]*$ ]] || { echo "REPETITION must be a positive integer." >&2; exit 1; }
+if [[ ! "$controller_image" =~ ^us-central1-docker\.pkg\.dev/microservices-demo-tcc/online-boutique-experiment/checkout-pdt-controller@sha256:[a-f0-9]{64}$ ]]; then
+  echo "PDT_CONTROLLER_IMAGE must be the immutable experiment controller image." >&2
+  exit 1
+fi
 
 mkdir -p "${cycle_dir}/alternatives"
 cp "$candidate_file" "${cycle_dir}/candidate.json"
@@ -79,6 +87,18 @@ jq -e '
   and .decision_contract.human_confirmation_required == true
 ' "${cycle_dir}/controller-plan.json" >/dev/null
 
+controller_manifest="${cycle_dir}/controller-runtime-manifest.json"
+python3 "${repo_root}/experiment/scripts/prepare-pdt-controller-job.py" \
+  --controller-image "$controller_image" \
+  --candidate "${cycle_dir}/candidate.json" \
+  --conventional-decision "${cycle_dir}/conventional-decision.json" \
+  --snapshot "${cycle_dir}/pdt-input-state.json" \
+  --thresholds "${cycle_dir}/safety-thresholds.json" \
+  --model-policy "${cycle_dir}/model-policy.json" \
+  --repetition "$repetition" \
+  --output "$controller_manifest"
+controller_job=$(jq -er '.items[] | select(.kind == "Job") | .metadata.name' "$controller_manifest")
+
 write_status() {
   jq -n --arg cycle_id "$cycle_id" --arg state "$1" --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
     '{cycle_id: $cycle_id, state: $state, updated_at: $timestamp}' > "${cycle_dir}/status.json"
@@ -98,14 +118,60 @@ cleanup_pdt() {
   kubectl delete -k "$pdt_overlay" --ignore-not-found --wait=true --timeout=10m >/dev/null 2>&1 || true
 }
 
+cleanup_controller() {
+  if [[ -n "$controller_manifest" && -f "$controller_manifest" ]]; then
+    kubectl delete -f "$controller_manifest" --ignore-not-found --wait=true --timeout=5m >/dev/null 2>&1 || true
+  fi
+}
+
 on_error() {
   write_status failed
+  if [[ -n "$controller_job" ]]; then
+    kubectl logs --namespace pdt-system "job/${controller_job}" --container controller \
+      > "${cycle_dir}/controller-runtime-error.log" 2>&1 || true
+    kubectl describe job --namespace pdt-system "$controller_job" \
+      > "${cycle_dir}/controller-runtime-describe.txt" 2>&1 || true
+  fi
+  cleanup_controller
   cleanup_pdt
 }
 
 write_status running
 trap on_error ERR
 cleanup_pdt
+cleanup_controller
+
+kubectl apply -f "$controller_manifest" > "${cycle_dir}/controller-runtime-apply.log"
+kubectl wait --namespace pdt-system --for=condition=complete \
+  --timeout=5m "job/${controller_job}" > "${cycle_dir}/controller-runtime-wait.log"
+kubectl logs --namespace pdt-system "job/${controller_job}" --container controller \
+  > "${cycle_dir}/controller-runtime-plan.json"
+jq -e '
+  .controller_id == "checkout-pdt-controller-v1"
+  and .source_binding.target_namespace == "pdt"
+  and .execution.operational_mutation_allowed == false
+  and .decision_contract.human_confirmation_required == true
+  and (.generated_at | test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"))
+' "${cycle_dir}/controller-runtime-plan.json" >/dev/null
+jq -S 'del(.generated_at)' "${cycle_dir}/controller-plan.json" > "${cycle_dir}/controller-plan.normalized.json"
+jq -S 'del(.generated_at)' "${cycle_dir}/controller-runtime-plan.json" > "${cycle_dir}/controller-runtime-plan.normalized.json"
+cmp "${cycle_dir}/controller-plan.normalized.json" "${cycle_dir}/controller-runtime-plan.normalized.json"
+expected_plan_sha256=$(sha256sum "${cycle_dir}/controller-plan.normalized.json" | cut -d ' ' -f1)
+runtime_plan_sha256=$(sha256sum "${cycle_dir}/controller-runtime-plan.normalized.json" | cut -d ' ' -f1)
+jq -n --arg image "$controller_image" --arg job "$controller_job" \
+  --arg expected_sha256 "$expected_plan_sha256" --arg runtime_sha256 "$runtime_plan_sha256" \
+  '{
+    schema_version: "1.0.0",
+    controller_id: "checkout-pdt-controller-v1",
+    namespace: "pdt-system",
+    job: $job,
+    immutable_image: $image,
+    expected_normalized_plan_sha256: $expected_sha256,
+    runtime_normalized_plan_sha256: $runtime_sha256,
+    plans_equivalent: ($expected_sha256 == $runtime_sha256),
+    operational_mutation_allowed: false
+  }' > "${cycle_dir}/controller-runtime-evidence.json"
+cleanup_controller
 
 while IFS= read -r alternative; do
   alternative_id=$(jq -r '.id' <<< "$alternative")
@@ -373,5 +439,6 @@ mv "${cycle_dir}/decision.tmp.json" "${cycle_dir}/decision.json"
 
 trap - ERR
 write_status completed
+cleanup_controller
 cleanup_pdt
 printf '%s\n' "$cycle_dir"

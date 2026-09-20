@@ -202,6 +202,66 @@ resource "kubernetes_role_binding_v1" "github_experiment_mutator" {
   }
 }
 
+resource "kubernetes_role_v1" "github_experiment_pdt_controller" {
+  count = var.enable_github_actions_federation ? 1 : 0
+
+  metadata {
+    name      = "github-tcc-pdt-controller"
+    namespace = kubernetes_namespace_v1.experiment["pdt-system"].metadata[0].name
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["configmaps", "serviceaccounts"]
+    verbs      = ["create", "delete", "get", "list", "patch", "update", "watch"]
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["events", "pods"]
+    verbs      = ["get", "list", "watch"]
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["pods/log"]
+    verbs      = ["get"]
+  }
+
+  rule {
+    api_groups = ["batch"]
+    resources  = ["jobs"]
+    verbs      = ["create", "delete", "get", "list", "patch", "update", "watch"]
+  }
+
+  rule {
+    api_groups = ["networking.k8s.io"]
+    resources  = ["networkpolicies"]
+    verbs      = ["create", "delete", "get", "list", "patch", "update", "watch"]
+  }
+}
+
+resource "kubernetes_role_binding_v1" "github_experiment_pdt_controller" {
+  count = var.enable_github_actions_federation ? 1 : 0
+
+  metadata {
+    name      = "github-tcc-pdt-controller"
+    namespace = kubernetes_namespace_v1.experiment["pdt-system"].metadata[0].name
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = kubernetes_role_v1.github_experiment_pdt_controller[0].metadata[0].name
+  }
+
+  subject {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "User"
+    name      = google_service_account.github_experiment[0].email
+  }
+}
+
 resource "kubernetes_role_v1" "github_experiment_operational_reader" {
   count = var.enable_github_actions_federation ? 1 : 0
 

@@ -18,7 +18,7 @@
     },
     {
       "path": "experiment/scripts/run-pdt-cycle.sh",
-      "sha256": "33430166ef3b7807ef2b5ea42ebc41e8f77a0a5e5ab5038511f48697c878b06d"
+      "sha256": "237c1c21407b1c9518a61351ad755d283155f8c170e166d46bba978ed08ef6a6"
     },
     {
       "path": "experiment/scripts/decide-pdt.py",
@@ -35,6 +35,10 @@
     {
       "path": "experiment/scripts/summarize-checkout-observability.py",
       "sha256": "5ec20f95e9bd75f60d8e74455caafa4c6d32cd6c108fb03e8c643bfbce3e1e2e"
+    },
+    {
+      "path": "infra/terraform/github-actions.tf",
+      "sha256": "c4e12e5717d22936f4299809fa564407fb9ac7028de68c2240b3848183dc4e1f"
     },
     {
       "path": "experiment/pdt/model-policy.json",
