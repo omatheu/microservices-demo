@@ -36,6 +36,11 @@ class TccGithubWorkflowTests(unittest.TestCase):
         self.assertIn("experiment/oracle/harness/Dockerfile", rendered)
         self.assertIn("src/currencyservice/Dockerfile", rendered)
         self.assertIn("published_to_registry:false", rendered)
+        self.assertIn('schema_version:"1.1.0"', rendered)
+        self.assertIn('source_commit', rendered)
+        self.assertIn('source_tree', rendered)
+        self.assertIn('PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}', rendered)
+        self.assertIn('pr-${PR_HEAD_SHA}', rendered)
         self.assertNotIn("docker push", rendered)
 
     def test_cloud_workflow_is_chained_and_protected(self):

@@ -38,6 +38,7 @@ jobs:
       - name: Build, inventory and scan experiment runtime images
         shell: bash
         env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           SYFT_IMAGE: ghcr.io/anchore/syft@sha256:500e2d872ac019436926e8322b4fc1f39441d94d21f6f4046c6ff29b30e8cb02
           TRIVY_IMAGE: aquasec/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969
         run: |
@@ -53,7 +54,7 @@ jobs:
           )
           for definition in "${images[@]}"; do
             IFS='|' read -r name dockerfile context <<< "${definition}"
-            tag="online-boutique/${name}:pr-${GITHUB_SHA}"
+            tag="online-boutique/${name}:pr-${PR_HEAD_SHA}"
             docker build --pull --platform linux/amd64 \
               --file "${dockerfile}" --tag "${tag}" "${context}"
             docker run --rm --volume /var/run/docker.sock:/var/run/docker.sock \
@@ -72,8 +73,26 @@ jobs:
               '{name:$name,local_tag:$tag,image_id:$image_id,size_bytes:$size_bytes,sbom:"pass",scan:"pass"}' \
               >> "${evidence_dir}/images.ndjson"
           done
-          jq -s '{schema_version:"1.0.0",published_to_registry:false,images:.}' \
-            "${evidence_dir}/images.ndjson" > "${evidence_dir}/summary.json"
+          source_tree=$(git rev-parse "${PR_HEAD_SHA}^{tree}")
+          jq -s \
+            --arg source_commit "${PR_HEAD_SHA}" \
+            --arg source_tree "${source_tree}" \
+            --arg repository "${GITHUB_REPOSITORY}" \
+            --arg workflow_run_id "${GITHUB_RUN_ID}" \
+            --argjson pull_request_number "${{ github.event.pull_request.number }}" \
+            '{
+              schema_version:"1.1.0",
+              source:{
+                repository:$repository,
+                commit:$source_commit,
+                tree:$source_tree,
+                pull_request_number:$pull_request_number,
+                workflow_run_id:$workflow_run_id
+              },
+              build_platform:"linux/amd64",
+              published_to_registry:false,
+              images:.
+            }' "${evidence_dir}/images.ndjson" > "${evidence_dir}/summary.json"
           jq . "${evidence_dir}/summary.json"
 
       - name: Upload runtime image evidence
