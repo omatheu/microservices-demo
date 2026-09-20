@@ -14,6 +14,7 @@ REQUIRED_INPUTS = {
     "comparative_pipeline_runner",
     "deployment_action_preparer",
     "human_gate_recorder",
+    "confirmatory_analyzer",
     "pull_request_workflow",
     "cloud_experiment_workflow",
     "billing_export_infrastructure",

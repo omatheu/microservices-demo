@@ -9,6 +9,11 @@ estiver com status `frozen`, novas execuções são apenas de engenharia e não
 podem ser incluídas na análise confirmatória CI/CD convencional × CI/CD
 acrescida do PDT.
 
+O plano estatístico executável está documentado em
+[`analysis/README.md`](./analysis/README.md). Seu modo normal aceita somente um
+dataset completo vinculado ao hash de um protocolo congelado; pilotos usam uma
+trava explícita e permanecem inelegíveis.
+
 ## Operational baseline
 
 Run a baseline repetition with:
