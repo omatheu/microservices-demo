@@ -1,5 +1,7 @@
 {
   "schema_version": "1.0.0",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
   "model_id": "empirical-counterfactual-v1",
   "prediction_target": "controlled-operational-validation",
   "policy": {

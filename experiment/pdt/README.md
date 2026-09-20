@@ -30,11 +30,12 @@ simular o que poderia acontecer e prescrever uma ação.
 
 O namespace `pdt-system` já existe no cluster, com quota própria e nenhum pod
 permanente. A captura de estado, a execução contrafactual, o modelo e a decisão
-prescritiva já existem como scripts executáveis do experimento. Eles ainda não
-estão empacotados como um runtime Kubernetes autônomo: esse artefato será o
-`checkout-pdt-controller`, executado sob demanda para não manter capacidade
-ociosa. Até esse empacotamento, a implementação deve ser descrita como o motor
-batch do PDT, e não como um serviço já implantado.
+prescritiva são coordenados pela aplicação
+[`controller/checkout_pdt_controller.py`](./controller/checkout_pdt_controller.py).
+O runtime possui Dockerfile reprodutível e gerador de Job isolado sob demanda;
+a imagem ainda não foi publicada e o Job ainda não foi aplicado no cluster.
+Até essa validação, ele deve ser descrito como controlador batch empacotado,
+não como serviço permanentemente implantado.
 
 O vínculo da instância física/digital é declarado em
 [`source-binding.json`](./source-binding.json). O namespace `operational` é a

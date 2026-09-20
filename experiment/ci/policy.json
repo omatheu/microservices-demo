@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "status": "engineering-draft",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
   "scope": "checkout-path-local-pre-staging-ci",
     "required_gates": [
     "candidate-identity",

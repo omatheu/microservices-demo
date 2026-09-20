@@ -5,11 +5,11 @@
   "files": [
     {
       "path": "experiment/oracle/policy-v1.json",
-      "sha256": "65926c78513d5d569d0b08fafed3a7d2cc1da9159308c7dd928a7ae177207151"
+      "sha256": "3ff9e3e6ced495b6f00e72a7c52351f47e2ef56cc9af90f26346eeafa22b5326"
     },
     {
       "path": "experiment/oracle/harness/Dockerfile",
-      "sha256": "ac68a4709ac7d001a071643d0f5132fcba5705cbe41204c12a048c3c3f8e8c9c"
+      "sha256": "cfb4117531f94c375bc232c0494c2802eecac3995dd7d4dbcf11e4ccf1d9fb42"
     },
     {
       "path": "src/checkoutservice/cmd/oracleharness/main.go",

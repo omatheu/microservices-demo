@@ -286,15 +286,19 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "9c04975fbcd948fbb47f6a373f86647cd9fff432a1b284be970aff393b03f612"
+      "sha256": "76b60adcd54ea649609a25ba64c8ce159e82dbafef4562912d4e9932944d4656"
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "97fd476341ea90ff7e9fe9622ef15852599225f508914396896b9d36ffb843e6"
+      "sha256": "feed9981bbb28ee70789b9a647f1da0c9cbf2b77804af84e35e960b6885e1272"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "e2ab249a65d80e670fec82a27adab2dd942307b2ed127c88c1e2b107b5c8d578"
+      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+    },
+    "pdt_runtime_manifest": {
+      "path": "experiment/pdt/runtime-manifest.json",
+      "sha256": "59c25161b20b2f8179ff835b8c0eb6b6a7c255e6f748d38718478f11af6b4fec"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
@@ -302,12 +306,13 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "a9ff9915f8818647cdb035c78a19fff27a7e554776ab7d8b91103a266c8b3341"
+      "sha256": "155587959b7d68e57dbf7278fcbbfce9eb0c40595a58ec7dc24f90fa81df4ecf"
     }
   },
   "required_before_freeze": [
     "implement and hash every mutation operator",
     "implement and hash the independent oracle suite",
+    "package, publish and hash the checkout-pdt-controller runtime",
     "freeze functional invariants and final SLOs",
     "validate the proposed BRL ceiling against current billing data",
     "record researcher approval of the preregistration candidate",

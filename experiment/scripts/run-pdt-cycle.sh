@@ -64,6 +64,21 @@ cp "$snapshot_file" "${cycle_dir}/pdt-input-state.json"
 cp "$thresholds_file" "${cycle_dir}/safety-thresholds.json"
 cp "$model_policy_file" "${cycle_dir}/model-policy.json"
 
+python3 "${repo_root}/experiment/pdt/controller/checkout_pdt_controller.py" plan \
+  --candidate "${cycle_dir}/candidate.json" \
+  --conventional-decision "${cycle_dir}/conventional-decision.json" \
+  --snapshot "${cycle_dir}/pdt-input-state.json" \
+  --thresholds "${cycle_dir}/safety-thresholds.json" \
+  --model-policy "${cycle_dir}/model-policy.json" \
+  --repetition "$repetition" \
+  --output "${cycle_dir}/controller-plan.json"
+jq -e '
+  .controller_id == "checkout-pdt-controller-v1"
+  and .source_binding.target_namespace == "pdt"
+  and .execution.operational_mutation_allowed == false
+  and .decision_contract.human_confirmation_required == true
+' "${cycle_dir}/controller-plan.json" >/dev/null
+
 write_status() {
   jq -n --arg cycle_id "$cycle_id" --arg state "$1" --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
     '{cycle_id: $cycle_id, state: $state, updated_at: $timestamp}' > "${cycle_dir}/status.json"

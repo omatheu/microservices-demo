@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "status": "engineering-calibrated",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
   "method": "predeclared-safe-staging-calibration",
   "decision_values": ["PASS", "FAIL"],
   "thresholds": {

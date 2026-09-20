@@ -12,6 +12,7 @@ REQUIRED_INPUTS = {
     "ci_policy",
     "staging_thresholds",
     "pdt_model_policy",
+    "pdt_runtime_manifest",
     "mutation_registry",
     "oracle_suite_manifest",
 }

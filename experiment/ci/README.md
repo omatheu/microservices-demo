@@ -48,7 +48,7 @@ desabilitada por padrão e nenhuma escrita cloud ocorre.
 
 O ruleset Semgrep está versionado localmente e seu SHA-256 é verificado pelo
 gate. O modo confirmatório permanece bloqueado enquanto `policy.json` estiver
-com status `engineering-draft`; a política completa só será congelada depois
+com status `pre-registration-candidate`; a política completa só será congelada depois
 de protocolo, corpus, limiares e retenção do artefato serem definidos.
 
 ## Gates atuais

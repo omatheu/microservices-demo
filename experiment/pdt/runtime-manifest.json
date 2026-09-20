@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "runtime_id": "checkout-pdt-controller-v1",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
+  "files": [
+    {
+      "path": "experiment/pdt/controller/checkout_pdt_controller.py",
+      "sha256": "88a830aa603fbd2b537ec4be3d670ea810f9d30edc0d2343fe9656ff72596540"
+    },
+    {
+      "path": "experiment/pdt/controller/Dockerfile",
+      "sha256": "3c3986b3b908070de50ca908244feb046536b99092044a21a54044822a31c8e0"
+    },
+    {
+      "path": "experiment/scripts/prepare-pdt-controller-job.py",
+      "sha256": "da75c345bcc1f2cad6fa3260cfad7f74ed79717a195b709d1a02d6703cd753ff"
+    },
+    {
+      "path": "experiment/scripts/run-pdt-cycle.sh",
+      "sha256": "33430166ef3b7807ef2b5ea42ebc41e8f77a0a5e5ab5038511f48697c878b06d"
+    },
+    {
+      "path": "experiment/scripts/decide-pdt.py",
+      "sha256": "50ea53e748c87b7be669d4d217a1884a0d2470cb83ee3cc91bfc878be9e70302"
+    },
+    {
+      "path": "experiment/scripts/capture-pdt-source-state.sh",
+      "sha256": "cc33324bcf02360309866a31ecca852fad9f7bb081969e7cf0ba31f759906b2b"
+    },
+    {
+      "path": "experiment/scripts/export-observability-window.sh",
+      "sha256": "d2d20cd34eac3469bab66cae1e6c949d74e4aefebe5c4e4941afa1b274eed234"
+    },
+    {
+      "path": "experiment/scripts/summarize-checkout-observability.py",
+      "sha256": "5ec20f95e9bd75f60d8e74455caafa4c6d32cd6c108fb03e8c643bfbce3e1e2e"
+    },
+    {
+      "path": "experiment/pdt/model-policy.json",
+      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+    }
+  ],
+  "controller_image": null,
+  "freeze_rule": "Every runtime file and the immutable controller image digest must be verified before this runtime can become frozen."
+}

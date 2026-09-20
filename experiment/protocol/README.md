@@ -197,15 +197,38 @@ O comando falha fechado quando o protocolo ainda não está `frozen`. A opção
 [`preview/`](./preview/). A chave e o manifesto reservado nunca são versionados.
 
 Os `frozen_inputs` do protocolo já vinculam as políticas de CI, staging e PDT,
-o registro de mutações e o manifesto da suíte independente do oráculo. Isso
+a implementação do `checkout-pdt-controller`, o registro de mutações e o
+manifesto da suíte independente do oráculo. Isso
 ainda não significa congelamento: o manifesto do oráculo só poderá ser
-congelado depois de registrar e validar os digests imutáveis de suas imagens.
+congelado depois de registrar e validar os digests imutáveis de suas imagens,
+e o runtime PDT exige o digest imutável de sua própria imagem.
 
 O teto proposto para a coleta é R$200 de custo incremental, com parada para
 revisão em R$150 e ao final de cada bloco de três candidatas. Isso ainda não é
 uma autorização de gasto: orçamento do GCP gera alertas, não um bloqueio rígido,
 e a coleta continuará proibida até existir uma forma de conferir o custo
 incremental após cada bloco.
+
+## Auditoria de prontidão para congelamento
+
+O verificador [`../scripts/audit-protocol-freeze.py`](../scripts/audit-protocol-freeze.py)
+materializa os pré-requisitos do congelamento como checks fail-closed. Ele
+confere estrutura e hashes do protocolo, operadores, estados das políticas,
+arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
+explícita do pesquisador:
+
+```bash
+python3 experiment/scripts/audit-protocol-freeze.py \
+  --repo-root . \
+  --require-ready
+```
+
+Enquanto houver pendências, o comando termina com status diferente de zero e
+lista `blocking_requirements`. Os modelos em [`approvals/`](./approvals/) não
+são aprovações; arquivos sem o sufixo `.example` só devem ser criados com dados
+reais. Tanto a revisão financeira quanto a aprovação do protocolo registram
+`cloud_execution_authorized: false`: congelar o desenho nunca autoriza uma
+execução paga.
 
 ## Dados excluídos da comparação principal
 

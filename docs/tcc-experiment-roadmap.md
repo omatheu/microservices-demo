@@ -77,14 +77,14 @@ como Partial Digital Twin.
 - [x] modelo preditivo inicial;
 - [x] política prescritiva de seleção de ação;
 - [x] namespace isolado `pdt-system` para o plano de controle do twin;
-- [ ] empacotar a lógica existente como o runtime `checkout-pdt-controller`;
+- [x] empacotar a lógica existente como o runtime `checkout-pdt-controller`;
 - [ ] executar o controlador sob demanda no namespace `pdt-system`;
 - [ ] gate semiautônomo no pipeline;
 - [ ] congelar e versionar o protocolo experimental revisado;
 - [x] implementar os 13 operadores do corpus candidato e validar todos os seus espaços de parâmetros;
 - [x] gerar uma prévia opaca inelegível para a coleta confirmatória;
 - [ ] gerar o corpus opaco definitivo, somente após congelamento;
-- [ ] implementar o oráculo de validação independente;
+- [x] implementar o oráculo de validação independente;
 - [ ] execução pareada e repetida das candidatas do corpus;
 - [ ] validação das previsões no ambiente-oráculo isolado;
 - [ ] consolidação estatística e análise dos resultados;
@@ -335,7 +335,21 @@ GitHub Actions. O primeiro é disparado automaticamente pelo pull request e não
 possui credencial cloud. O segundo é encadeado após sucesso, mas só acessa o GCP
 para PR do próprio repositório com candidata opaca, dois rótulos explícitos,
 aprovação do ambiente protegido e trava financeira. Ainda falta aplicar essa
-configuração no repositório GitHub e validar uma execução de engenharia por PR.
+configuração no repositório GitHub e validar uma execução cloud de engenharia
+por PR. O workflow sem cloud já foi validado no PR #1: seus 22 gates passaram,
+a evidência foi publicada e os workflows herdados sem proteção foram
+aposentados.
+
+A prontidão para o congelamento agora possui auditoria executável em
+`experiment/scripts/audit-protocol-freeze.py`. Ela mantém a coleta bloqueada e
+expõe de forma objetiva as pendências de políticas/SLOs, imagens do oráculo,
+revisão financeira e aprovação explícita do pesquisador.
+
+O `checkout-pdt-controller` agora existe como aplicação e imagem reproduzível,
+gera o plano vinculado aos inputs selados e produz a decisão prescritiva. Um
+gerador prepara sua execução como Job isolado, sem token da API e sem rede, no
+namespace `pdt-system`. A publicação do digest e a primeira execução do Job
+continuam pendentes e não foram antecipadas sem autorização financeira.
 
 **Critério de saída:** protocolo versionado antes da coleta e corpus contendo
 controles seguros, mutações funcionais e não funcionais, sem rótulos acessíveis
