@@ -363,10 +363,13 @@ Essa separação impede que uma pilha tradicional de métricas ou um gate de CI/
 seja apresentado como se fosse o próprio PDT.
 
 O namespace `pdt-system` foi criado no cluster com quota própria e sem workloads
-permanentes. A implementação atual do comportamento do PDT ainda é executada
-pelos scripts do experimento; o próximo incremento é empacotar essa lógica como
-o runtime identificável `checkout-pdt-controller`. Portanto, a existência do
-namespace não deve ser descrita como se o controlador já estivesse implantado.
+permanentes. A lógica foi empacotada como a aplicação e imagem reproduzível
+`checkout-pdt-controller`, preparada para execução como Job efêmero, sem token
+da API e sem rede. Os scripts do experimento continuam responsáveis pela
+orquestração e pela verificação independente do plano emitido pelo container.
+O namespace vazio e o código do runtime não devem ser descritos como uma
+implantação validada: ainda faltam publicar a imagem por digest e comprovar uma
+execução cloud explicitamente autorizada.
 
 Isso captura o poder de agência sem exigir um sistema autônomo complexo ou
 permitir que o protótipo altere uma produção real.

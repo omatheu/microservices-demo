@@ -323,9 +323,14 @@ gate_protobuf_contracts() {
 }
 
 gate_terraform_static() {
-  terraform -chdir="${REPO_ROOT}/infra/terraform" fmt -check -recursive -diff
-  terraform -chdir="${REPO_ROOT}/infra/terraform" init -backend=false -input=false -no-color
-  terraform -chdir="${REPO_ROOT}/infra/terraform" validate -no-color
+  local terraform_directory
+  for terraform_directory in \
+    "${REPO_ROOT}/infra/terraform" \
+    "${REPO_ROOT}/infra/terraform-billing-export"; do
+    terraform -chdir="${terraform_directory}" fmt -check -recursive -diff
+    terraform -chdir="${terraform_directory}" init -backend=false -input=false -no-color
+    terraform -chdir="${terraform_directory}" validate -no-color
+  done
 }
 
 gate_kustomize_render() {

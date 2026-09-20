@@ -75,6 +75,22 @@ credit. Credits are excluded from spend calculations so that they do not mask
 resource consumption. Alerts are sent at 25%, 50%, 75%, 90%, 95%, and 100% to
 the billing account's default recipients.
 
+### Exportação de custo por bloco
+
+O stack separado [`terraform-billing-export`](./terraform-billing-export/README.md)
+mantém `enable_billing_export_dataset = false` por padrão. Quando explicitamente
+autorizado, ele cria somente o dataset
+`online_boutique_billing` na multirregião `US`, protegido contra destruição, e
+habilita a API do BigQuery. A ativação do **Standard usage cost export** continua
+sendo uma ação separada na página de Cloud Billing; o Terraform não a habilita
+implicitamente.
+
+A localização `US` foi escolhida porque o export padrão pode receber o mês
+atual e o mês anterior retroativamente. Consultas do experimento usam
+`query-billing-cost-window.sh`, ficam restritas ao projeto e recusam processar
+mais de 100 MB por execução. O resultado separa custo bruto, créditos e custo
+líquido e nunca autoriza uma execução cloud.
+
 The cluster is created with deletion protection enabled by default. The
 configuration provisions the cluster and namespace boundaries only; application
 deployment is a separate, explicit step.

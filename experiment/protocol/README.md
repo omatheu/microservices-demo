@@ -226,6 +226,9 @@ explícita do pesquisador:
 Os dois workflows GitHub também são inputs selados. Qualquer mudança no
 gatilho do pull request, nas travas financeiras, na identidade cloud ou na
 ordem de publicação invalida o hash do protocolo.
+O dataset declarativo e a consulta de custo limitada a 100 MB também são
+selados, impedindo que a regra de contabilização seja alterada depois da
+observação dos resultados.
 
 ```bash
 python3 experiment/scripts/audit-protocol-freeze.py \

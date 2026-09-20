@@ -288,6 +288,10 @@
       "path": "experiment/ci/policy.json",
       "sha256": "76b60adcd54ea649609a25ba64c8ce159e82dbafef4562912d4e9932944d4656"
     },
+    "conventional_ci_runner": {
+      "path": "experiment/scripts/run-conventional-ci-local.sh",
+      "sha256": "b22498248cbf32dac4ec5086a14d4a9d748c77f6b7c9535a7cb21a7ead9cbd20"
+    },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
       "sha256": "ec5d3293594aceb2486e816f20321dc7ccaf25cf9a44c6bae0a5fbdce3a645dd"
@@ -295,6 +299,14 @@
     "cloud_experiment_workflow": {
       "path": ".github/workflows/tcc-pr-experiment.yaml",
       "sha256": "b4a007668c6404f6ab801f9ab9a281f78348bb8b0ef9acd4f93a8e739ffc4fc5"
+    },
+    "billing_export_infrastructure": {
+      "path": "infra/terraform-billing-export/main.tf",
+      "sha256": "c270b944e731634f2a53e8aebe440044645fccae3f235af7de42836386f7aae0"
+    },
+    "billing_cost_query": {
+      "path": "experiment/scripts/query-billing-cost-window.sh",
+      "sha256": "a18611845aa32b49487d2833352e171ab879bdcb9aff57399b7e880b709e6cc8"
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",

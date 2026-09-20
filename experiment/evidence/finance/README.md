@@ -39,3 +39,23 @@ está em
 [`artifact-registry-storage-readiness-20260920T222357Z.json`](./artifact-registry-storage-readiness-20260920T222357Z.json).
 Isso resolve a incerteza de armazenamento visível na conta, mas não substitui a
 exportação do custo corrente: publicação e execução continuam bloqueadas.
+
+Após a criação e ativação explicitamente autorizadas do Standard usage cost
+export, uma janela pode ser conferida com:
+
+```bash
+START_TIME=2026-09-19T00:00:00Z \
+END_TIME=<fim-exclusivo-em-UTC> \
+OUTPUT_FILE=experiment/evidence/finance/cost-window.json \
+./experiment/scripts/query-billing-cost-window.sh
+```
+
+A consulta é limitada a 100 MB, usa cache, exige exatamente uma tabela padrão,
+filtra `microservices-demo-tcc` e falha se não houver uma observação completa em
+BRL. O valor é uma estimativa exportada, não uma fatura finalizada.
+
+O plano do stack isolado foi validado sem aplicação. Com a trava desligada não
+há mudança; com a trava ligada aparecem somente a API do BigQuery e o dataset
+`US`, sem alterações em GKE, Kubernetes, Artifact Registry, IAM ou orçamento.
+A evidência está em
+[`billing-export-plan-readiness-20260920T224203Z.json`](./billing-export-plan-readiness-20260920T224203Z.json).

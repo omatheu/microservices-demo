@@ -12,6 +12,18 @@ If you’re using this demo, please **★Star** this repository to show your int
 
 **Note to Googlers:** Please fill out the form at [go/microservices-demo](http://go/microservices-demo).
 
+## TCC experiment status
+
+This fork implements a paired comparison between a complete conventional
+CI/CD pipeline with staging and the same pipeline augmented by a predictive and
+prescriptive Partial Digital Twin of `checkoutservice`. The operational GKE
+baseline, conventional gates, PDT controller, mutation operators, and
+independent oracle are implemented. Confirmatory collection has not started:
+the protocol is still a pre-registration candidate, runtime image digests and
+the financial review are pending, and cloud execution remains explicitly
+locked. See the [experiment roadmap](/docs/tcc-experiment-roadmap.md) for the
+authoritative live status and exit criteria.
+
 ## Architecture
 
 **Online Boutique** is composed of 11 microservices written in different

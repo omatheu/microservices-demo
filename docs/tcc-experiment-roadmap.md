@@ -147,7 +147,7 @@ equipe razoavelmente madura usaria antes de produção, sem reduzir o controle a
 um simples namespace de staging.
 
 - [x] capturar commit, árvore de origem, candidata e artefato no runner local;
-- [ ] exigir identidade imutável e árvore limpa na execução confirmatória;
+- [x] exigir identidade imutável e árvore limpa na execução confirmatória;
 - [x] executar lint, compilação e testes unitários do `checkoutservice`;
 - [x] selecionar e validar os serviços alterados no caminho de checkout;
 - [x] implementar validação de sincronização e compatibilidade do contrato
@@ -302,10 +302,10 @@ durante a decisão.
 - [x] incluir falhas funcionais controladas no checkout/pagamento;
 - [x] incluir falhas não funcionais de latência, disponibilidade e recursos;
 - [x] estratificar casos independentes e dependentes do estado operacional;
-- [ ] definir tamanho do corpus por custo/poder antes de observar resultados;
+- [x] definir tamanho do corpus por viabilidade e custo antes de observar resultados;
 - [x] validar geração de identificadores opacos e separação do manifesto em uma prévia inelegível;
 - [ ] congelar sementes, repetições, ordem e regra de parada;
-- [ ] fixar um teto de duração e capacidade-tempo por decisão;
+- [x] propor teto de duração, custo incremental e capacidade-tempo por decisão;
 - [ ] vedar o conjunto de avaliação contra calibração do PDT.
 
 Os operadores candidatos e os controles estão catalogados em
@@ -318,9 +318,9 @@ plano pareado e limites operacionais. O gerador HMAC criou uma prévia pública
 com IDs opacos e compromisso do manifesto reservado; operador, parâmetros e
 rótulo permanecem fora da árvore versionada. A prévia está marcada como
 `confirmatory_eligible: false`. O protocolo permanece em
-`pre-registration-candidate` até os operadores, o oráculo, SLOs e teto
-financeiro serem implementados e validados; portanto, nenhum checkbox de
-congelamento é antecipado por essa prévia.
+`pre-registration-candidate` até as políticas, os SLOs, os runtimes imutáveis,
+a revisão financeira e a aprovação do pesquisador serem validados; portanto,
+nenhum checkbox de congelamento é antecipado por essa prévia.
 
 Os 13 operadores definidos no protocolo agora possuem materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -328,8 +328,9 @@ determinística e cobertura de todas as combinações de parâmetros. O controle
 staging competente deve bloquear; `DEP-CURRENCY-01` passou a produzir uma
 alteração semântica condicional real. Isso impede contar um no-op ou uma
 mutação equivalente como evidência favorável ao PDT. A validação de execução
-das imagens materializadas e o oráculo independente ainda são pré-requisitos
-para congelar o protocolo.
+das imagens materializadas, a publicação imutável dos runtimes e uma execução
+cloud do oráculo ainda são pré-requisitos para congelar o protocolo; a
+implementação independente do oráculo já está concluída.
 
 Cada candidata será avaliada de forma pareada por staging e PDT. Os dois usam
 as mesmas invariantes e SLOs. Primeiro é selada a decisão da CI/CD convencional
@@ -357,6 +358,13 @@ gera o plano vinculado aos inputs selados e produz a decisão prescritiva. Um
 gerador prepara sua execução como Job isolado, sem token da API e sem rede, no
 namespace `pdt-system`. A publicação do digest e a primeira execução do Job
 continuam pendentes e não foram antecipadas sem autorização financeira.
+
+O mecanismo de custo por bloco também está preparado, mas não aplicado. Uma
+stack Terraform isolada e desligada por padrão cria somente a API do BigQuery e
+o dataset protegido `online_boutique_billing`; a consulta versionada limita cada
+leitura a 100 MB. A exportação padrão do Cloud Billing continua desabilitada e
+depende de autorização explícita, portanto ainda não existe evidência de custo
+monetário corrente apta à revisão financeira do protocolo.
 
 **Critério de saída:** protocolo versionado antes da coleta e corpus contendo
 controles seguros, mutações funcionais e não funcionais, sem rótulos acessíveis
@@ -471,6 +479,8 @@ intervalo de confiança quando o número de repetições permitir.
 - [x] quotas por namespace;
 - [x] somente um Load Balancer permitido;
 - [x] staging e PDT sem exposição pública;
+- [x] preparar stack isolada e consulta limitada para exportação de faturamento;
+- [ ] criar o dataset e habilitar o Standard usage cost export após autorização;
 - [ ] exportar e conferir custo diariamente durante execuções;
 - [x] definir rotina de desligamento ao final de cada janela;
 - [x] remover workloads ociosos;
