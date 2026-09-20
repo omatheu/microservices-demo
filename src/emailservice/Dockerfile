@@ -28,7 +28,7 @@ RUN apk update \
 
 # get packages
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 FROM base
 
@@ -41,9 +41,15 @@ ENV ENABLE_PROFILER=1
 RUN apk update \
     && apk upgrade --no-cache \
     && apk add --no-cache libstdc++ \
+    && addgroup -S -g 10001 app \
+    && adduser -S -D -H -u 10001 -G app app \
     && rm -rf /var/cache/apk/*
 
 WORKDIR /email_server
+
+# Remove vulnerable packages inherited from the runtime base before overlaying
+# the upgraded copies produced by the builder stage.
+RUN pip uninstall --yes setuptools msgpack
 
 # Grab packages from builder
 COPY --from=builder /usr/local/lib/python3.14/ /usr/local/lib/python3.14/
@@ -52,4 +58,5 @@ COPY --from=builder /usr/local/lib/python3.14/ /usr/local/lib/python3.14/
 COPY . .
 
 EXPOSE 8080
+USER 10001:10001
 ENTRYPOINT [ "python", "email_server.py" ]
