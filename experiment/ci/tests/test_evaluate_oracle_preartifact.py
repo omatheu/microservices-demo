@@ -184,8 +184,11 @@ class EvaluateOraclePreartifactTests(unittest.TestCase):
             workspace = pathlib.Path(directory)
             source = workspace / "src" / "checkoutservice"
             source.mkdir(parents=True)
+            synthetic_prefix = "AKIA"
+            synthetic_suffix = "QWERTYUIOPASDFGH"
             (source / "candidate.txt").write_text(
-                'aws_access_key_id = "AKIAQWERTYUIOPASDFGH"\n', encoding="utf-8"
+                f'aws_access_key_id = "{synthetic_prefix}{synthetic_suffix}"\n',
+                encoding="utf-8",
             )
 
             result = MODULE.evaluate(

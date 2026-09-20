@@ -37,7 +37,8 @@
   },
     "tool_versions": {
         "protoc": "libprotoc 3.21.12",
-        "pyyaml": "6.0.1"
+        "pyyaml": "6.0.1",
+        "protobuf_python": "4.21.12"
     },
     "kubernetes_policy": {
         "protected_namespaces": [

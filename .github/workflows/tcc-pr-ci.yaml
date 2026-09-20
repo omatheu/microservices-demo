@@ -53,7 +53,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes jq protobuf-compiler python3-venv shellcheck
           python3 -m venv "${RUNNER_TEMP}/tcc-ci-venv"
-          "${RUNNER_TEMP}/tcc-ci-venv/bin/python" -m pip install --disable-pip-version-check PyYAML==6.0.1
+          "${RUNNER_TEMP}/tcc-ci-venv/bin/python" -m pip install --disable-pip-version-check \
+            PyYAML==6.0.1 \
+            protobuf==4.21.12
           echo "${RUNNER_TEMP}/tcc-ci-venv/bin" >> "${GITHUB_PATH}"
 
       - name: Resolve the opaque candidate represented by the PR

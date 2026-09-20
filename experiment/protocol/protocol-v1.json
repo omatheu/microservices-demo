@@ -286,7 +286,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "441835b3e8c269bdcebc4f38b462cc31b0baeea310242d9d6f7ea65fbfdbbe55"
+      "sha256": "9c04975fbcd948fbb47f6a373f86647cd9fff432a1b284be970aff393b03f612"
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
@@ -298,7 +298,7 @@
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
-      "sha256": "aa1fc1a2405eb7f048072c786dbfc1ecbfc0822605ca3d93d67a4c3326f9acb7"
+      "sha256": "0c18ba57d5e35f9986fef1bbc4c59fd49d3bbe2660d8bc6d455ffed516dbf268"
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",

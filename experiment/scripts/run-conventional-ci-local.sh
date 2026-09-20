@@ -91,6 +91,7 @@ SYFT_IMAGE="$(jq -er '.container_images.syft' "${POLICY_FILE}")"
 SEMGREP_RULESET="$(jq -er '.scanner_policy.semgrep_ruleset' "${POLICY_FILE}")"
 PROTOC_VERSION="$(jq -er '.tool_versions.protoc' "${POLICY_FILE}")"
 PYYAML_VERSION="$(jq -er '.tool_versions.pyyaml' "${POLICY_FILE}")"
+PROTOBUF_PYTHON_VERSION="$(jq -er '.tool_versions.protobuf_python' "${POLICY_FILE}")"
 
 jq -n \
   --arg schema_version "1.0.0" \
@@ -238,21 +239,25 @@ gate_component_selection() {
 
 gate_policy_readiness() {
   jq empty "${POLICY_FILE}"
-  local policy_status rules_frozen rules_hash_expected rules_hash_actual pyyaml_actual
+  local policy_status rules_frozen rules_hash_expected rules_hash_actual pyyaml_actual protobuf_python_actual
   policy_status="$(jq -r '.status' "${POLICY_FILE}")"
   rules_frozen="$(jq -r '.scanner_policy.semgrep_ruleset_frozen' "${POLICY_FILE}")"
   rules_hash_expected="$(jq -r '.scanner_policy.semgrep_ruleset_sha256' "${POLICY_FILE}")"
   [[ -f "${REPO_ROOT}/${SEMGREP_RULESET}" ]]
   rules_hash_actual="$(sha256sum "${REPO_ROOT}/${SEMGREP_RULESET}" | cut -d ' ' -f1)"
   pyyaml_actual="$(python3 -c 'import yaml; print(yaml.__version__)')"
+  protobuf_python_actual="$(python3 -c 'import google.protobuf; print(google.protobuf.__version__)')"
   echo "policy_status=${policy_status}"
   echo "semgrep_ruleset_frozen=${rules_frozen}"
   echo "semgrep_ruleset_sha256_expected=${rules_hash_expected}"
   echo "semgrep_ruleset_sha256_actual=${rules_hash_actual}"
   echo "pyyaml_version_expected=${PYYAML_VERSION}"
   echo "pyyaml_version_actual=${pyyaml_actual}"
+  echo "protobuf_python_version_expected=${PROTOBUF_PYTHON_VERSION}"
+  echo "protobuf_python_version_actual=${protobuf_python_actual}"
   [[ "${rules_hash_actual}" == "${rules_hash_expected}" ]]
   [[ "${pyyaml_actual}" == "${PYYAML_VERSION}" ]]
+  [[ "${protobuf_python_actual}" == "${PROTOBUF_PYTHON_VERSION}" ]]
 
   if [[ "${MODE}" == "confirmatory" ]]; then
     [[ "${policy_status}" == "frozen" ]]
@@ -319,6 +324,7 @@ gate_protobuf_contracts() {
 
 gate_terraform_static() {
   terraform -chdir="${REPO_ROOT}/infra/terraform" fmt -check -recursive -diff
+  terraform -chdir="${REPO_ROOT}/infra/terraform" init -backend=false -input=false -no-color
   terraform -chdir="${REPO_ROOT}/infra/terraform" validate -no-color
 }
 

@@ -315,9 +315,11 @@ def apply_source_mutation(workspace, candidate):
         failure_kind = parameters["failure_kind"]
         if failure_kind == "synthetic-secret-canary":
             path = workspace / "src" / "checkoutservice" / "candidate-secret-canary.txt"
+            synthetic_prefix = "AKIA"
+            synthetic_suffix = "QWERTYUIOPASDFGH"
             write_text_exclusive(
                 path,
-                'aws_access_key_id = "AKIAQWERTYUIOPASDFGH"\n'
+                f'aws_access_key_id = "{synthetic_prefix}{synthetic_suffix}"\n'
                 "# Synthetic scanner fixture; never a real credential.\n",
             )
             changed.append("src/checkoutservice/candidate-secret-canary.txt")

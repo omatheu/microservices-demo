@@ -3,7 +3,7 @@
   "protocol_id": "checkout-pdt-comparison-v1",
   "materializer": {
     "path": "experiment/scripts/materialize-candidate.py",
-    "sha256": "160ce4ce84390c5a568a99a1cb1cafa30a290541b19cf0f7e784efa08f7b0af2"
+    "sha256": "f8844d7705f6b9c61978abba582d9473f9a76ad1ba3464c8978415b3e40d5d64"
   },
   "operators": [
     {

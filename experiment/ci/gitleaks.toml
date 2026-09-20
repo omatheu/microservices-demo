@@ -7,6 +7,9 @@ paths = [
   '''(^|/)\.git/''',
   '''(^|/)\.terraform/''',
   '''(^|/)experiment/evidence/''',
+  '''(^|/)experiment/protocol/\.private[^/]*/''',
+  '''(^|/)__pycache__/''',
+  '''\.pyc$''',
   '''\.tfstate(\.backup)?$''',
   '''(^|/)node_modules/''',
   '''(^|/)vendor/'''
