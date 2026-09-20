@@ -226,6 +226,10 @@ explícita do pesquisador:
 Os dois workflows GitHub também são inputs selados. Qualquer mudança no
 gatilho do pull request, nas travas financeiras, na identidade cloud ou na
 ordem de publicação invalida o hash do protocolo.
+O runner pareado, o preparador da ação selecionada e o registrador do gate
+humano também são inputs selados. Assim, a fronteira do `checkoutservice`, o
+rollback efêmero e a separação entre aprovação humana e autorização cloud não
+podem ser alterados depois da observação dos resultados.
 O dataset declarativo e a consulta de custo limitada a 100 MB também são
 selados, impedindo que a regra de contabilização seja alterada depois da
 observação dos resultados.

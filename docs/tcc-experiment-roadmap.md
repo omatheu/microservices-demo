@@ -270,10 +270,10 @@ real, sob supervisão, sem remover nenhum gate preexistente.
 
 - [x] integrar a decisão convencional consolidada e a decisão PDT no software do gate;
 - [x] bloquear progressão quando o PDT decidir `block`;
-- [ ] preparar configuração quando decidir `reconfigure`;
+- [x] preparar configuração isolada quando decidir `reconfigure`;
 - [ ] solicitar confirmação humana antes do ambiente operacional;
 - [ ] aplicar a ação aprovada no ambiente controlado;
-- [ ] suportar rollback;
+- [x] preparar rollback por remoção e verificação do runtime efêmero;
 - [x] registrar decisões e estado da intervenção humana;
 
 **Critério de saída:** o pipeline executa a decisão até o gate humano sem
@@ -290,6 +290,14 @@ está resumido no
 continua sendo apenas evidência de piloto. Uma execução completa com candidata
 opaca, o caminho real de confirmação humana, a aplicação controlada e o
 rollback continuam pendentes.
+
+O pipeline agora também prepara `deployment-action.json` para decisões
+`approve` ou `reconfigure`. O arquivo restringe mudanças à fronteira do
+`checkoutservice`, vincula candidata, snapshot e decisões por hash e inclui
+rollback obrigatório no namespace efêmero `oracle`. Um recibo humano separado
+pode aprovar ou rejeitar essa validação, mas não autoriza custo cloud nem
+mutação do ambiente operacional. A comprovação de aplicação e cleanup numa
+execução autorizada ainda permanece pendente.
 
 ### Fase 6 — Protocolo e corpus de avaliação
 

@@ -292,6 +292,18 @@
       "path": "experiment/scripts/run-conventional-ci-local.sh",
       "sha256": "b22498248cbf32dac4ec5086a14d4a9d748c77f6b7c9535a7cb21a7ead9cbd20"
     },
+    "comparative_pipeline_runner": {
+      "path": "experiment/scripts/run-comparative-candidate.sh",
+      "sha256": "6338ab14283c9aed6c8fa3c29e929428f5334e599460a7368f70da59af07cf36"
+    },
+    "deployment_action_preparer": {
+      "path": "experiment/scripts/prepare-deployment-action.py",
+      "sha256": "6c15de807426c745c26c12fc65ca55f3fbef02dfd0d8ca6ba5aed0b7f94a6d63"
+    },
+    "human_gate_recorder": {
+      "path": "experiment/scripts/record-human-gate-decision.py",
+      "sha256": "03255e439bd5bfe663f0d5c35a3f393429a50249af14d76680b2b7fc5dfefff5"
+    },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
       "sha256": "ec5d3293594aceb2486e816f20321dc7ccaf25cf9a44c6bae0a5fbdce3a645dd"

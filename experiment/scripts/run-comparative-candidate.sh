@@ -216,8 +216,22 @@ python3 "${repo_root}/experiment/scripts/evaluate-deployment-gate.py" \
   --pdt-decision "$pdt_decision" \
   --output "$gate_file"
 
+action_plan="${pipeline_dir}/deployment-action.json"
+action_plan_prepared=false
+if [[ $(jq -er '.gate_state' "$gate_file") == "awaiting-human-confirmation" ]]; then
+  python3 "${repo_root}/experiment/scripts/prepare-deployment-action.py" \
+    --candidate-definition "$candidate_definition" \
+    --snapshot "$snapshot_file" \
+    --conventional-decision "$conventional_decision" \
+    --pdt-decision "$pdt_decision" \
+    --deployment-gate "$gate_file" \
+    --output "$action_plan"
+  action_plan_prepared=true
+fi
+
 jq -n --arg pipeline_id "$pipeline_id" --arg candidate_id "$candidate_id" \
   --arg snapshot "$snapshot_file" \
+  --argjson action_plan_prepared "$action_plan_prepared" \
   --slurpfile control "$conventional_decision" \
   --slurpfile pdt "$pdt_decision" \
   --slurpfile gate "$gate_file" '
@@ -233,6 +247,10 @@ jq -n --arg pipeline_id "$pipeline_id" --arg candidate_id "$candidate_id" \
     treatment_decision: $pdt[0].decision,
     deployment_gate: $gate[0].gate_state,
     human_confirmation_required: $gate[0].human_confirmation.required,
+    deployment_action_prepared: $action_plan_prepared,
+    deployment_action_scope: (
+      if $action_plan_prepared then "isolated-oracle-validation" else null end
+    ),
     operational_mutation_performed: false
   }' >"${pipeline_dir}/summary.json"
 

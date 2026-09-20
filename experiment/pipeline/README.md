@@ -10,6 +10,9 @@ especificação do controle está em
 - CI/CD convencional selada com staging `PASS` e PDT `approve` ou
   `reconfigure`: estado
   `awaiting-human-confirmation`;
+- para `approve` ou `reconfigure`, o runner prepara uma ação vinculada por hash
+  para validação isolada no namespace `oracle`, acompanhada de rollback por
+  remoção e verificação do runtime efêmero;
 - nenhuma mutação do operacional ocorre antes da confirmação humana e da
   existência de um plano de rollback.
 
@@ -25,6 +28,14 @@ Uso:
 Uma decisão isolada de staging não é aceita. O gate exige o resultado selado da
 esteira convencional, verifica a presença da CI local e exige que controle e PDT
 tenham executado os mesmos artefatos imutáveis.
+
+`prepare-deployment-action.py` valida que a alternativa selecionada pertence ao
+`checkoutservice`, coincide exatamente com a recomendação PDT e contém apenas
+réplicas ou recursos permitidos. O artefato resultante mantém
+`cloud_execution_authorized` e `operational_mutation_authorized` como `false`.
+`record-human-gate-decision.py` registra aprovação ou rejeição humana em um novo
+arquivo imutável; mesmo uma aprovação vale somente para solicitar a validação
+isolada e não substitui a revisão financeira nem as travas cloud.
 
 O piloto `engineering-artifact-binding-v2` percorreu CI local, staging e PDT
 com o mesmo digest. Controle e PDT aprovaram `deploy-as-is`, então o gate parou
@@ -43,7 +54,22 @@ tratamento sem permitir que o PDT substitua qualquer gate convencional:
    convencional;
 4. somente quando o controle aprovar captura o snapshot operacional e executa
    o PDT com os mesmos artefatos e configuração candidata;
-5. produz o gate humano, sempre com `operational_mutation_performed: false`.
+5. produz o gate humano e, quando aplicável, prepara a ação e o rollback para o
+   ambiente-oráculo, sempre com `operational_mutation_performed: false`.
+
+Depois da revisão, o recibo humano pode ser produzido sem executar o cluster:
+
+```bash
+./experiment/scripts/record-human-gate-decision.py \
+  --deployment-gate <gate.json> \
+  --deployment-action <deployment-action.json> \
+  --decision approve-isolated-validation \
+  --actor <identidade-do-pesquisador> \
+  --output <human-gate-decision.json>
+```
+
+O recibo aprovado ainda registra `cloud_execution_authorized: false`; a
+autorização financeira e operacional da janela continua sendo um ato separado.
 
 O runner falha antes de qualquer escrita cloud sem duas confirmações explícitas:
 `ALLOW_EXPERIMENTAL_CLOUD_EXECUTION=true` e
