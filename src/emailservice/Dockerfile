@@ -33,6 +33,11 @@ ENV PATH="/opt/venv/bin:${PATH}"
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
+# The runtime does not install packages. Removing pip also removes its embedded
+# build-tool SBOM, so scanners do not misclassify vendored tooling as runtime
+# dependencies.
+RUN pip uninstall --yes pip
+
 FROM base
 
 ENV PYTHONDONTWRITEBYTECODE=1
