@@ -22,3 +22,6 @@ principal.
 O agregado sanitizado e versionável está em
 [`aggregate-summary.json`](./aggregate-summary.json). Os diretórios de cada
 execução permanecem locais ou em artefatos do pipeline e são ignorados pelo Git.
+As 60 linhas brutas, os três resumos de repetição e este agregado foram
+recalculados e vinculados por SHA-256 no
+[`relatório de validação da Fase 1`](../baseline/validation-report.json).

@@ -333,6 +333,22 @@
       "path": "docs/tcc-validity-threats.md",
       "sha256": "8c447606a87deae79086df3bf51093f3de1e9925318d7640164be3763fd358e2"
     },
+    "baseline_evidence_validator": {
+      "path": "experiment/scripts/validate-baseline-evidence.py",
+      "sha256": "7e00ff599e29c02dd613e1fea87bb93f838da94037502aa97af9bc2e87f4da11"
+    },
+    "operational_baseline_summary": {
+      "path": "experiment/evidence/baseline/aggregate-summary.json",
+      "sha256": "1f7b487468b1e0d5e7a1bf0e4b2b82af81e302ab6747bd47f7c3912512fb0f25"
+    },
+    "checkout_baseline_summary": {
+      "path": "experiment/evidence/checkout-baseline/aggregate-summary.json",
+      "sha256": "12953acafbfefefd9e9fd89e80788cdb4907930fb998dc7ab24a00617ad7f3f1"
+    },
+    "baseline_validation_report": {
+      "path": "experiment/evidence/baseline/validation-report.json",
+      "sha256": "327a9967704f06a162c7c746bc1d21315c7fd897aa91c813fc615d3de54dda30"
+    },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
       "sha256": "feed9981bbb28ee70789b9a647f1da0c9cbf2b77804af84e35e960b6885e1272"

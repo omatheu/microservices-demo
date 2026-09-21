@@ -55,6 +55,18 @@ After collecting multiple repetitions, consolidate them with:
 The aggregate is written to `evidence/baseline/aggregate-summary.json` and
 includes cross-run mean, range, and standard deviation for latency metrics.
 
+Before using the baseline for protocol calibration, verify that every raw
+sample and resource artifact still matches both tracked aggregates:
+
+```sh
+python3 experiment/scripts/validate-baseline-evidence.py --repo-root .
+```
+
+The committed `evidence/baseline/validation-report.json` records the SHA-256
+chain for the initial three operational repetitions and three checkout
+repetitions. Raw directories remain local or in pipeline artifacts; missing or
+modified evidence makes the validator fail closed.
+
 ## Common observability export
 
 The common collection process is documented in

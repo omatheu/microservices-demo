@@ -44,6 +44,15 @@ Cross-run standard deviation:
 The canonical machine-readable result is
 [`aggregate-summary.json`](./aggregate-summary.json).
 
+The fail-closed auditor
+[`../../scripts/validate-baseline-evidence.py`](../../scripts/validate-baseline-evidence.py)
+recomputed counts, nearest-rank quantiles and cross-run statistics from every
+raw sample; it also verified the completed status, timestamps, resource
+artifacts and stable deployment set. The resulting
+[`validation-report.json`](./validation-report.json) binds every local raw
+artifact by SHA-256 to the tracked operational and checkout aggregates. Both
+the auditor and report are frozen protocol inputs.
+
 ## Interpretation boundary
 
 The external HTTP probe and Locust answer different questions:

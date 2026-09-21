@@ -117,6 +117,9 @@ e 818 requisições Locust, sem falhas. O relatório está em
 Também foram validadas 60 transações completas do objeto geminado, sem falhas,
 conforme
 [`../experiment/evidence/checkout-baseline/README.md`](../experiment/evidence/checkout-baseline/README.md).
+Um auditor fail-closed recalculou as amostras, os agregados e a completude dos
+artefatos; seu relatório vincula as evidências brutas por SHA-256 e foi selado
+como input do protocolo.
 As execuções definitivas usarão janelas maiores porque, com 60 amostras por
 repetição, o p99 ainda é sensível a valores extremos.
 

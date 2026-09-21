@@ -246,6 +246,10 @@ binomiais exatos e McNemar pareado definidos nesta versão do protocolo.
 O dataset declarativo e a consulta de custo limitada a 100 MB também são
 selados, impedindo que a regra de contabilização seja alterada depois da
 observação dos resultados.
+Os agregados da linha de base operacional e funcional, seu auditor fail-closed
+e o relatório que vincula cada amostra bruta por SHA-256 também são inputs
+selados. Assim, os SLOs finais não podem ser recalibrados contra um baseline
+substituído depois da geração do corpus.
 O registro de ameaças à validade também é um input selado, para que regras de
 exclusão e interpretações de viés não sejam reescritas depois da coleta.
 
