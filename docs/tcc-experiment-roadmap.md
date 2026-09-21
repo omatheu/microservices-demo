@@ -525,7 +525,7 @@ intervalo de confiança quando o número de repetições permitir.
 - [ ] impedir que dados da validação vazem para a previsão avaliada;
 - [ ] executar número equivalente de repetições;
 - [ ] tratar candidata, e não repetição, como unidade estatística;
-- [ ] documentar falhas, exclusões e dados ausentes.
+- [x] documentar falhas, exclusões e dados ausentes no fluxo completo por candidata, com ledger pré-rótulo e sem imputação.
 
 ## Controles financeiros e operacionais
 

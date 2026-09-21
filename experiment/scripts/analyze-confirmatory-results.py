@@ -3,12 +3,17 @@
 """Analyze the frozen candidate-level paired experiment without external packages."""
 
 import argparse
+import collections
 import datetime
 import hashlib
 import json
 import math
 import pathlib
+import re
 import statistics
+
+
+DIGEST = re.compile(r"^[0-9a-f]{64}$")
 
 
 def load(path):
@@ -203,6 +208,130 @@ def collect_numeric_metrics(records, condition):
     return {name: continuous_summary(items) for name, items in sorted(values.items())}
 
 
+def validate_manifest_exclusion(record, protocol):
+    exclusion = record.get("exclusion")
+    expected_keys = {
+        "reason_code",
+        "reason",
+        "decided_before_oracle_label",
+        "label_revealed",
+        "valid_repetitions",
+        "invalid_repetitions",
+        "replacement_attempted",
+        "evidence",
+    }
+    repetitions = record.get("repetitions")
+    required = protocol.get("research_design", {}).get(
+        "technical_repetitions_per_candidate"
+    )
+    minimum = protocol.get("aggregation", {}).get("minimum_valid_repetitions")
+    if (
+        not isinstance(exclusion, dict)
+        or set(exclusion) != expected_keys
+        or exclusion.get("reason_code") != "insufficient-valid-repetitions"
+        or not isinstance(exclusion.get("reason"), str)
+        or not exclusion["reason"].strip()
+        or exclusion.get("decided_before_oracle_label") is not True
+        or exclusion.get("label_revealed") is not False
+        or exclusion.get("replacement_attempted") is not True
+        or not isinstance(required, int)
+        or isinstance(required, bool)
+        or required <= 0
+        or not isinstance(minimum, int)
+        or isinstance(minimum, bool)
+        or minimum <= 0
+        or minimum > required
+        or repetitions != list(range(1, required + 1))
+    ):
+        raise ValueError("candidate exclusion is not protocol-authorized")
+    valid = exclusion.get("valid_repetitions")
+    invalid = exclusion.get("invalid_repetitions")
+    evidence = exclusion.get("evidence")
+    evidence_path_value = evidence.get("path") if isinstance(evidence, dict) else None
+    evidence_path = (
+        pathlib.PurePosixPath(evidence_path_value)
+        if isinstance(evidence_path_value, str)
+        else None
+    )
+    if (
+        not isinstance(valid, list)
+        or not isinstance(invalid, list)
+        or any(not isinstance(item, int) or isinstance(item, bool) for item in valid + invalid)
+        or valid != sorted(set(valid))
+        or invalid != sorted(set(invalid))
+        or set(valid) & set(invalid)
+        or set(valid) | set(invalid) != set(repetitions)
+        or len(valid) >= minimum
+        or not isinstance(evidence, dict)
+        or set(evidence) != {"path", "sha256"}
+        or evidence_path is None
+        or not evidence_path.parts
+        or evidence_path.is_absolute()
+        or ".." in evidence_path.parts
+        or not isinstance(evidence.get("sha256"), str)
+        or not DIGEST.fullmatch(evidence["sha256"])
+    ):
+        raise ValueError("candidate exclusion repetition accounting is invalid")
+    if any(record.get(field) is not None for field in ("control", "treatment", "oracle")):
+        raise ValueError("excluded candidate must not contain decision or oracle evidence")
+    return exclusion
+
+
+def validate_inconclusive_oracle(oracle, protocol):
+    alternatives = oracle.get("alternatives")
+    deploy_as_is = [
+        item
+        for item in alternatives or []
+        if isinstance(item, dict) and item.get("id") == "deploy-as-is"
+    ]
+    if len(deploy_as_is) != 1 or deploy_as_is[0].get("label") != "inconclusive":
+        raise ValueError("inconclusive oracle adjudication lacks deploy-as-is detail")
+    aggregate = deploy_as_is[0].get("aggregate")
+    required = protocol.get("research_design", {}).get(
+        "technical_repetitions_per_candidate"
+    )
+    minimum = protocol.get("aggregation", {}).get("minimum_valid_repetitions")
+    count_names = (
+        "valid_repetitions",
+        "harmful_repetitions",
+        "safe_repetitions",
+        "invalid_repetitions",
+    )
+    counts = {name: aggregate.get(name) for name in count_names} if isinstance(aggregate, dict) else {}
+    if (
+        not isinstance(required, int)
+        or isinstance(required, bool)
+        or required <= 0
+        or not isinstance(minimum, int)
+        or isinstance(minimum, bool)
+        or minimum <= 0
+        or minimum > required
+        or any(
+            not isinstance(value, int) or isinstance(value, bool) or value < 0
+            for value in counts.values()
+        )
+        or counts.get("valid_repetitions", -1) + counts.get("invalid_repetitions", -1)
+        != required
+        or counts.get("harmful_repetitions", -1) + counts.get("safe_repetitions", -1)
+        != counts.get("valid_repetitions")
+    ):
+        raise ValueError("inconclusive oracle repetition accounting is invalid")
+    reason = aggregate.get("reason")
+    if reason == "insufficient-valid-repetitions":
+        valid_reason = counts["valid_repetitions"] < minimum
+    elif reason == "split-valid-repetitions":
+        valid_reason = (
+            counts["valid_repetitions"] == minimum
+            and counts["harmful_repetitions"] > 0
+            and counts["safe_repetitions"] > 0
+        )
+    else:
+        valid_reason = False
+    if not valid_reason:
+        raise ValueError("inconclusive oracle adjudication lacks a valid reason")
+    return aggregate
+
+
 def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
     confirmatory = (
         protocol.get("status") == "frozen"
@@ -221,11 +350,41 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
     declared_count = protocol.get("research_design", {}).get("candidate_count")
     if not isinstance(records, list) or len(records) != declared_count:
         raise ValueError("dataset candidate count differs from the protocol")
+    if not all(isinstance(record, dict) for record in records):
+        raise ValueError("dataset candidate records must be objects")
     identifiers = [record.get("candidate_id") for record in records]
     if not all(isinstance(item, str) and item.startswith("cand-") for item in identifiers):
         raise ValueError("dataset contains a non-opaque candidate identifier")
     if len(identifiers) != len(set(identifiers)):
         raise ValueError("dataset contains duplicate candidates")
+    manifest_exclusions = []
+    for record in records:
+        exclusion = record.get("exclusion")
+        if exclusion is not None:
+            if not isinstance(exclusion, dict):
+                raise ValueError("candidate exclusion must be an object")
+            manifest_exclusions.append(
+                {"candidate_id": record["candidate_id"], **exclusion}
+            )
+    flow = dataset.get("collection_flow")
+    flow_keys = {
+        "declared_candidates",
+        "candidate_records",
+        "complete_decision_pairs",
+        "manifest_exclusions",
+        "silently_missing_candidates",
+    }
+    if (
+        not isinstance(flow, dict)
+        or set(flow) != flow_keys
+        or flow.get("declared_candidates") != declared_count
+        or flow.get("candidate_records") != declared_count
+        or flow.get("complete_decision_pairs")
+        != declared_count - len(manifest_exclusions)
+        or flow.get("manifest_exclusions") != manifest_exclusions
+        or flow.get("silently_missing_candidates") != 0
+    ):
+        raise ValueError("dataset collection flow is absent or inconsistent")
 
     eligible = []
     excluded = []
@@ -233,19 +392,36 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
     for record in records:
         exclusion = record.get("exclusion")
         if exclusion is not None:
-            if not isinstance(exclusion, dict) or not exclusion.get("reason"):
-                raise ValueError("candidate exclusion must contain a reason")
-            excluded.append({"candidate_id": record["candidate_id"], "reason": exclusion["reason"]})
+            exclusion = validate_manifest_exclusion(record, protocol)
+            excluded.append(
+                {
+                    "candidate_id": record["candidate_id"],
+                    "source": "collection-manifest",
+                    **exclusion,
+                }
+            )
             continue
         oracle = record.get("oracle")
         if not isinstance(oracle, dict) or oracle.get("candidate_id") != record["candidate_id"]:
             raise ValueError("candidate lacks a matching oracle adjudication")
-        if confirmatory and oracle.get("eligible_for_primary_analysis") is not True:
-            raise ValueError("confirmatory candidate is not oracle-eligible for primary analysis")
         actual = oracle.get("observed_deploy_as_is_label")
         if actual == "inconclusive":
-            excluded.append({"candidate_id": record["candidate_id"], "reason": "oracle-inconclusive"})
+            if oracle.get("eligible_for_primary_analysis") is not False:
+                raise ValueError("inconclusive oracle adjudication must be analysis-ineligible")
+            aggregate = validate_inconclusive_oracle(oracle, protocol)
+            excluded.append(
+                {
+                    "candidate_id": record["candidate_id"],
+                    "source": "oracle-adjudication",
+                    "reason_code": aggregate["reason"],
+                    "reason": "oracle adjudication remained inconclusive",
+                    "valid_repetitions": aggregate.get("valid_repetitions"),
+                    "invalid_repetitions": aggregate.get("invalid_repetitions"),
+                }
+            )
             continue
+        if confirmatory and oracle.get("eligible_for_primary_analysis") is not True:
+            raise ValueError("confirmatory candidate is not oracle-eligible for primary analysis")
         if actual not in {"safe", "harmful"}:
             raise ValueError("oracle deploy-as-is label must be safe, harmful or inconclusive")
         labels, costs = oracle_alternative_labels(oracle)
@@ -315,6 +491,10 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
         if control_rate is not None and treatment_rate is not None
         else None
     )
+    exclusion_counts = collections.Counter(
+        item["reason_code"] for item in excluded
+    )
+    exclusion_sources = collections.Counter(item["source"] for item in excluded)
     return {
         "schema_version": "1.0.0",
         "protocol_id": protocol["protocol_id"],
@@ -328,6 +508,11 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
             "harmful_candidates": len(harmful_rows),
             "safe_candidates": len(safe_rows),
             "excluded_candidates": excluded,
+            "exclusion_counts_by_reason": dict(sorted(exclusion_counts.items())),
+            "exclusion_counts_by_source": dict(sorted(exclusion_sources.items())),
+            "silently_missing_candidates": 0,
+            "complete_decision_pair_rate": flow["complete_decision_pairs"] / len(records),
+            "primary_analysis_rate": len(rows) / len(records),
         },
         "primary_outcome": {
             "control_unsafe_approval_rate": rate(control_unsafe, len(harmful_rows)),

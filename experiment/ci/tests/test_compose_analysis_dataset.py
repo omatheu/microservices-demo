@@ -29,7 +29,11 @@ def protocol():
         "status": "pre-registration-candidate",
         "frozen_at": None,
         "confirmatory_collection_allowed": False,
-        "research_design": {"candidate_count": 2},
+        "research_design": {
+            "candidate_count": 2,
+            "technical_repetitions_per_candidate": 3,
+        },
+        "aggregation": {"minimum_valid_repetitions": 2},
     }
 
 
@@ -129,6 +133,8 @@ class ComposeAnalysisDatasetTests(unittest.TestCase):
         self.assertEqual("block", result["candidates"][1]["treatment"]["decision"])
         self.assertEqual("engineering-dry-run", result["composition_mode"])
         self.assertFalse(result["confirmatory_eligible"])
+        self.assertEqual(2, result["collection_flow"]["complete_decision_pairs"])
+        self.assertEqual([], result["collection_flow"]["manifest_exclusions"])
 
     def test_evidence_hash_substitution_is_rejected(self):
         temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
@@ -150,6 +156,97 @@ class ComposeAnalysisDatasetTests(unittest.TestCase):
         manifest["candidates"][1]["candidate_id"] = "cand-other"
         with self.assertRaisesRegex(ValueError, "candidate set"):
             MODULE.compose(proto, proto_sha, public, public_sha, manifest, root, allow_draft=True)
+
+    def test_exclusion_requires_a_pre_unblinding_repetition_ledger(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        ledger = {
+            "schema_version": "1.0.0",
+            "candidate_id": "cand-0002",
+            "classification": "infrastructure-invalid",
+            "label_revealed": False,
+            "planned_repetitions": [1, 2, 3],
+            "valid_repetitions": [1],
+            "invalid_repetitions": [
+                {
+                    "repetition": 2,
+                    "attempts": 2,
+                    "reasons": ["cluster-error", "cluster-error"],
+                },
+                {
+                    "repetition": 3,
+                    "attempts": 2,
+                    "reasons": ["quota-error", "quota-error"],
+                },
+            ],
+        }
+        manifest["candidates"][1] = {
+            "candidate_id": "cand-0002",
+            "exclusion": {
+                "reason_code": "insufficient-valid-repetitions",
+                "reason": "two repetitions remained infrastructure-invalid",
+                "decided_before_oracle_label": True,
+                "label_revealed": False,
+                "valid_repetitions": [1],
+                "invalid_repetitions": [2, 3],
+                "replacement_attempted": True,
+                "evidence": write(root, "exclusion-2.json", ledger),
+            },
+        }
+
+        result = MODULE.compose(
+            proto, proto_sha, public, public_sha, manifest, root, allow_draft=True
+        )
+
+        self.assertEqual(1, result["collection_flow"]["complete_decision_pairs"])
+        self.assertEqual(
+            "insufficient-valid-repetitions",
+            result["collection_flow"]["manifest_exclusions"][0]["reason_code"],
+        )
+
+    def test_exclusion_after_label_release_is_rejected(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        manifest["candidates"][1]["exclusion"] = {
+            "reason_code": "undesired-result",
+            "reason": "remove after seeing the label",
+        }
+
+        with self.assertRaisesRegex(ValueError, "schema"):
+            MODULE.compose(
+                proto, proto_sha, public, public_sha, manifest, root, allow_draft=True
+            )
+
+    def test_exclusion_cannot_coexist_with_decision_or_oracle_evidence(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        ledger = {
+            "schema_version": "1.0.0",
+            "candidate_id": "cand-0002",
+            "classification": "infrastructure-invalid",
+            "label_revealed": False,
+            "planned_repetitions": [1, 2, 3],
+            "valid_repetitions": [1],
+            "invalid_repetitions": [
+                {"repetition": 2, "attempts": 2, "reasons": ["quota", "quota"]},
+                {"repetition": 3, "attempts": 2, "reasons": ["quota", "quota"]},
+            ],
+        }
+        manifest["candidates"][1]["exclusion"] = {
+            "reason_code": "insufficient-valid-repetitions",
+            "reason": "two repetitions remained infrastructure-invalid",
+            "decided_before_oracle_label": True,
+            "label_revealed": False,
+            "valid_repetitions": [1],
+            "invalid_repetitions": [2, 3],
+            "replacement_attempted": True,
+            "evidence": write(root, "exclusion-2.json", ledger),
+        }
+
+        with self.assertRaisesRegex(ValueError, "must not contain decision"):
+            MODULE.compose(
+                proto, proto_sha, public, public_sha, manifest, root, allow_draft=True
+            )
 
     def test_draft_protocol_is_fail_closed_by_default(self):
         temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()

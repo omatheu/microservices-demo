@@ -235,9 +235,14 @@ humano também são inputs selados. Assim, a fronteira do `checkoutservice`, o
 rollback efêmero e a separação entre aprovação humana e autorização cloud não
 podem ser alterados depois da observação dos resultados.
 O compositor do dataset e o analisador confirmatório também são selados. O
-primeiro verifica os hashes de cada decisão e adjudicação; o segundo aplica a
-unidade de análise no nível da candidata, intervalos binomiais exatos e McNemar
-pareado definidos nesta versão do protocolo.
+primeiro verifica os hashes de cada decisão e adjudicação e exige uma linha de
+fluxo para cada candidata declarada. Uma exclusão de infraestrutura só é aceita
+antes da abertura do rótulo, depois da repetição substituta prevista, com ledger
+hash-bound dos dois intentos inválidos e sem evidência de decisão ou oráculo na
+mesma linha. O segundo rejeita candidatas silenciosamente ausentes, separa
+exclusões do manifesto de adjudicações inconclusivas, não imputa decisões ou
+rótulos e aplica a unidade de análise no nível da candidata, intervalos
+binomiais exatos e McNemar pareado definidos nesta versão do protocolo.
 O dataset declarativo e a consulta de custo limitada a 100 MB também são
 selados, impedindo que a regra de contabilização seja alterada depois da
 observação dos resultados.

@@ -49,6 +49,104 @@ def validate_metrics(metrics, label):
     return metrics.copy()
 
 
+def validate_exclusion(repo_root, candidate_id, planned_repetitions, exclusion, protocol):
+    required_keys = {
+        "reason_code",
+        "reason",
+        "decided_before_oracle_label",
+        "label_revealed",
+        "valid_repetitions",
+        "invalid_repetitions",
+        "replacement_attempted",
+        "evidence",
+    }
+    if not isinstance(exclusion, dict) or set(exclusion) != required_keys:
+        raise ValueError("candidate exclusion has an incomplete or unexpected schema")
+    minimum_valid = protocol.get("aggregation", {}).get("minimum_valid_repetitions")
+    if exclusion.get("reason_code") != "insufficient-valid-repetitions":
+        raise ValueError("candidate exclusion reason code is not protocol-authorized")
+    if not isinstance(exclusion.get("reason"), str) or not exclusion["reason"].strip():
+        raise ValueError("candidate exclusion must contain a non-empty reason")
+    if (
+        exclusion.get("decided_before_oracle_label") is not True
+        or exclusion.get("label_revealed") is not False
+    ):
+        raise ValueError("candidate exclusion must be decided before oracle label release")
+    if exclusion.get("replacement_attempted") is not True:
+        raise ValueError("candidate exclusion requires the protocol replacement attempt")
+    valid = exclusion.get("valid_repetitions")
+    invalid = exclusion.get("invalid_repetitions")
+    if (
+        not isinstance(valid, list)
+        or not isinstance(invalid, list)
+        or any(not isinstance(item, int) or isinstance(item, bool) for item in valid + invalid)
+        or len(valid) != len(set(valid))
+        or len(invalid) != len(set(invalid))
+        or valid != sorted(valid)
+        or invalid != sorted(invalid)
+        or set(valid) & set(invalid)
+        or set(valid) | set(invalid) != set(planned_repetitions)
+        or not isinstance(minimum_valid, int)
+        or isinstance(minimum_valid, bool)
+        or minimum_valid <= 0
+        or minimum_valid > len(planned_repetitions)
+        or len(valid) >= minimum_valid
+    ):
+        raise ValueError("candidate exclusion repetition accounting is invalid")
+
+    evidence = resolve_binding(
+        repo_root, exclusion.get("evidence"), f"{candidate_id} exclusion ledger"
+    )
+    invalid_attempts = (
+        evidence.get("invalid_repetitions") if isinstance(evidence, dict) else None
+    )
+    evidence_keys = {
+        "schema_version",
+        "candidate_id",
+        "classification",
+        "label_revealed",
+        "planned_repetitions",
+        "valid_repetitions",
+        "invalid_repetitions",
+    }
+    if (
+        not isinstance(evidence, dict)
+        or set(evidence) != evidence_keys
+        or evidence.get("schema_version") != "1.0.0"
+        or evidence.get("candidate_id") != candidate_id
+        or evidence.get("classification") != "infrastructure-invalid"
+        or evidence.get("label_revealed") is not False
+        or evidence.get("planned_repetitions") != planned_repetitions
+        or evidence.get("valid_repetitions") != valid
+        or not isinstance(invalid_attempts, list)
+        or len(invalid_attempts) != len(invalid)
+    ):
+        raise ValueError("candidate exclusion ledger differs from the declared repetitions")
+    for expected_repetition, item in zip(invalid, invalid_attempts):
+        if (
+            not isinstance(item, dict)
+            or set(item) != {"repetition", "attempts", "reasons"}
+            or item.get("repetition") != expected_repetition
+            or item.get("attempts") != 2
+            or not isinstance(item.get("reasons"), list)
+            or len(item["reasons"]) != 2
+            or not all(
+                isinstance(reason, str) and reason.strip() for reason in item["reasons"]
+            )
+        ):
+            raise ValueError("excluded repetition lacks both infrastructure-invalid attempts")
+    return {
+        "reason_code": exclusion["reason_code"],
+        "reason": exclusion["reason"].strip(),
+        "decided_before_oracle_label": True,
+        "label_revealed": False,
+        "valid_repetitions": valid.copy(),
+        "invalid_repetitions": invalid.copy(),
+        "replacement_attempted": True,
+        "evidence": exclusion["evidence"].copy(),
+    }
+
+
 def compose(protocol, protocol_sha256, public, public_sha256, manifest, repo_root, allow_draft=False):
     confirmatory = (
         protocol.get("status") == "frozen"
@@ -90,14 +188,54 @@ def compose(protocol, protocol_sha256, public, public_sha256, manifest, repo_roo
     by_id = {item["candidate_id"]: item for item in manifest_entries}
 
     candidates = []
+    manifest_exclusions = []
     for public_entry in public_entries:
         candidate_id = public_entry["candidate_id"]
+        planned_repetitions = public_entry.get("repetitions")
+        required_repetitions = protocol.get("research_design", {}).get(
+            "technical_repetitions_per_candidate"
+        )
+        if (
+            not isinstance(required_repetitions, int)
+            or required_repetitions <= 0
+            or planned_repetitions != list(range(1, required_repetitions + 1))
+        ):
+            raise ValueError("public corpus repetition plan differs from the protocol")
         item = by_id[candidate_id]
         exclusion = item.get("exclusion")
         if exclusion is not None:
-            if not isinstance(exclusion, dict) or not exclusion.get("reason"):
-                raise ValueError("candidate exclusion must contain a reason")
-            candidates.append({"candidate_id": candidate_id, "exclusion": exclusion})
+            normalized = validate_exclusion(
+                repo_root,
+                candidate_id,
+                planned_repetitions,
+                exclusion,
+                protocol,
+            )
+            if any(
+                item.get(field) is not None
+                for field in (
+                    "conventional_decision",
+                    "pdt_decision",
+                    "deployment_gate",
+                    "oracle_adjudication",
+                    "control_continuous_metrics",
+                    "treatment_continuous_metrics",
+                )
+            ):
+                raise ValueError(
+                    f"{candidate_id} excluded candidate must not contain decision or oracle evidence"
+                )
+            candidates.append(
+                {
+                    "candidate_id": candidate_id,
+                    "sequence": public_entry.get("sequence"),
+                    "repetitions": public_entry.get("repetitions"),
+                    "exclusion": normalized,
+                }
+            )
+            manifest_exclusions.append(
+                {"candidate_id": candidate_id, **normalized}
+            )
             continue
 
         control = resolve_binding(
@@ -116,8 +254,15 @@ def compose(protocol, protocol_sha256, public, public_sha256, manifest, repo_roo
             raise ValueError(f"{candidate_id} conventional decision is invalid or unsealed")
         if oracle.get("candidate_id") != candidate_id:
             raise ValueError(f"{candidate_id} oracle adjudication belongs to another candidate")
-        if confirmatory and oracle.get("eligible_for_primary_analysis") is not True:
-            raise ValueError(f"{candidate_id} oracle adjudication is not analysis-eligible")
+        if confirmatory:
+            actual = oracle.get("observed_deploy_as_is_label")
+            eligible = oracle.get("eligible_for_primary_analysis")
+            if actual == "inconclusive" and eligible is not False:
+                raise ValueError(
+                    f"{candidate_id} inconclusive oracle adjudication must be analysis-ineligible"
+                )
+            if actual != "inconclusive" and eligible is not True:
+                raise ValueError(f"{candidate_id} oracle adjudication is not analysis-eligible")
 
         control_result = {
             "decision": control["decision"],
@@ -191,6 +336,13 @@ def compose(protocol, protocol_sha256, public, public_sha256, manifest, repo_roo
         "collection_complete": True,
         "confirmatory_eligible": confirmatory and not allow_draft,
         "composition_mode": "confirmatory" if confirmatory and not allow_draft else "engineering-dry-run",
+        "collection_flow": {
+            "declared_candidates": declared_count,
+            "candidate_records": len(candidates),
+            "complete_decision_pairs": declared_count - len(manifest_exclusions),
+            "manifest_exclusions": manifest_exclusions,
+            "silently_missing_candidates": 0,
+        },
         "candidates": candidates,
     }
 

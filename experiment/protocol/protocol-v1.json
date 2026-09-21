@@ -252,7 +252,7 @@
     "nonfunctional_rule": "At least two of three valid repetitions must violate a frozen SLO for candidate-level harm.",
     "minimum_valid_repetitions": 2,
     "infrastructure_retry_rule": "One replacement attempt is allowed for a repetition classified as infrastructure-invalid before opening the oracle label.",
-    "candidate_exclusion_rule": "Exclude without replacement when fewer than two repetitions remain valid; report identity and reason."
+    "candidate_exclusion_rule": "Exclude without replacement only when fewer than two repetitions remain valid after the single authorized retry; preserve a hash-bound pre-label ledger for every invalid attempt and report the opaque candidate identity and reason."
   },
   "analysis": {
     "primary_comparison": "exact paired McNemar analysis of unsafe approval discordance",
@@ -263,6 +263,7 @@
       "range"
     ],
     "multiplicity": "Secondary outcomes are descriptive and explicitly labeled exploratory.",
+    "missing_data": "No decision or label is imputed. Every declared candidate remains in the collection flow; manifest exclusions require a pre-label infrastructure-invalid ledger, and inconclusive oracle adjudications are reported separately from complete decision pairs.",
     "early_stopping": "No efficacy stopping; only financial, safety or unrecoverable infrastructure stops are permitted.",
     "power_claim": "No confirmatory minimum-effect or population-generalization claim is made for this fixed feasibility corpus."
   },
@@ -306,11 +307,11 @@
     },
     "confirmatory_analyzer": {
       "path": "experiment/scripts/analyze-confirmatory-results.py",
-      "sha256": "4fa6fb7cf7e771f02fd307ca60f36fc9d3fdf715d4b86ef71f00cadcfdf1d416"
+      "sha256": "b6d0df9a54c84571091a4f45b7e4511437fd35ead204e9a482d7af4527e24422"
     },
     "analysis_dataset_composer": {
       "path": "experiment/scripts/compose-analysis-dataset.py",
-      "sha256": "a2d7b2749123469daa1e5d27cbebe59764a62ab574a452e70e753551f37f72d1"
+      "sha256": "d386b1c8d9fa32d7d097c5d22798d5c9b9f260859b961cde6bb079f80b61a1f5"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
