@@ -328,6 +328,10 @@
       "path": "experiment/scripts/query-billing-cost-window.sh",
       "sha256": "a18611845aa32b49487d2833352e171ab879bdcb9aff57399b7e880b709e6cc8"
     },
+    "validity_threat_register": {
+      "path": "docs/tcc-validity-threats.md",
+      "sha256": "8c447606a87deae79086df3bf51093f3de1e9925318d7640164be3763fd358e2"
+    },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
       "sha256": "feed9981bbb28ee70789b9a647f1da0c9cbf2b77804af84e35e960b6885e1272"

@@ -20,6 +20,7 @@ REQUIRED_INPUTS = {
     "cloud_experiment_workflow",
     "billing_export_infrastructure",
     "billing_cost_query",
+    "validity_threat_register",
     "staging_thresholds",
     "pdt_model_policy",
     "pdt_runtime_manifest",

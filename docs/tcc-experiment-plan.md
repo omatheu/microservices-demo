@@ -9,6 +9,9 @@
 
 O progresso de implementação, os critérios de saída e as pendências são
 mantidos no [`tcc-experiment-roadmap.md`](./tcc-experiment-roadmap.md).
+As ameaças à validade, suas direções prováveis e as regras de tratamento são
+pré-registradas em
+[`tcc-validity-threats.md`](./tcc-validity-threats.md).
 
 ## Direção do trabalho
 

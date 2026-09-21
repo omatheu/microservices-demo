@@ -467,7 +467,8 @@ seladas.
 - [ ] comparar custo computacional de staging e PDT;
 - [ ] analisar pares discordantes no nível da candidata;
 - [ ] calcular intervalos de confiança no nível da candidata;
-- [ ] documentar ameaças à validade.
+- [x] documentar ameaças à validade e regras de tratamento pré-coleta;
+- [ ] atualizar ameaças materializadas e risco residual após a coleta.
 
 **Critério de saída:** resultados suficientes para responder à questão de
 pesquisa e sustentar ou rejeitar as hipóteses.
@@ -481,6 +482,10 @@ incremental, qualidade prescritiva e resumos contínuos. O modo normal falha
 enquanto o protocolo não estiver congelado; o modo de autoteste produz saída
 explicitamente inelegível. Os valores experimentais e sua interpretação
 continuam pendentes da coleta confirmatória e do oráculo.
+O registro pré-coleta de validade está em
+[`tcc-validity-threats.md`](./tcc-validity-threats.md) e fixa direção de viés,
+mitigação, evidência e regras de exclusão antes dos resultados. A avaliação
+residual pós-coleta permanece aberta.
 
 ## Métricas e fórmulas a registrar
 

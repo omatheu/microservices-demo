@@ -142,6 +142,10 @@ e perfis de carga. Ele combina:
 O oráculo rotula `deploy-as-is` e cada alternativa permitida. Ele não fornece
 dados para o staging nem para o PDT antes do fechamento das decisões.
 
+O registro pré-coleta de ameaças à validade e as regras que impedem exclusões
+pós-hoc estão em
+[`../../docs/tcc-validity-threats.md`](../../docs/tcc-validity-threats.md).
+
 ## Ordem e isolamento
 
 - a mesma candidata passa pela esteira convencional e, quando elegível, pelo
@@ -237,6 +241,8 @@ pareado definidos nesta versão do protocolo.
 O dataset declarativo e a consulta de custo limitada a 100 MB também são
 selados, impedindo que a regra de contabilização seja alterada depois da
 observação dos resultados.
+O registro de ameaças à validade também é um input selado, para que regras de
+exclusão e interpretações de viés não sejam reescritas depois da coleta.
 
 ```bash
 python3 experiment/scripts/audit-protocol-freeze.py \
