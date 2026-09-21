@@ -45,7 +45,7 @@ resource "google_iam_workload_identity_pool_provider" "github_experiment" {
   project                            = var.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_experiment[0].workload_identity_pool_id
   workload_identity_pool_provider_id = var.github_workload_identity_provider_id
-  display_name                       = "Protected GitHub experiment workflow"
+  display_name                       = "Protected GitHub TCC workflow"
   description                        = "Repository, environment, event and workflow-restricted GitHub OIDC trust"
 
   attribute_mapping = {

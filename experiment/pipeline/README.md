@@ -151,6 +151,11 @@ andamento, para não interromper o cleanup. Ele usa o projeto
 Registry com retenção curta já provisionado. Nenhum passo faz deploy no
 namespace operacional.
 
-Essas configurações do GitHub e da identidade federada ainda precisam ser
-aplicadas fora do repositório. Apenas adicionar os arquivos não concede acesso
-ao GCP nem inicia uma execução.
+Em 21/09/2026, a identidade federada e essas configurações do GitHub foram
+aplicadas. A Service Account não possui chave; a auditoria de RBAC confirmou
+mutação somente em `staging`, `pdt` e nos recursos estritamente necessários do
+`pdt-system`, com leitura do `operational` e sem acesso de mutação ao `oracle`.
+A variável `TCC_COST_REVIEW_ACKNOWLEDGED` permanece `false` e nenhum dos dois
+rótulos foi anexado ao PR #1, portanto essa configuração, por si só, não iniciou
+uma execução cloud. O workflow ainda precisa chegar à branch `main` antes da
+primeira execução protegida.

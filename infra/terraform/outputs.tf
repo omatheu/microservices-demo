@@ -27,6 +27,22 @@ output "gross_cost_budget" {
   }
 }
 
+output "experiment_spend_budget" {
+  description = "Lower gross-cost alert budget used for experiment execution reviews."
+  value = {
+    currency = "BRL"
+    amount   = var.experiment_spend_budget_amount
+    name     = google_billing_budget.experiment_spend_guard.display_name
+    alert_amounts = [
+      var.experiment_spend_budget_amount * 0.25,
+      var.experiment_spend_budget_amount * 0.50,
+      var.experiment_spend_budget_amount * 0.75,
+      var.experiment_spend_budget_amount * 0.90,
+      var.experiment_spend_budget_amount,
+    ]
+  }
+}
+
 output "artifact_registry" {
   description = "Artifact Registry endpoint and retention controls, or null while its separate cost gate is disabled."
   value = var.allow_artifact_registry_creation ? {

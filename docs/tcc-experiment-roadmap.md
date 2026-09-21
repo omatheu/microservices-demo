@@ -49,13 +49,16 @@ como Partial Digital Twin.
 - [x] Projeto Google Cloud `microservices-demo-tcc` configurado.
 - [x] Terraform separado da infraestrutura original da demonstração.
 - [x] Cluster GKE Autopilot `online-boutique-experiment` em `us-central1`.
-- [x] Namespaces cloud `operational`, `staging`, `pdt`, `pdt-system` e `observability`.
-- [x] Definição local do namespace isolado `oracle`, sem LoadBalancer e com quota própria; aplicação cloud ainda não autorizada.
+- [x] Namespaces cloud `operational`, `staging`, `pdt`, `pdt-system`, `oracle` e `observability`.
+- [x] Namespace isolado `oracle` aplicado, sem LoadBalancer e com quota própria.
 - [x] Quotas de CPU, memória, pods e Load Balancers por namespace.
 - [x] Orçamento de custo bruto de R$1.751,10.
 - [x] Margem de R$10 preservada sobre R$1.761,10 de crédito informado.
 - [x] Período do orçamento alinhado à expiração dos créditos em 19/12/2026.
 - [x] Alertas financeiros em 25%, 50%, 75%, 90%, 95% e 100%.
+- [x] Orçamento operacional adicional de R$200, com alertas em R$50, R$100, R$150, R$180 e R$200.
+- [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
+- [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Overlay Kustomize do ambiente operacional.
 - [x] Políticas de rede da Online Boutique aplicadas.
 - [x] Online Boutique completa no namespace `operational`.
@@ -350,11 +353,13 @@ A entrada operacional da esteira agora está versionada como dois workflows do
 GitHub Actions. O primeiro é disparado automaticamente pelo pull request e não
 possui credencial cloud. O segundo é encadeado após sucesso, mas só acessa o GCP
 para PR do próprio repositório com candidata opaca, dois rótulos explícitos,
-aprovação do ambiente protegido e trava financeira. Ainda falta aplicar essa
-configuração no repositório GitHub e validar uma execução cloud de engenharia
-por PR. O workflow sem cloud já foi validado no PR #1: seus 22 gates passaram,
-a evidência foi publicada e os workflows herdados sem proteção foram
-aposentados.
+aprovação do ambiente protegido e trava financeira. A identidade federada, o
+ambiente protegido, os secrets, a variável financeira inicialmente `false`, os
+rótulos e a proteção de `main` já foram aplicados. Nenhum rótulo foi anexado ao
+PR #1. Ainda faltam incorporar os workflows à branch padrão e validar uma
+execução cloud de engenharia por PR. O workflow sem cloud já foi validado no PR
+#1: seus 22 gates passaram, a evidência foi publicada e os workflows herdados
+sem proteção foram aposentados.
 
 A prontidão para o congelamento agora possui auditoria executável em
 `experiment/scripts/audit-protocol-freeze.py`. Ela mantém a coleta bloqueada e
@@ -367,12 +372,12 @@ gerador prepara sua execução como Job isolado, sem token da API e sem rede, no
 namespace `pdt-system`. A publicação do digest e a primeira execução do Job
 continuam pendentes e não foram antecipadas sem autorização financeira.
 
-O mecanismo de custo por bloco também está preparado, mas não aplicado. Uma
-stack Terraform isolada e desligada por padrão cria somente a API do BigQuery e
-o dataset protegido `online_boutique_billing`; a consulta versionada limita cada
-leitura a 100 MB. A exportação padrão do Cloud Billing continua desabilitada e
-depende de autorização explícita, portanto ainda não existe evidência de custo
-monetário corrente apta à revisão financeira do protocolo.
+O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery e
+o dataset protegido `online_boutique_billing` já existem; a consulta versionada
+limita cada leitura a 100 MB. A exportação padrão do Cloud Billing continua
+desabilitada enquanto o salvamento final no Console aguarda confirmação,
+portanto ainda não existe evidência de custo monetário corrente apta à revisão
+financeira do protocolo.
 
 **Critério de saída:** protocolo versionado antes da coleta e corpus contendo
 controles seguros, mutações funcionais e não funcionais, sem rótulos acessíveis
@@ -500,7 +505,8 @@ intervalo de confiança quando o número de repetições permitir.
 - [x] somente um Load Balancer permitido;
 - [x] staging e PDT sem exposição pública;
 - [x] preparar stack isolada e consulta limitada para exportação de faturamento;
-- [ ] criar o dataset e habilitar o Standard usage cost export após autorização;
+- [x] criar o dataset protegido `online_boutique_billing` e habilitar a API do BigQuery;
+- [ ] habilitar o Standard usage cost export no Console do Cloud Billing;
 - [ ] exportar e conferir custo diariamente durante execuções;
 - [x] definir rotina de desligamento ao final de cada janela;
 - [x] remover workloads ociosos;

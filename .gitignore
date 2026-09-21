@@ -8,6 +8,7 @@
 .terraform.lock.hcl
 !infra/terraform/.terraform.lock.hcl
 **/.terraform/
+*.tfplan
 .venv/
 .vs/
 .vscode/

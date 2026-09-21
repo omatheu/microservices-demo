@@ -177,6 +177,17 @@ variable "gross_cost_budget_amount" {
   }
 }
 
+variable "experiment_spend_budget_amount" {
+  description = "Lower project-scoped gross-cost alert budget used as the operational ceiling for the experiment."
+  type        = number
+  default     = 200
+
+  validation {
+    condition     = var.experiment_spend_budget_amount > 0 && var.experiment_spend_budget_amount < var.gross_cost_budget_amount
+    error_message = "experiment_spend_budget_amount must be greater than zero and lower than gross_cost_budget_amount."
+  }
+}
+
 variable "resource_quotas" {
   description = "Capacity ceilings per experiment namespace; these are limits, not reservations."
   type = map(object({

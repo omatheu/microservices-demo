@@ -75,6 +75,13 @@ credit. Credits are excluded from spend calculations so that they do not mask
 resource consumption. Alerts are sent at 25%, 50%, 75%, 90%, 95%, and 100% to
 the billing account's default recipients.
 
+A second project-scoped gross-cost guard tracks the R$200 experiment ceiling
+over the same period. Its alerts correspond to R$50, R$100, R$150, R$180, and
+R$200. R$150 remains the mandatory manual review point in the protocol. Both
+budgets are alerts rather than hard caps; namespace quotas, serial execution,
+timeouts, cleanup, and the per-block cost review are the effective containment
+controls.
+
 ### Exportação de custo por bloco
 
 O stack separado [`terraform-billing-export`](./terraform-billing-export/README.md)

@@ -42,7 +42,7 @@
     },
     {
       "path": "infra/terraform/github-actions.tf",
-      "sha256": "c4e12e5717d22936f4299809fa564407fb9ac7028de68c2240b3848183dc4e1f"
+      "sha256": "d0baecbb108cd241dfe8f6c4884a7de7e6874230b35693f4515747db4d0b992f"
     },
     {
       "path": "experiment/pdt/model-policy.json",
