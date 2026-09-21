@@ -50,10 +50,18 @@ class RunOracleRepetitionTests(unittest.TestCase):
                     {
                         "mechanism": "conventional-ci-cd-with-staging",
                         "candidate_id": "cand-test",
-                        "decision": "approve",
+                        "decision": "block",
                         "control_decision_sealed": True,
                         "candidate_definition_sha256": candidate_sha,
-                        "immutable_artifacts": [],
+                        "immutable_artifacts": [
+                            {
+                                "component": "checkoutservice",
+                                "remote_reference": (
+                                    f"{IMAGE_PREFIX}/checkoutservice@sha256:{'c' * 64}"
+                                ),
+                            }
+                        ],
+                        "staging": {"executed": True},
                     }
                 ),
                 encoding="utf-8",
@@ -64,7 +72,7 @@ class RunOracleRepetitionTests(unittest.TestCase):
                         "candidate_id": "cand-test",
                         "candidate_definition_sha256": candidate_sha,
                         "repetitions": [1, 2, 3],
-                        "control_decision": "approve",
+                        "control_decision": "block",
                     }
                 ),
                 encoding="utf-8",

@@ -196,6 +196,7 @@ snapshot_file="${snapshot_dir}/pdt-input-state.json"
   echo "PDT synchronization did not produce an immutable snapshot." >&2
   exit 1
 }
+cp "$snapshot_file" "${pipeline_dir}/pdt-input-state.json"
 
 pdt_log="${pipeline_dir}/pdt.log"
 env MODE="$mode" CANDIDATE_FILE="$candidate_definition" \

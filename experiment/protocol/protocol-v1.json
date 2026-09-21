@@ -294,7 +294,7 @@
     },
     "comparative_pipeline_runner": {
       "path": "experiment/scripts/run-comparative-candidate.sh",
-      "sha256": "6338ab14283c9aed6c8fa3c29e929428f5334e599460a7368f70da59af07cf36"
+      "sha256": "646cb32d1b12c85404520a38870767534fa6ccce53c940723f08c945caee2739"
     },
     "deployment_action_preparer": {
       "path": "experiment/scripts/prepare-deployment-action.py",
@@ -346,7 +346,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "155587959b7d68e57dbf7278fcbbfce9eb0c40595a58ec7dc24f90fa81df4ecf"
+      "sha256": "54b0716a752494c2b03f8c87ecabcfb1c55243b6a487dc2562ccc6a8cad1afce"
     }
   },
   "required_before_freeze": [

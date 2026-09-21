@@ -7,6 +7,11 @@ mode=${MODE:-engineering}
 candidate_id=${CANDIDATE_ID:-}
 candidate_definition=${CANDIDATE_DEFINITION:-}
 conventional_decision=${CONVENTIONAL_DECISION:-}
+pdt_decision=${PDT_DECISION:-}
+deployment_gate=${DEPLOYMENT_GATE:-}
+deployment_action=${DEPLOYMENT_ACTION:-}
+human_gate_decision=${HUMAN_GATE_DECISION:-}
+github_approval_history=${GITHUB_APPROVAL_HISTORY:-}
 private_work_item=${PRIVATE_WORK_ITEM:-}
 snapshot_file=${SNAPSHOT_FILE:-}
 alternative_id=${ALTERNATIVE_ID:-deploy-as-is}
@@ -28,6 +33,7 @@ cloud_started=false
 run_succeeded=false
 run_dir=""
 runtime_manifest=""
+human_gate_validation=""
 
 require_command() {
   command -v "$1" >/dev/null 2>&1 || {
@@ -113,6 +119,33 @@ if ! jq -e --arg candidate "$candidate_id" --arg sha256 "$candidate_definition_s
 ' "$conventional_decision" >/dev/null; then
   echo "Oracle runtime requires either an approved control or a staging-blocked control with sealed deployable artifacts." >&2
   exit 1
+fi
+if [[ "$control_decision" == "approve" ]]; then
+  for required_file in "$pdt_decision" "$deployment_gate" "$deployment_action" \
+    "$human_gate_decision" "$github_approval_history"; do
+    [[ -f "$required_file" ]] || {
+      echo "Approved control requires protected human gate input: $required_file" >&2
+      exit 1
+    }
+  done
+  human_gate_validation=$(python3 \
+    "${repo_root}/experiment/scripts/validate-human-gate-receipt.py" \
+    --candidate-definition "$candidate_definition" \
+    --snapshot "$snapshot_file" \
+    --conventional-decision "$conventional_decision" \
+    --pdt-decision "$pdt_decision" \
+    --deployment-gate "$deployment_gate" \
+    --deployment-action "$deployment_action" \
+    --human-gate-decision "$human_gate_decision" \
+    --github-approval-history "$github_approval_history")
+  [[ $(jq -r '.validated' <<<"$human_gate_validation") == "true" ]] || {
+    echo "Protected human gate validation did not succeed." >&2
+    exit 1
+  }
+  [[ $(jq -r '.selected_alternative' <<<"$human_gate_validation") == "$alternative_id" ]] || {
+    echo "Oracle alternative differs from the protected human decision." >&2
+    exit 1
+  }
 fi
 if ! jq -e --arg candidate "$candidate_id" --arg sha256 "$candidate_definition_sha256" \
   --arg control_decision "$control_decision" --argjson repetition "$repetition" '
@@ -242,6 +275,15 @@ cp "$candidate_definition" "${run_dir}/candidate-definition.json"
 cp "$conventional_decision" "${run_dir}/conventional-decision.json"
 cp "$snapshot_file" "${run_dir}/pdt-input-state.json"
 cp "$policy_file" "${run_dir}/oracle-policy.json"
+if [[ "$control_decision" == "approve" ]]; then
+  cp "$pdt_decision" "${run_dir}/pdt-decision.json"
+  cp "$deployment_gate" "${run_dir}/deployment-gate.json"
+  cp "$deployment_action" "${run_dir}/deployment-action.json"
+  cp "$human_gate_decision" "${run_dir}/human-gate-decision.json"
+  cp "$github_approval_history" "${run_dir}/github-environment-approvals.json"
+  printf '%s\n' "$human_gate_validation" | jq . \
+    >"${run_dir}/human-gate-validation.json"
+fi
 
 python3 "${repo_root}/experiment/scripts/prepare-oracle-runtime.py" \
   --private-work-item "$private_work_item" \

@@ -70,6 +70,10 @@ Depois da revisão, o recibo humano pode ser produzido sem executar o cluster:
 
 O recibo aprovado ainda registra `cloud_execution_authorized: false`; a
 autorização financeira e operacional da janela continua sendo um ato separado.
+Para candidatas aprovadas pelo controle, o runner do oráculo recusa iniciar sem
+esse recibo, o histórico bruto de aprovação do GitHub e toda a cadeia de
+decisões vinculada por hash. A aprovação humana é, portanto, uma precondição
+executável da validação isolada e não apenas um registro documental.
 
 O runner falha antes de qualquer escrita cloud sem duas confirmações explícitas:
 `ALLOW_EXPERIMENTAL_CLOUD_EXECUTION=true` e

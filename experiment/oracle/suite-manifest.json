@@ -69,7 +69,11 @@
     },
     {
       "path": "experiment/scripts/run-oracle-repetition.sh",
-      "sha256": "af5feabf20cca912e5fe4668eb9f2390b076ab22a98ea9cd2c994a90b233d476"
+      "sha256": "dddcaa38f1f84c2a6685b50afc8eef6e418c04cd1de50af8f68b81a4a0958f93"
+    },
+    {
+      "path": "experiment/scripts/validate-human-gate-receipt.py",
+      "sha256": "d87148a328f6c7c9a1fabf04697f5bd0765b12bcad9f20c2f67d5c936e63aeca"
     },
     {
       "path": "experiment/scripts/unlock-oracle-candidate.py",

@@ -311,6 +311,13 @@ criado no GitHub com `omatheu` como revisor obrigatório e somente a branch
 execução de engenharia comprovar a pausa e a retomada; a aprovação continua sem
 autorizar execução cloud ou mutação operacional.
 
+O runner do oráculo agora também consome esse recibo de forma fail-closed para
+candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,
+decisão convencional, decisão PDT, gate, ação e histórico bruto do GitHub, e
+recusa qualquer divergência antes de chamar `kubectl`. Assim, a confirmação
+humana deixou de ser somente evidência produzida e passou a ser uma precondição
+executável da validação isolada. A execução real continua pendente.
+
 ### Fase 6 — Protocolo e corpus de avaliação
 
 Objetivo: avaliar os mecanismos em candidatas cujo rótulo não esteja disponível
@@ -424,7 +431,10 @@ previsão e qualidade da decisão.
 
 **Estado:** a suíte funcional, o gerador de carga, o compositor de observação,
 o runtime mínimo e o runner Kubernetes único estão implementados e cobertos por
-testes locais. O verificador pré-artefato também está implementado e confere
+testes locais. Para decisões aprovadas pelo controle, o runner exige uma cadeia
+íntegra até a aprovação do ambiente protegido do GitHub antes de acessar o
+cluster; o recibo humano não substitui as três travas financeiras/cloud. O
+verificador pré-artefato também está implementado e confere
 commit, árvore, patch e decisões seladas antes de reproduzir a propriedade
 violada sem usar o rótulo pretendido. Uma execução de engenharia validou a
 matriz funcional contra o `checkoutservice`, mas não integra a análise

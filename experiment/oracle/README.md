@@ -39,7 +39,8 @@ O overlay [`../../infra/kustomize/oracle/`](../../infra/kustomize/oracle/)
 renderiza a Online Boutique em um namespace próprio, sem `LoadBalancer` e sem
 carga contínua. A configuração Terraform atribui quota máxima de 3 vCPU de
 requests, 6 GiB de memória de requests e 20 pods; são limites, não reservas.
-Essa configuração ainda não foi aplicada ao cluster.
+O namespace e a quota já foram aplicados ao cluster; permanecem vazios até uma
+janela explicitamente autorizada.
 
 Cada repetição deve:
 
@@ -58,6 +59,12 @@ aprovadas pelo controle e candidatas bloqueadas somente depois de staging,
 desde que estas ainda possuam os artefatos imutáveis selados. Ele verifica a identidade da candidata, a
 permissão `0600` do item privado, o hash da definição, os digests imutáveis, o
 snapshot do cluster e o namespace vazio antes de aplicar o runtime mínimo.
+Quando o controle aprovou e o PDT selecionou uma ação, o runner também exige a
+decisão PDT, o gate, a ação, o recibo humano e o histórico bruto de aprovação
+do GitHub. `validate-human-gate-receipt.py` recompõe todos os hashes e exige
+uma aprovação do ambiente protegido antes de qualquer chamada ao Kubernetes.
+Uma candidata bloqueada pelo controle não possui ação PDT para aprovar e segue
+o caminho independente de adjudicação/oráculo já selado.
 Falhas funcionais da candidata não encerram o runner: o harness permanece
 disponível e as transforma em observações. Falhas do harness ou da referência
 independente invalidam a execução.
@@ -69,6 +76,11 @@ MODE=confirmatory \
 CANDIDATE_ID=cand-exemplo \
 CANDIDATE_DEFINITION=/caminho/candidate-definition.json \
 CONVENTIONAL_DECISION=/caminho/conventional-decision.json \
+PDT_DECISION=/caminho/pdt-decision.json \
+DEPLOYMENT_GATE=/caminho/gate.json \
+DEPLOYMENT_ACTION=/caminho/deployment-action.json \
+HUMAN_GATE_DECISION=/caminho/human-gate-decision.json \
+GITHUB_APPROVAL_HISTORY=/caminho/github-environment-approvals.json \
 PRIVATE_WORK_ITEM=/caminho/private-work-item.json \
 SNAPSHOT_FILE=/caminho/pdt-input-state.json \
 ALTERNATIVE_ID=deploy-as-is REPETITION=1 \
@@ -103,7 +115,7 @@ perfis de desempenho, limites de saúde e a regra de duas repetições prejudici
 entre pelo menos duas válidas. `adjudicate-oracle.py` já implementa e testa essa
 regra sem usar o rótulo pretendido como entrada da classificação.
 
-[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 18
+[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 19
 arquivos que definem a política, o harness, os avaliadores e o runner. O
 validador `validate-oracle-suite.py` falha se qualquer arquivo mudar. O
 manifesto permanece `pre-registration-candidate` e seus dois digests de imagem
@@ -117,7 +129,8 @@ carga e coleta de efeitos. Os scripts `run-oracle-functional-suite.py`,
 `compose-oracle-observation.py` produzem a observação no schema consumido pelo
 adjudicador. `prepare-oracle-runtime.py` gera um runtime Kubernetes mínimo,
 privado e vinculado aos mesmos artefatos selados pelo controle, e
-`run-oracle-repetition.sh` encadeia deployment, medições, composição e cleanup.
+`run-oracle-repetition.sh` encadeia validação do gate humano, deployment,
+medições, composição e cleanup.
 
 Para candidatas bloqueadas antes de existir artefato,
 [`../scripts/evaluate-oracle-preartifact.py`](../scripts/evaluate-oracle-preartifact.py)

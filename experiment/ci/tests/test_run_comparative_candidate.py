@@ -17,6 +17,14 @@ CANDIDATE_PATH = (
 
 
 class ComparativeCandidateRunnerTests(unittest.TestCase):
+    def test_paired_evidence_copies_the_bound_snapshot_into_the_pipeline_dir(self):
+        rendered = SCRIPT_PATH.read_text(encoding="utf-8")
+
+        self.assertIn(
+            'cp "$snapshot_file" "${pipeline_dir}/pdt-input-state.json"',
+            rendered,
+        )
+
     def test_cloud_execution_is_fail_closed_before_cluster_access(self):
         candidate = json.loads(CANDIDATE_PATH.read_text(encoding="utf-8"))
         environment = os.environ.copy()
