@@ -22,7 +22,65 @@ def sha256_file(path):
     return digest.hexdigest()
 
 
-def record(gate, action, decision, actor, recorded_at, gate_sha256, action_sha256):
+def github_environment_review(
+    approval_history,
+    environment,
+    repository,
+    workflow_run_id,
+    approval_history_sha256,
+):
+    if not isinstance(approval_history, list):
+        raise ValueError("GitHub approval history must be a list")
+    if not environment.strip():
+        raise ValueError("GitHub approval environment is required")
+    if not repository.strip() or "/" not in repository:
+        raise ValueError("GitHub repository must use owner/repository format")
+    if not str(workflow_run_id).isdigit() or int(workflow_run_id) <= 0:
+        raise ValueError("GitHub workflow run identifier must be positive")
+
+    matching = []
+    for review in approval_history:
+        if not isinstance(review, dict) or review.get("state") != "approved":
+            continue
+        environments = review.get("environments")
+        if not isinstance(environments, list) or not any(
+            isinstance(item, dict) and item.get("name") == environment
+            for item in environments
+        ):
+            continue
+        reviewer = review.get("user")
+        if not isinstance(reviewer, dict) or not str(reviewer.get("login", "")).strip():
+            raise ValueError("GitHub environment approval has no reviewer identity")
+        matching.append(review)
+    if not matching:
+        raise ValueError(
+            f"GitHub approval history has no approved review for {environment}"
+        )
+
+    review = matching[-1]
+    reviewer = review["user"]["login"].strip()
+    return reviewer, {
+        "source": "github-environment-protection",
+        "repository": repository,
+        "workflow_run_id": int(workflow_run_id),
+        "environment": environment,
+        "state": "approved",
+        "reviewer": reviewer,
+        "comment": review.get("comment") or "",
+        "approval_history_sha256": approval_history_sha256,
+    }
+
+
+def record(
+    gate,
+    action,
+    decision,
+    actor,
+    recorded_at,
+    gate_sha256,
+    action_sha256,
+    review_evidence=None,
+):
     if not actor.strip():
         raise ValueError("human reviewer identity is required")
     if gate.get("candidate_id") != action.get("candidate_id"):
@@ -47,7 +105,7 @@ def record(gate, action, decision, actor, recorded_at, gate_sha256, action_sha25
         raise ValueError("human decision must approve isolated validation or reject")
 
     approved = decision == "approve-isolated-validation"
-    return {
+    result = {
         "schema_version": "1.0.0",
         "candidate_id": gate["candidate_id"],
         "scope": "isolated-oracle-validation",
@@ -70,6 +128,14 @@ def record(gate, action, decision, actor, recorded_at, gate_sha256, action_sha25
         "operational_mutation_authorized": False,
         "operational_mutation_performed": False,
     }
+    if review_evidence is not None:
+        if review_evidence.get("reviewer") != actor.strip():
+            raise ValueError("human actor differs from the protected review identity")
+        result["human_review_evidence"] = review_evidence
+        result["bindings"]["github_approval_history_sha256"] = review_evidence[
+            "approval_history_sha256"
+        ]
+    return result
 
 
 def main():
@@ -79,21 +145,52 @@ def main():
     parser.add_argument(
         "--decision", choices=("approve-isolated-validation", "reject"), required=True
     )
-    parser.add_argument("--actor", required=True)
+    parser.add_argument("--actor")
+    parser.add_argument("--github-approval-history", type=pathlib.Path)
+    parser.add_argument("--github-environment")
+    parser.add_argument("--github-repository")
+    parser.add_argument("--github-workflow-run-id")
     parser.add_argument("--output", type=pathlib.Path, required=True)
     args = parser.parse_args()
     recorded_at = datetime.datetime.now(datetime.timezone.utc).isoformat().replace(
         "+00:00", "Z"
     )
     try:
+        github_arguments = (
+            args.github_approval_history,
+            args.github_environment,
+            args.github_repository,
+            args.github_workflow_run_id,
+        )
+        if any(value is not None for value in github_arguments) and not all(
+            value is not None for value in github_arguments
+        ):
+            raise ValueError("all GitHub approval arguments must be supplied together")
+        actor = args.actor
+        review_evidence = None
+        if args.github_approval_history is not None:
+            actor, review_evidence = github_environment_review(
+                load(args.github_approval_history),
+                args.github_environment,
+                args.github_repository,
+                args.github_workflow_run_id,
+                sha256_file(args.github_approval_history),
+            )
+            if args.actor is not None and args.actor.strip() != actor:
+                raise ValueError("--actor differs from the GitHub environment reviewer")
+        if actor is None:
+            raise ValueError(
+                "--actor or a verified GitHub environment approval is required"
+            )
         result = record(
             load(args.deployment_gate),
             load(args.deployment_action),
             args.decision,
-            args.actor,
+            actor,
             recorded_at,
             sha256_file(args.deployment_gate),
             sha256_file(args.deployment_action),
+            review_evidence,
         )
     except (OSError, ValueError, json.JSONDecodeError) as error:
         raise SystemExit(f"human gate decision failed: {error}") from error

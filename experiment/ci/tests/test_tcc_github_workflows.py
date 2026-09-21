@@ -62,6 +62,16 @@ class TccGithubWorkflowTests(unittest.TestCase):
         self.assertIn("--require-frozen", rendered)
         self.assertIn("run-comparative-candidate.sh", rendered)
 
+        human_gate = workflow["jobs"]["human-gate-receipt"]
+        self.assertEqual(human_gate["environment"], "tcc-deployment-approval")
+        self.assertEqual(
+            human_gate["permissions"], {"actions": "read", "contents": "read"}
+        )
+        self.assertNotIn("id-token", human_gate["permissions"])
+        self.assertIn("record-human-gate-decision.py", rendered)
+        self.assertIn("/actions/runs/${GITHUB_RUN_ID}/approvals", rendered)
+        self.assertIn("human-gate-receipt-pr-", rendered)
+
     def test_cloud_auth_is_after_financial_and_candidate_guards(self):
         rendered = CLOUD_WORKFLOW.read_text(encoding="utf-8")
 

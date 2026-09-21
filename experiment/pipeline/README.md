@@ -97,7 +97,7 @@ execução pertencem à fase posterior, depois de as decisões estarem seladas.
 ## Gatilho por pull request no GitHub
 
 No GitHub, o equivalente a um merge request é um **pull request**. Os workflows
-versionados implementam o encadeamento em duas fronteiras de confiança:
+versionados implementam o encadeamento em três fronteiras de confiança:
 
 1. [`.github/workflows/tcc-pr-ci.yaml`](../../.github/workflows/tcc-pr-ci.yaml)
    roda automaticamente em abertura, atualização, reabertura ou retirada do
@@ -108,7 +108,14 @@ versionados implementam o encadeamento em duas fronteiras de confiança:
    recebe o evento `workflow_run` somente após sucesso da CI. Ele rejeita fork,
    revisão obsoleta, PR em rascunho e ausência dos rótulos
    `tcc-experiment-cloud` e `tcc-cost-reviewed`. A autenticação cloud só ocorre
-   depois da aprovação do ambiente protegido e das validações locais.
+   depois da aprovação do ambiente protegido e das validações locais;
+3. depois que staging e PDT selam as decisões, um job separado e sem
+   `id-token` espera a aprovação do ambiente protegido
+   `tcc-deployment-approval`. O job consulta o histórico de aprovações do
+   próprio workflow pela API do GitHub, vincula o login real do revisor ao hash
+   do gate e da ação preparada e publica um recibo. Esse recibo autoriza apenas
+   solicitar a validação isolada no oráculo; ele não autoriza GCP nem mutação do
+   ambiente operacional.
 
 Um PR comum nunca executa GKE. Para ser elegível ao estágio experimental, o PR
 deve introduzir exatamente um arquivo
@@ -134,7 +141,9 @@ Depois que os dois workflows estiverem na branch padrão:
    para `false` ao encerrar o bloco;
 4. criar os rótulos `tcc-experiment-cloud` e `tcc-cost-reviewed`;
 5. tornar o check `TCC Conventional CI / Conventional pre-staging gates`
-   obrigatório na proteção da branch `main`.
+   obrigatório na proteção da branch `main`;
+6. criar o ambiente `tcc-deployment-approval`, exigir revisor e restringi-lo à
+   branch `main`. Esse ambiente não recebe secrets nem identidade cloud.
 
 Em execuções de engenharia autorizadas, o job protegido reconstrói as três
 imagens experimentais, gera SBOM, bloqueia vulnerabilidades altas ou críticas,
@@ -152,10 +161,13 @@ Registry com retenção curta já provisionado. Nenhum passo faz deploy no
 namespace operacional.
 
 Em 21/09/2026, a identidade federada e essas configurações do GitHub foram
-aplicadas. A Service Account não possui chave; a auditoria de RBAC confirmou
+aplicadas. O ambiente `tcc-deployment-approval` também foi criado com
+`omatheu` como revisor obrigatório, política restrita à branch `main` e sem
+secrets. A Service Account não possui chave; a auditoria de RBAC confirmou
 mutação somente em `staging`, `pdt` e nos recursos estritamente necessários do
 `pdt-system`, com leitura do `operational` e sem acesso de mutação ao `oracle`.
 A variável `TCC_COST_REVIEW_ACKNOWLEDGED` permanece `false` e nenhum dos dois
 rótulos foi anexado ao PR #1, portanto essa configuração, por si só, não iniciou
 uma execução cloud. O workflow ainda precisa chegar à branch `main` antes da
-primeira execução protegida.
+primeira execução protegida e o novo gate humano precisa ser comprovado por uma
+execução de engenharia.

@@ -44,10 +44,12 @@ jobs:
           if [[ "${same_repository}" != "true" || "${current_revision}" != "true" || "${draft}" == "true" || "${experiment_label}" != "true" || "${cost_label}" != "true" ]]; then
             exit 0
           fi
-          echo "pull_request_number=${PR_NUMBER}" >> "${GITHUB_OUTPUT}"
-          echo "base_sha=$(jq -er '.base.sha' "${RUNNER_TEMP}/pull-request.json")" >> "${GITHUB_OUTPUT}"
-          echo "head_sha=$(jq -er '.head.sha' "${RUNNER_TEMP}/pull-request.json")" >> "${GITHUB_OUTPUT}"
-          echo "authorized=true" >> "${GITHUB_OUTPUT}"
+          {
+            echo "pull_request_number=${PR_NUMBER}"
+            echo "base_sha=$(jq -er '.base.sha' "${RUNNER_TEMP}/pull-request.json")"
+            echo "head_sha=$(jq -er '.head.sha' "${RUNNER_TEMP}/pull-request.json")"
+            echo "authorized=true"
+          } >> "${GITHUB_OUTPUT}"
 
   paired-experiment:
     name: Conventional staging plus PDT
@@ -63,6 +65,8 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    outputs:
+      human_gate_required: ${{ steps.paired.outputs.human_gate_required }}
     steps:
       - name: Require the per-block financial kill switch
         shell: bash
@@ -231,6 +235,12 @@ jobs:
           pipeline_dir=$(tail -n 1 "${RUNNER_TEMP}/paired-experiment.log")
           [[ -d "${pipeline_dir}" && -f "${pipeline_dir}/summary.json" ]]
           echo "pipeline_dir=${pipeline_dir}" >> "${GITHUB_OUTPUT}"
+          human_gate_required=$(jq -r '
+            .human_confirmation_required == true
+            and .deployment_action_prepared == true
+            and .operational_mutation_performed == false
+          ' "${pipeline_dir}/summary.json")
+          echo "human_gate_required=${human_gate_required}" >> "${GITHUB_OUTPUT}"
 
       - name: Upload paired experimental evidence
         if: always()
@@ -245,3 +255,77 @@ jobs:
             experiment/evidence/pipeline/paired-${{ steps.candidate.outputs.candidate_id }}-*/
           if-no-files-found: warn
           retention-days: 14
+
+  human-gate-receipt:
+    name: Record protected human PDT decision
+    needs:
+      - authorize
+      - paired-experiment
+    if: needs.paired-experiment.outputs.human_gate_required == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: tcc-deployment-approval
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Check out the exact reviewed revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.authorize.outputs.head_sha }}
+          persist-credentials: false
+
+      - name: Download the sealed paired evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: paired-experiment-pr-${{ needs.authorize.outputs.pull_request_number }}-${{ needs.authorize.outputs.head_sha }}
+          path: ${{ runner.temp }}/paired-evidence
+
+      - name: Record the protected environment reviewer and decision
+        id: receipt
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVIEW_ENVIRONMENT: tcc-deployment-approval
+        run: |
+          set -euo pipefail
+          mapfile -t gate_files < <(find "${RUNNER_TEMP}/paired-evidence" -type f -path '*/paired-*/gate.json' -print)
+          [[ ${#gate_files[@]} -eq 1 ]]
+          pipeline_dir=$(dirname "${gate_files[0]}")
+          [[ -f "${pipeline_dir}/deployment-action.json" ]]
+          [[ $(jq -er '.gate_state' "${pipeline_dir}/gate.json") == "awaiting-human-confirmation" ]]
+          [[ $(jq -er '.status' "${pipeline_dir}/deployment-action.json") == "prepared-awaiting-human-confirmation" ]]
+
+          approval_history="${RUNNER_TEMP}/github-environment-approvals.json"
+          gh api \
+            --header 'X-GitHub-Api-Version: 2026-03-10' \
+            "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/approvals" \
+            > "${approval_history}"
+
+          receipt="${pipeline_dir}/human-gate-decision.json"
+          python3 experiment/scripts/record-human-gate-decision.py \
+            --deployment-gate "${pipeline_dir}/gate.json" \
+            --deployment-action "${pipeline_dir}/deployment-action.json" \
+            --decision approve-isolated-validation \
+            --github-approval-history "${approval_history}" \
+            --github-environment "${REVIEW_ENVIRONMENT}" \
+            --github-repository "${GITHUB_REPOSITORY}" \
+            --github-workflow-run-id "${GITHUB_RUN_ID}" \
+            --output "${receipt}"
+          cp "${approval_history}" "${pipeline_dir}/github-environment-approvals.json"
+          jq -e '
+            .status == "approved"
+            and .scope == "isolated-oracle-validation"
+            and .human_review_evidence.environment == "tcc-deployment-approval"
+            and .cloud_execution_authorized == false
+            and .operational_mutation_authorized == false
+          ' "${receipt}" >/dev/null
+          echo "pipeline_dir=${pipeline_dir}" >> "${GITHUB_OUTPUT}"
+
+      - name: Upload the immutable human gate receipt
+        uses: actions/upload-artifact@v7
+        with:
+          name: human-gate-receipt-pr-${{ needs.authorize.outputs.pull_request_number }}-${{ needs.authorize.outputs.head_sha }}
+          path: ${{ steps.receipt.outputs.pipeline_dir }}/
+          if-no-files-found: error
+          retention-days: 30

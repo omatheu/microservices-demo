@@ -161,9 +161,11 @@ jobs:
           candidate_id=$(jq -er '.candidate_id' <<< "${result}")
           candidate_definition=$(jq -r '.candidate_definition // ""' <<< "${result}")
           experimental_cloud_eligible=$(jq -r '.experimental_cloud_eligible' <<< "${result}")
-          echo "candidate_id=${candidate_id}" >> "${GITHUB_OUTPUT}"
-          echo "candidate_definition=${candidate_definition}" >> "${GITHUB_OUTPUT}"
-          echo "experimental_cloud_eligible=${experimental_cloud_eligible}" >> "${GITHUB_OUTPUT}"
+          {
+            echo "candidate_id=${candidate_id}"
+            echo "candidate_definition=${candidate_definition}"
+            echo "experimental_cloud_eligible=${experimental_cloud_eligible}"
+          } >> "${GITHUB_OUTPUT}"
           jq . <<< "${result}"
 
       - name: Run all conventional pre-staging gates

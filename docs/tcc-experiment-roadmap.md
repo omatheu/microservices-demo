@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 20 de setembro de 2026.
+> **Última verificação:** 21 de setembro de 2026.
 
 ## Objetivo do experimento
 
@@ -301,6 +301,15 @@ rollback obrigatório no namespace efêmero `oracle`. Um recibo humano separado
 pode aprovar ou rejeitar essa validação, mas não autoriza custo cloud nem
 mutação do ambiente operacional. A comprovação de aplicação e cleanup numa
 execução autorizada ainda permanece pendente.
+
+O caminho do gate humano real também está implementado no workflow: depois da
+decisão pareada, um job sem identidade GCP aguarda o ambiente protegido
+`tcc-deployment-approval`, consulta o histórico oficial de aprovações do run e
+registra o revisor em um recibo ligado por hash ao gate e à ação. O ambiente foi
+criado no GitHub com `omatheu` como revisor obrigatório e somente a branch
+`main` permitida. O item permanece aberto até o workflow alcançar `main` e uma
+execução de engenharia comprovar a pausa e a retomada; a aprovação continua sem
+autorizar execução cloud ou mutação operacional.
 
 ### Fase 6 — Protocolo e corpus de avaliação
 
