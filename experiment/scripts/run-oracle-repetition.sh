@@ -34,6 +34,7 @@ run_succeeded=false
 run_dir=""
 runtime_manifest=""
 human_gate_validation=""
+treatment_decision="block"
 
 require_command() {
   command -v "$1" >/dev/null 2>&1 || {
@@ -121,38 +122,68 @@ if ! jq -e --arg candidate "$candidate_id" --arg sha256 "$candidate_definition_s
   exit 1
 fi
 if [[ "$control_decision" == "approve" ]]; then
-  for required_file in "$pdt_decision" "$deployment_gate" "$deployment_action" \
-    "$human_gate_decision" "$github_approval_history"; do
+  for required_file in "$pdt_decision" "$deployment_gate"; do
     [[ -f "$required_file" ]] || {
-      echo "Approved control requires protected human gate input: $required_file" >&2
+      echo "Approved control requires sealed PDT and gate input: $required_file" >&2
       exit 1
     }
   done
-  human_gate_validation=$(python3 \
-    "${repo_root}/experiment/scripts/validate-human-gate-receipt.py" \
-    --candidate-definition "$candidate_definition" \
-    --snapshot "$snapshot_file" \
-    --conventional-decision "$conventional_decision" \
-    --pdt-decision "$pdt_decision" \
-    --deployment-gate "$deployment_gate" \
-    --deployment-action "$deployment_action" \
-    --human-gate-decision "$human_gate_decision" \
-    --github-approval-history "$github_approval_history")
-  [[ $(jq -r '.validated' <<<"$human_gate_validation") == "true" ]] || {
-    echo "Protected human gate validation did not succeed." >&2
-    exit 1
-  }
-  [[ $(jq -r '.selected_alternative' <<<"$human_gate_validation") == "$alternative_id" ]] || {
-    echo "Oracle alternative differs from the protected human decision." >&2
-    exit 1
-  }
+  treatment_decision=$(jq -er '.decision | select(. == "approve" or . == "block" or . == "reconfigure")' "$pdt_decision")
+  if [[ "$treatment_decision" == "approve" || "$treatment_decision" == "reconfigure" ]]; then
+    for required_file in "$deployment_action" "$human_gate_decision" \
+      "$github_approval_history"; do
+      [[ -f "$required_file" ]] || {
+        echo "Deployable PDT action requires protected human gate input: $required_file" >&2
+        exit 1
+      }
+    done
+    human_gate_validation=$(python3 \
+      "${repo_root}/experiment/scripts/validate-human-gate-receipt.py" \
+      --candidate-definition "$candidate_definition" \
+      --snapshot "$snapshot_file" \
+      --conventional-decision "$conventional_decision" \
+      --pdt-decision "$pdt_decision" \
+      --deployment-gate "$deployment_gate" \
+      --deployment-action "$deployment_action" \
+      --human-gate-decision "$human_gate_decision" \
+      --github-approval-history "$github_approval_history")
+    [[ $(jq -r '.validated' <<<"$human_gate_validation") == "true" ]] || {
+      echo "Protected human gate validation did not succeed." >&2
+      exit 1
+    }
+    [[ $(jq -r '.selected_alternative' <<<"$human_gate_validation") == "$alternative_id" ]] || {
+      echo "Oracle alternative differs from the protected human decision." >&2
+      exit 1
+    }
+  else
+    if ! jq -e --arg candidate "$candidate_id" --arg snapshot "$(jq -er '.snapshot_id' "$snapshot_file")" \
+      --slurpfile control "$conventional_decision" '
+      .candidate == $candidate
+      and .snapshot_id == $snapshot
+      and .decision == "block"
+      and .artifact_binding.staging_binding_verified == true
+      and .artifact_binding.immutable_artifacts == $control[0].immutable_artifacts
+      and .artifact_binding.candidate_definition_sha256 == $control[0].candidate_definition_sha256
+    ' "$pdt_decision" >/dev/null || ! jq -e --arg candidate "$candidate_id" '
+      .candidate_id == $candidate
+      and .gate_state == "blocked"
+      and .pdt.decision == "block"
+      and .human_confirmation.status == "not-requested"
+      and .operational_mutation_performed == false
+    ' "$deployment_gate" >/dev/null; then
+      echo "Blocked PDT oracle path requires matching sealed PDT and gate decisions." >&2
+      exit 1
+    fi
+  fi
 fi
 if ! jq -e --arg candidate "$candidate_id" --arg sha256 "$candidate_definition_sha256" \
-  --arg control_decision "$control_decision" --argjson repetition "$repetition" '
+  --arg control_decision "$control_decision" --arg treatment_decision "$treatment_decision" \
+  --argjson repetition "$repetition" '
   .candidate_id == $candidate
   and .candidate_definition_sha256 == $sha256
   and (.repetitions | index($repetition) != null)
   and .control_decision == $control_decision
+  and .treatment_decision.decision == $treatment_decision
 ' "$private_work_item" >/dev/null; then
   echo "Private oracle work item does not authorize this candidate and repetition." >&2
   exit 1
@@ -278,11 +309,13 @@ cp "$policy_file" "${run_dir}/oracle-policy.json"
 if [[ "$control_decision" == "approve" ]]; then
   cp "$pdt_decision" "${run_dir}/pdt-decision.json"
   cp "$deployment_gate" "${run_dir}/deployment-gate.json"
-  cp "$deployment_action" "${run_dir}/deployment-action.json"
-  cp "$human_gate_decision" "${run_dir}/human-gate-decision.json"
-  cp "$github_approval_history" "${run_dir}/github-environment-approvals.json"
-  printf '%s\n' "$human_gate_validation" | jq . \
-    >"${run_dir}/human-gate-validation.json"
+  if [[ "$treatment_decision" == "approve" || "$treatment_decision" == "reconfigure" ]]; then
+    cp "$deployment_action" "${run_dir}/deployment-action.json"
+    cp "$human_gate_decision" "${run_dir}/human-gate-decision.json"
+    cp "$github_approval_history" "${run_dir}/github-environment-approvals.json"
+    printf '%s\n' "$human_gate_validation" | jq . \
+      >"${run_dir}/human-gate-validation.json"
+  fi
 fi
 
 python3 "${repo_root}/experiment/scripts/prepare-oracle-runtime.py" \

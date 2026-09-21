@@ -318,6 +318,12 @@ recusa qualquer divergência antes de chamar `kubectl`. Assim, a confirmação
 humana deixou de ser somente evidência produzida e passou a ser uma precondição
 executável da validação isolada. A execução real continua pendente.
 
+A barreira que libera o item privado do oráculo aplica a mesma regra antes de
+revelar operador e parâmetros. `approve` e `reconfigure` exigem revisão humana
+protegida; `block` não inventa uma ação para aprovação, mas exige decisão PDT e
+gate bloqueado coerentes. Isso preserva a distinção entre supervisão de uma
+ação prescritiva e a coleta posterior de ground truth.
+
 ### Fase 6 — Protocolo e corpus de avaliação
 
 Objetivo: avaliar os mecanismos em candidatas cujo rótulo não esteja disponível

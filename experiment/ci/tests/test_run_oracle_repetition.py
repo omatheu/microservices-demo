@@ -73,6 +73,10 @@ class RunOracleRepetitionTests(unittest.TestCase):
                         "candidate_definition_sha256": candidate_sha,
                         "repetitions": [1, 2, 3],
                         "control_decision": "block",
+                        "treatment_decision": {
+                            "decision": "block",
+                            "source": "inherited-control-block",
+                        },
                     }
                 ),
                 encoding="utf-8",

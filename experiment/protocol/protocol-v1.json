@@ -346,7 +346,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "54b0716a752494c2b03f8c87ecabcfb1c55243b6a487dc2562ccc6a8cad1afce"
+      "sha256": "a3c6f4e28ab3f32dcfe60c22e9ba221ab78670fb102f1599f959a001e00f325d"
     }
   },
   "required_before_freeze": [

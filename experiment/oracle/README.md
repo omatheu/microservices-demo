@@ -18,7 +18,12 @@ CI/CD convencional + staging -> decisão de controle selada
 Se o controle bloquear a candidata, o tratamento herda o bloqueio e o PDT não
 é executado. A liberação ainda ocorre somente depois de a decisão convencional
 estar selada. Se o controle aprovar, a liberação exige a decisão PDT, o gate
-terminal e identidade exata de artefato e configuração entre as condições.
+terminal e identidade exata de artefato e configuração entre as condições. Se
+o PDT selecionar `approve` ou `reconfigure`, a barreira também exige o recibo
+do ambiente protegido, a ação preparada e o histórico bruto de aprovação do
+GitHub. Se o PDT selecionar `block`, nenhuma ação deployável existe para ser
+aprovada; o gate deve estar terminalmente bloqueado e o oráculo segue apenas
+com as travas financeiras da avaliação.
 
 Um bloqueio anterior ao build não elimina a candidata do corpus. Como não há
 imagem que possa ser implantada, ele segue um caminho de oráculo pré-artefato:
@@ -31,7 +36,9 @@ PDT.
 O script `unlock-oracle-candidate.py` implementa essa barreira. O recibo
 público não contém operador, parâmetros ou rótulo. O item privado tem permissão
 `0600` e só pode ser usado pelo executor do oráculo depois do fechamento das
-decisões.
+decisões. Para ações deployáveis ele reutiliza o mesmo validador fail-closed do
+runner, de modo que o manifesto privado não é revelado antes da aprovação
+humana protegida.
 
 ## Ambiente
 

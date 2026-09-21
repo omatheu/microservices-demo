@@ -58,10 +58,11 @@ def control(decision="approve"):
     }
 
 
-def pdt():
+def pdt(decision="approve"):
     return {
         "candidate": CANDIDATE_ID,
-        "decision": "approve",
+        "decision": decision,
+        "selected_alternative": "deploy-as-is",
         "artifact_binding": {
             "candidate_definition_sha256": DEFINITION_SHA256,
             "immutable_artifacts": [],
@@ -69,22 +70,48 @@ def pdt():
     }
 
 
-def gate():
+def gate(decision="approve"):
+    blocked = decision == "block"
     return {
         "candidate_id": CANDIDATE_ID,
-        "gate_state": "awaiting-human-confirmation",
+        "gate_state": "blocked" if blocked else "awaiting-human-confirmation",
+        "pdt": {
+            "decision": decision,
+            "selected_alternative": "deploy-as-is",
+        },
+        "human_confirmation": {
+            "status": "not-requested" if blocked else "pending"
+        },
         "operational_mutation_performed": False,
+    }
+
+
+def protected_review():
+    return {
+        "validated": True,
+        "candidate_id": CANDIDATE_ID,
+        "selected_alternative": "deploy-as-is",
+        "review_environment": "tcc-deployment-approval",
+        "repository": "owner/repository",
+        "workflow_run_id": 1234,
     }
 
 
 class UnlockOracleCandidateTests(unittest.TestCase):
     def test_approved_control_requires_and_accepts_sealed_pdt(self):
         private_item, receipt = MODULE.unlock(
-            public(), oracle(), CANDIDATE_ID, control(), pdt(), gate()
+            public(),
+            oracle(),
+            CANDIDATE_ID,
+            control(),
+            pdt(),
+            gate(),
+            protected_review(),
         )
 
         self.assertEqual(private_item["operator_id"], "INF-CPU-01")
         self.assertEqual(receipt["treatment_decision"], "approve")
+        self.assertTrue(receipt["protected_human_gate_verified"])
         self.assertEqual(
             MODULE.recursively_find_keys(receipt, MODULE.FORBIDDEN_RECEIPT_KEYS), []
         )
@@ -92,6 +119,25 @@ class UnlockOracleCandidateTests(unittest.TestCase):
     def test_approved_control_without_pdt_is_blocked(self):
         with self.assertRaisesRegex(ValueError, "requires sealed PDT"):
             MODULE.unlock(public(), oracle(), CANDIDATE_ID, control())
+
+    def test_deployable_pdt_action_without_protected_review_is_blocked(self):
+        with self.assertRaisesRegex(ValueError, "protected human review"):
+            MODULE.unlock(
+                public(), oracle(), CANDIDATE_ID, control(), pdt(), gate()
+            )
+
+    def test_pdt_block_does_not_require_a_deployable_action_review(self):
+        private_item, receipt = MODULE.unlock(
+            public(),
+            oracle(),
+            CANDIDATE_ID,
+            control(),
+            pdt("block"),
+            gate("block"),
+        )
+
+        self.assertEqual(private_item["treatment_decision"]["decision"], "block")
+        self.assertFalse(receipt["protected_human_gate_verified"])
 
     def test_control_block_inherits_treatment_block_without_running_pdt(self):
         private_item, receipt = MODULE.unlock(
@@ -124,6 +170,7 @@ class UnlockOracleCandidateTests(unittest.TestCase):
             control(),
             pdt(),
             gate(),
+            protected_review(),
             allow_draft=True,
         )
         self.assertEqual(private_item["candidate_id"], CANDIDATE_ID)
@@ -134,7 +181,13 @@ class UnlockOracleCandidateTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "candidate definitions differ"):
             MODULE.unlock(
-                public(), oracle(), CANDIDATE_ID, control(), pdt_decision, gate()
+                public(),
+                oracle(),
+                CANDIDATE_ID,
+                control(),
+                pdt_decision,
+                gate(),
+                protected_review(),
             )
 
 
