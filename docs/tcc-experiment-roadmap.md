@@ -276,6 +276,12 @@ dedicado que permite apenas os recursos necessários a esse Job. O item
 “executar o controlador sob demanda” permanece pendente até a publicação por
 digest e um piloto cloud explicitamente autorizado comprovarem esse caminho.
 
+O contrato de fidelidade pós-decisão também está implementado localmente. Para
+cada alternativa e repetição, ele exige identidade e hashes selados, compara a
+previsão do PDT com o perfil basal observado pelo oráculo e registra erro
+assinado, absoluto e relativo, sem usar o rótulo pretendido. O checkbox de
+fidelidade permanece aberto até existirem observações cloud válidas.
+
 ### Fase 5 — Gate PDT incremental e semiautônomo
 
 Objetivo: acrescentar a previsão à esteira convencional e orientar uma ação
@@ -457,6 +463,15 @@ matriz funcional contra o `checkoutservice`, mas não integra a análise
 principal. Ainda faltam validar os dois caminhos com candidatas materializadas,
 validar todas as imagens e realizar a execução cega posterior às decisões
 seladas.
+
+O runner agora permite ao oráculo percorrer todas as alternativas implantáveis
+que a definição candidata e a decisão PDT selada têm em comum, mesmo quando o
+gate humano aprovou apenas a ação recomendada. Essa ampliação vale somente no
+namespace isolado `oracle` e é necessária para adjudicar a melhor ação; não
+autoriza mutação operacional. Quando existe previsão PDT para a alternativa, o
+runner persiste ainda `pdt-fidelity.json`, vinculado por hash, com erro por
+métrica e concordância de classificação. A implementação está coberta
+localmente, mas os itens quantitativos continuam pendentes de execução real.
 
 ### Fase 8 — Análise final
 

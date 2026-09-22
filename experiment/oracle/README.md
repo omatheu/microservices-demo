@@ -12,7 +12,8 @@ CI/CD convencional + staging -> decisão de controle selada
                                     -> gate sem mutação operacional
                                            -> liberação do item privado
                                                   -> execução no oracle
-                                                         -> adjudicação
+                                                         -> relatório de fidelidade
+                                                                -> adjudicação
 ```
 
 Se o controle bloquear a candidata, o tratamento herda o bloqueio e o PDT não
@@ -58,7 +59,8 @@ Cada repetição deve:
    `policy-v1.json`;
 4. coletar disponibilidade, reinícios e duplicidade de efeitos;
 5. persistir uma observação por alternativa e repetição;
-6. limpar todos os workloads antes da execução seguinte.
+6. comparar a observação com a previsão PDT já selada, quando ela existir;
+7. limpar todos os workloads antes da execução seguinte.
 
 O runner [`../scripts/run-oracle-repetition.sh`](../scripts/run-oracle-repetition.sh)
 implementa esse ciclo para uma alternativa implantável. Isso inclui candidatas
@@ -70,6 +72,12 @@ Quando o controle aprovou e o PDT selecionou uma ação, o runner também exige 
 decisão PDT, o gate, a ação, o recibo humano e o histórico bruto de aprovação
 do GitHub. `validate-human-gate-receipt.py` recompõe todos os hashes e exige
 uma aprovação do ambiente protegido antes de qualquer chamada ao Kubernetes.
+Essa aprovação continua vinculada à ação escolhida, mas não restringe a matriz
+de avaliação independente: depois do selo, o oráculo pode executar qualquer
+alternativa implantável que já conste da definição candidata e da lista de
+contrafactuais efetivamente avaliados pelo PDT. Isso é necessário para
+classificar `deploy-as-is`, verificar reconfigurações e determinar a melhor
+ação sem alterar a decisão histórica.
 Uma candidata bloqueada pelo controle não possui ação PDT para aprovar e segue
 o caminho independente de adjudicação/oráculo já selado.
 Falhas funcionais da candidata não encerram o runner: o harness permanece
@@ -122,7 +130,7 @@ perfis de desempenho, limites de saúde e a regra de duas repetições prejudici
 entre pelo menos duas válidas. `adjudicate-oracle.py` já implementa e testa essa
 regra sem usar o rótulo pretendido como entrada da classificação.
 
-[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 19
+[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 21
 arquivos que definem a política, o harness, os avaliadores e o runner. O
 validador `validate-oracle-suite.py` falha se qualquer arquivo mudar. O
 manifesto permanece `pre-registration-candidate` e seus dois digests de imagem
@@ -138,6 +146,16 @@ adjudicador. `prepare-oracle-runtime.py` gera um runtime Kubernetes mínimo,
 privado e vinculado aos mesmos artefatos selados pelo controle, e
 `run-oracle-repetition.sh` encadeia validação do gate humano, deployment,
 medições, composição e cleanup.
+
+Quando há previsão PDT, o runner também chama
+[`../scripts/calculate-pdt-fidelity.py`](../scripts/calculate-pdt-fidelity.py).
+O relatório `pdt-fidelity.json` compara sucesso, p95/p99 do checkout,
+indisponibilidade e reinícios da mesma candidata, alternativa e repetição. Ele
+registra erro assinado, absoluto e relativo, além da concordância entre a
+classificação prevista e a observada. Observação zero mantém erro relativo
+como `null`; não há imputação. A política
+[`../pdt/fidelity-policy.json`](../pdt/fidelity-policy.json) proíbe que o
+relatório altere a decisão ou recalibre o modelo com o corpus confirmatório.
 
 Para candidatas bloqueadas antes de existir artefato,
 [`../scripts/evaluate-oracle-preartifact.py`](../scripts/evaluate-oracle-preartifact.py)

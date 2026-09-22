@@ -19,6 +19,7 @@ repetition=${REPETITION:-1}
 harness_image=${ORACLE_HARNESS_IMAGE:-}
 currency_reference_image=${CURRENCY_REFERENCE_IMAGE:-}
 policy_file=${ORACLE_POLICY:-${repo_root}/experiment/oracle/policy-v1.json}
+fidelity_policy=${FIDELITY_POLICY:-${repo_root}/experiment/pdt/fidelity-policy.json}
 namespace=${NAMESPACE:-oracle}
 local_port=${LOCAL_PORT:-18082}
 engineering_duration=${ENGINEERING_DURATION_SECONDS:-}
@@ -71,7 +72,7 @@ if [[ ! "$local_port" =~ ^[1-9][0-9]*$ ]] || (( local_port > 65535 )); then
   echo "LOCAL_PORT must be between 1 and 65535." >&2
   exit 1
 fi
-for required_file in "$candidate_definition" "$conventional_decision" "$private_work_item" "$snapshot_file" "$policy_file"; do
+for required_file in "$candidate_definition" "$conventional_decision" "$private_work_item" "$snapshot_file" "$policy_file" "$fidelity_policy"; do
   [[ -f "$required_file" ]] || {
     echo "Required oracle input file not found: $required_file" >&2
     exit 1
@@ -151,8 +152,9 @@ if [[ "$control_decision" == "approve" ]]; then
       echo "Protected human gate validation did not succeed." >&2
       exit 1
     }
-    [[ $(jq -r '.selected_alternative' <<<"$human_gate_validation") == "$alternative_id" ]] || {
-      echo "Oracle alternative differs from the protected human decision." >&2
+    pdt_selected_alternative=$(jq -er '.selected_alternative' "$pdt_decision")
+    [[ $(jq -r '.selected_alternative' <<<"$human_gate_validation") == "$pdt_selected_alternative" ]] || {
+      echo "Protected human decision differs from the sealed PDT action." >&2
       exit 1
     }
   else
@@ -175,6 +177,22 @@ if [[ "$control_decision" == "approve" ]]; then
       exit 1
     fi
   fi
+  if ! jq -e --arg candidate "$candidate_id" --arg alternative "$alternative_id" \
+    --arg mode "$mode" --argjson repetition "$repetition" '
+    .candidate == $candidate
+    and .repetition == $repetition
+    and .execution_mode == $mode
+    and .operational_mutation_performed == false
+    and ([.alternatives_evaluated[] |
+      select(
+        .id == $alternative
+        and .action == "deploy"
+        and (.predicted_metrics | type == "object")
+      )] | length == 1)
+  ' "$pdt_decision" >/dev/null; then
+    echo "Oracle alternative lacks a matching sealed PDT prediction for this repetition." >&2
+    exit 1
+  fi
 fi
 if ! jq -e --arg candidate "$candidate_id" --arg sha256 "$candidate_definition_sha256" \
   --arg control_decision "$control_decision" --arg treatment_decision "$treatment_decision" \
@@ -194,6 +212,20 @@ if ! jq -e --arg mode "$mode" '
   and ($mode != "confirmatory" or .status == "frozen")
 ' "$policy_file" >/dev/null; then
   echo "Oracle policy is invalid or not frozen for confirmatory execution." >&2
+  exit 1
+fi
+if ! jq -e --arg mode "$mode" '
+  .policy_id == "checkout-pdt-fidelity-v1"
+  and .twin_object == "checkoutservice"
+  and .controls.post_decision_only == true
+  and .controls.model_mutation_allowed == false
+  and .controls.confirmatory_corpus_recalibration_allowed == false
+  and (
+    $mode != "confirmatory"
+    or (.status == "frozen" and (.frozen_at | type == "string" and length > 0))
+  )
+' "$fidelity_policy" >/dev/null; then
+  echo "Fidelity policy is invalid or not frozen for confirmatory execution." >&2
   exit 1
 fi
 if ! jq -e '
@@ -450,6 +482,25 @@ python3 "${repo_root}/experiment/scripts/compose-oracle-observation.py" \
   "${performance_arguments[@]}" --health "${run_dir}/health.json" \
   --output "${run_dir}/observation.json" >"${run_dir}/compose-observation.log"
 
+fidelity_report=""
+if [[ "$control_decision" == "approve" ]]; then
+  fidelity_report="${run_dir}/pdt-fidelity.json"
+  python3 "${repo_root}/experiment/scripts/calculate-pdt-fidelity.py" \
+    --policy "$fidelity_policy" --oracle-policy "$policy_file" \
+    --pdt-decision "$pdt_decision" \
+    --oracle-observation "${run_dir}/observation.json" \
+    --output "$fidelity_report" >"${run_dir}/fidelity.log"
+fi
+
+pdt_decision_sha256=""
+fidelity_report_sha256=""
+if [[ -n "$pdt_decision" ]]; then
+  pdt_decision_sha256=$(sha256sum "$pdt_decision" | cut -d ' ' -f1)
+fi
+if [[ -n "$fidelity_report" ]]; then
+  fidelity_report_sha256=$(sha256sum "$fidelity_report" | cut -d ' ' -f1)
+fi
+
 jq -n \
   --arg schema_version "1.0.0" --arg run_id "$run_id" --arg mode "$mode" \
   --arg candidate_id "$candidate_id" --arg alternative_id "$alternative_id" \
@@ -460,6 +511,9 @@ jq -n \
   --arg private_work_item_sha256 "$(sha256sum "$private_work_item" | cut -d ' ' -f1)" \
   --arg snapshot_sha256 "$(sha256sum "$snapshot_file" | cut -d ' ' -f1)" \
   --arg oracle_policy_sha256 "$(sha256sum "$policy_file" | cut -d ' ' -f1)" \
+  --arg fidelity_policy_sha256 "$(sha256sum "$fidelity_policy" | cut -d ' ' -f1)" \
+  --arg pdt_decision_sha256 "$pdt_decision_sha256" \
+  --arg fidelity_report_sha256 "$fidelity_report_sha256" \
   --arg runtime_sha256 "$(sha256sum "$runtime_manifest" | cut -d ' ' -f1)" '
   {
     schema_version: $schema_version,
@@ -478,8 +532,15 @@ jq -n \
       private_work_item: $private_work_item_sha256,
       pdt_snapshot: $snapshot_sha256,
       oracle_policy: $oracle_policy_sha256,
+      fidelity_policy: $fidelity_policy_sha256,
+      pdt_decision: (if $pdt_decision_sha256 == "" then null else $pdt_decision_sha256 end),
       runtime: $runtime_sha256
-    }
+    },
+    pdt_fidelity: (
+      if $fidelity_report_sha256 == "" then null
+      else {path: "pdt-fidelity.json", sha256: $fidelity_report_sha256}
+      end
+    )
   }' >"${run_dir}/metadata.json"
 
 cleanup_runtime

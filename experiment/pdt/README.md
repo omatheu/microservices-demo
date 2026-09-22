@@ -75,3 +75,22 @@ de limiares usado pelo staging. Ele repete também os checkouts válidos, os doi
 caminhos negativos e o tráfego Locust, e aplica a mesma política de sucesso,
 latência, disponibilidade e reinícios. Essa simetria impede atribuir ao PDT uma
 vantagem causada simplesmente por receber uma suíte de testes melhor.
+
+## Fidelidade pós-decisão
+
+A previsão não é tratada como verdadeira apenas porque o PDT produziu uma
+decisão. Depois de a decisão ficar selada, o oráculo isolado produz uma
+observação para cada alternativa e repetição. O utilitário
+[`../scripts/calculate-pdt-fidelity.py`](../scripts/calculate-pdt-fidelity.py)
+compara essa observação com a entrada correspondente de
+`alternatives_evaluated`, exigindo a mesma candidata, alternativa, repetição e
+modo de execução.
+
+A política [`fidelity-policy.json`](./fidelity-policy.json) fixa as métricas e
+as fórmulas antes da coleta: erro assinado, absoluto e relativo para taxa de
+sucesso, p95/p99 do checkout, indisponibilidade e reinícios, além da
+concordância de classificação. O rótulo pretendido da mutação não é usado. O
+resultado é somente pós-decisão e registra
+`model_mutation_performed: false` e `recalibration_allowed: false`; dados
+confirmatórios jamais podem retroagir sobre o modelo avaliado. A evidência
+quantitativa continua pendente das execuções autorizadas do oráculo.

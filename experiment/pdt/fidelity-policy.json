@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "policy_id": "checkout-pdt-fidelity-v1",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
+  "twin_object": "checkoutservice",
+  "evaluation_scope": "candidate-alternative-repetition",
+  "oracle_policy_id": "checkout-oracle-v1",
+  "oracle_profile_id": "baseline",
+  "metrics": [
+    {
+      "id": "checkout_success_rate",
+      "unit": "ratio",
+      "prediction": "predicted_metrics.checkout.successes / predicted_metrics.checkout.tests",
+      "observation": "oracle.performance_profiles[baseline].success_rate"
+    },
+    {
+      "id": "checkout_latency_p95_ms",
+      "unit": "milliseconds",
+      "prediction": "predicted_metrics.checkout.latency_p95_ms",
+      "observation": "oracle.performance_profiles[baseline].checkout_latency_p95_ms"
+    },
+    {
+      "id": "checkout_latency_p99_ms",
+      "unit": "milliseconds",
+      "prediction": "predicted_metrics.checkout.latency_p99_ms",
+      "observation": "oracle.performance_profiles[baseline].checkout_latency_p99_ms"
+    },
+    {
+      "id": "checkoutservice_unavailable",
+      "unit": "deployments",
+      "prediction": "predicted_metrics.checkout.unavailable",
+      "observation": "oracle.health.checkoutservice_unavailable"
+    },
+    {
+      "id": "checkoutservice_restart_increase",
+      "unit": "restarts",
+      "prediction": "predicted_metrics.checkout.restart_increase",
+      "observation": "oracle.health.checkoutservice_restart_increase"
+    }
+  ],
+  "error_definitions": {
+    "signed_error": "predicted - observed",
+    "absolute_error": "abs(predicted - observed)",
+    "relative_error": "abs(predicted - observed) / abs(observed)",
+    "zero_observation_relative_error": null
+  },
+  "controls": {
+    "post_decision_only": true,
+    "oracle_intended_label_is_not_an_input": true,
+    "model_mutation_allowed": false,
+    "confirmatory_corpus_recalibration_allowed": false,
+    "calibration_rule": "Only separately designated engineering pilots may inform a new version of the model policy and protocol; confirmatory reports are evaluation-only."
+  },
+  "limitations": [
+    "Continuous errors compare the checkout path measured by the PDT under its synchronized fixed load with the independent oracle baseline checkout profile; differences in sampling duration remain a measurement limitation.",
+    "A fidelity report evaluates a sealed prediction after the decision and cannot retroactively change that decision.",
+    "Relative error is undefined when the observed value is zero and is reported as null instead of being imputed."
+  ]
+}

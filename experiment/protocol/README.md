@@ -237,6 +237,11 @@ O runner pareado, o preparador da ação selecionada e o registrador do gate
 humano também são inputs selados. Assim, a fronteira do `checkoutservice`, o
 rollback efêmero e a separação entre aprovação humana e autorização cloud não
 podem ser alterados depois da observação dos resultados.
+O runner do oráculo, a política de fidelidade e o calculador pós-decisão ficam
+vinculados pelo manifesto da suíte do oráculo. Assim, as alternativas
+observáveis, o conjunto de métricas, as fórmulas de erro e a vedação de
+recalibração confirmatória não podem ser modificados depois da abertura dos
+rótulos.
 O compositor do dataset e o analisador confirmatório também são selados. O
 primeiro verifica os hashes de cada decisão e adjudicação e exige uma linha de
 fluxo para cada candidata declarada. Uma exclusão de infraestrutura só é aceita

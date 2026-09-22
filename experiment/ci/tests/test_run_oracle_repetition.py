@@ -15,6 +15,31 @@ IMAGE_PREFIX = "us-central1-docker.pkg.dev/project/repository"
 
 
 class RunOracleRepetitionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.script = SCRIPT_PATH.read_text(encoding="utf-8")
+
+    def test_all_predeclared_pdt_deployments_can_reach_the_isolated_oracle(self):
+        self.assertIn(
+            "pdt_selected_alternative=$(jq -er '.selected_alternative' \"$pdt_decision\")",
+            self.script,
+        )
+        self.assertIn('.id == $alternative', self.script)
+        self.assertIn('.action == "deploy"', self.script)
+        self.assertIn('(.predicted_metrics | type == "object")', self.script)
+        self.assertIn('.repetition == $repetition', self.script)
+        self.assertNotIn(
+            '== "$alternative_id" ]] || {\n      echo "Oracle alternative differs from the protected human decision.',
+            self.script,
+        )
+
+    def test_oracle_run_persists_hash_bound_post_decision_fidelity(self):
+        self.assertIn("calculate-pdt-fidelity.py", self.script)
+        self.assertIn('--oracle-observation "${run_dir}/observation.json"', self.script)
+        self.assertIn('fidelity_report="${run_dir}/pdt-fidelity.json"', self.script)
+        self.assertIn('pdt_fidelity:', self.script)
+        self.assertIn('fidelity_policy:', self.script)
+
     def test_cloud_execution_is_fail_closed_before_kubectl(self):
         with tempfile.TemporaryDirectory() as directory:
             root = pathlib.Path(directory)

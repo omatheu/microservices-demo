@@ -22,9 +22,17 @@ class ValidateOracleSuiteTests(unittest.TestCase):
     def test_candidate_suite_files_are_bound_but_images_remain_pending(self):
         result = MODULE.validate(REPO_ROOT, manifest())
 
-        self.assertEqual(result["file_count"], 19)
+        self.assertEqual(result["file_count"], 21)
         self.assertIn(
             "experiment/scripts/validate-human-gate-receipt.py",
+            {item["path"] for item in manifest()["files"]},
+        )
+        self.assertIn(
+            "experiment/scripts/calculate-pdt-fidelity.py",
+            {item["path"] for item in manifest()["files"]},
+        )
+        self.assertIn(
+            "experiment/pdt/fidelity-policy.json",
             {item["path"] for item in manifest()["files"]},
         )
         self.assertFalse(result["images_ready"])
