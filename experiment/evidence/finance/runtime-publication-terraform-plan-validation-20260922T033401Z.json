@@ -1,0 +1,68 @@
+{
+  "apply_authorized": false,
+  "artifact_publication_authorized": false,
+  "blocking_requirements": [],
+  "check_count": 9,
+  "checks": [
+    {
+      "detail": "resource_change_count=46",
+      "id": "terraform-plan-json-structure",
+      "passed": true
+    },
+    {
+      "detail": "changed_addresses=['google_artifact_registry_repository_iam_member.github_runtime_publisher_writer[0]', 'google_service_account.github_runtime_publisher[0]', 'google_service_account_iam_member.github_runtime_publisher_federation[0]']",
+      "id": "exact-runtime-publisher-change-set",
+      "passed": true
+    },
+    {
+      "detail": "actions=[['create'], ['create'], ['create']]",
+      "id": "create-only-no-update-or-destroy",
+      "passed": true
+    },
+    {
+      "detail": "publisher_email=github-tcc-runtime-publisher@microservices-demo-tcc.iam.gserviceaccount.com",
+      "id": "keyless-runtime-publisher-identity",
+      "passed": true
+    },
+    {
+      "detail": "scope=microservices-demo-tcc/us-central1/online-boutique-experiment",
+      "id": "artifact-registry-repository-writer-only",
+      "passed": true
+    },
+    {
+      "detail": "principal=principalSet://iam.googleapis.com/projects/3042974916/locations/global/workloadIdentityPools/github-tcc-experiment/attribute.repository_id/1376372479",
+      "id": "repository-scoped-workload-identity",
+      "passed": true
+    },
+    {
+      "detail": "publisher_reference_graph_valid=True",
+      "id": "isolated-runtime-publisher-reference-graph",
+      "passed": true
+    },
+    {
+      "detail": "changed_types=['google_artifact_registry_repository_iam_member', 'google_service_account', 'google_service_account_iam_member']",
+      "id": "no-service-account-key",
+      "passed": true
+    },
+    {
+      "detail": "changed_types=['google_artifact_registry_repository_iam_member', 'google_service_account', 'google_service_account_iam_member']",
+      "id": "no-compute-storage-or-network-resource-change",
+      "passed": true
+    }
+  ],
+  "cost_authorized": false,
+  "expected_change_count": 3,
+  "gcp_mutation_performed": false,
+  "github_mutation_performed": false,
+  "mechanism": "runtime-publication-terraform-plan-validator",
+  "observed_change_count": 3,
+  "passed_count": 9,
+  "plan_matches_approved_scope": true,
+  "plan_sha256": "833a1c0bc4f7cf8be8ea29d013d3f9691658b682c42933b672a6dc892e270d7c",
+  "project_id": "microservices-demo-tcc",
+  "read_only_validation": true,
+  "schema_version": "1.0.0",
+  "terraform_apply_performed": false,
+  "terraform_version": "1.16.3",
+  "validated_at": "2026-09-22T03:34:01Z"
+}

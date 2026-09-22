@@ -20,6 +20,7 @@ REQUIRED_INPUTS = {
     "protocol_freeze_candidate_preparer",
     "protocol_freeze_finalizer",
     "runtime_publication_readiness_auditor",
+    "runtime_publication_terraform_plan_validator",
     "protocol_input_validator",
     "pull_request_workflow",
     "cloud_experiment_workflow",

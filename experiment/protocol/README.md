@@ -256,6 +256,20 @@ PR e falha quando uma leitura IAM necessária está indisponível. Mesmo com 13/
 o resultado não autoriza publicação; a janela ainda exige aprovação humana e a
 ativação deliberada da variável financeira exclusiva.
 
+O arquivo binário candidato a `terraform apply` também precisa passar pelo gate
+de escopo antes de qualquer instalação:
+
+```bash
+python3 experiment/scripts/validate-runtime-publication-terraform-plan.py \
+  --plan /tmp/runtime-publication-controls.tfplan \
+  --require-safe
+```
+
+Esse gate abre diretamente o plano binário, registra seu SHA-256 e aceita
+somente as três criações IAM predeclaradas. Um resultado 9/9 continua com
+`apply_authorized: false` e `cost_authorized: false`; autorização e execução são
+eventos posteriores e separados.
+
 Depois da revisão dos dois manifests propostos, o próximo passo também é
 gerado sem tocar na árvore ativa:
 
@@ -313,11 +327,11 @@ confere estrutura e hashes do protocolo, operadores, estados das políticas,
 arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
 explícita do pesquisador.
 
-O auditor de congelamento, o auditor da publicação dos runtimes, o preparador
-do candidato, o finalizador e o próprio validador agora também fazem parte dos
-28 inputs selados do protocolo. Assim, as regras que decidem a prontidão e
-materializam a proposta final não podem ser trocadas silenciosamente depois da
-aprovação do desenho.
+O auditor de congelamento, o auditor da publicação dos runtimes, o validador do
+plano Terraform, o preparador do candidato, o finalizador e o próprio validador
+agora também fazem parte dos 29 inputs selados do protocolo. Assim, as regras
+que decidem a prontidão e materializam a proposta final não podem ser trocadas
+silenciosamente depois da aprovação do desenho.
 
 Os dois workflows GitHub também são inputs selados. Qualquer mudança no
 gatilho do pull request, nas travas financeiras, na identidade cloud ou na

@@ -126,6 +126,63 @@ to the protected GitHub Environment secrets described in
 [`../experiment/pipeline/README.md`](../experiment/pipeline/README.md). Keep the
 GitHub financial kill switch disabled until each block review.
 
+### Runtime publisher installation transaction
+
+The publication-only identity is installed as a fail-closed transaction. First
+generate a binary plan and validate that exact file from the repository root:
+
+```sh
+terraform -chdir=infra/terraform plan \
+  -input=false \
+  -out=/tmp/runtime-publication-controls.tfplan
+
+python3 experiment/scripts/validate-runtime-publication-terraform-plan.py \
+  --plan /tmp/runtime-publication-controls.tfplan \
+  --require-safe
+```
+
+The validator accepts only three creates: the keyless publisher Service
+Account, its repository-scoped OIDC binding, and
+`roles/artifactregistry.writer` on the existing experiment repository. It
+rejects updates, destroys, keys, project roles and compute, storage or network
+changes. It records the SHA-256 of the binary plan but never authorizes or runs
+`terraform apply`.
+
+Only after a separate review and explicit apply authorization, apply that same
+binary file. Then register the output without arming a publication:
+
+```sh
+terraform -chdir=infra/terraform apply /tmp/runtime-publication-controls.tfplan
+
+publisher_service_account="$(
+  terraform -chdir=infra/terraform output -json github_actions_federation |
+    jq -r '.runtime_publisher_service_account'
+)"
+
+gh secret set GCP_RUNTIME_PUBLISHER_SERVICE_ACCOUNT \
+  --repo omatheu/microservices-demo \
+  --env tcc-experiment \
+  --body "${publisher_service_account}"
+
+gh variable set TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED \
+  --repo omatheu/microservices-demo \
+  --env tcc-experiment \
+  --body false
+
+gh label create tcc-runtime-publication \
+  --repo omatheu/microservices-demo \
+  --color 1D76DB \
+  --description "Authorize the isolated TCC runtime publication path"
+```
+
+The workflow must already be present on `main`. Do not attach an authorization
+label to a pull request and do not change either financial variable to `true`
+during installation. Finish by requiring 13/13 from
+`audit-runtime-publication-readiness.py`. If any GitHub step fails, leave the
+publisher unused and the switches off; do not compensate with direct IAM
+changes. A future rollback must be produced and reviewed as a new Terraform
+plan.
+
 ## Deploy the environments
 
 After Terraform completes, configure `kubectl` using the command exposed by the

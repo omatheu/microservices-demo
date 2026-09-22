@@ -444,6 +444,13 @@ o PR desarmado, secrets, variáveis financeiras, ausência de chaves persistente
 e o privilégio mínimo da identidade publisher. A evidência está em
 [`../experiment/evidence/finance/runtime-publication-readiness-20260922T031427Z.json`](../experiment/evidence/finance/runtime-publication-readiness-20260922T031427Z.json).
 Essa leitura não modificou GitHub ou GCP e não autorizou publicação.
+O plano Terraform binário correspondente também foi regenerado e passou em
+9/9 controles de escopo: exatamente três criações IAM, referências vinculadas
+à identidade publisher, nenhuma chave, papel de projeto, alteração, destruição
+ou recurso de compute/storage/rede. O relatório vinculado ao SHA-256 do plano
+está em
+[`../experiment/evidence/finance/runtime-publication-terraform-plan-validation-20260922T033401Z.json`](../experiment/evidence/finance/runtime-publication-terraform-plan-validation-20260922T033401Z.json).
+O plano continua não aplicado e o relatório não constitui autorização.
 
 O passo seguinte também está automatizado localmente:
 `prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um

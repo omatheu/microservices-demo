@@ -329,9 +329,13 @@
       "path": "experiment/scripts/audit-runtime-publication-readiness.py",
       "sha256": "84ee15a73b403964af3bff4cce79374417fd93efd5b633078245cad72d01faf2"
     },
+    "runtime_publication_terraform_plan_validator": {
+      "path": "experiment/scripts/validate-runtime-publication-terraform-plan.py",
+      "sha256": "fd9d31b894b33bf886f04c338c152060fd131b47b439645bbeeef9c3e0aca032"
+    },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "bbafae4d6d5d0aac94456c3f34d487f88bb5f5437813fb5c8748ef39cfe64b34"
+      "sha256": "9cd71c4f6064998cf48ed45c82baae218be96072b10e34642fd8cdea60eee28a"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",

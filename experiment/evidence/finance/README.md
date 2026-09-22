@@ -51,6 +51,18 @@ ou destruição de recurso existente. O plano não foi aplicado e não autoriza
 armazenamento ou execução; o rótulo, o secret e a trava financeira continuam
 pendentes.
 
+O plano binário foi regenerado em 22/09/2026 UTC e conferido diretamente por
+[`validate-runtime-publication-terraform-plan.py`](../../scripts/validate-runtime-publication-terraform-plan.py).
+Os 9/9 controles passaram: somente as três criações previstas aparecem, todas
+são `create`, o principal OIDC é o repositório imutável esperado, o Writer está
+limitado ao repositório, o grafo referencia a identidade exclusiva e não existe
+chave, compute, storage ou rede nova. O relatório sanitizado, vinculado ao
+SHA-256 do plano binário, está em
+[`runtime-publication-terraform-plan-validation-20260922T033401Z.json`](./runtime-publication-terraform-plan-validation-20260922T033401Z.json).
+O plano binário não é versionado porque contém o estado integral da
+infraestrutura. O relatório declara explicitamente que nenhum `apply`, mutação,
+publicação ou autorização de custo ocorreu.
+
 O auditor somente leitura
 [`audit-runtime-publication-readiness.py`](../../scripts/audit-runtime-publication-readiness.py)
 transforma essas pendências em 13 controles verificáveis. A leitura de
