@@ -213,6 +213,15 @@ pull request constrói localmente `checkout-pdt-controller`, `oracle-harness` e
 corrigíveis e registra o tamanho. Esse job não possui identidade GCP e define
 explicitamente `published_to_registry: false`.
 
+Quando uma publicação cloud for autorizada, o job protegido produzirá um
+`summary.json` com os três digests remotos. O utilitário
+[`../scripts/bind-runtime-publication.py`](../scripts/bind-runtime-publication.py)
+confere repositório, commit, árvore, pull request, ambiente protegido, revisão
+financeira, SBOM, scan e o prefixo exato do Artifact Registry antes de gerar
+propostas para os manifests PDT e oráculo. As duas propostas recebem a mesma
+proveniência hash-bound. O binder não publica imagens, não modifica o GCP e não
+marca nenhum artefato como `frozen`.
+
 O teto proposto para a coleta é R$200 de custo incremental, com parada para
 revisão em R$150 e ao final de cada bloco de três candidatas. Isso ainda não é
 uma autorização de gasto: orçamento do GCP gera alertas, não um bloqueio rígido,
@@ -225,7 +234,11 @@ O verificador [`../scripts/audit-protocol-freeze.py`](../scripts/audit-protocol-
 materializa os pré-requisitos do congelamento como checks fail-closed. Ele
 confere estrutura e hashes do protocolo, operadores, estados das políticas,
 arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
-explícita do pesquisador:
+explícita do pesquisador.
+
+O auditor e o próprio validador dos inputs agora também fazem parte dos 25
+inputs selados do protocolo. Assim, as regras que decidem a prontidão não podem
+ser trocadas silenciosamente depois da aprovação do desenho.
 
 Os dois workflows GitHub também são inputs selados. Qualquer mudança no
 gatilho do pull request, nas travas financeiras, na identidade cloud ou na

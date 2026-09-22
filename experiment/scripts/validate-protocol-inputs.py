@@ -16,6 +16,8 @@ REQUIRED_INPUTS = {
     "human_gate_recorder",
     "confirmatory_analyzer",
     "analysis_dataset_composer",
+    "protocol_freeze_auditor",
+    "protocol_input_validator",
     "pull_request_workflow",
     "cloud_experiment_workflow",
     "billing_export_infrastructure",

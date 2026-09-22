@@ -130,12 +130,18 @@ perfis de desempenho, limites de saúde e a regra de duas repetições prejudici
 entre pelo menos duas válidas. `adjudicate-oracle.py` já implementa e testa essa
 regra sem usar o rótulo pretendido como entrada da classificação.
 
-[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 22
+[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 24
 arquivos que definem a política, o harness, os avaliadores e o runner. O
 validador `validate-oracle-suite.py` falha se qualquer arquivo mudar. O
 manifesto permanece `pre-registration-candidate` e seus dois digests de imagem
 permanecem nulos até o build, publicação e validação deliberados; ele não pode
 ser marcado como `frozen` nesse estado.
+
+O inventário inclui o binder e o próprio validador. Quando existirem imagens
+publicadas, os digests de `oracle-harness` e `currency-reference` só serão
+aceitos com a mesma proveniência de publicação usada pelo controlador PDT;
+referências manuais, outro registry ou execuções sem as travas protegidas são
+recusadas.
 
 O harness independente em [`harness/`](./harness/) já fornece doubles gRPC,
 proxies opcionais para dependências candidatas, matriz funcional, perfis de

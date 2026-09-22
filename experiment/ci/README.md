@@ -43,8 +43,11 @@ experimento, embora corretamente impeça o release.
 No modo confirmatório, a CI também exige `PUBLISH_ARTIFACTS=true` e
 `ARTIFACT_REGISTRY_PREFIX=REGION-docker.pkg.dev/PROJECT/REPOSITORY`. A imagem é
 publicada somente depois de build, SBOM e scan aprovados; a evidência registra
-a referência imutável `imagem@sha256:...`. Em engenharia a publicação permanece
-desabilitada por padrão e nenhuma escrita cloud ocorre.
+a referência imutável `imagem@sha256:...`. A publicação permanece desabilitada
+por padrão e nenhuma escrita cloud ocorre. Quando for explicitamente
+autorizada, `bind-runtime-publication.py` vincula os digests ao commit, à árvore
+e ao ambiente protegido antes de propô-los para os manifests congeláveis. O
+binder não concede autorização cloud nem substitui a revisão financeira.
 
 O ruleset Semgrep está versionado localmente e seu SHA-256 é verificado pelo
 gate. O modo confirmatório permanece bloqueado enquanto `policy.json` estiver

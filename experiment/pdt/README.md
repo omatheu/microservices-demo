@@ -37,6 +37,12 @@ a imagem ainda não foi publicada e o Job ainda não foi aplicado no cluster.
 Até essa validação, ele deve ser descrito como controlador batch empacotado,
 não como serviço permanentemente implantado.
 
+Após uma publicação autorizada, `bind-runtime-publication.py` só aceita o
+digest do `checkout-pdt-controller` se a mesma evidência provar commit, árvore,
+execução no ambiente protegido, SBOM, scan e revisão financeira. O resultado é
+uma proposta de manifest ainda `pre-registration-candidate`; vincular a imagem
+não congela o protocolo nem autoriza executar o Job.
+
 O vínculo da instância física/digital é declarado em
 [`source-binding.json`](./source-binding.json). O namespace `operational` é a
 fonte observada e `pdt` é o ambiente isolado onde alternativas serão

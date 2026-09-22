@@ -2,6 +2,7 @@
   "schema_version": "1.0.0",
   "suite_id": "checkout-independent-oracle-v1",
   "status": "pre-registration-candidate",
+  "frozen_at": null,
   "files": [
     {
       "path": "experiment/oracle/policy-v1.json",
@@ -42,6 +43,10 @@
     {
       "path": "experiment/scripts/aggregate-pdt-fidelity.py",
       "sha256": "2b21cc5dd95d3b1c46c967455fb140a6b98b9a2c3a07f596f459d6aff532f359"
+    },
+    {
+      "path": "experiment/scripts/bind-runtime-publication.py",
+      "sha256": "a27c3f34246a44fc6fb087c9f5403698933684a23978e60691a0974a52d5d000"
     },
     {
       "path": "experiment/scripts/adjudicate-oracle.py",
@@ -90,11 +95,16 @@
     {
       "path": "experiment/scripts/unlock-oracle-candidate.py",
       "sha256": "848bd30749b148cab5db101fecae0b81182c794c8b1f0017c7725fe13de6ab20"
+    },
+    {
+      "path": "experiment/scripts/validate-oracle-suite.py",
+      "sha256": "7ed6032f16b30c1074abf15b60a99f84a997a930aa9f6441baf95c1ee9966b9c"
     }
   ],
   "images": {
     "oracle_harness": null,
     "currency_reference": null
   },
-  "freeze_rule": "Every file hash and both immutable image digests must be verified before the suite status can become frozen."
+  "publication_binding": null,
+  "freeze_rule": "Every file hash, both immutable image digests and the shared attested publication binding must be verified before the suite status can become frozen."
 }

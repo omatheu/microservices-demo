@@ -404,6 +404,13 @@ A prontidão para o congelamento agora possui auditoria executável em
 expõe de forma objetiva as pendências de políticas/SLOs, imagens do oráculo,
 revisão financeira e aprovação explícita do pesquisador.
 
+O caminho de publicação até os manifests também está fechado localmente:
+`bind-runtime-publication.py` valida a evidência das três imagens contra o
+commit, a árvore, o registry aprovado, SBOM/scan e as travas do ambiente
+protegido, e produz propostas PDT/oráculo com uma única proveniência. O binder
+está integrado ao workflow, mas não foi executado porque nenhuma publicação
+cloud nova foi autorizada. Ele não congela o protocolo nem altera o GCP.
+
 O `checkout-pdt-controller` agora existe como aplicação e imagem reproduzível,
 gera o plano vinculado aos inputs selados e produz a decisão prescritiva. Um
 gerador prepara sua execução como Job isolado, sem token da API e sem rede, no

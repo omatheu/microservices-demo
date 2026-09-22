@@ -21,6 +21,14 @@
       "sha256": "56962a2574d4b87af89d4aa7d013acebf7c9ea0491d6a476eeb5022eb1cc61cd"
     },
     {
+      "path": "experiment/scripts/bind-runtime-publication.py",
+      "sha256": "a27c3f34246a44fc6fb087c9f5403698933684a23978e60691a0974a52d5d000"
+    },
+    {
+      "path": "experiment/scripts/validate-pdt-runtime.py",
+      "sha256": "8c26282c9daba69a1b2ee72933203c11c34523175baa65b87f22fe61c30a8c53"
+    },
+    {
       "path": "experiment/scripts/run-pdt-cycle.sh",
       "sha256": "237c1c21407b1c9518a61351ad755d283155f8c170e166d46bba978ed08ef6a6"
     },
@@ -50,5 +58,6 @@
     }
   ],
   "controller_image": null,
-  "freeze_rule": "Every runtime file and the immutable controller image digest must be verified before this runtime can become frozen."
+  "publication_binding": null,
+  "freeze_rule": "Every runtime file, the immutable controller image digest and its attested publication binding must be verified before this runtime can become frozen."
 }

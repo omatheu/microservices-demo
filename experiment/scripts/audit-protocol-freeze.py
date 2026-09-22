@@ -8,9 +8,36 @@ import re
 
 
 DIGEST_PATTERN = re.compile(r"^[a-f0-9]{64}$")
-IMAGE_PATTERN = re.compile(r"^[^\s@:]+(?:/[^\s@:]+)+@sha256:[a-f0-9]{64}$")
+PDT_IMAGE_PATTERN = re.compile(
+    r"^us-central1-docker\.pkg\.dev/microservices-demo-tcc/"
+    r"online-boutique-experiment/checkout-pdt-controller@sha256:[a-f0-9]{64}$"
+)
+ORACLE_IMAGE_PATTERNS = {
+    "oracle_harness": re.compile(
+        r"^us-central1-docker\.pkg\.dev/microservices-demo-tcc/"
+        r"online-boutique-experiment/oracle-harness@sha256:[a-f0-9]{64}$"
+    ),
+    "currency_reference": re.compile(
+        r"^us-central1-docker\.pkg\.dev/microservices-demo-tcc/"
+        r"online-boutique-experiment/currency-reference@sha256:[a-f0-9]{64}$"
+    ),
+}
 RFC3339_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 COMMIT_PATTERN = re.compile(r"^[a-f0-9]{40}$")
+PUBLICATION_BINDING_KEYS = {
+    "schema_version",
+    "publication_summary_sha256",
+    "repository",
+    "source_commit",
+    "source_tree",
+    "pull_request_number",
+    "workflow_run_id",
+    "published_at",
+    "build_platform",
+    "protected_environment",
+    "explicit_cloud_gate",
+    "cost_review_acknowledged",
+}
 
 
 def load(path):
@@ -35,6 +62,35 @@ def load_optional(path):
         return load(path)
     except FileNotFoundError:
         return None
+
+
+def publication_binding_identity(binding):
+    if not (
+        isinstance(binding, dict)
+        and set(binding) == PUBLICATION_BINDING_KEYS
+        and binding.get("schema_version") == "1.0.0"
+        and isinstance(binding.get("publication_summary_sha256"), str)
+        and DIGEST_PATTERN.fullmatch(binding["publication_summary_sha256"])
+        and binding.get("repository") == "omatheu/microservices-demo"
+        and isinstance(binding.get("source_commit"), str)
+        and COMMIT_PATTERN.fullmatch(binding["source_commit"])
+        and isinstance(binding.get("source_tree"), str)
+        and COMMIT_PATTERN.fullmatch(binding["source_tree"])
+        and isinstance(binding.get("pull_request_number"), int)
+        and not isinstance(binding["pull_request_number"], bool)
+        and binding["pull_request_number"] > 0
+        and isinstance(binding.get("workflow_run_id"), str)
+        and binding["workflow_run_id"].isdigit()
+        and int(binding["workflow_run_id"]) > 0
+        and isinstance(binding.get("published_at"), str)
+        and RFC3339_PATTERN.fullmatch(binding["published_at"])
+        and binding.get("build_platform") == "linux/amd64"
+        and binding.get("protected_environment") == "tcc-experiment"
+        and binding.get("explicit_cloud_gate") is True
+        and binding.get("cost_review_acknowledged") is True
+    ):
+        return None
+    return tuple(binding[name] for name in sorted(PUBLICATION_BINDING_KEYS))
 
 
 def audit(repo_root, protocol, researcher_approval=None, cost_review=None):
@@ -108,6 +164,7 @@ def audit(repo_root, protocol, researcher_approval=None, cost_review=None):
         ("ci-policy-frozen", "experiment/ci/policy.json"),
         ("staging-thresholds-frozen", "experiment/staging/safety-thresholds.json"),
         ("pdt-model-policy-frozen", "experiment/pdt/model-policy.json"),
+        ("pdt-fidelity-policy-frozen", "experiment/pdt/fidelity-policy.json"),
         ("oracle-policy-frozen", "experiment/oracle/policy-v1.json"),
     ]
     for check_id, relative in policy_requirements:
@@ -137,19 +194,27 @@ def audit(repo_root, protocol, researcher_approval=None, cost_review=None):
         f"verified {len(pdt_runtime.get('files', []))} PDT runtime files",
     )
     controller_image = pdt_runtime.get("controller_image")
-    controller_image_ready = isinstance(controller_image, str) and bool(
-        IMAGE_PATTERN.fullmatch(controller_image)
+    pdt_publication = publication_binding_identity(
+        pdt_runtime.get("publication_binding")
+    )
+    controller_image_ready = (
+        isinstance(controller_image, str)
+        and bool(PDT_IMAGE_PATTERN.fullmatch(controller_image))
+        and pdt_publication is not None
     )
     add_check(
         checks,
         "pdt-controller-image-bound",
         controller_image_ready,
-        "controller image requires an immutable digest",
+        "controller image requires an immutable digest and publication provenance",
     )
     add_check(
         checks,
         "pdt-runtime-frozen",
-        pdt_runtime.get("status") == "frozen" and controller_image_ready,
+        pdt_runtime.get("status") == "frozen"
+        and controller_image_ready
+        and isinstance(pdt_runtime.get("frozen_at"), str)
+        and bool(RFC3339_PATTERN.fullmatch(pdt_runtime["frozen_at"])),
         f"status={pdt_runtime.get('status', 'missing')}",
     )
 
@@ -173,15 +238,33 @@ def audit(repo_root, protocol, researcher_approval=None, cost_review=None):
         f"verified {len(oracle_manifest.get('files', []))} oracle files",
     )
     oracle_images = oracle_manifest.get("images", {})
-    images_ready = set(oracle_images) == {"oracle_harness", "currency_reference"} and all(
-        isinstance(value, str) and IMAGE_PATTERN.fullmatch(value)
-        for value in oracle_images.values()
+    oracle_publication = publication_binding_identity(
+        oracle_manifest.get("publication_binding")
     )
-    add_check(checks, "oracle-images-bound", images_ready, "both images require immutable digests")
+    images_ready = (
+        isinstance(oracle_images, dict)
+        and set(oracle_images) == set(ORACLE_IMAGE_PATTERNS)
+        and all(
+            isinstance(oracle_images.get(name), str)
+            and pattern.fullmatch(oracle_images[name])
+            for name, pattern in ORACLE_IMAGE_PATTERNS.items()
+        )
+        and oracle_publication is not None
+        and oracle_publication == pdt_publication
+    )
+    add_check(
+        checks,
+        "oracle-images-bound",
+        images_ready,
+        "both images require immutable digests and the same publication provenance",
+    )
     add_check(
         checks,
         "oracle-suite-frozen",
-        oracle_manifest.get("status") == "frozen" and images_ready,
+        oracle_manifest.get("status") == "frozen"
+        and images_ready
+        and isinstance(oracle_manifest.get("frozen_at"), str)
+        and bool(RFC3339_PATTERN.fullmatch(oracle_manifest["frozen_at"])),
         f"status={oracle_manifest.get('status', 'missing')}",
     )
 

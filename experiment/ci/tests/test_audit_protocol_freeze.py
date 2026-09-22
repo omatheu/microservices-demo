@@ -17,6 +17,23 @@ def protocol():
     return json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
 
+def publication_binding():
+    return {
+        "schema_version": "1.0.0",
+        "publication_summary_sha256": "a" * 64,
+        "repository": "omatheu/microservices-demo",
+        "source_commit": "b" * 40,
+        "source_tree": "c" * 40,
+        "pull_request_number": 42,
+        "workflow_run_id": "1234",
+        "published_at": "2026-09-21T12:00:00Z",
+        "build_platform": "linux/amd64",
+        "protected_environment": "tcc-experiment",
+        "explicit_cloud_gate": True,
+        "cost_review_acknowledged": True,
+    }
+
+
 class AuditProtocolFreezeTests(unittest.TestCase):
     def test_current_candidate_reports_explicit_freeze_blockers(self):
         result = MODULE.audit(REPO_ROOT, protocol())
@@ -25,6 +42,7 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         self.assertIn("ci-policy-frozen", result["blocking_requirements"])
         self.assertIn("staging-thresholds-frozen", result["blocking_requirements"])
         self.assertIn("pdt-model-policy-frozen", result["blocking_requirements"])
+        self.assertIn("pdt-fidelity-policy-frozen", result["blocking_requirements"])
         self.assertIn("pdt-controller-image-bound", result["blocking_requirements"])
         self.assertIn("pdt-runtime-frozen", result["blocking_requirements"])
         self.assertIn("oracle-images-bound", result["blocking_requirements"])
@@ -50,6 +68,13 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         checks = {item["id"]: item["passed"] for item in result["checks"]}
 
         self.assertFalse(checks["frozen-input-hashes"])
+
+    def test_publication_binding_identity_is_fail_closed(self):
+        value = publication_binding()
+        self.assertIsNotNone(MODULE.publication_binding_identity(value))
+
+        value["protected_environment"] = "unprotected"
+        self.assertIsNone(MODULE.publication_binding_identity(value))
 
 
 if __name__ == "__main__":

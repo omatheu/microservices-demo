@@ -56,6 +56,8 @@ class TccGithubWorkflowTests(unittest.TestCase):
         self.assertIn("tcc-cost-reviewed", rendered)
         self.assertIn("TCC_COST_REVIEW_ACKNOWLEDGED", rendered)
         self.assertIn("publish-experiment-runtimes.sh", rendered)
+        self.assertIn("bind-runtime-publication.py", rendered)
+        self.assertIn("manifest-bindings", rendered)
         self.assertIn("PDT_CONTROLLER_IMAGE", rendered)
         self.assertIn("published-experiment-runtimes-pr-", rendered)
         self.assertIn("validate-pdt-runtime.py", rendered)
@@ -79,9 +81,11 @@ class TccGithubWorkflowTests(unittest.TestCase):
         candidate = rendered.index("Resolve and require one public experimental candidate")
         cloud_auth = rendered.index("Authenticate with Google Cloud")
         publication = rendered.index("publish-experiment-runtimes.sh")
+        binding = rendered.index("bind-runtime-publication.py")
         self.assertLess(financial, cloud_auth)
         self.assertLess(candidate, cloud_auth)
         self.assertLess(financial, publication)
+        self.assertLess(publication, binding)
 
 
 if __name__ == "__main__":

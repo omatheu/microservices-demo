@@ -167,6 +167,12 @@ jobs:
           export SOURCE_TREE
           SOURCE_TREE=$(git rev-parse 'HEAD^{tree}')
           ./experiment/scripts/publish-experiment-runtimes.sh
+          python3 experiment/scripts/bind-runtime-publication.py \
+            --repo-root . \
+            --publication-summary "${OUTPUT_DIR}/summary.json" \
+            --expected-commit "${SOURCE_COMMIT}" \
+            --expected-tree "${SOURCE_TREE}" \
+            --output-directory "${OUTPUT_DIR}/manifest-bindings"
           controller_image=$(jq -er '.images[] | select(.name == "checkout-pdt-controller") | .immutable_reference' "${OUTPUT_DIR}/summary.json")
           echo "controller_image=${controller_image}" >> "${GITHUB_OUTPUT}"
 
