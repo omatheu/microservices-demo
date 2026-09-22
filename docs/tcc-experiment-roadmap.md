@@ -421,6 +421,12 @@ a vincular os SHA-256 dos relatórios brutos, e o binder revalida conteúdo, tag
 image ID e ausência de achados antes de aceitar os digests remotos. O registro
 local é inelegível para publicação ou coleta confirmatória.
 
+O contrato publisher → binder também foi exercitado ponta a ponta sem cloud:
+os scripts reais produziram e consumiram o mesmo pacote com Docker e `gcloud`
+simulados, e cada trava de autorização foi desligada isoladamente para provar
+falha anterior à criação de qualquer artefato. Isso valida o encaixe do caminho
+de publicação sem converter a simulação em evidência de publicação.
+
 O passo seguinte também está automatizado localmente:
 `prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um
 bundle único com cinco políticas, dois manifests e o protocolo candidato, já

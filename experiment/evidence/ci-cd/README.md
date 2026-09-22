@@ -76,3 +76,12 @@ inputs materiais não terem mudado. Por isso o protocolo não pressupõe
 reprodutibilidade bit-a-bit; o job protegido deve escanear exatamente a imagem
 que enviará, vincular os hashes dos relatórios brutos e congelar o digest
 retornado pelo registry.
+
+O contrato entre publicação e binding também possui uma simulação local ponta
+a ponta em
+[`../../ci/tests/test_runtime_publication_integration.py`](../../ci/tests/test_runtime_publication_integration.py).
+Ela substitui somente os comandos `docker` e `gcloud` por dublês locais,
+executa o publisher real, gera relatórios CycloneDX/Trivy sintéticos, passa o
+mesmo `summary.json` pelo binder real e comprova que a ausência de qualquer uma
+das duas autorizações interrompe o fluxo antes da criação de artefatos. O teste
+não acessa rede ou cloud e não simula sucesso alterando o código de produção.

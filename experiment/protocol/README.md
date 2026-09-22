@@ -225,6 +225,11 @@ achados bloqueantes. As duas propostas recebem a mesma proveniência
 hash-bound. O binder não publica imagens, não modifica o GCP e não marca nenhum
 artefato como `frozen`.
 
+Uma integração local executa o publisher e o binder reais com somente Docker e
+`gcloud` substituídos por dublês sem rede. Ela verifica que o schema produzido
+é aceito ponta a ponta, que os hashes dos relatórios chegam ao recibo e que as
+travas cloud e financeira falham antes de qualquer saída quando desligadas.
+
 Depois da revisão dos dois manifests propostos, o próximo passo também é
 gerado sem tocar na árvore ativa:
 
