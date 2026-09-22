@@ -183,10 +183,12 @@ aplicadas. O ambiente `tcc-deployment-approval` também foi criado com
 secrets. A Service Account não possui chave; a auditoria de RBAC confirmou
 mutação somente em `staging`, `pdt` e nos recursos estritamente necessários do
 `pdt-system`, com leitura do `operational` e sem acesso de mutação ao `oracle`.
-A variável `TCC_COST_REVIEW_ACKNOWLEDGED` permanece `false` e nenhum dos dois
-rótulos cloud existentes foi anexado ao PR #1, portanto essa configuração, por
-si só, não iniciou uma execução cloud. A identidade de publicação-only, seu
-secret e seu rótulo ainda são apenas uma proposta Terraform não aplicada. O
-workflow ainda precisa chegar à branch `main` antes da primeira execução
-protegida e o novo gate humano precisa ser comprovado por uma execução de
-engenharia.
+As variáveis `TCC_COST_REVIEW_ACKNOWLEDGED` e
+`TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED` permanecem `false`, e nenhum dos três
+rótulos cloud foi anexado ao PR #1; portanto essa configuração, por si só, não
+iniciou execução cloud. Em 22/09/2026, a identidade de publicação-only, seu
+vínculo OIDC e o Writer restrito ao repositório foram aplicados com 3 adições,
+0 alterações e 0 destruições. Seu secret, sua variável desligada e seu rótulo
+passivo também foram cadastrados. O auditor passou em 12/13: o workflow ainda
+precisa chegar à branch `main` antes da primeira execução protegida, e o novo
+gate humano precisa ser comprovado por uma execução de engenharia.

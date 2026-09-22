@@ -270,6 +270,12 @@ somente as três criações IAM predeclaradas. Um resultado 9/9 continua com
 `apply_authorized: false` e `cost_authorized: false`; autorização e execução são
 eventos posteriores e separados.
 
+Em 22/09/2026 UTC, uma autorização posterior levou à aplicação daquele mesmo
+plano binário: 3 recursos IAM adicionados, 0 alterados e 0 destruídos. O estado
+pós-apply não possui drift, as variáveis financeiras continuam `false`, o PR #1
+continua desarmado e nenhuma imagem foi publicada. A auditoria passou em 12/13;
+o único bloqueio é o workflow revisado ainda não estar na `main`.
+
 Depois da revisão dos dois manifests propostos, o próximo passo também é
 gerado sem tocar na árvore ativa:
 

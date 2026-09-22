@@ -433,8 +433,11 @@ job pareado. O novo caminho exige rótulo próprio, rótulo financeiro, variáve
 financeira e aprovação do ambiente; os rótulos de publicação e experimento são
 mutuamente exclusivos. Sua identidade proposta possui somente
 `roles/artifactregistry.writer` no repositório e nenhum IAM/RBAC de GKE. O plano
-Terraform validado contém 3 adições IAM, 0 alterações e 0 destruições; ele não
-foi aplicado e nenhum rótulo, secret ou recurso remoto foi criado.
+Terraform validado continha 3 adições IAM, 0 alterações e 0 destruições. Ele foi
+aplicado após autorização: a Service Account sem chave, o vínculo OIDC e o
+Writer restrito ao repositório agora existem. O secret, a variável financeira
+exclusiva em `false` e o rótulo passivo também foram cadastrados no GitHub; o
+PR #1 continua sem rótulos de autorização.
 As janelas também usam variáveis financeiras distintas: habilitar uma
 publicação não habilita a execução pareada.
 Um auditor somente leitura e fail-closed verificou o estado remoto em
@@ -450,7 +453,13 @@ O plano Terraform binário correspondente também foi regenerado e passou em
 ou recurso de compute/storage/rede. O relatório vinculado ao SHA-256 do plano
 está em
 [`../experiment/evidence/finance/runtime-publication-terraform-plan-validation-20260922T033401Z.json`](../experiment/evidence/finance/runtime-publication-terraform-plan-validation-20260922T033401Z.json).
-O plano continua não aplicado e o relatório não constitui autorização.
+O relatório de 9/9 preserva a validação pré-apply e não constitui autorização
+por si só. O apply posterior criou exatamente os três recursos, e um novo plano
+confirmou zero drift. O recibo está em
+[`../experiment/evidence/finance/runtime-publication-controls-installation-20260922T033857Z.json`](../experiment/evidence/finance/runtime-publication-controls-installation-20260922T033857Z.json).
+A auditoria pós-instalação passou em 12/13; resta somente incorporar o workflow
+revisado à `main`. Nenhuma imagem foi publicada e as duas travas financeiras
+permanecem desligadas.
 
 O passo seguinte também está automatizado localmente:
 `prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um

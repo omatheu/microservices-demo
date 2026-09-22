@@ -47,9 +47,9 @@ O plano somente leitura em
 [`runtime-publication-identity-plan-20260922T025300Z.json`](./runtime-publication-identity-plan-20260922T025300Z.json)
 contém três adições: Service Account sem chave, vínculo OIDC e Writer apenas no
 repositório Artifact Registry. Não há IAM de projeto, RBAC Kubernetes, mudança
-ou destruição de recurso existente. O plano não foi aplicado e não autoriza
-armazenamento ou execução; o rótulo, o secret e a trava financeira continuam
-pendentes.
+ou destruição de recurso existente. Esse arquivo preserva o estado anterior ao
+apply; a instalação controlada posterior aplicou exatamente as três adições e
+continua sem autorizar armazenamento de imagens ou execução de workloads.
 
 O plano binário foi regenerado em 22/09/2026 UTC e conferido diretamente por
 [`validate-runtime-publication-terraform-plan.py`](../../scripts/validate-runtime-publication-terraform-plan.py).
@@ -60,8 +60,9 @@ chave, compute, storage ou rede nova. O relatório sanitizado, vinculado ao
 SHA-256 do plano binário, está em
 [`runtime-publication-terraform-plan-validation-20260922T033401Z.json`](./runtime-publication-terraform-plan-validation-20260922T033401Z.json).
 O plano binário não é versionado porque contém o estado integral da
-infraestrutura. O relatório declara explicitamente que nenhum `apply`, mutação,
-publicação ou autorização de custo ocorreu.
+infraestrutura. O relatório preserva a validação pré-apply e declara
+explicitamente que ele próprio não executou mutação, publicação ou autorização
+de custo.
 
 O auditor somente leitura
 [`audit-runtime-publication-readiness.py`](../../scripts/audit-runtime-publication-readiness.py)
@@ -72,14 +73,32 @@ na identidade proposta. Os oito bloqueios restantes são o workflow ainda fora
 de `main`, o rótulo, o secret, a variável financeira exclusiva e a identidade
 publisher com seus vínculos mínimos. O relatório está em
 [`runtime-publication-readiness-20260922T031427Z.json`](./runtime-publication-readiness-20260922T031427Z.json).
-Ele registra `read_only: true`, nenhuma mutação GitHub/GCP e nenhuma autorização
-de publicação. Uma nova conferência fail-closed pode ser executada com:
+Ele registra `read_only: true`, nenhuma mutação GitHub/GCP pelo auditor e nenhuma
+autorização de publicação. Uma nova conferência fail-closed pode ser executada
+com:
 
 ```bash
 python3 experiment/scripts/audit-runtime-publication-readiness.py \
   --pull-request 1 \
   --require-ready
 ```
+
+Após autorização, o plano binário vinculado foi aplicado com **3 adições, 0
+alterações e 0 destruições**. Em seguida foram cadastrados o secret da identidade
+publisher, a variável exclusiva com valor `false` e o rótulo passivo, sem
+anexá-lo ao PR #1. O plano Terraform pós-apply retornou `No changes`. O recibo
+está em
+[`runtime-publication-controls-installation-20260922T033857Z.json`](./runtime-publication-controls-installation-20260922T033857Z.json).
+
+A auditoria somente leitura pós-instalação passou em 12/13 controles. Ela
+confirmou zero chaves, Writer somente no repositório, nenhum papel de projeto,
+principal OIDC exato, variáveis financeiras desligadas e PR desarmado. O único
+bloqueio restante é o workflow revisado ainda não existir na `main`. A evidência
+está em
+[`runtime-publication-readiness-20260922T033857Z.json`](./runtime-publication-readiness-20260922T033857Z.json).
+O campo `cloud_mutation_performed: false` desse arquivo descreve o auditor
+somente leitura; o recibo separado registra as mutações de instalação que o
+precederam.
 
 Uma leitura posterior da conta de faturamento retornou somente o projeto
 `microservices-demo-tcc` e somente o repositório Docker do experimento, com

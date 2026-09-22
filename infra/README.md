@@ -183,6 +183,14 @@ publisher unused and the switches off; do not compensate with direct IAM
 changes. A future rollback must be produced and reviewed as a new Terraform
 plan.
 
+Current state on 22/09/2026 UTC: the reviewed binary plan was applied with
+three additions, zero changes and zero destroys. The publisher secret, disabled
+financial variable and passive label were registered; no label was attached to
+PR #1. A post-apply Terraform plan reported `No changes`, and the readiness
+audit passed 12/13 controls. The only remaining blocker is installing the
+reviewed workflow on `main`. No image was published and no experiment workload
+was started.
+
 ## Deploy the environments
 
 After Terraform completes, configure `kubectl` using the command exposed by the
