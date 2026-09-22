@@ -19,6 +19,8 @@ métricas ou evidências do ambiente `operational` durante a decisão.
 - p99 geral de no máximo 1.550 ms;
 - p95 e p99 do checkout de no máximo 1.150 ms;
 - nenhuma falha nos checkouts válidos ou nos caminhos negativos;
+- aprovação dos contratos gRPC reais `happy-path-order` e
+  `payment-failure-preserves-cart`;
 - nenhum deployment indisponível;
 - nenhum aumento de reinícios durante a medição.
 
@@ -28,6 +30,16 @@ produto, o carrinho e a troca de moeda. Em paralelo, o load generator fixo usa
 cartão não suportado e um cartão expirado, exigindo HTTP 500, ausência de
 confirmação e preservação do carrinho. A carga é deliberadamente fixa e não é
 adaptada ao estado operacional.
+
+O probe `src/checkoutservice/cmd/stagingcontract` também acessa por
+port-forward os `cartservice` e `checkoutservice` implantados. O caso feliz
+prova armazenamento do item, pedido, rastreio, conteúdo, moeda e esvaziamento
+do carrinho; para concluir, o checkout exercita as instâncias reais de
+catálogo, câmbio, entrega e pagamento. O caso de pagamento expirado exige erro
+e preservação do carrinho. O relatório é incorporado à decisão de staging e
+qualquer falha produz `FAIL`. O `emailservice` não é creditado por esse probe,
+pois o contrato do checkout trata falha de e-mail como não crítica; sua ordem
+e semântica continuam cobertas pelos contratos locais com doubles.
 
 No protocolo definitivo, staging e PDT receberão as mesmas invariantes
 funcionais e os mesmos SLOs. O staging continuará sem sincronização operacional
@@ -49,3 +61,8 @@ digest antes de tocar o cluster. Por padrão, aplica o bundle derivado de
 `infra/kustomize/staging`, acessa o frontend por port-forward, persiste a
 decisão local, o binding e o YAML exato, e remove os workloads no final. Use
 `KEEP_STAGING=true` somente durante diagnóstico supervisionado.
+
+O probe de contratos reais usa a imagem Go fixada por digest na política da CI
+e não consulta snapshot, métricas ou arquivos do ambiente `operational`.
+Implementação e acoplamento estão testados localmente; a evidência de execução
+contra o staging permanece pendente de autorização cloud.

@@ -25,6 +25,8 @@ REQUIRED_INPUTS = {
     "operational_baseline_summary",
     "checkout_baseline_summary",
     "baseline_validation_report",
+    "traditional_staging_runner",
+    "staging_contract_probe",
     "staging_thresholds",
     "pdt_model_policy",
     "pdt_runtime_manifest",

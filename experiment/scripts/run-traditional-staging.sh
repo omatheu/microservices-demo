@@ -14,13 +14,15 @@ thresholds_file=${THRESHOLDS_FILE:-${repo_root}/experiment/staging/safety-thresh
 fixed_load_file=${FIXED_LOAD_FILE:-${repo_root}/experiment/staging/fixed-loadgenerator.json}
 keep_staging=${KEEP_STAGING:-false}
 local_port=${LOCAL_PORT:-18080}
-port_forward_pid=""
+local_cart_port=${LOCAL_CART_PORT:-17070}
+local_checkout_port=${LOCAL_CHECKOUT_PORT:-15050}
+port_forward_pids=()
 
 require_command() {
   command -v "$1" >/dev/null 2>&1 || { echo "Required command not found: $1" >&2; exit 1; }
 }
 
-for command_name in awk base64 curl gcloud git jq kubectl python3 sha256sum sort; do
+for command_name in awk base64 curl docker gcloud git jq kubectl python3 sha256sum sort; do
   require_command "$command_name"
 done
 
@@ -39,6 +41,13 @@ for identifier in "$namespace" "$candidate_id"; do
 done
 [[ "$repetition" =~ ^[1-9][0-9]*$ ]] || { echo "REPETITION must be a positive integer." >&2; exit 1; }
 [[ "$keep_staging" == "true" || "$keep_staging" == "false" ]] || { echo "KEEP_STAGING must be true or false." >&2; exit 1; }
+for port in "$local_port" "$local_cart_port" "$local_checkout_port"; do
+  [[ "$port" =~ ^[1-9][0-9]{3,4}$ && "$port" -le 65535 ]] || { echo "Local staging ports must be between 1000 and 65535." >&2; exit 1; }
+done
+[[ "$local_port" != "$local_cart_port" && "$local_port" != "$local_checkout_port" && "$local_cart_port" != "$local_checkout_port" ]] || {
+  echo "Local staging ports must be unique." >&2
+  exit 1
+}
 
 run_timestamp=$(date -u +%Y%m%dT%H%M%SZ)
 run_id="staging-${candidate_id}-r${repetition}-${run_timestamp}"
@@ -57,6 +66,9 @@ maximum_checkout_p99=$(jq -r '.thresholds.maximum_checkout_latency_p99_ms' "$thr
 maximum_functional_failures=$(jq -r '.thresholds.maximum_functional_failures' "$thresholds_file")
 maximum_unavailable=$(jq -r '.thresholds.maximum_unavailable_deployments' "$thresholds_file")
 maximum_restart_increase=$(jq -r '.thresholds.maximum_restart_increase' "$thresholds_file")
+required_contract_ids=$(jq -cer '.real_service_contracts.required_ids | select(type == "array" and length > 0)' "$thresholds_file")
+maximum_contract_failures=$(jq -er '.real_service_contracts.maximum_failures | select(type == "number" and . >= 0)' "$thresholds_file")
+go_image=$(jq -er '.container_images.golang' "${repo_root}/experiment/ci/policy.json")
 
 mkdir -p "$run_dir"
 cp "$local_ci_decision" "${run_dir}/local-ci-decision.json"
@@ -95,10 +107,13 @@ write_status() {
 }
 
 cleanup() {
-  if [[ -n "$port_forward_pid" ]] && kill -0 "$port_forward_pid" 2>/dev/null; then
-    kill "$port_forward_pid" 2>/dev/null || true
-    wait "$port_forward_pid" 2>/dev/null || true
-  fi
+  local pid
+  for pid in "${port_forward_pids[@]}"; do
+    if kill -0 "$pid" 2>/dev/null; then
+      kill "$pid" 2>/dev/null || true
+      wait "$pid" 2>/dev/null || true
+    fi
+  done
   if [[ "$keep_staging" == "false" ]]; then
     kubectl delete -f "$fixed_load_file" --ignore-not-found --wait=true --timeout=5m >> "${run_dir}/cleanup.log" 2>&1 || true
     if [[ -f "$rendered_candidate" ]]; then
@@ -143,9 +158,30 @@ kubectl get pods --namespace "$namespace" -o json > "${run_dir}/pods-start.json"
 kubectl get services --namespace "$namespace" -o json > "${run_dir}/services.json"
 kubectl get events --namespace "$namespace" -o json > "${run_dir}/events-start.json"
 
-kubectl port-forward --namespace "$namespace" service/frontend "${local_port}:80" > "${run_dir}/port-forward.log" 2>&1 &
-port_forward_pid=$!
-for _ in $(seq 1 60); do
+start_port_forward() {
+  local service=$1
+  local local_service_port=$2
+  local remote_service_port=$3
+  local log_file=$4
+  kubectl port-forward --namespace "$namespace" "service/${service}" \
+    "${local_service_port}:${remote_service_port}" > "$log_file" 2>&1 &
+  local pid=$!
+  port_forward_pids+=("$pid")
+  for _ in $(seq 1 60); do
+    if grep -q 'Forwarding from' "$log_file"; then
+      return 0
+    fi
+    kill -0 "$pid" 2>/dev/null || break
+    sleep 1
+  done
+  echo "Port-forward for ${service} did not become ready." >&2
+  return 1
+}
+
+start_port_forward frontend "$local_port" 80 "${run_dir}/port-forward-frontend.log"
+start_port_forward cartservice "$local_cart_port" 7070 "${run_dir}/port-forward-cartservice.log"
+start_port_forward checkoutservice "$local_checkout_port" 5050 "${run_dir}/port-forward-checkoutservice.log"
+for _ in $(seq 1 30); do
   if curl -fsS --max-time 2 "http://127.0.0.1:${local_port}/" >/dev/null 2>&1; then
     break
   fi
@@ -263,6 +299,52 @@ for negative_index in 0 1; do
 done
 negative_successes=$(awk -F, 'NR>1 && $5=="true" {n++} END {print n+0}' "${run_dir}/checkout-negative-tests.csv")
 negative_failures=$((negative_test_count-negative_successes))
+
+real_contracts_file="${run_dir}/real-service-contracts.json"
+set +e
+docker run --rm --network host \
+  --user "$(id -u):$(id -g)" \
+  --env HOME=/tmp \
+  --env GOCACHE=/tmp/go-build \
+  --env GOMODCACHE=/tmp/go-mod \
+  --volume "${repo_root}/src/checkoutservice:/source:ro" \
+  --volume "${run_dir}:/evidence" \
+  --workdir /source \
+  "$go_image" \
+  go run ./cmd/stagingcontract \
+    --cart-address="127.0.0.1:${local_cart_port}" \
+    --checkout-address="127.0.0.1:${local_checkout_port}" \
+    --candidate-id="$candidate_id" \
+    --repetition="$repetition" \
+    --output=/evidence/real-service-contracts.json \
+    > "${run_dir}/real-service-contracts.log" 2>&1
+real_contracts_exit=$?
+set -e
+if [[ ! -f "$real_contracts_file" || "$real_contracts_exit" -gt 1 ]]; then
+  cat "${run_dir}/real-service-contracts.log" >&2
+  echo "Real-service contract probe failed before producing a candidate decision." >&2
+  on_error
+  exit 1
+fi
+if ! jq -e \
+  --arg candidate "$candidate_id" \
+  --argjson repetition "$repetition" \
+  --argjson required "$required_contract_ids" '
+    .schema_version == "1.0.0"
+    and .mechanism == "traditional-staging-real-service-contracts"
+    and .candidate_id == $candidate
+    and .repetition == $repetition
+    and .operational_snapshot_access == false
+    and (.passed + .failed == (.cases | length))
+    and ([.cases[].id] | length == (unique | length))
+    and ([.cases[].id] | sort == ($required | sort))
+    and (.decision == (if .failed == 0 then "PASS" else "FAIL" end))
+  ' "$real_contracts_file" >/dev/null; then
+  echo "Real-service contract report is incomplete or inconsistent." >&2
+  on_error
+  exit 1
+fi
+real_contract_failures=$(jq -er '.failed | select(type == "number" and . >= 0)' "$real_contracts_file")
 measurement_ended_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
 kubectl get deployments --namespace "$namespace" -o json > "${run_dir}/deployments-end.json"
@@ -308,6 +390,7 @@ reasons=$(jq -n \
   --argjson checkout_failures "$checkout_failures" --argjson checkout_p95 "$checkout_p95" --argjson max_checkout_p95 "$maximum_checkout_p95" \
   --argjson negative_failures "$negative_failures" \
   --argjson checkout_p99 "$checkout_p99" --argjson max_checkout_p99 "$maximum_checkout_p99" \
+  --argjson contract_failures "$real_contract_failures" --argjson max_contract_failures "$maximum_contract_failures" \
   --argjson unavailable "$checkout_unavailable" --argjson max_unavailable "$maximum_unavailable" \
   --argjson restarts "$checkout_restart_increase" --argjson max_restarts "$maximum_restart_increase" '
   [
@@ -316,6 +399,7 @@ reasons=$(jq -n \
     if $p95 > $max_p95 then "latency_p95_above_threshold" else empty end,
     if $p99 > $max_p99 then "latency_p99_above_threshold" else empty end,
     if $failures > $max_failures or $checkout_failures > $max_failures or $negative_failures > $max_failures then "functional_failures_above_threshold" else empty end,
+    if $contract_failures > $max_contract_failures then "real_service_contracts_failed" else empty end,
     if $checkout_p95 > $max_checkout_p95 then "checkout_latency_p95_above_threshold" else empty end,
     if $checkout_p99 > $max_checkout_p99 then "checkout_latency_p99_above_threshold" else empty end,
     if $unavailable > $max_unavailable then "checkoutservice_unavailable_above_threshold" else empty end,
@@ -338,7 +422,8 @@ jq -n \
   --argjson checkout_unavailable "$checkout_unavailable" --argjson checkout_restart_increase "$checkout_restart_increase" \
   --argjson locust_requests "$locust_requests" --argjson locust_failures "$locust_failures" --argjson locust_success_rate "$locust_success_rate" \
   --arg git_commit "$(git -C "$repo_root" rev-parse HEAD)" \
-  --slurpfile artifact_binding "${candidate_bundle_dir}/candidate-binding.json" '
+  --slurpfile artifact_binding "${candidate_bundle_dir}/candidate-binding.json" \
+  --slurpfile real_service_contracts "$real_contracts_file" '
   {
     schema_version: $schema_version,
     run_id: $run_id,
@@ -349,8 +434,8 @@ jq -n \
     decision: $decision,
     rationale: $reasons,
     timing: {deployment_started_at: $deployment_started_at, ready_at: $ready_at, measurement_started_at: $measurement_started_at, measurement_ended_at: $measurement_ended_at},
-    observed: {samples: $samples, successes: $successes, failures: $failures, success_rate: $success_rate, latency_ms: {p50: $p50,p95:$p95,p99:$p99},checkout:{tests:$checkout_tests,successes:$checkout_successes,failures:$checkout_failures,latency_p95_ms:$checkout_p95,latency_p99_ms:$checkout_p99,negative_paths:{tests:$negative_tests,successes:$negative_successes,failures:$negative_failures,assertions:["unsupported card rejected","expired card rejected","no order confirmation","cart retained"]},unavailable:$checkout_unavailable,restart_increase:$checkout_restart_increase},context:{unavailable_deployments:$unavailable,restart_increase:$restart_increase},locust:{requests:$locust_requests,failures:$locust_failures,success_rate:$locust_success_rate}},
-    controls: {operational_snapshot_access: false, workload_profile: "fixed-round-robin-v1-plus-fixed-locust-10-users-rate-1", thresholds: "safety-thresholds.json"},
+    observed: {samples: $samples, successes: $successes, failures: $failures, success_rate: $success_rate, latency_ms: {p50: $p50,p95:$p95,p99:$p99},checkout:{tests:$checkout_tests,successes:$checkout_successes,failures:$checkout_failures,latency_p95_ms:$checkout_p95,latency_p99_ms:$checkout_p99,negative_paths:{tests:$negative_tests,successes:$negative_successes,failures:$negative_failures,assertions:["unsupported card rejected","expired card rejected","no order confirmation","cart retained"]},real_service_contracts:$real_service_contracts[0],unavailable:$checkout_unavailable,restart_increase:$checkout_restart_increase},context:{unavailable_deployments:$unavailable,restart_increase:$restart_increase},locust:{requests:$locust_requests,failures:$locust_failures,success_rate:$locust_success_rate}},
+    controls: {operational_snapshot_access: false, workload_profile: "fixed-round-robin-v1-plus-fixed-locust-10-users-rate-1", thresholds: "safety-thresholds.json", real_service_contract_policy: "real_service_contracts"},
     artifact_binding: $artifact_binding[0],
     git_commit: $git_commit
   }' > "${run_dir}/decision.json"

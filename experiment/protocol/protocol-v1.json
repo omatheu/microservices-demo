@@ -349,9 +349,17 @@
       "path": "experiment/evidence/baseline/validation-report.json",
       "sha256": "327a9967704f06a162c7c746bc1d21315c7fd897aa91c813fc615d3de54dda30"
     },
+    "traditional_staging_runner": {
+      "path": "experiment/scripts/run-traditional-staging.sh",
+      "sha256": "f53bf25430b1a9a3e92c9aa3630aadb18b42a11a595f23479bfc562a549b8647"
+    },
+    "staging_contract_probe": {
+      "path": "src/checkoutservice/cmd/stagingcontract/main.go",
+      "sha256": "4c8d42376abf753c2a36823badfe6cd3ff404217aecfd63498d14cbe9598ac85"
+    },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "feed9981bbb28ee70789b9a647f1da0c9cbf2b77804af84e35e960b6885e1272"
+      "sha256": "ea288a5dee9991312018d77ac509766c0bc2c8b0b8048889e23aad8c508d5581"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",

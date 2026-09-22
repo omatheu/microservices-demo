@@ -210,12 +210,19 @@ só produz `approve` quando CI local e staging aprovam a mesma candidata e sela
 as entradas por hash. O staging `staging-engineering-artifact-binding-v2-r4-
 20260920T070010Z` executou esse digest com 120/120 requisições do perfil, 10/10
 checkouts válidos e 2/2 caminhos negativos, produzindo uma decisão
-convencional selada. Ainda faltam os contratos de falha de dependência com
-serviços reais, a política completa congelada, candidatas opacas e a
-orquestração confirmatória. Os dados atuais continuam classificados apenas
-como piloto de engenharia em
+convencional selada. Naquele piloto ainda não existia o novo probe de serviços
+reais. Para concluir a fase faltam comprovar esse probe no cluster, congelar a
+política, usar candidatas opacas e executar a orquestração confirmatória. Os
+dados atuais continuam classificados apenas como piloto de engenharia em
 [`../experiment/evidence/staging/README.md`](../experiment/evidence/staging/README.md);
 esses dados não integrarão a comparação principal.
+
+O contrato de integração real já está implementado e ligado ao `PASS/FAIL` do
+staging: um pedido válido deve concluir e esvaziar o carrinho, enquanto um
+pagamento expirado deve falhar e preservar o item. Ele usa as instâncias reais
+de `cartservice` e `checkoutservice`, que por sua vez exercitam catálogo,
+câmbio, entrega e pagamento. O checkbox permanece aberto até uma execução
+cloud autorizada comprovar esses casos contra uma candidata implantada.
 
 ### Fase 4 — Núcleo do Partial Digital Twin
 

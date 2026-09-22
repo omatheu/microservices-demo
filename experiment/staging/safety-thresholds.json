@@ -20,6 +20,15 @@
     "sample_interval_seconds": 0.5,
     "request_profile": "fixed-round-robin-v1"
   },
+  "real_service_contracts": {
+    "required_ids": [
+      "happy-path-order",
+      "payment-failure-preserves-cart"
+    ],
+    "maximum_failures": 0,
+    "operational_snapshot_access": false,
+    "rule": "Both candidate-independent contracts must pass against the deployed cartservice and checkoutservice; a successful checkout exercises its real catalog, currency, shipping and payment dependencies."
+  },
   "checkoutservice_baseline": {
     "evidence": "experiment/evidence/checkout-baseline/aggregate-summary.json",
     "tests": 60,

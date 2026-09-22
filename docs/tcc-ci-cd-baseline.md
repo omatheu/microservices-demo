@@ -188,9 +188,16 @@ O piloto `engineering-artifact-binding-v2` percorreu CI local, publicação,
 staging e PDT usando o mesmo digest do `checkoutservice`. Isso valida o
 encadeamento técnico, mas não é resultado da comparação principal.
 
+O runner agora exige dois contratos candidato-independentes contra
+`cartservice` e `checkoutservice` reais no staging. Eles verificam o caminho
+feliz e a preservação do carrinho após rejeição de pagamento, exercitando as
+dependências reais de catálogo, câmbio, entrega e pagamento sem consumir o
+snapshot operacional. A implementação está pronta, mas o item permanece
+pendente até uma execução cloud autorizada produzir a evidência.
+
 Antes de uma coleta confirmatória ainda será obrigatório: congelar política e
-limiares, usar árvore Git limpa e identificadores opacos, ampliar as falhas de
-dependência exercitadas com serviços reais, fixar corpus/sementes/repetições e
+limiares, usar árvore Git limpa e identificadores opacos, validar o probe de
+serviços reais numa execução autorizada, fixar corpus/sementes/repetições e
 executar toda a orquestração em modo confirmatório.
 
 Uma execução confirmatória só poderá ser chamada de “esteira completa” quando
