@@ -138,12 +138,14 @@ Depois que os dois workflows estiverem na branch padrão:
 
 1. criar o ambiente `tcc-experiment` e exigir ao menos um revisor;
 2. nesse ambiente, cadastrar os secrets `GCP_WORKLOAD_IDENTITY_PROVIDER` e
-   `GCP_EXPERIMENT_SERVICE_ACCOUNT` para uma identidade federada de privilégio
-   mínimo, sem chave JSON persistente;
+   `GCP_EXPERIMENT_SERVICE_ACCOUNT` para a execução pareada e
+   `GCP_RUNTIME_PUBLISHER_SERVICE_ACCOUNT` para a identidade exclusiva do
+   Artifact Registry; ambas são federadas e não possuem chave JSON persistente;
 3. cadastrar a variável de ambiente `TCC_COST_REVIEW_ACKNOWLEDGED` como `false`;
    alterá-la para `true` apenas depois da revisão financeira do bloco e retornar
    para `false` ao encerrar o bloco;
-4. criar os rótulos `tcc-experiment-cloud` e `tcc-cost-reviewed`;
+4. criar os rótulos `tcc-experiment-cloud`, `tcc-runtime-publication` e
+   `tcc-cost-reviewed`; os dois primeiros são mutuamente exclusivos;
 5. tornar o check `TCC Conventional CI / Conventional pre-staging gates`
    obrigatório na proteção da branch `main`;
 6. criar o ambiente `tcc-deployment-approval`, exigir revisor e restringi-lo à
@@ -156,6 +158,14 @@ staging. Em modo confirmatório ele não reconstrói runtimes: exige os manifest
 PDT e oráculo congelados e verifica que os três digests imutáveis ainda existem.
 Assim, o controlador executado em `pdt-system` é exatamente o artefato atestado
 na mesma janela autorizada ou o artefato previamente congelado.
+
+Antes do congelamento, o rótulo `tcc-runtime-publication` seleciona um caminho
+separado que apenas constrói, escaneia, publica e vincula os três runtimes. Ele
+usa uma Service Account com `roles/artifactregistry.writer` somente no
+repositório revisado, não instala o plugin GKE, não obtém credenciais do
+cluster e não executa staging ou PDT. O workflow rejeita a combinação desse
+rótulo com `tcc-experiment-cloud`; autorização de publicação é distinta de
+autorização para workloads experimentais.
 
 Aplicar os dois rótulos não substitui a aprovação do ambiente nem a chave
 financeira. O job cloud é serializado globalmente e não cancela uma execução em
@@ -171,7 +181,9 @@ secrets. A Service Account não possui chave; a auditoria de RBAC confirmou
 mutação somente em `staging`, `pdt` e nos recursos estritamente necessários do
 `pdt-system`, com leitura do `operational` e sem acesso de mutação ao `oracle`.
 A variável `TCC_COST_REVIEW_ACKNOWLEDGED` permanece `false` e nenhum dos dois
-rótulos foi anexado ao PR #1, portanto essa configuração, por si só, não iniciou
-uma execução cloud. O workflow ainda precisa chegar à branch `main` antes da
-primeira execução protegida e o novo gate humano precisa ser comprovado por uma
-execução de engenharia.
+rótulos cloud existentes foi anexado ao PR #1, portanto essa configuração, por
+si só, não iniciou uma execução cloud. A identidade de publicação-only, seu
+secret e seu rótulo ainda são apenas uma proposta Terraform não aplicada. O
+workflow ainda precisa chegar à branch `main` antes da primeira execução
+protegida e o novo gate humano precisa ser comprovado por uma execução de
+engenharia.

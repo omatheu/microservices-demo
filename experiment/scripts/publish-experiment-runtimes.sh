@@ -10,7 +10,7 @@ workflow_run_id=${WORKFLOW_RUN_ID:-}
 registry_prefix=${ARTIFACT_REGISTRY_PREFIX:-}
 output_dir=${OUTPUT_DIR:-}
 trivy_cache_dir=${TRIVY_CACHE_DIR:-${output_dir}.trivy-cache}
-allow_cloud=${ALLOW_EXPERIMENTAL_CLOUD_EXECUTION:-false}
+allow_publication=${ALLOW_RUNTIME_PUBLICATION:-false}
 cost_review=${COST_REVIEW_ACKNOWLEDGED:-false}
 syft_image=${SYFT_IMAGE:-ghcr.io/anchore/syft@sha256:500e2d872ac019436926e8322b4fc1f39441d94d21f6f4046c6ff29b30e8cb02}
 trivy_image=${TRIVY_IMAGE:-aquasec/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969}
@@ -26,7 +26,7 @@ for command_name in awk date docker gcloud git jq mkdir tee; do
   require_command "$command_name"
 done
 
-[[ "$allow_cloud" == "true" && "$cost_review" == "true" ]] || {
+[[ "$allow_publication" == "true" && "$cost_review" == "true" ]] || {
   echo "Runtime publication requires explicit cloud and financial authorization." >&2
   exit 1
 }

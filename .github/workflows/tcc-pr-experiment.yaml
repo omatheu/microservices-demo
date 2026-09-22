@@ -20,6 +20,7 @@ jobs:
       pull-requests: read
     outputs:
       authorized: ${{ steps.pr.outputs.authorized }}
+      runtime_publication_authorized: ${{ steps.pr.outputs.runtime_publication_authorized }}
       pull_request_number: ${{ steps.pr.outputs.pull_request_number }}
       base_sha: ${{ steps.pr.outputs.base_sha }}
       head_sha: ${{ steps.pr.outputs.head_sha }}
@@ -34,22 +35,116 @@ jobs:
         run: |
           set -euo pipefail
           echo "authorized=false" >> "${GITHUB_OUTPUT}"
+          echo "runtime_publication_authorized=false" >> "${GITHUB_OUTPUT}"
           [[ "${PR_NUMBER}" =~ ^[1-9][0-9]*$ ]] || exit 0
           gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > "${RUNNER_TEMP}/pull-request.json"
           same_repository=$(jq -r --arg repository "${GITHUB_REPOSITORY}" '.head.repo.full_name == $repository' "${RUNNER_TEMP}/pull-request.json")
           current_revision=$(jq -r --arg sha "${EXPECTED_HEAD_SHA}" '.head.sha == $sha' "${RUNNER_TEMP}/pull-request.json")
           draft=$(jq -r '.draft' "${RUNNER_TEMP}/pull-request.json")
           experiment_label=$(jq -r 'any(.labels[]; .name == "tcc-experiment-cloud")' "${RUNNER_TEMP}/pull-request.json")
+          runtime_publication_label=$(jq -r 'any(.labels[]; .name == "tcc-runtime-publication")' "${RUNNER_TEMP}/pull-request.json")
           cost_label=$(jq -r 'any(.labels[]; .name == "tcc-cost-reviewed")' "${RUNNER_TEMP}/pull-request.json")
-          if [[ "${same_repository}" != "true" || "${current_revision}" != "true" || "${draft}" == "true" || "${experiment_label}" != "true" || "${cost_label}" != "true" ]]; then
+          if [[ "${same_repository}" != "true" || "${current_revision}" != "true" || "${draft}" == "true" || "${cost_label}" != "true" ]]; then
+            exit 0
+          fi
+          if [[ "${experiment_label}" == "${runtime_publication_label}" ]]; then
             exit 0
           fi
           {
             echo "pull_request_number=${PR_NUMBER}"
             echo "base_sha=$(jq -er '.base.sha' "${RUNNER_TEMP}/pull-request.json")"
             echo "head_sha=$(jq -er '.head.sha' "${RUNNER_TEMP}/pull-request.json")"
-            echo "authorized=true"
+            echo "authorized=${experiment_label}"
+            echo "runtime_publication_authorized=${runtime_publication_label}"
           } >> "${GITHUB_OUTPUT}"
+
+  runtime-publication:
+    name: Publish immutable experiment runtimes only
+    needs:
+      - authorize
+    if: needs.authorize.outputs.runtime_publication_authorized == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    environment: tcc-experiment
+    concurrency:
+      group: tcc-runtime-publication
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Require the publication financial kill switch
+        shell: bash
+        env:
+          COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
+        run: |
+          set -euo pipefail
+          [[ "${COST_REVIEW_ACKNOWLEDGED}" == "true" ]]
+
+      - name: Check out the already validated PR revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.authorize.outputs.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Require the locked pre-freeze protocol state
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '
+            .status == "pre-registration-candidate"
+            and .frozen_at == null
+            and .confirmatory_collection_allowed == false
+            and .execution_limits.cloud_execution_authorization
+              == "explicit-user-authorization-required-after-freeze"
+          ' experiment/protocol/protocol-v1.json >/dev/null
+
+      - name: Authenticate the Artifact Registry-only identity
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_RUNTIME_PUBLISHER_SERVICE_ACCOUNT }}
+
+      - name: Install Google Cloud SDK without GKE credentials
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Bind Docker only to the reviewed Artifact Registry
+        shell: bash
+        run: |
+          set -euo pipefail
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Publish, attest and bind the exact runtime images
+        shell: bash
+        env:
+          SOURCE_COMMIT: ${{ needs.authorize.outputs.head_sha }}
+          PULL_REQUEST_NUMBER: ${{ needs.authorize.outputs.pull_request_number }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          ARTIFACT_REGISTRY_PREFIX: us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment
+          OUTPUT_DIR: ${{ runner.temp }}/runtime-publication-only
+          ALLOW_RUNTIME_PUBLICATION: "true"
+          COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
+        run: |
+          set -euo pipefail
+          export SOURCE_TREE
+          SOURCE_TREE=$(git rev-parse 'HEAD^{tree}')
+          ./experiment/scripts/publish-experiment-runtimes.sh
+          python3 experiment/scripts/bind-runtime-publication.py \
+            --repo-root . \
+            --publication-summary "${OUTPUT_DIR}/summary.json" \
+            --expected-commit "${SOURCE_COMMIT}" \
+            --expected-tree "${SOURCE_TREE}" \
+            --output-directory "${OUTPUT_DIR}/manifest-bindings"
+
+      - name: Upload publication-only evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: runtime-publication-only-pr-${{ needs.authorize.outputs.pull_request_number }}-${{ needs.authorize.outputs.head_sha }}
+          path: ${{ runner.temp }}/runtime-publication-only
+          if-no-files-found: warn
+          retention-days: 30
 
   paired-experiment:
     name: Conventional staging plus PDT
@@ -160,7 +255,7 @@ jobs:
           WORKFLOW_RUN_ID: ${{ github.run_id }}
           ARTIFACT_REGISTRY_PREFIX: us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment
           OUTPUT_DIR: ${{ runner.temp }}/published-experiment-runtimes
-          ALLOW_EXPERIMENTAL_CLOUD_EXECUTION: "true"
+          ALLOW_RUNTIME_PUBLICATION: "true"
           COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
         run: |
           set -euo pipefail

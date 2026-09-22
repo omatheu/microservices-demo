@@ -156,7 +156,7 @@ class RuntimePublicationIntegrationTests(unittest.TestCase):
                 "ARTIFACT_REGISTRY_PREFIX": REGISTRY_PREFIX,
                 "OUTPUT_DIR": str(output_directory),
                 "TRIVY_CACHE_DIR": str(root / "trivy-cache"),
-                "ALLOW_EXPERIMENTAL_CLOUD_EXECUTION": allow_cloud,
+                "ALLOW_RUNTIME_PUBLICATION": allow_cloud,
                 "COST_REVIEW_ACKNOWLEDGED": cost_review,
             }
         )

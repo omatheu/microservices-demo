@@ -161,6 +161,17 @@ variable "github_experiment_service_account_id" {
   default     = "github-tcc-experiment"
 }
 
+variable "github_runtime_publisher_service_account_id" {
+  description = "Artifact Registry-only service account ID used by the publication-only job."
+  type        = string
+  default     = "github-tcc-runtime-publisher"
+
+  validation {
+    condition     = can(regex("^[a-z][a-z0-9-]{4,28}[a-z0-9]$", var.github_runtime_publisher_service_account_id))
+    error_message = "github_runtime_publisher_service_account_id must be a valid service account ID."
+  }
+}
+
 variable "billing_account_id" {
   description = "Billing account used for project-scoped budget alerts."
   type        = string

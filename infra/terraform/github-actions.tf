@@ -29,6 +29,24 @@ resource "google_service_account" "github_experiment" {
   depends_on = [google_project_service.required]
 }
 
+resource "google_service_account" "github_runtime_publisher" {
+  count = var.enable_github_actions_federation ? 1 : 0
+
+  project      = var.project_id
+  account_id   = var.github_runtime_publisher_service_account_id
+  display_name = "GitHub TCC runtime publisher"
+  description  = "Keyless Artifact Registry-only identity for the protected runtime publication job"
+
+  lifecycle {
+    precondition {
+      condition     = var.allow_artifact_registry_creation
+      error_message = "GitHub runtime publication requires the separately approved Artifact Registry."
+    }
+  }
+
+  depends_on = [google_project_service.required]
+}
+
 resource "google_iam_workload_identity_pool" "github_experiment" {
   count = var.enable_github_actions_federation ? 1 : 0
 
@@ -78,6 +96,14 @@ resource "google_service_account_iam_member" "github_experiment_federation" {
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_experiment[0].name}/attribute.repository_id/${var.github_repository_id}"
 }
 
+resource "google_service_account_iam_member" "github_runtime_publisher_federation" {
+  count = var.enable_github_actions_federation ? 1 : 0
+
+  service_account_id = google_service_account.github_runtime_publisher[0].name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_experiment[0].name}/attribute.repository_id/${var.github_repository_id}"
+}
+
 resource "google_project_iam_member" "github_experiment" {
   for_each = var.enable_github_actions_federation ? local.github_project_roles : toset([])
 
@@ -94,6 +120,16 @@ resource "google_artifact_registry_repository_iam_member" "github_experiment_wri
   repository = google_artifact_registry_repository.experiment[0].repository_id
   role       = "roles/artifactregistry.writer"
   member     = "serviceAccount:${google_service_account.github_experiment[0].email}"
+}
+
+resource "google_artifact_registry_repository_iam_member" "github_runtime_publisher_writer" {
+  count = var.enable_github_actions_federation && var.allow_artifact_registry_creation ? 1 : 0
+
+  project    = var.project_id
+  location   = google_artifact_registry_repository.experiment[0].location
+  repository = google_artifact_registry_repository.experiment[0].repository_id
+  role       = "roles/artifactregistry.writer"
+  member     = "serviceAccount:${google_service_account.github_runtime_publisher[0].email}"
 }
 
 resource "kubernetes_cluster_role_v1" "github_experiment_namespace_reader" {

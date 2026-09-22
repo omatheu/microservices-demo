@@ -10,7 +10,8 @@ class PublishExperimentRuntimesTests(unittest.TestCase):
     def test_publication_is_bound_to_exact_source_and_reviewed_registry(self):
         rendered = PUBLISHER.read_text(encoding="utf-8")
 
-        self.assertIn("ALLOW_EXPERIMENTAL_CLOUD_EXECUTION", rendered)
+        self.assertIn("ALLOW_RUNTIME_PUBLICATION", rendered)
+        self.assertNotIn("ALLOW_EXPERIMENTAL_CLOUD_EXECUTION", rendered)
         self.assertIn("COST_REVIEW_ACKNOWLEDGED", rendered)
         self.assertIn('git -C "$repo_root" rev-parse HEAD', rendered)
         self.assertIn("rev-parse 'HEAD^{tree}'", rendered)

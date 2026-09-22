@@ -40,7 +40,7 @@ class ValidatePdtRuntimeTests(unittest.TestCase):
         result = MODULE.validate(REPO_ROOT, manifest())
 
         self.assertEqual(result["runtime_id"], "checkout-pdt-controller-v1")
-        self.assertEqual(result["file_count"], 13)
+        self.assertEqual(result["file_count"], 15)
         self.assertIn(
             "experiment/scripts/bind-runtime-publication.py",
             {item["path"] for item in manifest()["files"]},

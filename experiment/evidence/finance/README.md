@@ -42,6 +42,15 @@ passar por `bind-runtime-publication.py`. O binder gera propostas de manifests
 com a mesma proveniência de commit, árvore, workflow protegido, SBOM e scan;
 ele não publica, congela nem autoriza execução.
 
+A identidade de publicação foi desacoplada da identidade que executa workloads.
+O plano somente leitura em
+[`runtime-publication-identity-plan-20260922T025300Z.json`](./runtime-publication-identity-plan-20260922T025300Z.json)
+contém três adições: Service Account sem chave, vínculo OIDC e Writer apenas no
+repositório Artifact Registry. Não há IAM de projeto, RBAC Kubernetes, mudança
+ou destruição de recurso existente. O plano não foi aplicado e não autoriza
+armazenamento ou execução; o rótulo, o secret e a trava financeira continuam
+pendentes.
+
 Uma leitura posterior da conta de faturamento retornou somente o projeto
 `microservices-demo-tcc` e somente o repositório Docker do experimento, com
 7.843.495 bytes. A projeção conservadora após as três imagens é 236.019.643

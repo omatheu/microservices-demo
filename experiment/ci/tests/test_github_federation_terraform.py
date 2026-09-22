@@ -5,6 +5,7 @@ import unittest
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
 FEDERATION = REPO_ROOT / "infra" / "terraform" / "github-actions.tf"
 VARIABLES = REPO_ROOT / "infra" / "terraform" / "variables.tf"
+OUTPUTS = REPO_ROOT / "infra" / "terraform" / "outputs.tf"
 
 
 class GithubFederationTerraformTests(unittest.TestCase):
@@ -67,6 +68,35 @@ class GithubFederationTerraformTests(unittest.TestCase):
         self.assertIn('"roles/serviceusage.serviceUsageConsumer"', roles)
         self.assertNotIn("roles/editor", roles)
         self.assertNotIn("roles/owner", roles)
+
+    def test_runtime_publisher_is_keyless_and_artifact_registry_only(self):
+        federation = FEDERATION.read_text(encoding="utf-8")
+        variables = VARIABLES.read_text(encoding="utf-8")
+        outputs = OUTPUTS.read_text(encoding="utf-8")
+
+        self.assertIn('resource "google_service_account" "github_runtime_publisher"', federation)
+        self.assertIn(
+            'resource "google_service_account_iam_member" "github_runtime_publisher_federation"',
+            federation,
+        )
+        publisher_writer = federation.split(
+            'resource "google_artifact_registry_repository_iam_member" "github_runtime_publisher_writer"',
+            1,
+        )[1].split('resource "kubernetes_', 1)[0]
+        self.assertIn('role       = "roles/artifactregistry.writer"', publisher_writer)
+        self.assertIn("google_service_account.github_runtime_publisher", publisher_writer)
+
+        project_roles = federation.split(
+            'resource "google_project_iam_member" "github_experiment"', 1
+        )[1].split(
+            'resource "google_artifact_registry_repository_iam_member"', 1
+        )[0]
+        kubernetes_resources = federation.split('resource "kubernetes_', 1)[1]
+        self.assertNotIn("github_runtime_publisher", project_roles)
+        self.assertNotIn("github_runtime_publisher", kubernetes_resources)
+        self.assertNotIn("google_service_account_key", federation)
+        self.assertIn("github_runtime_publisher_service_account_id", variables)
+        self.assertIn("runtime_publisher_service_account", outputs)
 
 
 if __name__ == "__main__":

@@ -427,6 +427,15 @@ simulados, e cada trava de autorização foi desligada isoladamente para provar
 falha anterior à criação de qualquer artefato. Isso valida o encaixe do caminho
 de publicação sem converter a simulação em evidência de publicação.
 
+Para não pagar uma execução completa apenas para obter os digests exigidos
+pelo congelamento, o workflow protegido agora separa `runtime-publication` do
+job pareado. O novo caminho exige rótulo próprio, rótulo financeiro, variável
+financeira e aprovação do ambiente; os rótulos de publicação e experimento são
+mutuamente exclusivos. Sua identidade proposta possui somente
+`roles/artifactregistry.writer` no repositório e nenhum IAM/RBAC de GKE. O plano
+Terraform validado contém 3 adições IAM, 0 alterações e 0 destruições; ele não
+foi aplicado e nenhum rótulo, secret ou recurso remoto foi criado.
+
 O passo seguinte também está automatizado localmente:
 `prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um
 bundle único com cinco políticas, dois manifests e o protocolo candidato, já

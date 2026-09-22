@@ -18,7 +18,7 @@
     },
     {
       "path": "experiment/scripts/publish-experiment-runtimes.sh",
-      "sha256": "eff47bd354de0fc657c1e4c99b0c960b17bfdb931bd8663e227ef2a7840842fd"
+      "sha256": "5720909ebc8f626566b6c82eed277419af392994646c0d9e01b33195c8a63cd5"
     },
     {
       "path": "experiment/scripts/bind-runtime-publication.py",
@@ -50,7 +50,15 @@
     },
     {
       "path": "infra/terraform/github-actions.tf",
-      "sha256": "d0baecbb108cd241dfe8f6c4884a7de7e6874230b35693f4515747db4d0b992f"
+      "sha256": "37170d2327228d69883d5d01ea8101ae7efbf7d4e30e6e6d1755daab3c98d083"
+    },
+    {
+      "path": "infra/terraform/variables.tf",
+      "sha256": "11c92e836e5de83a8da1632ed5ac1800161ff086e73cfb189080b1724af3816d"
+    },
+    {
+      "path": "infra/terraform/outputs.tf",
+      "sha256": "689c1a1b85c5a1ac7e17b80c1486cee41338b40ba6ace6b84d0ce87dbe49804a"
     },
     {
       "path": "experiment/pdt/model-policy.json",

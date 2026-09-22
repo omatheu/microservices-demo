@@ -74,18 +74,62 @@ class TccGithubWorkflowTests(unittest.TestCase):
         self.assertIn("/actions/runs/${GITHUB_RUN_ID}/approvals", rendered)
         self.assertIn("human-gate-receipt-pr-", rendered)
 
-    def test_cloud_auth_is_after_financial_and_candidate_guards(self):
+    def test_runtime_publication_is_separate_and_has_no_cluster_access_path(self):
+        workflow = load(CLOUD_WORKFLOW)
         rendered = CLOUD_WORKFLOW.read_text(encoding="utf-8")
+        job = workflow["jobs"]["runtime-publication"]
+        job_rendered = str(job)
 
-        financial = rendered.index("Require the per-block financial kill switch")
-        candidate = rendered.index("Resolve and require one public experimental candidate")
-        cloud_auth = rendered.index("Authenticate with Google Cloud")
-        publication = rendered.index("publish-experiment-runtimes.sh")
-        binding = rendered.index("bind-runtime-publication.py")
+        self.assertEqual(job["environment"], "tcc-experiment")
+        self.assertEqual(job["permissions"], {"contents": "read", "id-token": "write"})
+        self.assertEqual(job["concurrency"]["cancel-in-progress"], "false")
+        self.assertEqual(
+            job["if"],
+            "needs.authorize.outputs.runtime_publication_authorized == 'true'",
+        )
+        self.assertIn("tcc-runtime-publication", rendered)
+        self.assertIn("GCP_RUNTIME_PUBLISHER_SERVICE_ACCOUNT", job_rendered)
+        self.assertIn("ALLOW_RUNTIME_PUBLICATION", job_rendered)
+        self.assertNotIn("ALLOW_EXPERIMENTAL_CLOUD_EXECUTION", job_rendered)
+        self.assertIn("publish-experiment-runtimes.sh", job_rendered)
+        self.assertIn("bind-runtime-publication.py", job_rendered)
+        self.assertNotIn("get-credentials", job_rendered)
+        self.assertNotIn("gke-gcloud-auth-plugin", job_rendered)
+        self.assertNotIn("kubectl", job_rendered)
+        self.assertNotIn("run-comparative-candidate.sh", job_rendered)
+        self.assertNotIn("GCP_EXPERIMENT_SERVICE_ACCOUNT", job_rendered)
+        self.assertIn(
+            'if [[ "${experiment_label}" == "${runtime_publication_label}" ]]',
+            rendered,
+        )
+
+    def test_cloud_auth_is_after_financial_and_candidate_guards(self):
+        workflow = load(CLOUD_WORKFLOW)
+        steps = workflow["jobs"]["paired-experiment"]["steps"]
+        names = [step["name"] for step in steps]
+        job_rendered = str(workflow["jobs"]["paired-experiment"])
+
+        financial = names.index("Require the per-block financial kill switch")
+        candidate = names.index("Resolve and require one public experimental candidate")
+        cloud_auth = names.index("Authenticate with Google Cloud through Workload Identity Federation")
+        publication_step = names.index("Publish and attest the exact engineering runtime images")
+        publication = job_rendered.index("publish-experiment-runtimes.sh")
+        binding = job_rendered.index("bind-runtime-publication.py")
         self.assertLess(financial, cloud_auth)
         self.assertLess(candidate, cloud_auth)
-        self.assertLess(financial, publication)
+        self.assertLess(cloud_auth, publication_step)
         self.assertLess(publication, binding)
+
+        publication_steps = workflow["jobs"]["runtime-publication"]["steps"]
+        publication_names = [step["name"] for step in publication_steps]
+        self.assertLess(
+            publication_names.index("Require the publication financial kill switch"),
+            publication_names.index("Authenticate the Artifact Registry-only identity"),
+        )
+        self.assertLess(
+            publication_names.index("Require the locked pre-freeze protocol state"),
+            publication_names.index("Authenticate the Artifact Registry-only identity"),
+        )
 
 
 if __name__ == "__main__":

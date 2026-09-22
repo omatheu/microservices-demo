@@ -230,6 +230,14 @@ Uma integração local executa o publisher e o binder reais com somente Docker e
 é aceito ponta a ponta, que os hashes dos relatórios chegam ao recibo e que as
 travas cloud e financeira falham antes de qualquer saída quando desligadas.
 
+A publicação necessária ao congelamento não precisa disparar staging ou PDT.
+O mesmo workflow protegido possui um caminho `runtime-publication` selecionado
+por rótulo próprio e mutuamente exclusivo do experimento completo. Esse job usa
+uma identidade federada exclusiva, com escrita somente no repositório Artifact
+Registry revisado, e não instala kubectl, não obtém credenciais GKE nem chama o
+runner comparativo. A trava `ALLOW_RUNTIME_PUBLICATION` não concede
+`ALLOW_EXPERIMENTAL_CLOUD_EXECUTION`.
+
 Depois da revisão dos dois manifests propostos, o próximo passo também é
 gerado sem tocar na árvore ativa:
 

@@ -335,7 +335,7 @@
     },
     "cloud_experiment_workflow": {
       "path": ".github/workflows/tcc-pr-experiment.yaml",
-      "sha256": "fba6c995e2442b2b37a7f8b3e84a97aae6f7cd28d94396828d10c2be0818fc05"
+      "sha256": "64a5f39b02ddc3a8504f426f5e7f2efe9b13aaff85e42257d16be3c264265a9b"
     },
     "billing_export_infrastructure": {
       "path": "infra/terraform-billing-export/main.tf",
@@ -383,7 +383,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "c6e3295f193846d6239a6bedb93c93af28c8a8f8300c9cadc01daef2952920d5"
+      "sha256": "241ab9d010c49f94d2080a0f18c82ac54da2c90d3483010f546babd396b1eba8"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",

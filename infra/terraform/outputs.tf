@@ -56,11 +56,12 @@ output "artifact_registry" {
 output "github_actions_federation" {
   description = "Values to register in the protected GitHub Environment, or null while federation is disabled."
   value = var.enable_github_actions_federation ? {
-    workload_identity_provider = google_iam_workload_identity_pool_provider.github_experiment[0].name
-    service_account            = google_service_account.github_experiment[0].email
-    trusted_repository_id      = var.github_repository_id
-    trusted_owner_id           = var.github_repository_owner_id
-    trusted_environment        = var.github_environment
-    trusted_workflow_ref       = local.github_workflow_ref
+    workload_identity_provider        = google_iam_workload_identity_pool_provider.github_experiment[0].name
+    service_account                   = google_service_account.github_experiment[0].email
+    runtime_publisher_service_account = google_service_account.github_runtime_publisher[0].email
+    trusted_repository_id             = var.github_repository_id
+    trusted_owner_id                  = var.github_repository_owner_id
+    trusted_environment               = var.github_environment
+    trusted_workflow_ref              = local.github_workflow_ref
   } : null
 }
