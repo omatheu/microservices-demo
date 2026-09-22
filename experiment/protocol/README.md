@@ -243,6 +243,28 @@ declara `cloud_execution_authorized: false`. O bundle inteiro deve ser aplicado
 e revisado como uma única mudança antes das aprovações financeira e do
 pesquisador.
 
+Depois que o bundle estiver aplicado, as aprovações reais existirem nos
+caminhos canônicos e a auditoria passar nos 17 checks, a proposta final de
+congelamento é gerada por:
+
+```bash
+python3 experiment/scripts/finalize-protocol-freeze.py \
+  --repo-root . \
+  --researcher-approval experiment/protocol/approvals/researcher-approval-v1.json \
+  --cost-review experiment/protocol/approvals/cost-review-v1.json \
+  --frozen-at <timestamp-RFC3339-UTC> \
+  --output-directory <freeze-finalization>
+```
+
+O finalizador carrega pelo hash o auditor selado no próprio protocolo, exige
+os 17 checks aprovados e vincula por SHA-256 tanto a aprovação do pesquisador
+quanto a revisão financeira. Ele recusa timestamps anteriores aos componentes
+ou às aprovações e produz três artefatos: o protocolo congelado proposto, a
+auditoria usada e um recibo criptográfico da finalização. O comando não altera
+a árvore ativa nem o GCP; o recibo mantém `cloud_execution_authorized: false`,
+portanto a futura execução cloud continua dependendo de autorização explícita
+independente.
+
 O teto proposto para a coleta é R$200 de custo incremental, com parada para
 revisão em R$150 e ao final de cada bloco de três candidatas. Isso ainda não é
 uma autorização de gasto: orçamento do GCP gera alertas, não um bloqueio rígido,
@@ -257,10 +279,10 @@ confere estrutura e hashes do protocolo, operadores, estados das políticas,
 arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
 explícita do pesquisador.
 
-O auditor, o preparador do candidato de congelamento e o próprio validador dos
-inputs agora também fazem parte dos 26 inputs selados do protocolo. Assim, as
-regras que decidem a prontidão não podem ser trocadas silenciosamente depois da
-aprovação do desenho.
+O auditor, o preparador do candidato de congelamento, o finalizador e o próprio
+validador dos inputs agora também fazem parte dos 27 inputs selados do
+protocolo. Assim, as regras que decidem a prontidão e materializam a proposta
+final não podem ser trocadas silenciosamente depois da aprovação do desenho.
 
 Os dois workflows GitHub também são inputs selados. Qualquer mudança no
 gatilho do pull request, nas travas financeiras, na identidade cloud ou na

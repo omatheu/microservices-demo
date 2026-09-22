@@ -419,6 +419,15 @@ divergentes, mudanças escondidas e hashes atuais inconsistentes; não aplica o
 bundle, não habilita a coleta e não autoriza cloud. Assim, o futuro
 pré-congelamento pode ser revisado e aplicado sem edições manuais parciais.
 
+A transição seguinte também está implementada de forma fail-closed:
+`finalize-protocol-freeze.py` só gera uma proposta de protocolo `frozen` quando
+o auditor selado comprova 17/17 checks, as aprovações financeira e do
+pesquisador vinculam o mesmo candidato e todos os timestamps são coerentes. A
+saída inclui a auditoria e um recibo com os hashes do candidato, do protocolo
+final e das aprovações. O finalizador não aplica a proposta, não modifica o GCP
+e preserva `cloud_execution_authorized: false`; congelar o desenho continua
+separado de autorizar uma execução paga.
+
 O `checkout-pdt-controller` agora existe como aplicação e imagem reproduzível,
 gera o plano vinculado aos inputs selados e produz a decisão prescritiva. Um
 gerador prepara sua execução como Job isolado, sem token da API e sem rede, no
