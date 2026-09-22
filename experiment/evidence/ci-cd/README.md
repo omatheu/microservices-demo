@@ -57,3 +57,22 @@ Os diretórios completos de execução são deliberadamente ignorados pelo Git p
 conterem artefatos volumosos. A coleta confirmatória deverá publicar o pacote
 imutável de evidências no destino de retenção definido pelo protocolo, junto
 dos hashes e da decisão convencional consolidada.
+
+## Preflight local dos runtimes experimentais de 22/09/2026
+
+As três imagens experimentais foram reconstruídas para o commit
+`6ecffab7d03fca1ae434515ef2b6ab5c55caf989` em `linux/amd64`, com Syft e
+Trivy fixados por digest. Os três SBOMs foram gerados e as três varreduras
+retornaram zero achados HIGH/CRITICAL corrigíveis. O limite superior adicional
+foi de 228.203.127 bytes; somado ao armazenamento observado na conta, a
+projeção conservadora é 236.046.622 de 500.000.000 bytes.
+
+O registro está em
+[`runtime-image-preflight-20260922T021540Z.json`](./runtime-image-preflight-20260922T021540Z.json).
+Ele é evidência de engenharia local, não evidência de publicação: não houve
+acesso ao GCP, push ou autorização cloud. A comparação com o artefato anterior
+da CI também mostrou que rebuilds não preservam o mesmo image ID apesar de os
+inputs materiais não terem mudado. Por isso o protocolo não pressupõe
+reprodutibilidade bit-a-bit; o job protegido deve escanear exatamente a imagem
+que enviará, vincular os hashes dos relatórios brutos e congelar o digest
+retornado pelo registry.

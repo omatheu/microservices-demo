@@ -46,7 +46,7 @@
     },
     {
       "path": "experiment/scripts/bind-runtime-publication.py",
-      "sha256": "a27c3f34246a44fc6fb087c9f5403698933684a23978e60691a0974a52d5d000"
+      "sha256": "52a96e87d878032d401a5f46fc4f8cf0b302ef8551c5c65404eafe73bfd36c67"
     },
     {
       "path": "experiment/scripts/adjudicate-oracle.py",

@@ -27,6 +27,9 @@ class PublishExperimentRuntimesTests(unittest.TestCase):
         self.assertLess(rendered.index('"$trivy_image" image'), rendered.index('docker push "$tag"'))
         self.assertLess(rendered.index('docker push "$tag"'), rendered.index("fully_qualified_digest"))
         self.assertIn("published_to_registry:true", rendered)
+        self.assertIn('sbom_sha256=$(sha256sum', rendered)
+        self.assertIn('scan_sha256=$(sha256sum', rendered)
+        self.assertIn('schema_version:"1.1.0"', rendered)
 
     def test_no_mutable_reference_is_emitted_as_the_runtime_binding(self):
         rendered = PUBLISHER.read_text(encoding="utf-8")

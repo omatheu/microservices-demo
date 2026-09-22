@@ -76,19 +76,23 @@ images=(
 for definition in "${images[@]}"; do
   IFS='|' read -r name dockerfile context <<< "$definition"
   tag="${registry_prefix}/${name}:git-${source_commit}"
+  sbom_file="${name}-sbom.cdx.json"
+  scan_file="${name}-trivy.json"
   docker build --pull --platform linux/amd64 \
     --file "${repo_root}/${dockerfile}" --tag "$tag" "${repo_root}/${context}"
   docker run --rm --volume /var/run/docker.sock:/var/run/docker.sock \
     "$syft_image" "$tag" -o cyclonedx-json \
-    > "${output_dir}/${name}-sbom.cdx.json"
+    > "${output_dir}/${sbom_file}"
   docker run --rm --volume /var/run/docker.sock:/var/run/docker.sock \
     --volume "${trivy_cache_dir}:/root/.cache/" \
     "$trivy_image" image --scanners vuln --severity HIGH,CRITICAL \
     --ignore-unfixed --exit-code 1 --format json "$tag" \
-    > "${output_dir}/${name}-trivy.json"
+    > "${output_dir}/${scan_file}"
 
   local_image_id=$(docker image inspect --format '{{.Id}}' "$tag")
   size_bytes=$(docker image inspect --format '{{.Size}}' "$tag")
+  sbom_sha256=$(sha256sum "${output_dir}/${sbom_file}" | awk '{print $1}')
+  scan_sha256=$(sha256sum "${output_dir}/${scan_file}" | awk '{print $1}')
   docker push "$tag" | tee "${output_dir}/${name}-push.log"
   registry_digest=$(awk '/^digest: sha256:[a-f0-9]{64} size:/{digest=$2} END{print digest}' \
     "${output_dir}/${name}-push.log")
@@ -108,6 +112,8 @@ for definition in "${images[@]}"; do
   jq -cn --arg name "$name" --arg source_tag "$tag" \
     --arg local_image_id "$local_image_id" --arg immutable_reference "$immutable_reference" \
     --arg registry_digest "$registry_digest" --argjson size_bytes "$size_bytes" \
+    --arg sbom_path "$sbom_file" --arg sbom_sha256 "$sbom_sha256" \
+    --arg scan_path "$scan_file" --arg scan_sha256 "$scan_sha256" \
     '{
       name:$name,
       source_tag:$source_tag,
@@ -115,8 +121,20 @@ for definition in "${images[@]}"; do
       immutable_reference:$immutable_reference,
       registry_digest:$registry_digest,
       uncompressed_size_bytes:$size_bytes,
-      sbom:"pass",
-      vulnerability_scan:"pass",
+      sbom:{
+        status:"pass",
+        path:$sbom_path,
+        format:"cyclonedx-json",
+        sha256:$sbom_sha256
+      },
+      vulnerability_scan:{
+        status:"pass",
+        path:$scan_path,
+        scanner:"trivy",
+        severity:["HIGH","CRITICAL"],
+        ignore_unfixed:true,
+        sha256:$scan_sha256
+      },
       published:true
     }' >> "${output_dir}/images.ndjson"
 done
@@ -127,7 +145,7 @@ jq -s --arg source_commit "$source_commit" --arg source_tree "$source_tree" \
   --arg published_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   --argjson pull_request_number "$pull_request_number" '
   {
-    schema_version:"1.0.0",
+    schema_version:"1.1.0",
     source:{
       repository:$repository,
       commit:$source_commit,

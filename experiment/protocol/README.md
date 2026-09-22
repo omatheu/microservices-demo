@@ -214,13 +214,16 @@ corrigíveis e registra o tamanho. Esse job não possui identidade GCP e define
 explicitamente `published_to_registry: false`.
 
 Quando uma publicação cloud for autorizada, o job protegido produzirá um
-`summary.json` com os três digests remotos. O utilitário
+`summary.json` com os três digests remotos e os SHA-256 dos relatórios brutos.
+O utilitário
 [`../scripts/bind-runtime-publication.py`](../scripts/bind-runtime-publication.py)
 confere repositório, commit, árvore, pull request, ambiente protegido, revisão
-financeira, SBOM, scan e o prefixo exato do Artifact Registry antes de gerar
-propostas para os manifests PDT e oráculo. As duas propostas recebem a mesma
-proveniência hash-bound. O binder não publica imagens, não modifica o GCP e não
-marca nenhum artefato como `frozen`.
+financeira, o prefixo exato do Artifact Registry e cada SBOM/scan por conteúdo
+e hash antes de gerar propostas para os manifests PDT e oráculo. O relatório
+Trivy deve descrever o mesmo tag e image ID publicados e não pode conter
+achados bloqueantes. As duas propostas recebem a mesma proveniência
+hash-bound. O binder não publica imagens, não modifica o GCP e não marca nenhum
+artefato como `frozen`.
 
 Depois da revisão dos dois manifests propostos, o próximo passo também é
 gerado sem tocar na árvore ativa:

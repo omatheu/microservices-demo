@@ -411,6 +411,16 @@ protegido, e produz propostas PDT/oráculo com uma única proveniência. O binde
 está integrado ao workflow, mas não foi executado porque nenhuma publicação
 cloud nova foi autorizada. Ele não congela o protocolo nem altera o GCP.
 
+O preflight local das três imagens foi repetido em 22/09/2026 para o commit
+`6ecffab7`: os três builds, SBOMs e scans HIGH/CRITICAL passaram, sem push ou
+acesso ao GCP, e a projeção conservadora de armazenamento permaneceu abaixo da
+franquia considerada. A comparação com o artefato anterior mostrou que os
+rebuilds não são bit-a-bit idênticos apesar de os inputs materiais serem os
+mesmos. O caminho de publicação foi então endurecido: o resumo protegido passa
+a vincular os SHA-256 dos relatórios brutos, e o binder revalida conteúdo, tag,
+image ID e ausência de achados antes de aceitar os digests remotos. O registro
+local é inelegível para publicação ou coleta confirmatória.
+
 O passo seguinte também está automatizado localmente:
 `prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um
 bundle único com cinco políticas, dois manifests e o protocolo candidato, já

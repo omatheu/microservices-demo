@@ -86,7 +86,7 @@ def validate_inventory(repo_root, manifest, label):
 
 
 def validate_summary(summary, expected_commit, expected_tree):
-    require(summary.get("schema_version") == "1.0.0", "unsupported publication schema")
+    require(summary.get("schema_version") == "1.1.0", "unsupported publication schema")
     require(summary.get("published_to_registry") is True, "runtime images were not published")
     require(summary.get("build_platform") == "linux/amd64", "unexpected build platform")
     require(COMMIT.fullmatch(expected_commit or ""), "expected commit must be a full Git SHA")
@@ -133,6 +133,7 @@ def validate_summary(summary, expected_commit, expected_tree):
         "publication image set is incomplete or unexpected",
     )
     normalized = {}
+    evidence = {}
     for item in images:
         name = item["name"]
         registry_digest = item.get("registry_digest")
@@ -162,14 +163,107 @@ def validate_summary(summary, expected_commit, expected_tree):
             and item["uncompressed_size_bytes"] > 0,
             f"{name}: image size is invalid",
         )
-        require(item.get("sbom") == "pass", f"{name}: SBOM did not pass")
+        sbom = item.get("sbom")
         require(
-            item.get("vulnerability_scan") == "pass",
-            f"{name}: vulnerability scan did not pass",
+            isinstance(sbom, dict)
+            and set(sbom) == {"status", "path", "format", "sha256"}
+            and sbom.get("status") == "pass"
+            and sbom.get("path") == f"{name}-sbom.cdx.json"
+            and sbom.get("format") == "cyclonedx-json"
+            and isinstance(sbom.get("sha256"), str)
+            and DIGEST.fullmatch(sbom["sha256"]),
+            f"{name}: SBOM evidence is invalid",
+        )
+        scan = item.get("vulnerability_scan")
+        require(
+            isinstance(scan, dict)
+            and set(scan)
+            == {
+                "status",
+                "path",
+                "scanner",
+                "severity",
+                "ignore_unfixed",
+                "sha256",
+            }
+            and scan.get("status") == "pass"
+            and scan.get("path") == f"{name}-trivy.json"
+            and scan.get("scanner") == "trivy"
+            and scan.get("severity") == ["HIGH", "CRITICAL"]
+            and scan.get("ignore_unfixed") is True
+            and isinstance(scan.get("sha256"), str)
+            and DIGEST.fullmatch(scan["sha256"]),
+            f"{name}: vulnerability scan evidence is invalid",
         )
         require(item.get("published") is True, f"{name}: publication flag is absent")
         normalized[name] = immutable_reference
-    return source, authorization, normalized
+        evidence[name] = {
+            "sbom": copy.deepcopy(sbom),
+            "vulnerability_scan": copy.deepcopy(scan),
+        }
+    return source, authorization, normalized, evidence
+
+
+def validate_evidence_files(summary_path, summary):
+    summary_path = pathlib.Path(summary_path).resolve()
+    evidence_root = summary_path.parent
+    for item in summary.get("images", []):
+        name = item.get("name", "unknown")
+        source_tag = item.get("source_tag")
+        local_image_id = item.get("local_image_id")
+        sbom_binding = item.get("sbom", {})
+        scan_binding = item.get("vulnerability_scan", {})
+        sbom_path = evidence_root / sbom_binding.get("path", "")
+        scan_path = evidence_root / scan_binding.get("path", "")
+        require(
+            sbom_path.is_file()
+            and sha256_file(sbom_path) == sbom_binding.get("sha256"),
+            f"{name}: SBOM file is absent or its hash differs",
+        )
+        require(
+            scan_path.is_file()
+            and sha256_file(scan_path) == scan_binding.get("sha256"),
+            f"{name}: vulnerability scan file is absent or its hash differs",
+        )
+        sbom = load(sbom_path)
+        require(isinstance(sbom, dict), f"{name}: SBOM content is invalid")
+        metadata = sbom.get("metadata")
+        component = metadata.get("component") if isinstance(metadata, dict) else None
+        require(
+            sbom.get("bomFormat") == "CycloneDX"
+            and isinstance(sbom.get("components"), list)
+            and bool(sbom["components"])
+            and isinstance(component, dict)
+            and f"{component.get('name')}:{component.get('version')}" == source_tag,
+            f"{name}: SBOM content does not describe the published source tag",
+        )
+        scan = load(scan_path)
+        require(
+            isinstance(scan, dict),
+            f"{name}: vulnerability report content is invalid",
+        )
+        results = scan.get("Results")
+        require(
+            isinstance(results, list)
+            and bool(results)
+            and all(isinstance(result, dict) for result in results),
+            f"{name}: vulnerability report results are invalid",
+        )
+        scan_metadata = scan.get("Metadata")
+        vulnerabilities = [
+            vulnerability
+            for result in results
+            for vulnerability in (result.get("Vulnerabilities") or [])
+        ]
+        require(
+            scan.get("SchemaVersion") == 2
+            and scan.get("ArtifactName") == source_tag
+            and scan.get("ArtifactType") == "container_image"
+            and isinstance(scan_metadata, dict)
+            and scan_metadata.get("ImageID") == local_image_id
+            and not vulnerabilities,
+            f"{name}: vulnerability report does not prove a clean scan of the published image",
+        )
 
 
 def bind(
@@ -204,7 +298,7 @@ def bind(
         == {"oracle_harness": None, "currency_reference": None},
         "oracle suite already contains image bindings",
     )
-    source, authorization, images = validate_summary(
+    source, authorization, images, evidence = validate_summary(
         summary, expected_commit, expected_tree
     )
     binding = {
@@ -237,6 +331,9 @@ def bind(
         "publication_binding": binding,
         "immutable_images": {
             name: images[name] for name in sorted(images)
+        },
+        "publication_evidence": {
+            name: evidence[name] for name in sorted(evidence)
         },
         "status": "proposed-manifests-require-review",
         "cloud_mutation_performed": False,
@@ -278,9 +375,12 @@ def main():
     repo_root = args.repo_root.resolve()
     try:
         summary_path = args.publication_summary.resolve()
+        summary = load(summary_path)
+        validate_summary(summary, args.expected_commit, args.expected_tree)
+        validate_evidence_files(summary_path, summary)
         pdt_bound, oracle_bound, receipt = bind(
             repo_root,
-            load(summary_path),
+            summary,
             sha256_file(summary_path),
             load(repo_root / args.pdt_manifest),
             load(repo_root / args.oracle_manifest),

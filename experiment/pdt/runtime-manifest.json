@@ -18,11 +18,11 @@
     },
     {
       "path": "experiment/scripts/publish-experiment-runtimes.sh",
-      "sha256": "56962a2574d4b87af89d4aa7d013acebf7c9ea0491d6a476eeb5022eb1cc61cd"
+      "sha256": "eff47bd354de0fc657c1e4c99b0c960b17bfdb931bd8663e227ef2a7840842fd"
     },
     {
       "path": "experiment/scripts/bind-runtime-publication.py",
-      "sha256": "a27c3f34246a44fc6fb087c9f5403698933684a23978e60691a0974a52d5d000"
+      "sha256": "52a96e87d878032d401a5f46fc4f8cf0b302ef8551c5c65404eafe73bfd36c67"
     },
     {
       "path": "experiment/scripts/validate-pdt-runtime.py",

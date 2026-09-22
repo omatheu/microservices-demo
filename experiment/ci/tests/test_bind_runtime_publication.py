@@ -1,7 +1,9 @@
 import copy
+import hashlib
 import importlib.util
 import json
 import pathlib
+import tempfile
 import unittest
 
 
@@ -43,13 +45,25 @@ def summary():
                 ),
                 "registry_digest": digest,
                 "uncompressed_size_bytes": index * 1_000_000,
-                "sbom": "pass",
-                "vulnerability_scan": "pass",
+                "sbom": {
+                    "status": "pass",
+                    "path": f"{name}-sbom.cdx.json",
+                    "format": "cyclonedx-json",
+                    "sha256": str((index + 4) % 10) * 64,
+                },
+                "vulnerability_scan": {
+                    "status": "pass",
+                    "path": f"{name}-trivy.json",
+                    "scanner": "trivy",
+                    "severity": ["HIGH", "CRITICAL"],
+                    "ignore_unfixed": True,
+                    "sha256": str((index + 5) % 10) * 64,
+                },
                 "published": True,
             }
         )
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "source": {
             "repository": "omatheu/microservices-demo",
             "commit": SOURCE_COMMIT,
@@ -104,6 +118,10 @@ class BindRuntimePublicationTests(unittest.TestCase):
         )
         self.assertFalse(receipt["cloud_mutation_performed"])
         self.assertFalse(receipt["protocol_frozen"])
+        self.assertEqual(
+            summary()["images"][0]["sbom"],
+            receipt["publication_evidence"]["checkout-pdt-controller"]["sbom"],
+        )
         self.assertEqual(pdt_before, original_pdt)
         self.assertEqual(oracle_before, original_oracle)
 
@@ -125,8 +143,8 @@ class BindRuntimePublicationTests(unittest.TestCase):
 
     def test_rejects_scan_or_authorization_failure(self):
         value = summary()
-        value["images"][1]["vulnerability_scan"] = "fail"
-        with self.assertRaisesRegex(ValueError, "scan did not pass"):
+        value["images"][1]["vulnerability_scan"]["status"] = "fail"
+        with self.assertRaisesRegex(ValueError, "scan evidence is invalid"):
             self.bind(value=value)
 
         value = summary()
@@ -140,6 +158,55 @@ class BindRuntimePublicationTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "already contains"):
             self.bind(pdt=pdt)
+
+    def test_verifies_bound_sbom_and_scan_files_against_the_exact_local_image(self):
+        value = summary()
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            for image in value["images"]:
+                source_name, version = image["source_tag"].rsplit(":", 1)
+                sbom = {
+                    "bomFormat": "CycloneDX",
+                    "metadata": {
+                        "component": {"name": source_name, "version": version}
+                    },
+                    "components": [{"name": "runtime"}],
+                }
+                scan = {
+                    "SchemaVersion": 2,
+                    "ArtifactName": image["source_tag"],
+                    "ArtifactType": "container_image",
+                    "Metadata": {"ImageID": image["local_image_id"]},
+                    "Results": [{"Vulnerabilities": None}],
+                }
+                for binding_name, payload in (("sbom", sbom), ("vulnerability_scan", scan)):
+                    path = root / image[binding_name]["path"]
+                    content = (json.dumps(payload) + "\n").encode()
+                    path.write_bytes(content)
+                    image[binding_name]["sha256"] = hashlib.sha256(content).hexdigest()
+
+            MODULE.validate_evidence_files(root / "summary.json", value)
+
+            scan_binding = value["images"][0]["vulnerability_scan"]
+            scan_path = root / scan_binding["path"]
+            unsafe_scan = json.loads(scan_path.read_text(encoding="utf-8"))
+            unsafe_scan["Results"][0]["Vulnerabilities"] = [{"Severity": "HIGH"}]
+            unsafe_content = (json.dumps(unsafe_scan) + "\n").encode()
+            scan_path.write_bytes(unsafe_content)
+            scan_binding["sha256"] = hashlib.sha256(unsafe_content).hexdigest()
+
+            with self.assertRaisesRegex(ValueError, "does not prove a clean scan"):
+                MODULE.validate_evidence_files(root / "summary.json", value)
+
+    def test_rejects_tampered_publication_evidence_file(self):
+        value = summary()
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            first = value["images"][0]
+            (root / first["sbom"]["path"]).write_text("{}\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(ValueError, "hash differs"):
+                MODULE.validate_evidence_files(root / "summary.json", value)
 
 
 if __name__ == "__main__":
