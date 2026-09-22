@@ -420,8 +420,13 @@ continuam pendentes e não foram antecipadas sem autorização financeira.
 O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery e
 o dataset protegido `online_boutique_billing` já existem; a consulta versionada
 limita cada leitura a 100 MB. A exportação padrão do Cloud Billing continua
-desabilitada enquanto o salvamento final no Console aguarda confirmação,
-portanto ainda não existe evidência de custo monetário corrente apta à revisão
+sem produzir dados: a verificação somente leitura de 22/09/2026 UTC encontrou
+zero tabelas no dataset e, por isso, não executou query faturável. O cluster continua
+`RUNNING`, com 12/12 deployments e pods operacionais disponíveis; staging,
+PDT, plano de controle, oráculo e observabilidade permanecem vazios. O registro
+está em
+[`../experiment/evidence/finance/protocol-freeze-readiness-20260922T013315Z.json`](../experiment/evidence/finance/protocol-freeze-readiness-20260922T013315Z.json).
+Ainda não existe evidência de custo monetário corrente apta à revisão
 financeira do protocolo.
 
 **Critério de saída:** protocolo versionado antes da coleta e corpus contendo

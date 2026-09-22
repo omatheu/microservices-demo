@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.1.0",
+  "captured_at": "2026-09-22T01:33:15Z",
+  "project_id": "microservices-demo-tcc",
+  "project_number": "3042974916",
+  "collection_mode": "read-only-metadata-only",
+  "project": {
+    "lifecycle_state": "ACTIVE",
+    "billing_enabled": true
+  },
+  "billing_export": {
+    "dataset_id": "online_boutique_billing",
+    "location": "US",
+    "dataset_found": true,
+    "table_count": 0,
+    "standard_export_table_count": 0,
+    "detailed_export_table_count": 0,
+    "current_spend_query_available": false,
+    "billable_query_executed": false,
+    "blocking_reason": "The protected dataset exists, but Cloud Billing has not created a gcp_billing_export_v1_* table, so no current-cost query has a valid source."
+  },
+  "budgets": [
+    {
+      "display_name": "Online Boutique TCC - experimental spend guard",
+      "currency": "BRL",
+      "amount": 200,
+      "credits_excluded_from_spend_basis": true,
+      "period_start": "2026-09-19",
+      "period_end_exclusive": "2026-12-20",
+      "alert_thresholds": [
+        0.25,
+        0.5,
+        0.75,
+        0.9,
+        1.0
+      ],
+      "hard_cap": false
+    },
+    {
+      "display_name": "Online Boutique TCC - gross cost guard",
+      "currency": "BRL",
+      "amount": 1751.1,
+      "credits_excluded_from_spend_basis": true,
+      "period_start": "2026-09-19",
+      "period_end_exclusive": "2026-12-20",
+      "alert_thresholds": [
+        0.25,
+        0.5,
+        0.75,
+        0.9,
+        0.95,
+        1.0
+      ],
+      "hard_cap": false
+    }
+  ],
+  "runtime": {
+    "cluster": "online-boutique-experiment",
+    "region": "us-central1",
+    "cluster_mode": "GKE Autopilot",
+    "cluster_status": "RUNNING",
+    "kubernetes_version": "1.35.7-gke.1222000",
+    "operational_deployments": 12,
+    "operational_available_deployments": 12,
+    "operational_pods": 12,
+    "operational_running_pods": 12,
+    "operational_requests": {
+      "cpu": "1570m",
+      "memory": "1859Mi"
+    },
+    "operational_load_balancers": 1,
+    "empty_experimental_namespaces": [
+      "staging",
+      "pdt",
+      "pdt-system",
+      "oracle",
+      "observability"
+    ]
+  },
+  "artifact_registry": {
+    "repository": "online-boutique-experiment",
+    "region": "us-central1",
+    "repository_size_display": "7.843MB",
+    "image_count": 1,
+    "images": [
+      {
+        "name": "checkoutservice",
+        "digest": "sha256:fc60c11a7146a53a5f87df486517453b4c91073e919d0d0b6342c5a318a3734f",
+        "image_size_bytes": 7840056,
+        "tags": [
+          "engineering-artifact-binding-v2"
+        ]
+      }
+    ],
+    "experiment_runtime_images_published": false
+  },
+  "protocol_financial_review": {
+    "proposed_incremental_spend_ceiling_brl": 200,
+    "mandatory_review_at_brl": 150,
+    "approved": false,
+    "blocking_reason": "Detailed current-cost data remains unavailable because the Cloud Billing export table has not been created."
+  },
+  "mutations_performed": false,
+  "cloud_resources_changed": false,
+  "billable_data_queries_executed": false
+}

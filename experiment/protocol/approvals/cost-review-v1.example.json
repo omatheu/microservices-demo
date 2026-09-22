@@ -9,6 +9,9 @@
   "confirmatory_incremental_spend_brl": 0,
   "approved_incremental_spend_ceiling_brl": 200,
   "mandatory_review_at_brl": 150,
-  "evidence_reference": "REPLACE_WITH_BILLING_EVIDENCE_REFERENCE",
+  "evidence": {
+    "path": "experiment/evidence/finance/REPLACE_WITH_COST_WINDOW.json",
+    "sha256": "REPLACE_WITH_64_CHARACTER_SHA256"
+  },
   "cloud_execution_authorized": false
 }

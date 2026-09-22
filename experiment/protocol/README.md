@@ -292,7 +292,11 @@ lista `blocking_requirements`. Os modelos em [`approvals/`](./approvals/) não
 são aprovações; arquivos sem o sufixo `.example` só devem ser criados com dados
 reais. Tanto a revisão financeira quanto a aprovação do protocolo registram
 `cloud_execution_authorized: false`: congelar o desenho nunca autoriza uma
-execução paga.
+execução paga. A revisão financeira só é aceita quando `evidence` contém caminho
+seguro e SHA-256 de uma saída real de `query-billing-cost-window.sh`. O auditor
+confere projeto, moeda BRL, janela, timestamp, custo bruto, linhas retornadas e
+o teto de 100 MB; um snapshot de prontidão sem custo observado não pode
+substituir essa evidência.
 
 ## Dados excluídos da comparação principal
 

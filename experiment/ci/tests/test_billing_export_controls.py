@@ -1,4 +1,5 @@
 import pathlib
+import json
 import unittest
 
 
@@ -9,6 +10,10 @@ VARIABLES = STACK / "variables.tf"
 MAIN = STACK / "main.tf"
 QUERY = REPO_ROOT / "experiment" / "scripts" / "query-billing-cost-window.sh"
 CI_RUNNER = REPO_ROOT / "experiment" / "scripts" / "run-conventional-ci-local.sh"
+LATEST_READINESS = (
+    REPO_ROOT
+    / "experiment/evidence/finance/protocol-freeze-readiness-20260922T013315Z.json"
+)
 
 
 class BillingExportControlsTests(unittest.TestCase):
@@ -57,6 +62,24 @@ class BillingExportControlsTests(unittest.TestCase):
 
         self.assertIn('infra/terraform-billing-export', rendered)
         self.assertIn('terraform -chdir="${terraform_directory}" validate', rendered)
+
+    def test_latest_readiness_snapshot_preserves_the_financial_blocker(self):
+        value = json.loads(LATEST_READINESS.read_text(encoding="utf-8"))
+
+        self.assertEqual("read-only-metadata-only", value["collection_mode"])
+        self.assertTrue(value["billing_export"]["dataset_found"])
+        self.assertEqual(0, value["billing_export"]["table_count"])
+        self.assertFalse(value["billing_export"]["current_spend_query_available"])
+        self.assertFalse(value["billing_export"]["billable_query_executed"])
+        self.assertFalse(value["protocol_financial_review"]["approved"])
+        self.assertFalse(value["mutations_performed"])
+        self.assertFalse(value["cloud_resources_changed"])
+        self.assertFalse(value["billable_data_queries_executed"])
+        self.assertEqual(12, value["runtime"]["operational_deployments"])
+        self.assertEqual(12, value["runtime"]["operational_available_deployments"])
+        self.assertFalse(
+            value["artifact_registry"]["experiment_runtime_images_published"]
+        )
 
 
 if __name__ == "__main__":

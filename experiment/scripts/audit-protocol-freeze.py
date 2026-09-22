@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import math
 import pathlib
 import re
 
@@ -24,6 +25,7 @@ ORACLE_IMAGE_PATTERNS = {
 }
 RFC3339_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 COMMIT_PATTERN = re.compile(r"^[a-f0-9]{40}$")
+BILLING_TABLE_PATTERN = re.compile(r"^gcp_billing_export_v1_[A-Fa-f0-9_]+$")
 PUBLICATION_BINDING_KEYS = {
     "schema_version",
     "publication_summary_sha256",
@@ -91,6 +93,133 @@ def publication_binding_identity(binding):
     ):
         return None
     return tuple(binding[name] for name in sorted(PUBLICATION_BINDING_KEYS))
+
+
+def finite_number(value):
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+    )
+
+
+def load_cost_evidence(repo_root, binding):
+    if not isinstance(binding, dict) or set(binding) != {"path", "sha256"}:
+        return None
+    relative = pathlib.PurePosixPath(binding.get("path", ""))
+    expected = binding.get("sha256")
+    if (
+        not relative.parts
+        or relative.is_absolute()
+        or ".." in relative.parts
+        or relative.parts[:3] != ("experiment", "evidence", "finance")
+        or not isinstance(expected, str)
+        or not DIGEST_PATTERN.fullmatch(expected)
+    ):
+        return None
+    path = pathlib.Path(repo_root) / relative
+    try:
+        if not path.is_file() or sha256_file(path) != expected:
+            return None
+        return load(path)
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def validate_cost_review(repo_root, protocol, cost_review):
+    limits = protocol.get("execution_limits", {})
+    ceiling = limits.get("proposed_incremental_spend_ceiling_brl")
+    review_at = limits.get("mandatory_cost_review_at_brl")
+    required_keys = {
+        "schema_version",
+        "protocol_id",
+        "project_id",
+        "decision",
+        "reviewed_at",
+        "billing_data_as_of",
+        "cost_data_available",
+        "confirmatory_incremental_spend_brl",
+        "approved_incremental_spend_ceiling_brl",
+        "mandatory_review_at_brl",
+        "evidence",
+        "cloud_execution_authorized",
+    }
+    if (
+        not isinstance(cost_review, dict)
+        or set(cost_review) != required_keys
+        or cost_review.get("schema_version") != "1.0.0"
+        or cost_review.get("protocol_id") != protocol.get("protocol_id")
+        or cost_review.get("project_id") != "microservices-demo-tcc"
+        or cost_review.get("decision") != "approved-for-protocol-freeze"
+        or cost_review.get("cloud_execution_authorized") is not False
+        or cost_review.get("cost_data_available") is not True
+        or cost_review.get("approved_incremental_spend_ceiling_brl") != ceiling
+        or cost_review.get("mandatory_review_at_brl") != review_at
+        or not finite_number(cost_review.get("confirmatory_incremental_spend_brl"))
+        or not finite_number(ceiling)
+        or not finite_number(review_at)
+        or not 0 < review_at <= ceiling
+        or not 0 <= cost_review["confirmatory_incremental_spend_brl"] < review_at
+        or not isinstance(cost_review.get("reviewed_at"), str)
+        or not RFC3339_PATTERN.fullmatch(cost_review["reviewed_at"])
+        or not isinstance(cost_review.get("billing_data_as_of"), str)
+        or not RFC3339_PATTERN.fullmatch(cost_review["billing_data_as_of"])
+        or cost_review["billing_data_as_of"] > cost_review["reviewed_at"]
+    ):
+        return False
+    evidence = load_cost_evidence(repo_root, cost_review.get("evidence"))
+    source = evidence.get("source") if isinstance(evidence, dict) else None
+    window = evidence.get("window") if isinstance(evidence, dict) else None
+    gross_cost = evidence.get("gross_cost_brl") if isinstance(evidence, dict) else None
+    if (
+        not isinstance(evidence, dict)
+        or evidence.get("schema_version") != "1.0.0"
+        or evidence.get("observation_mode")
+        != "Cloud Billing Standard usage cost export"
+        or evidence.get("project_id") != "microservices-demo-tcc"
+        or evidence.get("currency") != "BRL"
+        or not finite_number(gross_cost)
+        or gross_cost < 0
+        or not math.isclose(
+            gross_cost,
+            cost_review["confirmatory_incremental_spend_brl"],
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        )
+        or not finite_number(evidence.get("credits_brl"))
+        or not finite_number(evidence.get("net_cost_brl"))
+        or not math.isclose(
+            gross_cost + evidence["credits_brl"],
+            evidence["net_cost_brl"],
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        )
+        or not isinstance(evidence.get("line_items"), int)
+        or isinstance(evidence.get("line_items"), bool)
+        or evidence["line_items"] <= 0
+        or evidence.get("billing_data_as_of")
+        != cost_review["billing_data_as_of"]
+        or evidence.get("finalized_invoice_amount") is not False
+        or evidence.get("cloud_execution_authorized") is not False
+        or not isinstance(source, dict)
+        or source.get("dataset_id") != "online_boutique_billing"
+        or source.get("location") != "US"
+        or not isinstance(source.get("table_id"), str)
+        or not BILLING_TABLE_PATTERN.fullmatch(source["table_id"])
+        or not isinstance(source.get("maximum_bytes_billed"), int)
+        or isinstance(source.get("maximum_bytes_billed"), bool)
+        or not 0 < source["maximum_bytes_billed"] <= 100_000_000
+        or source.get("query_cache_enabled") is not True
+        or not isinstance(window, dict)
+        or not isinstance(window.get("start"), str)
+        or not RFC3339_PATTERN.fullmatch(window["start"])
+        or not isinstance(window.get("end"), str)
+        or not RFC3339_PATTERN.fullmatch(window["end"])
+        or window["start"] >= window["end"]
+        or window["end"] > cost_review["billing_data_as_of"]
+    ):
+        return False
+    return True
 
 
 def audit(repo_root, protocol, researcher_approval=None, cost_review=None):
@@ -296,22 +425,7 @@ def audit(repo_root, protocol, researcher_approval=None, cost_review=None):
 
     ceiling = limits.get("proposed_incremental_spend_ceiling_brl")
     review_at = limits.get("mandatory_cost_review_at_brl")
-    cost_review_ok = (
-        isinstance(cost_review, dict)
-        and cost_review.get("schema_version") == "1.0.0"
-        and cost_review.get("protocol_id") == protocol.get("protocol_id")
-        and cost_review.get("project_id") == "microservices-demo-tcc"
-        and cost_review.get("decision") == "approved-for-protocol-freeze"
-        and cost_review.get("cloud_execution_authorized") is False
-        and cost_review.get("cost_data_available") is True
-        and cost_review.get("approved_incremental_spend_ceiling_brl") == ceiling
-        and cost_review.get("mandatory_review_at_brl") == review_at
-        and isinstance(cost_review.get("confirmatory_incremental_spend_brl"), (int, float))
-        and 0 <= cost_review["confirmatory_incremental_spend_brl"] < review_at
-        and bool(RFC3339_PATTERN.fullmatch(cost_review.get("reviewed_at", "")))
-        and bool(RFC3339_PATTERN.fullmatch(cost_review.get("billing_data_as_of", "")))
-        and bool(cost_review.get("evidence_reference"))
-    )
+    cost_review_ok = validate_cost_review(repo_root, protocol, cost_review)
     add_check(
         checks,
         "financial-review",

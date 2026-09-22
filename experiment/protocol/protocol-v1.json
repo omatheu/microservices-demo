@@ -315,7 +315,7 @@
     },
     "protocol_freeze_auditor": {
       "path": "experiment/scripts/audit-protocol-freeze.py",
-      "sha256": "24f1ad5389505cabf647aa337f2014299ed95d3efc7645aaf9c6e2dbba391d8d"
+      "sha256": "5c580de7ad2a861ed89cea38ad7e99f1760794bc81a9250c47bcfa311f127fcf"
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
