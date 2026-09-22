@@ -307,11 +307,11 @@
     },
     "confirmatory_analyzer": {
       "path": "experiment/scripts/analyze-confirmatory-results.py",
-      "sha256": "b6d0df9a54c84571091a4f45b7e4511437fd35ead204e9a482d7af4527e24422"
+      "sha256": "abdcaee4cfbff26ad5bfb0ac1ae2bfe8dd5635bef01108a1baeeb57d565a04c4"
     },
     "analysis_dataset_composer": {
       "path": "experiment/scripts/compose-analysis-dataset.py",
-      "sha256": "d386b1c8d9fa32d7d097c5d22798d5c9b9f260859b961cde6bb079f80b61a1f5"
+      "sha256": "0bd48cde192df7c80b8c996d43e801b5a5d12f638799473cad7bc7549bc52225"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",

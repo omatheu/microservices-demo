@@ -114,3 +114,6 @@ python3 experiment/scripts/aggregate-pdt-fidelity.py \
 
 O comando normal exige desenho congelado. `--allow-draft` existe somente para
 pilotos de engenharia e nunca produz evidência confirmatória elegível.
+O arquivo resultante entra no manifesto de coleta como `pdt_fidelity`; o
+compositor e o analisador confirmatório recusam cobertura parcial, identidade
+divergente ou tentativa de tratar suas repetições como amostras independentes.

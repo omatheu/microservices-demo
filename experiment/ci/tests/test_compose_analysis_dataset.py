@@ -47,6 +47,82 @@ def oracle(candidate_id, actual):
     }
 
 
+def summary(value, count=3):
+    return {
+        "count": count,
+        "mean": value,
+        "median": value,
+        "sample_standard_deviation": 0.0 if count > 1 else None,
+        "minimum": value,
+        "maximum": value,
+    }
+
+
+def fidelity(candidate_id, protocol_id, protocol_sha, definition_sha, artifacts):
+    metrics = {}
+    for metric_id, unit in MODULE.FIDELITY_METRICS.items():
+        zero_observed = metric_id in {
+            "checkoutservice_unavailable",
+            "checkoutservice_restart_increase",
+        }
+        metrics[metric_id] = {
+            "unit": unit,
+            "report_count": 3,
+            "signed_error": summary(0.0),
+            "absolute_error": summary(0.0),
+            "relative_error": None if zero_observed else summary(0.0),
+            "undefined_relative_error_count": 3 if zero_observed else 0,
+        }
+    return {
+        "schema_version": "1.0.0",
+        "mechanism": "candidate-level-pdt-fidelity",
+        "protocol_id": protocol_id,
+        "protocol_sha256": protocol_sha,
+        "policy_id": "checkout-pdt-fidelity-v1",
+        "policy_sha256": "f" * 64,
+        "candidate_id": candidate_id,
+        "candidate_definition_sha256": definition_sha,
+        "immutable_artifacts": artifacts,
+        "unit_of_analysis": "candidate",
+        "execution_mode": "engineering",
+        "confirmatory_eligible": False,
+        "coverage": {
+            "deployable_alternatives": ["deploy-as-is"],
+            "repetitions": [1, 2, 3],
+            "expected_reports": 3,
+            "observed_reports": 3,
+            "complete": True,
+        },
+        "classification": {
+            "agreements": 2,
+            "comparisons": 3,
+            "agreement_rate": 2 / 3,
+            "by_alternative": {
+                "deploy-as-is": {
+                    "agreements": 2,
+                    "comparisons": 3,
+                    "agreement_rate": 2 / 3,
+                }
+            },
+        },
+        "metrics": metrics,
+        "report_index": [
+            {
+                "alternative_id": "deploy-as-is",
+                "repetition": repetition,
+                "classification_agreement": repetition != 3,
+            }
+            for repetition in (1, 2, 3)
+        ],
+        "controls": {
+            "complete_matrix_required": True,
+            "model_mutation_performed": False,
+            "recalibration_allowed": False,
+            "confirmatory_reports_are_evaluation_only": True,
+        },
+    }
+
+
 class ComposeAnalysisDatasetTests(unittest.TestCase):
     def fixture(self):
         temporary = tempfile.TemporaryDirectory()
@@ -90,6 +166,9 @@ class ComposeAnalysisDatasetTests(unittest.TestCase):
             "gate_state": "blocked",
             "operational_mutation_performed": False,
         }
+        fidelity_approved = fidelity(
+            "cand-0001", proto["protocol_id"], proto_sha, definition_sha, artifacts
+        )
         control_blocked = {
             "candidate_id": "cand-0002",
             "mechanism": "conventional-ci-cd-with-staging",
@@ -111,6 +190,7 @@ class ComposeAnalysisDatasetTests(unittest.TestCase):
                     "conventional_decision": write(root, "control-1.json", control_approved),
                     "pdt_decision": write(root, "pdt-1.json", pdt),
                     "deployment_gate": write(root, "gate-1.json", gate),
+                    "pdt_fidelity": write(root, "fidelity-1.json", fidelity_approved),
                     "oracle_adjudication": write(root, "oracle-1.json", oracle("cand-0001", "harmful")),
                 },
                 {
@@ -119,6 +199,7 @@ class ComposeAnalysisDatasetTests(unittest.TestCase):
                     "conventional_decision": write(root, "control-2.json", control_blocked),
                     "pdt_decision": None,
                     "deployment_gate": None,
+                    "pdt_fidelity": None,
                     "oracle_adjudication": write(root, "oracle-2.json", oracle("cand-0002", "safe")),
                 },
             ],
@@ -131,9 +212,21 @@ class ComposeAnalysisDatasetTests(unittest.TestCase):
         result = MODULE.compose(proto, proto_sha, public, public_sha, manifest, root, allow_draft=True)
         self.assertEqual("block", result["candidates"][0]["treatment"]["decision"])
         self.assertEqual("block", result["candidates"][1]["treatment"]["decision"])
+        self.assertEqual(
+            "candidate-level-pdt-fidelity",
+            result["candidates"][0]["treatment"]["fidelity"]["mechanism"],
+        )
+        self.assertIsNone(result["candidates"][1]["treatment"]["fidelity"])
         self.assertEqual("engineering-dry-run", result["composition_mode"])
         self.assertFalse(result["confirmatory_eligible"])
         self.assertEqual(2, result["collection_flow"]["complete_decision_pairs"])
+        self.assertEqual(1, result["collection_flow"]["pdt_fidelity_candidates"])
+        self.assertEqual(
+            1,
+            result["collection_flow"][
+                "pdt_fidelity_not_applicable_control_blocked"
+            ],
+        )
         self.assertEqual([], result["collection_flow"]["manifest_exclusions"])
 
     def test_evidence_hash_substitution_is_rejected(self):
@@ -149,6 +242,53 @@ class ComposeAnalysisDatasetTests(unittest.TestCase):
         manifest["candidates"][0]["pdt_decision"] = None
         with self.assertRaisesRegex(ValueError, "must contain only path"):
             MODULE.compose(proto, proto_sha, public, public_sha, manifest, root, allow_draft=True)
+
+    def test_control_approval_requires_hash_bound_complete_fidelity(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        manifest["candidates"][0]["pdt_fidelity"] = None
+        with self.assertRaisesRegex(ValueError, "must contain only path"):
+            MODULE.compose(
+                proto, proto_sha, public, public_sha, manifest, root, allow_draft=True
+            )
+
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        fidelity_path = root / manifest["candidates"][0]["pdt_fidelity"]["path"]
+        value = json.loads(fidelity_path.read_text(encoding="utf-8"))
+        value["coverage"]["complete"] = False
+        fidelity_path.write_text(json.dumps(value), encoding="utf-8")
+        manifest["candidates"][0]["pdt_fidelity"]["sha256"] = digest(fidelity_path)
+        with self.assertRaisesRegex(ValueError, "coverage is incomplete"):
+            MODULE.compose(
+                proto, proto_sha, public, public_sha, manifest, root, allow_draft=True
+            )
+
+    def test_control_blocked_candidate_cannot_carry_fidelity(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        manifest["candidates"][1]["pdt_fidelity"] = manifest["candidates"][0][
+            "pdt_fidelity"
+        ]
+
+        with self.assertRaisesRegex(ValueError, "must not contain PDT evidence"):
+            MODULE.compose(
+                proto, proto_sha, public, public_sha, manifest, root, allow_draft=True
+            )
+
+    def test_fidelity_report_index_must_cover_every_repetition(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        fidelity_path = root / manifest["candidates"][0]["pdt_fidelity"]["path"]
+        value = json.loads(fidelity_path.read_text(encoding="utf-8"))
+        value["report_index"][2]["repetition"] = 2
+        fidelity_path.write_text(json.dumps(value), encoding="utf-8")
+        manifest["candidates"][0]["pdt_fidelity"]["sha256"] = digest(fidelity_path)
+
+        with self.assertRaisesRegex(ValueError, "report index is inconsistent"):
+            MODULE.compose(
+                proto, proto_sha, public, public_sha, manifest, root, allow_draft=True
+            )
 
     def test_candidate_set_must_match_public_corpus(self):
         temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()

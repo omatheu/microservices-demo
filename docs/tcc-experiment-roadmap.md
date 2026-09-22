@@ -472,8 +472,10 @@ autoriza mutação operacional. Quando existe previsão PDT para a alternativa, 
 runner persiste ainda `pdt-fidelity.json`, vinculado por hash, com erro por
 métrica e concordância de classificação. A implementação está coberta
 localmente. Um agregador adicional exige a matriz completa de alternativas por
-três repetições e produz o resumo candidata-nível previsto no protocolo. Os
-itens quantitativos continuam pendentes de execução real.
+três repetições e produz o resumo candidata-nível previsto no protocolo. O
+compositor e o analisador final já exigem e consomem esse agregado sem tratar
+repetições técnicas como amostras independentes. Os itens quantitativos
+continuam pendentes de execução real.
 
 ### Fase 8 — Análise final
 
@@ -505,7 +507,10 @@ implementados e protegidos por hash no protocolo. O compositor confere o
 conjunto completo de IDs opacos e os hashes das decisões convencionais, PDT,
 gate e oráculo. O analisador calcula intervalos binomiais exatos, diferença
 pareada de risco, teste exato de McNemar, matrizes de confusão, utilidade
-incremental, qualidade prescritiva e resumos contínuos. O modo normal falha
+incremental, qualidade prescritiva, resumos contínuos e fidelidade preditiva no
+nível da candidata. O agregado de fidelidade só é aceito com cobertura completa
+das alternativas e repetições, identidade e hashes do protocolo, índice sem
+duplicatas e travas contra recalibração confirmatória. O modo normal falha
 enquanto o protocolo não estiver congelado; o modo de autoteste produz saída
 explicitamente inelegível. Os valores experimentais e sua interpretação
 continuam pendentes da coleta confirmatória e do oráculo.

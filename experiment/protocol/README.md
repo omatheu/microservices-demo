@@ -245,13 +245,19 @@ rótulos. O agregador de fidelidade também é selado e recusa cobertura parcial
 preservando a candidata — e não suas repetições — como unidade estatística.
 O compositor do dataset e o analisador confirmatório também são selados. O
 primeiro verifica os hashes de cada decisão e adjudicação e exige uma linha de
-fluxo para cada candidata declarada. Uma exclusão de infraestrutura só é aceita
-antes da abertura do rótulo, depois da repetição substituta prevista, com ledger
-hash-bound dos dois intentos inválidos e sem evidência de decisão ou oráculo na
-mesma linha. O segundo rejeita candidatas silenciosamente ausentes, separa
-exclusões do manifesto de adjudicações inconclusivas, não imputa decisões ou
-rótulos e aplica a unidade de análise no nível da candidata, intervalos
-binomiais exatos e McNemar pareado definidos nesta versão do protocolo.
+fluxo para cada candidata declarada. Quando o controle aprova, ele exige ainda
+o agregado de fidelidade vinculado por hash, valida política, artefatos,
+cobertura alternativa × repetição e controles contra recalibração. Quando o
+controle bloqueia, a fidelidade deve ser explicitamente ausente. Uma exclusão
+de infraestrutura só é aceita antes da abertura do rótulo, depois da repetição
+substituta prevista, com ledger hash-bound dos dois intentos inválidos e sem
+evidência de decisão ou oráculo na mesma linha. O segundo rejeita candidatas
+silenciosamente ausentes, separa exclusões do manifesto de adjudicações
+inconclusivas, não imputa decisões ou rótulos e aplica a unidade de análise no
+nível da candidata, intervalos binomiais exatos e McNemar pareado definidos
+nesta versão do protocolo. A fidelidade é resumida entre candidatas a partir
+dos agregados candidatos; nenhuma repetição técnica entra como unidade
+estatística independente.
 O dataset declarativo e a consulta de custo limitada a 100 MB também são
 selados, impedindo que a regra de contabilização seja alterada depois da
 observação dos resultados.

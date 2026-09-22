@@ -31,7 +31,99 @@ def protocol_hash(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
 
 
-def candidate(identifier, actual, control, treatment):
+def summary(value, count=6):
+    return {
+        "count": count,
+        "mean": value,
+        "median": value,
+        "sample_standard_deviation": 0.0 if count > 1 else None,
+        "minimum": value,
+        "maximum": value,
+    }
+
+
+def fidelity(identifier, proto, value, agreements):
+    confirmatory = (
+        proto.get("status") == "frozen"
+        and proto.get("confirmatory_collection_allowed") is True
+        and bool(proto.get("frozen_at"))
+    )
+    agreement_counts = {
+        "deploy-as-is": min(3, agreements),
+        "capacity-safe": max(0, agreements - 3),
+    }
+    metrics = {}
+    for metric_id, unit in MODULE.FIDELITY_METRICS.items():
+        undefined = metric_id in {
+            "checkoutservice_unavailable",
+            "checkoutservice_restart_increase",
+        }
+        metrics[metric_id] = {
+            "unit": unit,
+            "report_count": 6,
+            "signed_error": summary(value),
+            "absolute_error": summary(value),
+            "relative_error": None if undefined else summary(value / 10),
+            "undefined_relative_error_count": 6 if undefined else 0,
+        }
+    return {
+        "schema_version": "1.0.0",
+        "mechanism": "candidate-level-pdt-fidelity",
+        "protocol_id": proto["protocol_id"],
+        "protocol_sha256": protocol_hash(proto),
+        "policy_id": "checkout-pdt-fidelity-v1",
+        "policy_sha256": "f" * 64,
+        "candidate_id": identifier,
+        "candidate_definition_sha256": "a" * 64,
+        "immutable_artifacts": [
+            {
+                "component": "checkoutservice",
+                "remote_reference": "image@sha256:" + "b" * 64,
+            }
+        ],
+        "unit_of_analysis": "candidate",
+        "execution_mode": "confirmatory" if confirmatory else "engineering",
+        "confirmatory_eligible": confirmatory,
+        "coverage": {
+            "deployable_alternatives": ["capacity-safe", "deploy-as-is"],
+            "repetitions": [1, 2, 3],
+            "expected_reports": 6,
+            "observed_reports": 6,
+            "complete": True,
+        },
+        "classification": {
+            "agreements": agreements,
+            "comparisons": 6,
+            "agreement_rate": agreements / 6,
+            "by_alternative": {
+                alternative_id: {
+                    "agreements": count,
+                    "comparisons": 3,
+                    "agreement_rate": count / 3,
+                }
+                for alternative_id, count in agreement_counts.items()
+            },
+        },
+        "metrics": metrics,
+        "report_index": [
+            {
+                "alternative_id": alternative_id,
+                "repetition": repetition,
+                "classification_agreement": repetition <= agreement_counts[alternative_id],
+            }
+            for alternative_id in ("capacity-safe", "deploy-as-is")
+            for repetition in (1, 2, 3)
+        ],
+        "controls": {
+            "complete_matrix_required": True,
+            "model_mutation_performed": False,
+            "recalibration_allowed": False,
+            "confirmatory_reports_are_evaluation_only": True,
+        },
+    }
+
+
+def candidate(identifier, actual, control, treatment, proto, value, agreements):
     alternative = "deploy-as-is" if treatment == "approve" else "block"
     oracle_selected = "block" if actual == "harmful" else "deploy-as-is"
     return {
@@ -47,6 +139,11 @@ def candidate(identifier, actual, control, treatment):
             "decision": treatment,
             "selected_alternative": alternative,
             "continuous_metrics": {"duration_seconds": 12.0},
+            "fidelity": (
+                fidelity(identifier, proto, value, agreements)
+                if control == "approve"
+                else None
+            ),
         },
         "oracle": {
             "candidate_id": identifier,
@@ -62,22 +159,31 @@ def candidate(identifier, actual, control, treatment):
 
 
 def dataset(proto):
+    confirmatory = (
+        proto.get("status") == "frozen"
+        and proto.get("confirmatory_collection_allowed") is True
+        and bool(proto.get("frozen_at"))
+    )
     return {
         "protocol_id": proto["protocol_id"],
         "protocol_sha256": protocol_hash(proto),
         "collection_complete": True,
+        "confirmatory_eligible": confirmatory,
+        "composition_mode": "confirmatory" if confirmatory else "engineering-dry-run",
         "collection_flow": {
             "declared_candidates": 4,
             "candidate_records": 4,
             "complete_decision_pairs": 4,
+            "pdt_fidelity_candidates": 4,
+            "pdt_fidelity_not_applicable_control_blocked": 0,
             "manifest_exclusions": [],
             "silently_missing_candidates": 0,
         },
         "candidates": [
-            candidate("cand-0001", "harmful", "approve", "block"),
-            candidate("cand-0002", "harmful", "approve", "approve"),
-            candidate("cand-0003", "safe", "approve", "approve"),
-            candidate("cand-0004", "safe", "approve", "block"),
+            candidate("cand-0001", "harmful", "approve", "block", proto, 1.0, 6),
+            candidate("cand-0002", "harmful", "approve", "approve", proto, 2.0, 3),
+            candidate("cand-0003", "safe", "approve", "approve", proto, 3.0, 4),
+            candidate("cand-0004", "safe", "approve", "block", proto, 4.0, 5),
         ],
     }
 
@@ -106,6 +212,56 @@ class AnalyzeConfirmatoryResultsTests(unittest.TestCase):
         self.assertEqual(0.5, result["classification"]["treatment"]["specificity"])
         self.assertEqual(1, result["incremental_utility"]["prevented_by_pdt"])
         self.assertEqual(1, result["incremental_utility"]["safe_candidates_blocked_by_pdt"])
+
+    def test_prediction_fidelity_is_summarized_at_candidate_level(self):
+        result = self.analyze()
+        fidelity_result = result["prediction_fidelity"]
+        self.assertEqual("candidate", fidelity_result["unit_of_analysis"])
+        self.assertTrue(
+            fidelity_result["repetitions_used_only_within_candidate_aggregates"]
+        )
+        self.assertEqual(4, fidelity_result["candidates_with_pdt_prediction"])
+        self.assertEqual(
+            4,
+            fidelity_result["classification_agreement"]["candidate_rate_summary"][
+                "count"
+            ],
+        )
+        self.assertEqual(
+            0.75,
+            fidelity_result["classification_agreement"]["candidate_rate_summary"][
+                "median"
+            ],
+        )
+        self.assertEqual(
+            0.25,
+            fidelity_result["classification_agreement"][
+                "perfect_candidate_agreement"
+            ]["rate"],
+        )
+        self.assertEqual(
+            2.5,
+            fidelity_result["metrics"]["checkout_latency_p95_ms"][
+                "candidate_median_absolute_error"
+            ]["median"],
+        )
+        self.assertIsNone(
+            fidelity_result["metrics"]["checkoutservice_unavailable"][
+                "candidate_median_relative_error"
+            ]
+        )
+        self.assertEqual(
+            4,
+            fidelity_result["metrics"]["checkoutservice_unavailable"][
+                "candidates_with_undefined_relative_error"
+            ],
+        )
+        self.assertEqual(
+            1.0,
+            result["candidate_results"][0]["pdt_fidelity"][
+                "classification_agreement_rate"
+            ],
+        )
 
     def test_exact_interval_handles_boundary_counts(self):
         zero = MODULE.exact_binomial_interval(0, 1)
@@ -209,6 +365,7 @@ class AnalyzeConfirmatoryResultsTests(unittest.TestCase):
             "exclusion": exclusion,
         }
         value["collection_flow"]["complete_decision_pairs"] = 3
+        value["collection_flow"]["pdt_fidelity_candidates"] = 3
         value["collection_flow"]["manifest_exclusions"] = [
             {"candidate_id": "cand-0001", **exclusion}
         ]
@@ -229,6 +386,78 @@ class AnalyzeConfirmatoryResultsTests(unittest.TestCase):
         value["collection_flow"]["silently_missing_candidates"] = 1
 
         with self.assertRaisesRegex(ValueError, "collection flow"):
+            MODULE.analyze(proto, protocol_hash(proto), value, allow_draft=True)
+
+    def test_control_approval_requires_complete_candidate_fidelity(self):
+        proto = protocol()
+        value = dataset(proto)
+        value["candidates"][0]["treatment"]["fidelity"] = None
+
+        with self.assertRaisesRegex(ValueError, "not protocol-bound"):
+            MODULE.analyze(proto, protocol_hash(proto), value, allow_draft=True)
+
+        value = dataset(proto)
+        value["candidates"][0]["treatment"]["fidelity"]["report_index"].pop()
+        with self.assertRaisesRegex(ValueError, "report index is incomplete"):
+            MODULE.analyze(proto, protocol_hash(proto), value, allow_draft=True)
+
+    def test_control_blocked_candidate_cannot_claim_pdt_fidelity(self):
+        proto = protocol()
+        value = dataset(proto)
+        value["candidates"][0]["control"]["decision"] = "block"
+        value["candidates"][0]["control"]["selected_alternative"] = "block"
+        value["collection_flow"]["pdt_fidelity_candidates"] = 3
+        value["collection_flow"]["pdt_fidelity_not_applicable_control_blocked"] = 1
+
+        with self.assertRaisesRegex(ValueError, "must not contain PDT fidelity"):
+            MODULE.analyze(proto, protocol_hash(proto), value, allow_draft=True)
+
+    def test_control_blocked_candidate_is_explicitly_not_applicable_to_fidelity(self):
+        proto = protocol()
+        value = dataset(proto)
+        record = value["candidates"][0]
+        record["control"]["decision"] = "block"
+        record["control"]["selected_alternative"] = "block"
+        record["treatment"]["decision"] = "block"
+        record["treatment"]["selected_alternative"] = "block"
+        record["treatment"]["fidelity"] = None
+        value["collection_flow"]["pdt_fidelity_candidates"] = 3
+        value["collection_flow"]["pdt_fidelity_not_applicable_control_blocked"] = 1
+
+        result = MODULE.analyze(
+            proto, protocol_hash(proto), value, allow_draft=True
+        )
+
+        self.assertEqual(3, result["prediction_fidelity"]["candidates_with_pdt_prediction"])
+        self.assertEqual(
+            1,
+            result["prediction_fidelity"][
+                "not_applicable_control_blocked_candidates"
+            ],
+        )
+        self.assertIsNone(result["candidate_results"][0]["pdt_fidelity"])
+
+    def test_confirmatory_fidelity_cannot_claim_engineering_mode(self):
+        proto = protocol()
+        proto["status"] = "frozen"
+        proto["frozen_at"] = "2026-09-21T00:00:00Z"
+        proto["confirmatory_collection_allowed"] = True
+        value = dataset(proto)
+        for item in value["candidates"]:
+            item["oracle"]["eligible_for_primary_analysis"] = True
+        value["candidates"][0]["treatment"]["fidelity"][
+            "execution_mode"
+        ] = "engineering"
+
+        with self.assertRaisesRegex(ValueError, "not protocol-bound"):
+            MODULE.analyze(proto, protocol_hash(proto), value)
+
+    def test_dataset_cannot_claim_a_different_composition_mode(self):
+        proto = protocol()
+        value = dataset(proto)
+        value["confirmatory_eligible"] = True
+
+        with self.assertRaisesRegex(ValueError, "composition mode"):
             MODULE.analyze(proto, protocol_hash(proto), value, allow_draft=True)
 
     def test_inconclusive_repetition_accounting_is_fail_closed(self):
@@ -263,6 +492,7 @@ class AnalyzeConfirmatoryResultsTests(unittest.TestCase):
         }
         value["candidates"][0]["exclusion"] = exclusion
         value["collection_flow"]["complete_decision_pairs"] = 3
+        value["collection_flow"]["pdt_fidelity_candidates"] = 3
         value["collection_flow"]["manifest_exclusions"] = [
             {"candidate_id": "cand-0001", **exclusion}
         ]

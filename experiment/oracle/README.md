@@ -164,6 +164,12 @@ Relatório ausente, duplicado, misto entre engenharia/confirmatório ou com
 aritmética adulterada é recusado. Assim, repetições técnicas não são tratadas
 indevidamente como unidades experimentais independentes.
 
+O manifesto de coleta referencia esse agregado em `pdt_fidelity` para toda
+candidata aprovada pelo controle. O compositor verifica o hash e a matriz, e o
+analisador final resume a concordância e as medianas de erro entre candidatas.
+Candidatas bloqueadas pelo controle não executam o PDT e registram fidelidade
+como não aplicável.
+
 Para candidatas bloqueadas antes de existir artefato,
 [`../scripts/evaluate-oracle-preartifact.py`](../scripts/evaluate-oracle-preartifact.py)
 confere a ligação exata entre definição, item privado, ordem de trabalho, patch,

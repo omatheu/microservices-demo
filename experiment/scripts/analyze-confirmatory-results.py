@@ -14,6 +14,13 @@ import statistics
 
 
 DIGEST = re.compile(r"^[0-9a-f]{64}$")
+FIDELITY_METRICS = {
+    "checkout_success_rate": "ratio",
+    "checkout_latency_p95_ms": "milliseconds",
+    "checkout_latency_p99_ms": "milliseconds",
+    "checkoutservice_unavailable": "deployments",
+    "checkoutservice_restart_increase": "restarts",
+}
 
 
 def load(path):
@@ -142,6 +149,295 @@ def continuous_summary(values):
         "q3": third,
         "minimum": values[0],
         "maximum": values[-1],
+    }
+
+
+def finite_number(value):
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+    )
+
+
+def validate_fidelity_summary(summary, label, allow_empty=False, nonnegative=False):
+    if summary is None and allow_empty:
+        return
+    required = {
+        "count",
+        "mean",
+        "median",
+        "sample_standard_deviation",
+        "minimum",
+        "maximum",
+    }
+    if not isinstance(summary, dict) or set(summary) != required:
+        raise ValueError(f"{label} summary schema is invalid")
+    count = summary["count"]
+    values = [summary[name] for name in ("mean", "median", "minimum", "maximum")]
+    deviation = summary["sample_standard_deviation"]
+    if (
+        not isinstance(count, int)
+        or isinstance(count, bool)
+        or count <= 0
+        or any(not finite_number(value) for value in values)
+        or (count == 1 and deviation is not None)
+        or (count > 1 and (not finite_number(deviation) or deviation < 0))
+        or summary["minimum"] > summary["median"]
+        or summary["median"] > summary["maximum"]
+        or summary["minimum"] > summary["mean"]
+        or summary["mean"] > summary["maximum"]
+        or (nonnegative and summary["minimum"] < 0)
+    ):
+        raise ValueError(f"{label} summary values are invalid")
+
+
+def validate_candidate_fidelity(
+    fidelity,
+    protocol,
+    protocol_sha256,
+    candidate_id,
+    repetitions,
+    confirmatory,
+):
+    required_repetitions = protocol.get("research_design", {}).get(
+        "technical_repetitions_per_candidate"
+    )
+    planned_repetitions = (
+        list(range(1, required_repetitions + 1))
+        if isinstance(required_repetitions, int)
+        and not isinstance(required_repetitions, bool)
+        and required_repetitions > 0
+        else None
+    )
+    coverage = fidelity.get("coverage") if isinstance(fidelity, dict) else None
+    classification = fidelity.get("classification") if isinstance(fidelity, dict) else None
+    controls = fidelity.get("controls") if isinstance(fidelity, dict) else None
+    candidate_definition_sha256 = (
+        fidelity.get("candidate_definition_sha256")
+        if isinstance(fidelity, dict)
+        else None
+    )
+    if (
+        repetitions != planned_repetitions
+        or not isinstance(fidelity, dict)
+        or fidelity.get("schema_version") != "1.0.0"
+        or fidelity.get("mechanism") != "candidate-level-pdt-fidelity"
+        or fidelity.get("protocol_id") != protocol.get("protocol_id")
+        or fidelity.get("protocol_sha256") != protocol_sha256
+        or fidelity.get("policy_id") != "checkout-pdt-fidelity-v1"
+        or not isinstance(fidelity.get("policy_sha256"), str)
+        or not DIGEST.fullmatch(fidelity["policy_sha256"])
+        or fidelity.get("candidate_id") != candidate_id
+        or not isinstance(candidate_definition_sha256, str)
+        or not DIGEST.fullmatch(candidate_definition_sha256)
+        or not isinstance(fidelity.get("immutable_artifacts"), list)
+        or fidelity.get("unit_of_analysis") != "candidate"
+        or fidelity.get("execution_mode")
+        != ("confirmatory" if confirmatory else "engineering")
+        or fidelity.get("confirmatory_eligible") is not confirmatory
+    ):
+        raise ValueError(f"{candidate_id} fidelity aggregate is not protocol-bound")
+    if (
+        not isinstance(coverage, dict)
+        or coverage.get("complete") is not True
+        or coverage.get("repetitions") != planned_repetitions
+        or not isinstance(coverage.get("deployable_alternatives"), list)
+        or not coverage["deployable_alternatives"]
+        or len(coverage["deployable_alternatives"])
+        != len(set(coverage["deployable_alternatives"]))
+        or "deploy-as-is" not in coverage["deployable_alternatives"]
+        or not isinstance(coverage.get("expected_reports"), int)
+        or isinstance(coverage.get("expected_reports"), bool)
+        or coverage["expected_reports"] <= 0
+        or not isinstance(coverage.get("observed_reports"), int)
+        or isinstance(coverage.get("observed_reports"), bool)
+        or coverage["observed_reports"] != coverage["expected_reports"]
+        or coverage["expected_reports"]
+        != len(coverage["deployable_alternatives"]) * len(planned_repetitions)
+    ):
+        raise ValueError(f"{candidate_id} fidelity coverage is incomplete")
+
+    agreements = classification.get("agreements") if isinstance(classification, dict) else None
+    comparisons = classification.get("comparisons") if isinstance(classification, dict) else None
+    agreement_rate = classification.get("agreement_rate") if isinstance(classification, dict) else None
+    by_alternative = classification.get("by_alternative") if isinstance(classification, dict) else None
+    if (
+        not isinstance(agreements, int)
+        or isinstance(agreements, bool)
+        or not isinstance(comparisons, int)
+        or isinstance(comparisons, bool)
+        or comparisons != coverage["expected_reports"]
+        or agreements < 0
+        or agreements > comparisons
+        or not finite_number(agreement_rate)
+        or not math.isclose(
+            agreement_rate, agreements / comparisons, rel_tol=1e-12, abs_tol=1e-12
+        )
+        or not isinstance(by_alternative, dict)
+        or set(by_alternative) != set(coverage["deployable_alternatives"])
+    ):
+        raise ValueError(f"{candidate_id} fidelity classification is inconsistent")
+    for alternative_id, item in by_alternative.items():
+        expected_comparisons = len(planned_repetitions)
+        if (
+            not isinstance(item, dict)
+            or set(item) != {"agreements", "comparisons", "agreement_rate"}
+            or not isinstance(item["agreements"], int)
+            or isinstance(item["agreements"], bool)
+            or not isinstance(item["comparisons"], int)
+            or isinstance(item["comparisons"], bool)
+            or item["comparisons"] != expected_comparisons
+            or item["agreements"] < 0
+            or item["agreements"] > expected_comparisons
+            or not finite_number(item["agreement_rate"])
+            or not math.isclose(
+                item["agreement_rate"],
+                item["agreements"] / expected_comparisons,
+                rel_tol=1e-12,
+                abs_tol=1e-12,
+            )
+        ):
+            raise ValueError(
+                f"{candidate_id} fidelity classification for {alternative_id} is inconsistent"
+            )
+
+    metric_results = fidelity.get("metrics")
+    if not isinstance(metric_results, dict) or set(metric_results) != set(FIDELITY_METRICS):
+        raise ValueError(f"{candidate_id} fidelity metric set is invalid")
+    for metric_id, unit in FIDELITY_METRICS.items():
+        metric = metric_results[metric_id]
+        if (
+            not isinstance(metric, dict)
+            or set(metric)
+            != {
+                "unit",
+                "report_count",
+                "signed_error",
+                "absolute_error",
+                "relative_error",
+                "undefined_relative_error_count",
+            }
+            or metric.get("unit") != unit
+            or not isinstance(metric.get("report_count"), int)
+            or isinstance(metric.get("report_count"), bool)
+            or metric["report_count"] != coverage["expected_reports"]
+            or not isinstance(metric.get("undefined_relative_error_count"), int)
+            or isinstance(metric.get("undefined_relative_error_count"), bool)
+            or not 0 <= metric["undefined_relative_error_count"] <= metric["report_count"]
+        ):
+            raise ValueError(f"{candidate_id} fidelity metric {metric_id} is invalid")
+        validate_fidelity_summary(metric["signed_error"], f"{candidate_id} {metric_id} signed")
+        validate_fidelity_summary(
+            metric["absolute_error"],
+            f"{candidate_id} {metric_id} absolute",
+            nonnegative=True,
+        )
+        validate_fidelity_summary(
+            metric["relative_error"],
+            f"{candidate_id} {metric_id} relative",
+            allow_empty=metric["undefined_relative_error_count"] == metric["report_count"],
+            nonnegative=True,
+        )
+        relative_count = (
+            metric["relative_error"]["count"] if metric["relative_error"] is not None else 0
+        )
+        if relative_count + metric["undefined_relative_error_count"] != metric["report_count"]:
+            raise ValueError(f"{candidate_id} fidelity relative-error accounting differs")
+
+    report_index = fidelity.get("report_index")
+    expected_identities = {
+        (alternative_id, repetition)
+        for alternative_id in coverage["deployable_alternatives"]
+        for repetition in planned_repetitions
+    }
+    if not isinstance(report_index, list) or len(report_index) != len(expected_identities):
+        raise ValueError(f"{candidate_id} fidelity report index is incomplete")
+    indexed_identities = []
+    indexed_agreements = 0
+    indexed_by_alternative = {
+        alternative_id: 0 for alternative_id in coverage["deployable_alternatives"]
+    }
+    for item in report_index:
+        if (
+            not isinstance(item, dict)
+            or set(item)
+            != {"alternative_id", "repetition", "classification_agreement"}
+            or not isinstance(item.get("classification_agreement"), bool)
+        ):
+            raise ValueError(f"{candidate_id} fidelity report index is invalid")
+        identity = (item.get("alternative_id"), item.get("repetition"))
+        indexed_identities.append(identity)
+        indexed_agreements += item["classification_agreement"]
+        if item.get("alternative_id") in indexed_by_alternative:
+            indexed_by_alternative[item["alternative_id"]] += item[
+                "classification_agreement"
+            ]
+    if (
+        len(indexed_identities) != len(set(indexed_identities))
+        or set(indexed_identities) != expected_identities
+        or indexed_agreements != agreements
+        or any(
+            indexed_by_alternative[alternative_id]
+            != by_alternative[alternative_id]["agreements"]
+            for alternative_id in indexed_by_alternative
+        )
+    ):
+        raise ValueError(f"{candidate_id} fidelity report index is inconsistent")
+    if (
+        not isinstance(controls, dict)
+        or controls.get("complete_matrix_required") is not True
+        or controls.get("model_mutation_performed") is not False
+        or controls.get("recalibration_allowed") is not False
+        or controls.get("confirmatory_reports_are_evaluation_only") is not True
+    ):
+        raise ValueError(f"{candidate_id} fidelity controls are invalid")
+    return fidelity
+
+
+def summarize_prediction_fidelity(fidelity_records, not_applicable_control_blocked):
+    metric_results = {}
+    for metric_id, unit in FIDELITY_METRICS.items():
+        signed = [item["metrics"][metric_id]["signed_error"]["median"] for item in fidelity_records]
+        absolute = [
+            item["metrics"][metric_id]["absolute_error"]["median"]
+            for item in fidelity_records
+        ]
+        relative = [
+            item["metrics"][metric_id]["relative_error"]["median"]
+            for item in fidelity_records
+            if item["metrics"][metric_id]["relative_error"] is not None
+        ]
+        metric_results[metric_id] = {
+            "unit": unit,
+            "candidate_median_signed_error": continuous_summary(signed),
+            "candidate_median_absolute_error": continuous_summary(absolute),
+            "candidate_median_relative_error": continuous_summary(relative),
+            "candidates_with_undefined_relative_error": sum(
+                item["metrics"][metric_id]["relative_error"] is None
+                for item in fidelity_records
+            ),
+        }
+    agreement_rates = [
+        item["classification"]["agreement_rate"] for item in fidelity_records
+    ]
+    return {
+        "unit_of_analysis": "candidate",
+        "repetitions_used_only_within_candidate_aggregates": True,
+        "candidates_with_pdt_prediction": len(fidelity_records),
+        "not_applicable_control_blocked_candidates": not_applicable_control_blocked,
+        "classification_agreement": {
+            "candidate_rate_summary": continuous_summary(agreement_rates),
+            "perfect_candidate_agreement": rate(
+                sum(value == 1.0 for value in agreement_rates), len(agreement_rates)
+            ),
+        },
+        "metrics": metric_results,
+        "controls": {
+            "candidate_level_aggregation_only": True,
+            "confirmatory_recalibration_allowed": False,
+            "model_mutation_performed": False,
+        },
     }
 
 
@@ -346,6 +642,15 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
         raise ValueError("dataset is not bound to the supplied protocol")
     if dataset.get("collection_complete") is not True:
         raise ValueError("analysis requires an explicitly complete collection")
+    expected_dataset_eligibility = confirmatory and not allow_draft
+    expected_composition_mode = (
+        "confirmatory" if expected_dataset_eligibility else "engineering-dry-run"
+    )
+    if (
+        dataset.get("confirmatory_eligible") is not expected_dataset_eligibility
+        or dataset.get("composition_mode") != expected_composition_mode
+    ):
+        raise ValueError("dataset composition mode is inconsistent with the analysis mode")
     records = dataset.get("candidates")
     declared_count = protocol.get("research_design", {}).get("candidate_count")
     if not isinstance(records, list) or len(records) != declared_count:
@@ -357,7 +662,20 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
         raise ValueError("dataset contains a non-opaque candidate identifier")
     if len(identifiers) != len(set(identifiers)):
         raise ValueError("dataset contains duplicate candidates")
+    required_repetitions = protocol.get("research_design", {}).get(
+        "technical_repetitions_per_candidate"
+    )
+    planned_repetitions = (
+        list(range(1, required_repetitions + 1))
+        if isinstance(required_repetitions, int)
+        and not isinstance(required_repetitions, bool)
+        and required_repetitions > 0
+        else None
+    )
     manifest_exclusions = []
+    validated_fidelity = {}
+    fidelity_candidates = 0
+    fidelity_not_applicable = 0
     for record in records:
         exclusion = record.get("exclusion")
         if exclusion is not None:
@@ -366,11 +684,40 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
             manifest_exclusions.append(
                 {"candidate_id": record["candidate_id"], **exclusion}
             )
+            continue
+        control = record.get("control")
+        treatment = record.get("treatment")
+        if (
+            planned_repetitions is None
+            or record.get("repetitions") != planned_repetitions
+            or not isinstance(control, dict)
+            or not isinstance(treatment, dict)
+            or "fidelity" not in treatment
+        ):
+            raise ValueError("candidate decision pair or repetition plan is incomplete")
+        if control.get("decision") == "approve":
+            validated_fidelity[record["candidate_id"]] = validate_candidate_fidelity(
+                treatment.get("fidelity"),
+                protocol,
+                protocol_sha256,
+                record["candidate_id"],
+                record["repetitions"],
+                confirmatory,
+            )
+            fidelity_candidates += 1
+        elif control.get("decision") == "block":
+            if treatment.get("fidelity") is not None:
+                raise ValueError("control-blocked candidate must not contain PDT fidelity")
+            fidelity_not_applicable += 1
+        else:
+            raise ValueError("conventional decision must be approve or block")
     flow = dataset.get("collection_flow")
     flow_keys = {
         "declared_candidates",
         "candidate_records",
         "complete_decision_pairs",
+        "pdt_fidelity_candidates",
+        "pdt_fidelity_not_applicable_control_blocked",
         "manifest_exclusions",
         "silently_missing_candidates",
     }
@@ -381,12 +728,19 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
         or flow.get("candidate_records") != declared_count
         or flow.get("complete_decision_pairs")
         != declared_count - len(manifest_exclusions)
+        or flow.get("pdt_fidelity_candidates") != fidelity_candidates
+        or flow.get("pdt_fidelity_not_applicable_control_blocked")
+        != fidelity_not_applicable
+        or fidelity_candidates + fidelity_not_applicable
+        != flow.get("complete_decision_pairs")
         or flow.get("manifest_exclusions") != manifest_exclusions
         or flow.get("silently_missing_candidates") != 0
     ):
         raise ValueError("dataset collection flow is absent or inconsistent")
 
     eligible = []
+    eligible_fidelity = []
+    eligible_fidelity_not_applicable = 0
     excluded = []
     rows = []
     for record in records:
@@ -427,6 +781,7 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
         labels, costs = oracle_alternative_labels(oracle)
         control_action = selected_action(record, "control")
         treatment_action = selected_action(record, "treatment")
+        candidate_fidelity = validated_fidelity.get(record["candidate_id"])
         for action in (control_action, treatment_action):
             if action != "block" and action not in labels:
                 raise ValueError("selected action is absent from oracle alternatives")
@@ -449,9 +804,44 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
             "treatment_action_matches_oracle": treatment_action == oracle_action,
             "control_change_cost_difference": costs[control_action] - costs[oracle_action],
             "treatment_change_cost_difference": costs[treatment_action] - costs[oracle_action],
+            "pdt_fidelity": (
+                {
+                    "classification_agreement_rate": candidate_fidelity[
+                        "classification"
+                    ]["agreement_rate"],
+                    "metric_medians": {
+                        metric_id: {
+                            "unit": unit,
+                            "signed_error": candidate_fidelity["metrics"][metric_id][
+                                "signed_error"
+                            ]["median"],
+                            "absolute_error": candidate_fidelity["metrics"][metric_id][
+                                "absolute_error"
+                            ]["median"],
+                            "relative_error": (
+                                candidate_fidelity["metrics"][metric_id][
+                                    "relative_error"
+                                ]["median"]
+                                if candidate_fidelity["metrics"][metric_id][
+                                    "relative_error"
+                                ]
+                                is not None
+                                else None
+                            ),
+                        }
+                        for metric_id, unit in FIDELITY_METRICS.items()
+                    },
+                }
+                if candidate_fidelity is not None
+                else None
+            ),
         }
         rows.append(row)
         eligible.append(record)
+        if candidate_fidelity is not None:
+            eligible_fidelity.append(candidate_fidelity)
+        else:
+            eligible_fidelity_not_applicable += 1
 
     if not rows:
         raise ValueError("no candidates remain eligible for analysis")
@@ -553,6 +943,9 @@ def analyze(protocol, protocol_sha256, dataset, allow_draft=False):
                 [row["treatment_change_cost_difference"] for row in rows]
             ),
         },
+        "prediction_fidelity": summarize_prediction_fidelity(
+            eligible_fidelity, eligible_fidelity_not_applicable
+        ),
         "continuous_metrics": {
             "summary_method": "median, inclusive quartiles, interquartile range and range",
             "control": collect_numeric_metrics(eligible, "control"),
