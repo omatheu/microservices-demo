@@ -236,7 +236,25 @@ por rótulo próprio e mutuamente exclusivo do experimento completo. Esse job us
 uma identidade federada exclusiva, com escrita somente no repositório Artifact
 Registry revisado, e não instala kubectl, não obtém credenciais GKE nem chama o
 runner comparativo. A trava `ALLOW_RUNTIME_PUBLICATION` não concede
-`ALLOW_EXPERIMENTAL_CLOUD_EXECUTION`.
+`ALLOW_EXPERIMENTAL_CLOUD_EXECUTION`, e a variável protegida
+`TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED` é distinta da chave financeira usada
+pelos blocos experimentais.
+
+Antes de qualquer janela de publicação, o auditor fail-closed deve aprovar os
+13 controles de instalação, proteção, estado financeiro desarmado e privilégio
+mínimo:
+
+```bash
+python3 experiment/scripts/audit-runtime-publication-readiness.py \
+  --pull-request 1 \
+  --require-ready
+```
+
+O auditor compara o conteúdo em `main` com o workflow local revisado, exige
+revisor e branch exatos, rejeita qualquer rótulo de autorização já anexado ao
+PR e falha quando uma leitura IAM necessária está indisponível. Mesmo com 13/13,
+o resultado não autoriza publicação; a janela ainda exige aprovação humana e a
+ativação deliberada da variável financeira exclusiva.
 
 Depois da revisão dos dois manifests propostos, o próximo passo também é
 gerado sem tocar na árvore ativa:
@@ -295,10 +313,11 @@ confere estrutura e hashes do protocolo, operadores, estados das políticas,
 arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
 explícita do pesquisador.
 
-O auditor, o preparador do candidato de congelamento, o finalizador e o próprio
-validador dos inputs agora também fazem parte dos 27 inputs selados do
-protocolo. Assim, as regras que decidem a prontidão e materializam a proposta
-final não podem ser trocadas silenciosamente depois da aprovação do desenho.
+O auditor de congelamento, o auditor da publicação dos runtimes, o preparador
+do candidato, o finalizador e o próprio validador agora também fazem parte dos
+28 inputs selados do protocolo. Assim, as regras que decidem a prontidão e
+materializam a proposta final não podem ser trocadas silenciosamente depois da
+aprovação do desenho.
 
 Os dois workflows GitHub também são inputs selados. Qualquer mudança no
 gatilho do pull request, nas travas financeiras, na identidade cloud ou na

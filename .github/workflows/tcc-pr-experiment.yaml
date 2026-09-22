@@ -76,10 +76,10 @@ jobs:
       - name: Require the publication financial kill switch
         shell: bash
         env:
-          COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
+          RUNTIME_PUBLICATION_ACKNOWLEDGED: ${{ vars.TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED }}
         run: |
           set -euo pipefail
-          [[ "${COST_REVIEW_ACKNOWLEDGED}" == "true" ]]
+          [[ "${RUNTIME_PUBLICATION_ACKNOWLEDGED}" == "true" ]]
 
       - name: Check out the already validated PR revision
         uses: actions/checkout@v7
@@ -124,7 +124,7 @@ jobs:
           ARTIFACT_REGISTRY_PREFIX: us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment
           OUTPUT_DIR: ${{ runner.temp }}/runtime-publication-only
           ALLOW_RUNTIME_PUBLICATION: "true"
-          COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
+          COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED }}
         run: |
           set -euo pipefail
           export SOURCE_TREE

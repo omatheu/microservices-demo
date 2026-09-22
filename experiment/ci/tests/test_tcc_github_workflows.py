@@ -89,6 +89,8 @@ class TccGithubWorkflowTests(unittest.TestCase):
         )
         self.assertIn("tcc-runtime-publication", rendered)
         self.assertIn("GCP_RUNTIME_PUBLISHER_SERVICE_ACCOUNT", job_rendered)
+        self.assertIn("TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED", job_rendered)
+        self.assertNotIn("TCC_COST_REVIEW_ACKNOWLEDGED", job_rendered)
         self.assertIn("ALLOW_RUNTIME_PUBLICATION", job_rendered)
         self.assertNotIn("ALLOW_EXPERIMENTAL_CLOUD_EXECUTION", job_rendered)
         self.assertIn("publish-experiment-runtimes.sh", job_rendered)

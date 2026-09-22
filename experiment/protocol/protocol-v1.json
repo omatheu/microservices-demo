@@ -325,9 +325,13 @@
       "path": "experiment/scripts/finalize-protocol-freeze.py",
       "sha256": "a08e355dcaefc3d62f3a61699a2478225269589fc3d40a15101869b3e3cab5f5"
     },
+    "runtime_publication_readiness_auditor": {
+      "path": "experiment/scripts/audit-runtime-publication-readiness.py",
+      "sha256": "84ee15a73b403964af3bff4cce79374417fd93efd5b633078245cad72d01faf2"
+    },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "035edc58bc575ac2d6880f832ce683016d65718355a7b69acdb90d2e0e022e65"
+      "sha256": "bbafae4d6d5d0aac94456c3f34d487f88bb5f5437813fb5c8748ef39cfe64b34"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -335,7 +339,7 @@
     },
     "cloud_experiment_workflow": {
       "path": ".github/workflows/tcc-pr-experiment.yaml",
-      "sha256": "64a5f39b02ddc3a8504f426f5e7f2efe9b13aaff85e42257d16be3c264265a9b"
+      "sha256": "27fbd381e3b31ef0c4d2b9704f508f8f018b0dbe94528cd29d6e4b20075a0c0e"
     },
     "billing_export_infrastructure": {
       "path": "infra/terraform-billing-export/main.tf",

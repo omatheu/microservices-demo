@@ -1,0 +1,97 @@
+{
+  "blocking_requirements": [
+    "workflow-installed-on-default-branch",
+    "required-labels-defined",
+    "protected-environment-secrets",
+    "financial-kill-switches-disabled",
+    "runtime-publisher-service-account",
+    "runtime-publisher-no-user-managed-keys",
+    "runtime-publisher-repository-writer",
+    "runtime-publisher-workload-identity"
+  ],
+  "captured_at": "2026-09-22T03:14:27Z",
+  "check_count": 13,
+  "checks": [
+    {
+      "detail": "default_branch=main",
+      "id": "repository-default-branch",
+      "passed": true
+    },
+    {
+      "detail": "workflow is absent from main",
+      "id": "workflow-installed-on-default-branch",
+      "passed": false
+    },
+    {
+      "detail": "missing=['tcc-runtime-publication']",
+      "id": "required-labels-defined",
+      "passed": false
+    },
+    {
+      "detail": "required_reviewer_logins=['omatheu']",
+      "id": "protected-environment-review",
+      "passed": true
+    },
+    {
+      "detail": "custom_branch_policies=True; allowed_branches=['main']",
+      "id": "protected-environment-branch-policy",
+      "passed": true
+    },
+    {
+      "detail": "missing=['GCP_RUNTIME_PUBLISHER_SERVICE_ACCOUNT']",
+      "id": "protected-environment-secrets",
+      "passed": false
+    },
+    {
+      "detail": "invalid_or_missing={'TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED': None}",
+      "id": "financial-kill-switches-disabled",
+      "passed": false
+    },
+    {
+      "detail": "authorization_labels=[]",
+      "id": "pull-request-safe-disarmed-state",
+      "passed": true
+    },
+    {
+      "detail": "service account is absent",
+      "id": "runtime-publisher-service-account",
+      "passed": false
+    },
+    {
+      "detail": "user_managed_key_count=unavailable",
+      "id": "runtime-publisher-no-user-managed-keys",
+      "passed": false
+    },
+    {
+      "detail": "repository_writer_bound=False",
+      "id": "runtime-publisher-repository-writer",
+      "passed": false
+    },
+    {
+      "detail": "project_role_bound=False",
+      "id": "runtime-publisher-no-project-role",
+      "passed": true
+    },
+    {
+      "detail": "repository_principal_bound=False",
+      "id": "runtime-publisher-workload-identity",
+      "passed": false
+    }
+  ],
+  "cloud_mutation_performed": false,
+  "collection_errors": {
+    "runtime_publisher_service_account": "gcloud failed with exit 1",
+    "workflow_on_default_branch": "gh failed with exit 1"
+  },
+  "environment": "tcc-experiment",
+  "github_mutation_performed": false,
+  "mechanism": "runtime-publication-readiness-audit",
+  "passed_count": 5,
+  "project_id": "microservices-demo-tcc",
+  "publication_authorized": false,
+  "pull_request_number": 1,
+  "read_only": true,
+  "ready_for_controlled_enablement": false,
+  "repository": "omatheu/microservices-demo",
+  "schema_version": "1.0.0"
+}

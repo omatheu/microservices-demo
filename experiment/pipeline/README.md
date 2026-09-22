@@ -141,9 +141,10 @@ Depois que os dois workflows estiverem na branch padrão:
    `GCP_EXPERIMENT_SERVICE_ACCOUNT` para a execução pareada e
    `GCP_RUNTIME_PUBLISHER_SERVICE_ACCOUNT` para a identidade exclusiva do
    Artifact Registry; ambas são federadas e não possuem chave JSON persistente;
-3. cadastrar a variável de ambiente `TCC_COST_REVIEW_ACKNOWLEDGED` como `false`;
-   alterá-la para `true` apenas depois da revisão financeira do bloco e retornar
-   para `false` ao encerrar o bloco;
+3. cadastrar as variáveis de ambiente `TCC_COST_REVIEW_ACKNOWLEDGED` e
+   `TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED` como `false`; a primeira só pode ser
+   ligada durante um bloco experimental revisado, e a segunda somente durante
+   a janela de publicação dos runtimes; ambas retornam para `false` ao final;
 4. criar os rótulos `tcc-experiment-cloud`, `tcc-runtime-publication` e
    `tcc-cost-reviewed`; os dois primeiros são mutuamente exclusivos;
 5. tornar o check `TCC Conventional CI / Conventional pre-staging gates`
@@ -165,7 +166,9 @@ usa uma Service Account com `roles/artifactregistry.writer` somente no
 repositório revisado, não instala o plugin GKE, não obtém credenciais do
 cluster e não executa staging ou PDT. O workflow rejeita a combinação desse
 rótulo com `tcc-experiment-cloud`; autorização de publicação é distinta de
-autorização para workloads experimentais.
+autorização para workloads experimentais. Sua trava financeira exclusiva é
+`TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED`; ligar essa variável não habilita o job
+pareado.
 
 Aplicar os dois rótulos não substitui a aprovação do ambiente nem a chave
 financeira. O job cloud é serializado globalmente e não cancela uma execução em

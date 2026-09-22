@@ -51,6 +51,24 @@ ou destruição de recurso existente. O plano não foi aplicado e não autoriza
 armazenamento ou execução; o rótulo, o secret e a trava financeira continuam
 pendentes.
 
+O auditor somente leitura
+[`audit-runtime-publication-readiness.py`](../../scripts/audit-runtime-publication-readiness.py)
+transforma essas pendências em 13 controles verificáveis. A leitura de
+22/09/2026 UTC aprovou 5/13: `main`, revisor obrigatório `omatheu`, política de
+branch restrita a `main`, PR #1 aberto e desarmado e ausência de papel de projeto
+na identidade proposta. Os oito bloqueios restantes são o workflow ainda fora
+de `main`, o rótulo, o secret, a variável financeira exclusiva e a identidade
+publisher com seus vínculos mínimos. O relatório está em
+[`runtime-publication-readiness-20260922T031427Z.json`](./runtime-publication-readiness-20260922T031427Z.json).
+Ele registra `read_only: true`, nenhuma mutação GitHub/GCP e nenhuma autorização
+de publicação. Uma nova conferência fail-closed pode ser executada com:
+
+```bash
+python3 experiment/scripts/audit-runtime-publication-readiness.py \
+  --pull-request 1 \
+  --require-ready
+```
+
 Uma leitura posterior da conta de faturamento retornou somente o projeto
 `microservices-demo-tcc` e somente o repositório Docker do experimento, com
 7.843.495 bytes. A projeção conservadora após as três imagens é 236.019.643

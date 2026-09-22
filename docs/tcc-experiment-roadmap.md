@@ -435,6 +435,15 @@ mutuamente exclusivos. Sua identidade proposta possui somente
 `roles/artifactregistry.writer` no repositório e nenhum IAM/RBAC de GKE. O plano
 Terraform validado contém 3 adições IAM, 0 alterações e 0 destruições; ele não
 foi aplicado e nenhum rótulo, secret ou recurso remoto foi criado.
+As janelas também usam variáveis financeiras distintas: habilitar uma
+publicação não habilita a execução pareada.
+Um auditor somente leitura e fail-closed verificou o estado remoto em
+22/09/2026 UTC: 5/13 controles estão prontos e oito permanecem bloqueados. Ele
+confere o conteúdo exato do workflow em `main`, o revisor e a branch do ambiente,
+o PR desarmado, secrets, variáveis financeiras, ausência de chaves persistentes
+e o privilégio mínimo da identidade publisher. A evidência está em
+[`../experiment/evidence/finance/runtime-publication-readiness-20260922T031427Z.json`](../experiment/evidence/finance/runtime-publication-readiness-20260922T031427Z.json).
+Essa leitura não modificou GitHub ou GCP e não autorizou publicação.
 
 O passo seguinte também está automatizado localmente:
 `prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um
