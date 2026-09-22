@@ -222,6 +222,27 @@ propostas para os manifests PDT e oráculo. As duas propostas recebem a mesma
 proveniência hash-bound. O binder não publica imagens, não modifica o GCP e não
 marca nenhum artefato como `frozen`.
 
+Depois da revisão dos dois manifests propostos, o próximo passo também é
+gerado sem tocar na árvore ativa:
+
+```bash
+python3 experiment/scripts/prepare-protocol-freeze-candidate.py \
+  --repo-root . \
+  --bound-pdt-manifest <binding>/pdt-runtime-manifest.bound.json \
+  --bound-oracle-manifest <binding>/oracle-suite-manifest.bound.json \
+  --frozen-at <timestamp-RFC3339-UTC> \
+  --output-directory <freeze-candidate>
+```
+
+O comando valida que os manifests diferem dos atuais somente nos campos de
+publicação e que ambos vêm da mesma execução protegida. Em seguida produz, como
+proposta, as cinco políticas congeladas, os dois manifests congelados e um
+protocolo ainda `pre-registration-candidate`, com todos os hashes encadeados.
+Nenhum arquivo ativo é alterado, a coleta permanece desabilitada e o recibo
+declara `cloud_execution_authorized: false`. O bundle inteiro deve ser aplicado
+e revisado como uma única mudança antes das aprovações financeira e do
+pesquisador.
+
 O teto proposto para a coleta é R$200 de custo incremental, com parada para
 revisão em R$150 e ao final de cada bloco de três candidatas. Isso ainda não é
 uma autorização de gasto: orçamento do GCP gera alertas, não um bloqueio rígido,
@@ -236,9 +257,10 @@ confere estrutura e hashes do protocolo, operadores, estados das políticas,
 arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
 explícita do pesquisador.
 
-O auditor e o próprio validador dos inputs agora também fazem parte dos 25
-inputs selados do protocolo. Assim, as regras que decidem a prontidão não podem
-ser trocadas silenciosamente depois da aprovação do desenho.
+O auditor, o preparador do candidato de congelamento e o próprio validador dos
+inputs agora também fazem parte dos 26 inputs selados do protocolo. Assim, as
+regras que decidem a prontidão não podem ser trocadas silenciosamente depois da
+aprovação do desenho.
 
 Os dois workflows GitHub também são inputs selados. Qualquer mudança no
 gatilho do pull request, nas travas financeiras, na identidade cloud ou na

@@ -411,6 +411,14 @@ protegido, e produz propostas PDT/oráculo com uma única proveniência. O binde
 está integrado ao workflow, mas não foi executado porque nenhuma publicação
 cloud nova foi autorizada. Ele não congela o protocolo nem altera o GCP.
 
+O passo seguinte também está automatizado localmente:
+`prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um
+bundle único com cinco políticas, dois manifests e o protocolo candidato, já
+com todos os hashes dependentes recalculados. A ferramenta recusa proveniências
+divergentes, mudanças escondidas e hashes atuais inconsistentes; não aplica o
+bundle, não habilita a coleta e não autoriza cloud. Assim, o futuro
+pré-congelamento pode ser revisado e aplicado sem edições manuais parciais.
+
 O `checkout-pdt-controller` agora existe como aplicação e imagem reproduzível,
 gera o plano vinculado aos inputs selados e produz a decisão prescritiva. Um
 gerador prepara sua execução como Job isolado, sem token da API e sem rede, no

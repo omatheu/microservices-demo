@@ -317,9 +317,13 @@
       "path": "experiment/scripts/audit-protocol-freeze.py",
       "sha256": "5c580de7ad2a861ed89cea38ad7e99f1760794bc81a9250c47bcfa311f127fcf"
     },
+    "protocol_freeze_candidate_preparer": {
+      "path": "experiment/scripts/prepare-protocol-freeze-candidate.py",
+      "sha256": "7986a1609f83b3e4e69c3b0001eed9e3c9ac530d385217705b94069277a07457"
+    },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "f2e99eda67fba7ead49fc98849b27f5fcdae9ecf392a28d927341457c718807c"
+      "sha256": "a0c3d7d256af042ee743fc13595032894c084ad4aea2acc3ae087fe474b6d743"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
