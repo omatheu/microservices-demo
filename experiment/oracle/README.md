@@ -130,7 +130,7 @@ perfis de desempenho, limites de saúde e a regra de duas repetições prejudici
 entre pelo menos duas válidas. `adjudicate-oracle.py` já implementa e testa essa
 regra sem usar o rótulo pretendido como entrada da classificação.
 
-[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 21
+[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 22
 arquivos que definem a política, o harness, os avaliadores e o runner. O
 validador `validate-oracle-suite.py` falha se qualquer arquivo mudar. O
 manifesto permanece `pre-registration-candidate` e seus dois digests de imagem
@@ -156,6 +156,13 @@ classificação prevista e a observada. Observação zero mantém erro relativo
 como `null`; não há imputação. A política
 [`../pdt/fidelity-policy.json`](../pdt/fidelity-policy.json) proíbe que o
 relatório altere a decisão ou recalibre o modelo com o corpus confirmatório.
+
+Depois de completar todas as alternativas e repetições de uma candidata,
+[`../scripts/aggregate-pdt-fidelity.py`](../scripts/aggregate-pdt-fidelity.py)
+exige a matriz cartesiana inteira antes de produzir o agregado candidata-nível.
+Relatório ausente, duplicado, misto entre engenharia/confirmatório ou com
+aritmética adulterada é recusado. Assim, repetições técnicas não são tratadas
+indevidamente como unidades experimentais independentes.
 
 Para candidatas bloqueadas antes de existir artefato,
 [`../scripts/evaluate-oracle-preartifact.py`](../scripts/evaluate-oracle-preartifact.py)

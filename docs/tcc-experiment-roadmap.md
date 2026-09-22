@@ -471,7 +471,9 @@ namespace isolado `oracle` e é necessária para adjudicar a melhor ação; não
 autoriza mutação operacional. Quando existe previsão PDT para a alternativa, o
 runner persiste ainda `pdt-fidelity.json`, vinculado por hash, com erro por
 métrica e concordância de classificação. A implementação está coberta
-localmente, mas os itens quantitativos continuam pendentes de execução real.
+localmente. Um agregador adicional exige a matriz completa de alternativas por
+três repetições e produz o resumo candidata-nível previsto no protocolo. Os
+itens quantitativos continuam pendentes de execução real.
 
 ### Fase 8 — Análise final
 

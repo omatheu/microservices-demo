@@ -40,12 +40,16 @@
       "sha256": "70bb93b42e93399bf30d9971b6568244d0fa2eb1cb4757f967354810601dc916"
     },
     {
+      "path": "experiment/scripts/aggregate-pdt-fidelity.py",
+      "sha256": "2b21cc5dd95d3b1c46c967455fb140a6b98b9a2c3a07f596f459d6aff532f359"
+    },
+    {
       "path": "experiment/scripts/adjudicate-oracle.py",
       "sha256": "b1564fc7e6d5038488825c73d4c9b60171358b39e3b287378aa6c0d81625428c"
     },
     {
       "path": "experiment/scripts/calculate-pdt-fidelity.py",
-      "sha256": "9b277efbc2bf5314a8782c591ffd00d38832a66f00cc0c10e2ecf0843e5a72b0"
+      "sha256": "18a0a696e80205c6d0313957a29f25401dfd095344194533b52a8beb7f4e13a7"
     },
     {
       "path": "experiment/scripts/compose-oracle-observation.py",

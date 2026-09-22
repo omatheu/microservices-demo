@@ -241,7 +241,8 @@ O runner do oráculo, a política de fidelidade e o calculador pós-decisão fic
 vinculados pelo manifesto da suíte do oráculo. Assim, as alternativas
 observáveis, o conjunto de métricas, as fórmulas de erro e a vedação de
 recalibração confirmatória não podem ser modificados depois da abertura dos
-rótulos.
+rótulos. O agregador de fidelidade também é selado e recusa cobertura parcial,
+preservando a candidata — e não suas repetições — como unidade estatística.
 O compositor do dataset e o analisador confirmatório também são selados. O
 primeiro verifica os hashes de cada decisão e adjudicação e exige uma linha de
 fluxo para cada candidata declarada. Uma exclusão de infraestrutura só é aceita

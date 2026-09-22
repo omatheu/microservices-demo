@@ -23,6 +23,14 @@ O analisador calcula:
 - mediana, quartis inclusivos, intervalo interquartil e amplitude das métricas
   contínuas fornecidas.
 
+A fidelidade preditiva é produzida antes dessa composição pelo par
+`calculate-pdt-fidelity.py` e `aggregate-pdt-fidelity.py`. O primeiro compara
+uma previsão e uma observação seladas da mesma alternativa/repetição; o segundo
+exige cobertura completa das alternativas e repetições e somente então gera o
+agregado no nível da candidata. Esse artefato preserva a unidade experimental
+e será incorporado ao manifesto da coleta final, em vez de contabilizar cada
+repetição como amostra independente.
+
 ## Travas metodológicas
 
 Por padrão, a execução exige protocolo `frozen`, coleta confirmatória habilitada,

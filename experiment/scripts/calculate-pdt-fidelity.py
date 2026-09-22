@@ -259,6 +259,15 @@ def calculate(policy, oracle_policy, pdt, observation):
             "confidence": confidence,
             "snapshot_id": pdt.get("snapshot_id"),
         },
+        "sealed_input_bindings": {
+            "candidate_definition_sha256": binding[
+                "candidate_definition_sha256"
+            ],
+            "conventional_decision_sha256": binding[
+                "conventional_decision_sha256"
+            ],
+            "immutable_artifacts": binding["immutable_artifacts"],
+        },
         "observation": {
             "label": observed_label,
             "violations": evaluation["violations"],

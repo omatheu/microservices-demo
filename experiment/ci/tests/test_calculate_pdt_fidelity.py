@@ -120,6 +120,10 @@ class CalculatePdtFidelityTests(unittest.TestCase):
         self.assertTrue(result["classification_agreement"])
         self.assertFalse(result["controls"]["recalibration_allowed"])
         self.assertFalse(result["confirmatory_eligible"])
+        self.assertEqual(
+            "b" * 64,
+            result["sealed_input_bindings"]["candidate_definition_sha256"],
+        )
 
     def test_oracle_intended_label_does_not_change_fidelity(self):
         first = oracle_observation()

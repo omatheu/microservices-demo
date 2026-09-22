@@ -94,3 +94,23 @@ resultado é somente pós-decisão e registra
 `model_mutation_performed: false` e `recalibration_allowed: false`; dados
 confirmatórios jamais podem retroagir sobre o modelo avaliado. A evidência
 quantitativa continua pendente das execuções autorizadas do oráculo.
+
+Após as três repetições de todas as alternativas implantáveis, agregue sem
+abrir espaço para seleção manual de resultados:
+
+```bash
+python3 experiment/scripts/aggregate-pdt-fidelity.py \
+  --protocol experiment/protocol/protocol-v1.json \
+  --policy experiment/pdt/fidelity-policy.json \
+  --candidate-definition <candidate-definition.json> \
+  --report <alternativa-a-r1/pdt-fidelity.json> \
+  --report <alternativa-a-r2/pdt-fidelity.json> \
+  --report <alternativa-a-r3/pdt-fidelity.json> \
+  --report <alternativa-b-r1/pdt-fidelity.json> \
+  --report <alternativa-b-r2/pdt-fidelity.json> \
+  --report <alternativa-b-r3/pdt-fidelity.json> \
+  --output <candidate-fidelity.json>
+```
+
+O comando normal exige desenho congelado. `--allow-draft` existe somente para
+pilotos de engenharia e nunca produz evidência confirmatória elegível.
