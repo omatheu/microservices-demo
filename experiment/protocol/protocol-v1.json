@@ -1,0 +1,419 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_id": "checkout-pdt-comparison-v1",
+  "status": "pre-registration-candidate",
+  "confirmatory_collection_allowed": false,
+  "frozen_at": null,
+  "twin_object": "checkoutservice",
+  "research_design": {
+    "experimental_unit": "opaque release candidate",
+    "candidate_count": 18,
+    "technical_repetitions_per_candidate": 3,
+    "block_size": 3,
+    "block_count": 6,
+    "execution": "sequential",
+    "conditions": [
+      "conventional-ci-cd-with-staging",
+      "same-pipeline-plus-pdt"
+    ],
+    "primary_outcome": "candidate-level unsafe approval rate",
+    "primary_estimand": "paired risk difference in unsafe approvals between control and treatment",
+    "unit_of_analysis": "candidate after aggregation of technical repetitions",
+    "sample_size_rationale": "Fixed feasibility corpus sized before evaluation results; estimates use exact intervals and no minimum-effect claim."
+  },
+  "randomization": {
+    "public_seed_label": "checkout-pdt-v1-fixed-before-corpus",
+    "algorithm": "HMAC-SHA256 keyed deterministic sampling and Fisher-Yates order",
+    "candidate_identifier_prefix": "cand-",
+    "blinding_key_minimum_bytes": 32,
+    "blinding_key_location": "outside tracked repository content",
+    "human_blinding": "partial",
+    "mechanism_blinding": "required"
+  },
+  "operators": [
+    {
+      "id": "CTRL-SAFE-01",
+      "count": 3,
+      "stratum": "safe-control",
+      "intended_label": "safe",
+      "target_component": "checkoutservice",
+      "context_dependency": "independent",
+      "parameter_space": {
+        "variant": [
+          "equivalent-refactor",
+          "log-message-only",
+          "comment-only-runtime-neutral"
+        ]
+      }
+    },
+    {
+      "id": "CTRL-SAFE-OUTSIDE-01",
+      "count": 1,
+      "stratum": "pdt-boundary-control",
+      "intended_label": "safe",
+      "target_component": "recommendationservice",
+      "context_dependency": "outside-twin-boundary",
+      "parameter_space": {
+        "variant": [
+          "log-message-only",
+          "equivalent-refactor"
+        ]
+      }
+    },
+    {
+      "id": "CTRL-CI-01",
+      "count": 2,
+      "stratum": "conventional-ci-detectable",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "independent",
+      "parameter_space": {
+        "failure_kind": [
+          "compile-error",
+          "unit-test-regression"
+        ]
+      }
+    },
+    {
+      "id": "CTRL-SEC-01",
+      "count": 2,
+      "stratum": "conventional-security-detectable",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "independent",
+      "parameter_space": {
+        "failure_kind": [
+          "synthetic-secret-canary",
+          "prohibited-container-privilege"
+        ]
+      }
+    },
+    {
+      "id": "INF-CPU-01",
+      "count": 2,
+      "stratum": "nonfunctional-infrastructure",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "load-dependent",
+      "parameter_space": {
+        "cpu_limit": [
+          "50m",
+          "75m",
+          "100m"
+        ]
+      }
+    },
+    {
+      "id": "INF-REPLICA-01",
+      "count": 1,
+      "stratum": "conventional-staging-detectable",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "independent",
+      "parameter_space": {
+        "replicas": [
+          0
+        ]
+      }
+    },
+    {
+      "id": "INF-TIMEOUT-01",
+      "count": 1,
+      "stratum": "nonfunctional-configuration",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "dependency-tail-dependent",
+      "parameter_space": {
+        "dependency": [
+          "paymentservice",
+          "shippingservice"
+        ],
+        "timeout_ms": [
+          50,
+          100,
+          150
+        ]
+      }
+    },
+    {
+      "id": "FUNC-AMOUNT-01",
+      "count": 1,
+      "stratum": "functional-business-rule",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "input-class-dependent",
+      "parameter_space": {
+        "omitted_component": [
+          "shipping-cost",
+          "quantity",
+          "fractional-nanos"
+        ]
+      }
+    },
+    {
+      "id": "FUNC-ERROR-01",
+      "count": 1,
+      "stratum": "functional-error-propagation",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "dependency-failure-dependent",
+      "parameter_space": {
+        "dependency": [
+          "paymentservice",
+          "shippingservice"
+        ],
+        "fail_every_n": [
+          5,
+          7
+        ]
+      }
+    },
+    {
+      "id": "FUNC-COND-01",
+      "count": 1,
+      "stratum": "functional-conditional",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "input-distribution-dependent",
+      "parameter_space": {
+        "currency": [
+          "EUR",
+          "GBP",
+          "JPY"
+        ],
+        "minimum_cart_items": [
+          2,
+          3,
+          4
+        ]
+      }
+    },
+    {
+      "id": "FUNC-DEGRADE-01",
+      "count": 1,
+      "stratum": "nonfunctional-code-degradation",
+      "intended_label": "harmful",
+      "target_component": "checkoutservice",
+      "context_dependency": "concurrency-dependent",
+      "parameter_space": {
+        "trigger_concurrency": [
+          6,
+          8,
+          10
+        ],
+        "bounded_cpu_work_ms": [
+          100,
+          150,
+          200
+        ]
+      }
+    },
+    {
+      "id": "DEP-CURRENCY-01",
+      "count": 1,
+      "stratum": "dependency-semantics",
+      "intended_label": "harmful",
+      "target_component": "currencyservice",
+      "context_dependency": "input-class-dependent",
+      "parameter_space": {
+        "currency": [
+          "EUR",
+          "JPY",
+          "CAD"
+        ],
+        "rounding_mode": [
+          "truncate",
+          "ceil"
+        ]
+      }
+    },
+    {
+      "id": "DEP-TAIL-01",
+      "count": 1,
+      "stratum": "dependency-tail-latency",
+      "intended_label": "harmful",
+      "target_component": "paymentservice",
+      "context_dependency": "concurrency-dependent",
+      "parameter_space": {
+        "bounded_delay_ms": [
+          200,
+          300,
+          400
+        ],
+        "percentile_trigger": [
+          90,
+          95
+        ]
+      }
+    }
+  ],
+  "aggregation": {
+    "functional_rule": "Any reproducible contract violation in a valid repetition marks that repetition harmful.",
+    "nonfunctional_rule": "At least two of three valid repetitions must violate a frozen SLO for candidate-level harm.",
+    "minimum_valid_repetitions": 2,
+    "infrastructure_retry_rule": "One replacement attempt is allowed for a repetition classified as infrastructure-invalid before opening the oracle label.",
+    "candidate_exclusion_rule": "Exclude without replacement only when fewer than two repetitions remain valid after the single authorized retry; preserve a hash-bound pre-label ledger for every invalid attempt and report the opaque candidate identity and reason."
+  },
+  "analysis": {
+    "primary_comparison": "exact paired McNemar analysis of unsafe approval discordance",
+    "rate_intervals": "two-sided 95 percent exact binomial intervals",
+    "continuous_summary": [
+      "median",
+      "interquartile-range",
+      "range"
+    ],
+    "multiplicity": "Secondary outcomes are descriptive and explicitly labeled exploratory.",
+    "missing_data": "No decision or label is imputed. Every declared candidate remains in the collection flow; manifest exclusions require a pre-label infrastructure-invalid ledger, and inconclusive oracle adjudications are reported separately from complete decision pairs.",
+    "early_stopping": "No efficacy stopping; only financial, safety or unrecoverable infrastructure stops are permitted.",
+    "power_claim": "No confirmatory minimum-effect or population-generalization claim is made for this fixed feasibility corpus."
+  },
+  "execution_limits": {
+    "cloud_execution_authorization": "explicit-user-authorization-required-after-freeze",
+    "proposed_incremental_spend_ceiling_brl": 200,
+    "mandatory_cost_review_at_brl": 150,
+    "billing_alert_is_hard_cap": false,
+    "candidate_block_size": 3,
+    "cost_review_after_every_block": true,
+    "maximum_staging_minutes_per_repetition": 15,
+    "maximum_pdt_minutes_per_alternative": 15,
+    "maximum_pdt_deployable_alternatives": 2,
+    "maximum_oracle_minutes_per_repetition": 20,
+    "maximum_total_experimental_cpu_request_hours": 180,
+    "public_load_balancers_created": 0,
+    "concurrent_experimental_namespaces": 1,
+    "stop_when_cost_data_unavailable_after_block": true,
+    "cleanup_required_before_next_condition": true
+  },
+  "frozen_inputs": {
+    "ci_policy": {
+      "path": "experiment/ci/policy.json",
+      "sha256": "76b60adcd54ea649609a25ba64c8ce159e82dbafef4562912d4e9932944d4656"
+    },
+    "conventional_ci_runner": {
+      "path": "experiment/scripts/run-conventional-ci-local.sh",
+      "sha256": "b22498248cbf32dac4ec5086a14d4a9d748c77f6b7c9535a7cb21a7ead9cbd20"
+    },
+    "comparative_pipeline_runner": {
+      "path": "experiment/scripts/run-comparative-candidate.sh",
+      "sha256": "646cb32d1b12c85404520a38870767534fa6ccce53c940723f08c945caee2739"
+    },
+    "deployment_action_preparer": {
+      "path": "experiment/scripts/prepare-deployment-action.py",
+      "sha256": "6c15de807426c745c26c12fc65ca55f3fbef02dfd0d8ca6ba5aed0b7f94a6d63"
+    },
+    "human_gate_recorder": {
+      "path": "experiment/scripts/record-human-gate-decision.py",
+      "sha256": "26dadaa9144cb7288a786b4e27e90220c197526fdc7a14fed7329d52443929be"
+    },
+    "confirmatory_analyzer": {
+      "path": "experiment/scripts/analyze-confirmatory-results.py",
+      "sha256": "abdcaee4cfbff26ad5bfb0ac1ae2bfe8dd5635bef01108a1baeeb57d565a04c4"
+    },
+    "analysis_dataset_composer": {
+      "path": "experiment/scripts/compose-analysis-dataset.py",
+      "sha256": "0bd48cde192df7c80b8c996d43e801b5a5d12f638799473cad7bc7549bc52225"
+    },
+    "protocol_freeze_auditor": {
+      "path": "experiment/scripts/audit-protocol-freeze.py",
+      "sha256": "5c580de7ad2a861ed89cea38ad7e99f1760794bc81a9250c47bcfa311f127fcf"
+    },
+    "protocol_freeze_candidate_preparer": {
+      "path": "experiment/scripts/prepare-protocol-freeze-candidate.py",
+      "sha256": "7986a1609f83b3e4e69c3b0001eed9e3c9ac530d385217705b94069277a07457"
+    },
+    "protocol_freeze_finalizer": {
+      "path": "experiment/scripts/finalize-protocol-freeze.py",
+      "sha256": "a08e355dcaefc3d62f3a61699a2478225269589fc3d40a15101869b3e3cab5f5"
+    },
+    "runtime_publication_readiness_auditor": {
+      "path": "experiment/scripts/audit-runtime-publication-readiness.py",
+      "sha256": "84ee15a73b403964af3bff4cce79374417fd93efd5b633078245cad72d01faf2"
+    },
+    "runtime_publication_terraform_plan_validator": {
+      "path": "experiment/scripts/validate-runtime-publication-terraform-plan.py",
+      "sha256": "fd9d31b894b33bf886f04c338c152060fd131b47b439645bbeeef9c3e0aca032"
+    },
+    "protocol_input_validator": {
+      "path": "experiment/scripts/validate-protocol-inputs.py",
+      "sha256": "9cd71c4f6064998cf48ed45c82baae218be96072b10e34642fd8cdea60eee28a"
+    },
+    "pull_request_workflow": {
+      "path": ".github/workflows/tcc-pr-ci.yaml",
+      "sha256": "2db78b0b77685bffbb128886d7924cf1b4847b4911074236c9606d6de45d0aa9"
+    },
+    "cloud_experiment_workflow": {
+      "path": ".github/workflows/tcc-pr-experiment.yaml",
+      "sha256": "27fbd381e3b31ef0c4d2b9704f508f8f018b0dbe94528cd29d6e4b20075a0c0e"
+    },
+    "billing_export_infrastructure": {
+      "path": "infra/terraform-billing-export/main.tf",
+      "sha256": "c270b944e731634f2a53e8aebe440044645fccae3f235af7de42836386f7aae0"
+    },
+    "billing_cost_query": {
+      "path": "experiment/scripts/query-billing-cost-window.sh",
+      "sha256": "a18611845aa32b49487d2833352e171ab879bdcb9aff57399b7e880b709e6cc8"
+    },
+    "validity_threat_register": {
+      "path": "docs/tcc-validity-threats.md",
+      "sha256": "8c447606a87deae79086df3bf51093f3de1e9925318d7640164be3763fd358e2"
+    },
+    "baseline_evidence_validator": {
+      "path": "experiment/scripts/validate-baseline-evidence.py",
+      "sha256": "7e00ff599e29c02dd613e1fea87bb93f838da94037502aa97af9bc2e87f4da11"
+    },
+    "operational_baseline_summary": {
+      "path": "experiment/evidence/baseline/aggregate-summary.json",
+      "sha256": "1f7b487468b1e0d5e7a1bf0e4b2b82af81e302ab6747bd47f7c3912512fb0f25"
+    },
+    "checkout_baseline_summary": {
+      "path": "experiment/evidence/checkout-baseline/aggregate-summary.json",
+      "sha256": "12953acafbfefefd9e9fd89e80788cdb4907930fb998dc7ab24a00617ad7f3f1"
+    },
+    "baseline_validation_report": {
+      "path": "experiment/evidence/baseline/validation-report.json",
+      "sha256": "327a9967704f06a162c7c746bc1d21315c7fd897aa91c813fc615d3de54dda30"
+    },
+    "traditional_staging_runner": {
+      "path": "experiment/scripts/run-traditional-staging.sh",
+      "sha256": "f53bf25430b1a9a3e92c9aa3630aadb18b42a11a595f23479bfc562a549b8647"
+    },
+    "staging_contract_probe": {
+      "path": "src/checkoutservice/cmd/stagingcontract/main.go",
+      "sha256": "4c8d42376abf753c2a36823badfe6cd3ff404217aecfd63498d14cbe9598ac85"
+    },
+    "staging_thresholds": {
+      "path": "experiment/staging/safety-thresholds.json",
+      "sha256": "ea288a5dee9991312018d77ac509766c0bc2c8b0b8048889e23aad8c508d5581"
+    },
+    "pdt_model_policy": {
+      "path": "experiment/pdt/model-policy.json",
+      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+    },
+    "pdt_runtime_manifest": {
+      "path": "experiment/pdt/runtime-manifest.json",
+      "sha256": "241ab9d010c49f94d2080a0f18c82ac54da2c90d3483010f546babd396b1eba8"
+    },
+    "mutation_registry": {
+      "path": "experiment/mutations/registry.json",
+      "sha256": "0c18ba57d5e35f9986fef1bbc4c59fd49d3bbe2660d8bc6d455ffed516dbf268"
+    },
+    "oracle_suite_manifest": {
+      "path": "experiment/oracle/suite-manifest.json",
+      "sha256": "5acaab4071043e4e711493ec59495129868a1a04ae5bf74e9a4835b07b3c399e"
+    }
+  },
+  "required_before_freeze": [
+    "implement and hash every mutation operator",
+    "implement and hash the independent oracle suite",
+    "package, publish and hash the checkout-pdt-controller runtime",
+    "freeze functional invariants and final SLOs",
+    "validate the proposed BRL ceiling against current billing data",
+    "record researcher approval of the preregistration candidate",
+    "change status to frozen and set frozen_at without changing evaluated outcomes"
+  ],
+  "excluded_evidence": [
+    "current engineering pilots",
+    "checkout-cpu-restriction-v1",
+    "engineering-artifact-binding-v2"
+  ]
+}

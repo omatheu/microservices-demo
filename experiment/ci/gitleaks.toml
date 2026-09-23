@@ -1,0 +1,16 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated evidence, local state and dependency caches are not candidate source"
+paths = [
+  '''(^|/)\.git/''',
+  '''(^|/)\.terraform/''',
+  '''(^|/)experiment/evidence/''',
+  '''(^|/)experiment/protocol/\.private[^/]*/''',
+  '''(^|/)__pycache__/''',
+  '''\.pyc$''',
+  '''\.tfstate(\.backup)?$''',
+  '''(^|/)node_modules/''',
+  '''(^|/)vendor/'''
+]

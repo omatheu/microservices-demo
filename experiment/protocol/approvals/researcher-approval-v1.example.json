@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_id": "checkout-pdt-comparison-v1",
+  "candidate_protocol_sha256": "REPLACE_WITH_SHA256_FROM_AUDIT",
+  "decision": "approve-protocol-freeze",
+  "approved_by": "REPLACE_WITH_RESEARCHER_NAME",
+  "approved_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "cloud_execution_authorized": false,
+  "acknowledgements": {
+    "protocol_reviewed": true,
+    "no_confirmatory_outcomes_observed": true,
+    "changes_require_new_protocol_version": true
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "artifact_publication_performed": false,
+  "billing_impact": {
+    "billable_compute_storage_or_network_resources_added": 0,
+    "image_storage_added": false,
+    "interpretation": "The installation added IAM controls only. It did not run workloads or publish images."
+  },
+  "github": {
+    "authorization_labels_on_pull_request_1": [],
+    "environment": "tcc-experiment",
+    "financial_variables": {
+      "TCC_COST_REVIEW_ACKNOWLEDGED": "false",
+      "TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED": "false"
+    },
+    "label_registered": "tcc-runtime-publication",
+    "runtime_publisher_secret_registered": true
+  },
+  "github_mutation_performed": true,
+  "mechanism": "runtime-publication-controls-installation-receipt",
+  "project_id": "microservices-demo-tcc",
+  "publication_authorized": false,
+  "readiness": {
+    "blocking_requirements": [
+      "workflow-installed-on-default-branch"
+    ],
+    "check_count": 13,
+    "passed_count": 12,
+    "path": "experiment/evidence/finance/runtime-publication-readiness-20260922T033857Z.json",
+    "sha256": "81131b2f21cbef42d406553e94bc0e646b24ee90d0ffaf9826d3a656db4b8180"
+  },
+  "recorded_at": "2026-09-22T03:38:57Z",
+  "schema_version": "1.0.0",
+  "terraform": {
+    "apply_summary": {
+      "add": 3,
+      "change": 0,
+      "destroy": 0
+    },
+    "applied_plan_sha256": "833a1c0bc4f7cf8be8ea29d013d3f9691658b682c42933b672a6dc892e270d7c",
+    "gcp_mutation_performed": true,
+    "plan_validation": {
+      "check_count": 9,
+      "passed_count": 9,
+      "path": "experiment/evidence/finance/runtime-publication-terraform-plan-validation-20260922T033401Z.json",
+      "sha256": "300ad0a96a7a8841d8b3fbb7b0af1017246b843460ab0afaa9e84379193ccaf2"
+    },
+    "post_apply_plan": {
+      "changed_addresses": [],
+      "no_changes": true,
+      "sha256": "5a8a30a297c4501dd8e0c0e55f3ff2a6b26b6dca07d1ec80432732bd54473efc"
+    },
+    "resources_created": [
+      "google_service_account.github_runtime_publisher[0]",
+      "google_service_account_iam_member.github_runtime_publisher_federation[0]",
+      "google_artifact_registry_repository_iam_member.github_runtime_publisher_writer[0]"
+    ],
+    "state_lineage": "84b2ba8c-586c-ed41-c872-b7fb23f704f3",
+    "state_serial_after": 74,
+    "terraform_version": "1.16.3"
+  },
+  "workflow_installed_on_main": false
+}

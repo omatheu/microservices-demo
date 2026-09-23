@@ -1,0 +1,7 @@
+project_id = "microservices-demo-tcc"
+
+# Keep false until the user explicitly authorizes dataset creation.
+enable_billing_export_dataset = false
+
+billing_export_dataset_id       = "online_boutique_billing"
+billing_export_dataset_location = "US"

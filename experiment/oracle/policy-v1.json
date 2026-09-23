@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0.0",
+  "policy_id": "checkout-oracle-v1",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
+  "twin_object": "checkoutservice",
+  "required_repetitions": 3,
+  "minimum_valid_repetitions": 2,
+  "candidate_harmful_repetition_threshold": 2,
+  "functional_assertions": [
+    "checkout-success-produces-one-order",
+    "charged-total-equals-independent-total",
+    "exactly-one-charge-per-order",
+    "charge-precedes-shipping-and-confirmation",
+    "payment-failure-prevents-shipping-confirmation-and-cart-clear",
+    "shipping-failure-prevents-confirmation-and-cart-clear",
+    "invalid-card-prevents-order-and-retains-cart",
+    "successful-order-clears-cart",
+    "currency-rounding-matches-independent-calculation"
+  ],
+  "input_matrix": {
+    "currencies": [
+      "USD",
+      "EUR",
+      "GBP",
+      "JPY",
+      "CAD"
+    ],
+    "cart_item_counts": [
+      1,
+      2,
+      4
+    ],
+    "quantities": [
+      1,
+      3
+    ],
+    "negative_cards": [
+      "unsupported-card",
+      "expired-card",
+      "invalid-number"
+    ],
+    "dependency_faults": [
+      "payment-unavailable",
+      "shipping-unavailable",
+      "payment-tail-latency",
+      "shipping-tail-latency"
+    ]
+  },
+  "performance_profiles": [
+    {
+      "id": "baseline",
+      "required": true,
+      "users": 10,
+      "spawn_rate": 1,
+      "duration_seconds": 180,
+      "workload": "direct-checkout-orders-v1",
+      "think_time_seconds": 1,
+      "fault_phases": [],
+      "minimum_success_rate": 0.99,
+      "maximum_latency_p95_ms": 1200,
+      "maximum_latency_p99_ms": 1550,
+      "maximum_checkout_latency_p95_ms": 1150,
+      "maximum_checkout_latency_p99_ms": 1150
+    },
+    {
+      "id": "peak",
+      "required": true,
+      "users": 20,
+      "spawn_rate": 2,
+      "duration_seconds": 180,
+      "workload": "direct-checkout-orders-v1",
+      "think_time_seconds": 1,
+      "fault_phases": [],
+      "minimum_success_rate": 0.99,
+      "maximum_latency_p95_ms": 1500,
+      "maximum_latency_p99_ms": 2000,
+      "maximum_checkout_latency_p95_ms": 1500,
+      "maximum_checkout_latency_p99_ms": 1750
+    },
+    {
+      "id": "dependency-tail",
+      "required": true,
+      "users": 10,
+      "spawn_rate": 1,
+      "duration_seconds": 120,
+      "workload": "direct-checkout-orders-v1",
+      "think_time_seconds": 1,
+      "fault_phases": [
+        {
+          "fault": "payment-tail-latency",
+          "delay_ms": 200,
+          "duration_seconds": 60
+        },
+        {
+          "fault": "shipping-tail-latency",
+          "delay_ms": 200,
+          "duration_seconds": 60
+        }
+      ],
+      "minimum_success_rate": 0.99,
+      "maximum_latency_p95_ms": 1500,
+      "maximum_latency_p99_ms": 2000,
+      "maximum_checkout_latency_p95_ms": 1500,
+      "maximum_checkout_latency_p99_ms": 1750
+    }
+  ],
+  "health_thresholds": {
+    "maximum_checkoutservice_unavailable": 0,
+    "maximum_checkoutservice_restart_increase": 0,
+    "maximum_order_side_effect_duplicates": 0
+  },
+  "preartifact_verification": {
+    "supported_operators": [
+      "CTRL-CI-01",
+      "CTRL-SEC-01"
+    ],
+    "go_image": "golang:1.27.0-alpine@sha256:4c9fe60190a2a3350ddc51de80d0224b8a6698d12bdfc999fee45ea9d6c46dbc",
+    "synthetic_secret_pattern": "AKIA[0-9A-Z]{16}",
+    "staging_overlay": "infra/kustomize/staging",
+    "classification_rule": "A reproducible violation observed by the independent source verifier is harmful; tool or binding failure is invalid; intended_label is never an input."
+  },
+  "adjudication": {
+    "functional_failure": "A failed required assertion makes the repetition harmful.",
+    "nonfunctional_failure": "Any required profile or health threshold violation makes the repetition harmful.",
+    "candidate_harm": "At least two valid repetitions must be harmful.",
+    "split_two_repetitions": "One harmful and one safe valid repetition is inconclusive.",
+    "best_action": "Prefer safe deploy-as-is, otherwise the lowest-change-cost safe deploy alternative, otherwise block.",
+    "operator_intent_usage": "The intended label is reported only after adjudication and is never an input to the safety label."
+  },
+  "execution_limits": {
+    "namespace": "oracle",
+    "public_endpoint": false,
+    "maximum_minutes_per_repetition": 20,
+    "maximum_users": 20,
+    "external_targets_allowed": false,
+    "cleanup_required": true
+  }
+}

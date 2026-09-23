@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "provider": "gcp",
+  "project_id": "microservices-demo-tcc",
+  "cluster_name": "online-boutique-experiment",
+  "cluster_location": "us-central1",
+  "source_namespace": "operational",
+  "target_namespace": "pdt",
+  "controller": {
+    "name": "checkout-pdt-controller",
+    "namespace": "pdt-system",
+    "role": "digital-twin-control-plane"
+  },
+  "twin_object": {
+    "kind": "Deployment",
+    "name": "checkoutservice",
+    "scope": "state-prediction-and-prescriptive-actions"
+  },
+  "context_dependencies": [
+    "frontend",
+    "cartservice",
+    "currencyservice",
+    "paymentservice",
+    "shippingservice",
+    "emailservice"
+  ],
+  "relationship": "observes-and-simulates"
+}

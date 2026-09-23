@@ -1,0 +1,25 @@
+project_id = "replace-me"
+region     = "us-central1"
+
+billing_account_id       = "000000-000000-000000"
+gross_cost_budget_amount = 10
+experiment_spend_budget_amount = 5
+
+# Keep enabled until you explicitly intend to destroy the cluster.
+deletion_protection = true
+
+# Financial safety gate. Do not enable before reviewing credits and budgets.
+allow_billable_resources = false
+
+# Independent storage-cost gate. CI publication remains disabled while false.
+allow_artifact_registry_creation = false
+
+# Independent IAM gate. Keep false until both workflows are on main, the
+# protected GitHub Environment exists, and the Terraform plan is reviewed.
+enable_github_actions_federation = false
+
+# Immutable GitHub identities. Re-query the GitHub API before enabling if this
+# file is reused for another repository.
+github_repository          = "omatheu/microservices-demo"
+github_repository_id       = "1376372479"
+github_repository_owner_id = "124204749"

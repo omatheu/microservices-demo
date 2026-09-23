@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-policy-canary
+  namespace: staging
+spec:
+  selector:
+    matchLabels:
+      app: kubernetes-policy-canary
+  template:
+    metadata:
+      labels:
+        app: kubernetes-policy-canary
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: canary
+          image: example.invalid/canary@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: true
+            readOnlyRootFilesystem: true

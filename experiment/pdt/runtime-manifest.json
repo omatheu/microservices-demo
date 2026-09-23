@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "runtime_id": "checkout-pdt-controller-v1",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
+  "files": [
+    {
+      "path": "experiment/pdt/controller/checkout_pdt_controller.py",
+      "sha256": "88a830aa603fbd2b537ec4be3d670ea810f9d30edc0d2343fe9656ff72596540"
+    },
+    {
+      "path": "experiment/pdt/controller/Dockerfile",
+      "sha256": "896ad7b41399a2a5eb0655b060339006b1bd90147604fb9b2aac09e615d2d113"
+    },
+    {
+      "path": "experiment/scripts/prepare-pdt-controller-job.py",
+      "sha256": "da75c345bcc1f2cad6fa3260cfad7f74ed79717a195b709d1a02d6703cd753ff"
+    },
+    {
+      "path": "experiment/scripts/publish-experiment-runtimes.sh",
+      "sha256": "5720909ebc8f626566b6c82eed277419af392994646c0d9e01b33195c8a63cd5"
+    },
+    {
+      "path": "experiment/scripts/bind-runtime-publication.py",
+      "sha256": "52a96e87d878032d401a5f46fc4f8cf0b302ef8551c5c65404eafe73bfd36c67"
+    },
+    {
+      "path": "experiment/scripts/validate-pdt-runtime.py",
+      "sha256": "8c26282c9daba69a1b2ee72933203c11c34523175baa65b87f22fe61c30a8c53"
+    },
+    {
+      "path": "experiment/scripts/run-pdt-cycle.sh",
+      "sha256": "237c1c21407b1c9518a61351ad755d283155f8c170e166d46bba978ed08ef6a6"
+    },
+    {
+      "path": "experiment/scripts/decide-pdt.py",
+      "sha256": "50ea53e748c87b7be669d4d217a1884a0d2470cb83ee3cc91bfc878be9e70302"
+    },
+    {
+      "path": "experiment/scripts/capture-pdt-source-state.sh",
+      "sha256": "cc33324bcf02360309866a31ecca852fad9f7bb081969e7cf0ba31f759906b2b"
+    },
+    {
+      "path": "experiment/scripts/export-observability-window.sh",
+      "sha256": "d2d20cd34eac3469bab66cae1e6c949d74e4aefebe5c4e4941afa1b274eed234"
+    },
+    {
+      "path": "experiment/scripts/summarize-checkout-observability.py",
+      "sha256": "5ec20f95e9bd75f60d8e74455caafa4c6d32cd6c108fb03e8c643bfbce3e1e2e"
+    },
+    {
+      "path": "infra/terraform/github-actions.tf",
+      "sha256": "37170d2327228d69883d5d01ea8101ae7efbf7d4e30e6e6d1755daab3c98d083"
+    },
+    {
+      "path": "infra/terraform/variables.tf",
+      "sha256": "11c92e836e5de83a8da1632ed5ac1800161ff086e73cfb189080b1724af3816d"
+    },
+    {
+      "path": "infra/terraform/outputs.tf",
+      "sha256": "689c1a1b85c5a1ac7e17b80c1486cee41338b40ba6ace6b84d0ce87dbe49804a"
+    },
+    {
+      "path": "experiment/pdt/model-policy.json",
+      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+    }
+  ],
+  "controller_image": null,
+  "publication_binding": null,
+  "freeze_rule": "Every runtime file, the immutable controller image digest and its attested publication binding must be verified before this runtime can become frozen."
+}

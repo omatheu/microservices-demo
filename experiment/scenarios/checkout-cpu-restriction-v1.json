@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "scenario_id": "checkout-cpu-restriction-v1",
+  "evidence_classification": "engineering-pilot-only",
+  "confirmatory_eligibility": "excluded-known-hypothesis",
+  "twin_object": "checkoutservice",
+  "independent_variable": "container CPU limit",
+  "control_value": "200m",
+  "candidate_value": "100m",
+  "staging_overlay": "infra/kustomize/scenarios/checkout-cpu-restriction/staging",
+  "pdt_candidate": "experiment/pdt/candidates/checkout-cpu-restriction-v1.json",
+  "alternatives": ["deploy-as-is", "restore-resources", "block"],
+  "required_repetitions": 3,
+  "pilot_runs": {
+    "staging": "staging-checkout-cpu-restriction-v1-r1-20260920T034643Z",
+    "pdt": "pdt-checkout-cpu-restriction-v1-20260920T035311Z",
+    "exclusion_reason": "Staging did not yet include the fixed Locust workload and PDT used 80 rather than 120 probes."
+  },
+  "operational_validation": "pending-human-gate",
+  "hypothesis": "The restricted candidate increases checkout latency or resource saturation; restoring the original limit is safer than deploying as-is.",
+  "methodological_note": "The mutation and expected effect were known while the mechanisms were built, so this scenario cannot estimate comparative PDT usefulness."
+}

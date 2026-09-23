@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_kind": "local-runtime-image-preflight",
+  "generated_at": "2026-09-22T02:15:40Z",
+  "source": {
+    "repository": "omatheu/microservices-demo",
+    "commit": "6ecffab7d03fca1ae434515ef2b6ab5c55caf989",
+    "tree": "2f5dab3f3381cb4e48e0436a61a6cde0c8cedd28"
+  },
+  "execution": {
+    "platform": "linux/amd64",
+    "docker_version": "29.8.1",
+    "syft_image": "ghcr.io/anchore/syft@sha256:500e2d872ac019436926e8322b4fc1f39441d94d21f6f4046c6ff29b30e8cb02",
+    "trivy_image": "aquasec/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969",
+    "scan_severity": [
+      "HIGH",
+      "CRITICAL"
+    ],
+    "ignore_unfixed": true,
+    "published_to_registry": false,
+    "gcp_accessed": false,
+    "cloud_execution_authorized": false,
+    "cloud_mutation_performed": false
+  },
+  "images": [
+    {
+      "name": "checkout-pdt-controller",
+      "image_id": "sha256:d77961ed486daca6431570cd474fa2fc6222c85cdfc2090841bfc81fdd188083",
+      "uncompressed_size_bytes": 48913388,
+      "sbom": {
+        "result": "pass",
+        "component_count": 940,
+        "sha256": "11752730d3b4965e44da815d9c2de93cbd61a0018c8a419ab7e2a2ab4440749a"
+      },
+      "vulnerability_scan": {
+        "result": "pass",
+        "high_findings": 0,
+        "critical_findings": 0,
+        "sha256": "b257a312e60f8c28b37ec3ae77281ce40b5980a480a66900005ba7e2aec0e282"
+      }
+    },
+    {
+      "name": "oracle-harness",
+      "image_id": "sha256:1e11bc0ae96b7f0fc019590942d78505cbf680ff61c6ec372b6cddf5738343a9",
+      "uncompressed_size_bytes": 15282390,
+      "sbom": {
+        "result": "pass",
+        "component_count": 961,
+        "sha256": "5397370ebeb9e71240afdae1102d2e303cffda5f78c5947f358b8c734eb13533"
+      },
+      "vulnerability_scan": {
+        "result": "pass",
+        "high_findings": 0,
+        "critical_findings": 0,
+        "sha256": "05c1476d0161e4a0c34eb319382fc3b2d38442f25cc78c525af78f7b90880873"
+      }
+    },
+    {
+      "name": "currency-reference",
+      "image_id": "sha256:92697ff2c63dc4a2e8a65941c469f5ce377e14f1d9a783bcb2defbfab78e0a3d",
+      "uncompressed_size_bytes": 164007349,
+      "sbom": {
+        "result": "pass",
+        "component_count": 742,
+        "sha256": "d1eec4fd0690627e8b5a0c1602b01b746a7b1d98bd580a1a0be7f9fb67d9d5dd"
+      },
+      "vulnerability_scan": {
+        "result": "pass",
+        "high_findings": 0,
+        "critical_findings": 0,
+        "sha256": "86ab7c59ca3477479abdaaa00d087fae4d057bf848f0a0c9209b47fe68fa19f3"
+      },
+      "build_log_advisory": {
+        "source": "npm audit summary emitted during npm install",
+        "low": 1,
+        "moderate": 8,
+        "high": 0,
+        "critical": 0,
+        "gate_effect": "informational-outside-the-frozen-high-critical-blocking-policy"
+      }
+    }
+  ],
+  "storage_assessment": {
+    "measurement_kind": "conservative-upper-bound-from-uncompressed-image-sizes",
+    "additional_uncompressed_upper_bound_bytes": 228203127,
+    "existing_account_visible_artifact_registry_bytes": 7843495,
+    "projected_account_visible_upper_bound_bytes": 236046622,
+    "assumed_free_tier_allowance_bytes": 500000000,
+    "projected_headroom_bytes": 263953378,
+    "fits_account_visible_allowance": true,
+    "source_evidence": {
+      "path": "experiment/evidence/finance/artifact-registry-storage-readiness-20260920T222357Z.json",
+      "sha256": "0baa2e34ebccbb68e70f37b84eb8e946bdde14f93a3871b870a26242bc58c8e8"
+    },
+    "financial_clearance_granted": false
+  },
+  "comparison_with_prior_ci": {
+    "workflow_run_id": "35540876565",
+    "artifact_id": "10614194461",
+    "source_commit": "4a40ead8464d695deb23be06be5011034e7240f9",
+    "source_tree": "7ad6129062844c49396ee7777076b2b2d0168286",
+    "artifact_summary_sha256": "af9e93b0772de3db82ce4c7d1efe7946700597e29618c497624dd07ea3479b17",
+    "material_image_inputs_changed": false,
+    "all_local_image_ids_equal": false,
+    "interpretation": "The versioned build inputs are unchanged, but rebuild IDs are not bit-for-bit stable because generated layer metadata can vary. Publication assurance therefore depends on scanning the exact local image immediately before push and freezing the returned registry digest, not on asserting rebuild ID equality."
+  },
+  "result": "pass-local-engineering-preflight",
+  "confirmatory_eligible": false,
+  "publication_provenance_eligible": false,
+  "raw_local_reports_retained_in_repository": false,
+  "limitations": [
+    "This summary records hashes of temporary local SBOM and Trivy reports but does not retain their raw contents.",
+    "The protected publication job must regenerate the reports, bind their hashes into its summary and verify them before manifest binding.",
+    "Passing this preflight is not financial approval and does not authorize cloud publication or execution."
+  ]
+}

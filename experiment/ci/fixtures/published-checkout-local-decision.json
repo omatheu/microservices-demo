@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "ci-fixture",
+  "candidate_id": "fixture-candidate",
+  "scope": "local-pre-staging-ci",
+  "git": {
+    "commit": "fixture",
+    "dirty": false
+  },
+  "local_decision": "pass",
+  "eligible_for_staging": true,
+  "confirmatory_eligible": false,
+  "component_selection": {
+    "affected_service_components": [
+      "checkoutservice"
+    ]
+  },
+  "artifacts": [
+    {
+      "component": "checkoutservice",
+      "source_image_name": "us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/checkoutservice",
+      "build_status": "pass",
+      "sbom_status": "pass",
+      "image_scan_status": "pass",
+      "publication_status": "pass",
+      "remote_reference": "us-central1-docker.pkg.dev/example-project/example-repository/checkoutservice@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ]
+}

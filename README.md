@@ -12,6 +12,18 @@ If you’re using this demo, please **★Star** this repository to show your int
 
 **Note to Googlers:** Please fill out the form at [go/microservices-demo](http://go/microservices-demo).
 
+## TCC experiment status
+
+This fork implements a paired comparison between a complete conventional
+CI/CD pipeline with staging and the same pipeline augmented by a predictive and
+prescriptive Partial Digital Twin of `checkoutservice`. The operational GKE
+baseline, conventional gates, PDT controller, mutation operators, and
+independent oracle are implemented. Confirmatory collection has not started:
+the protocol is still a pre-registration candidate, runtime image digests and
+the financial review are pending, and cloud execution remains explicitly
+locked. See the [experiment roadmap](/docs/tcc-experiment-roadmap.md) for the
+authoritative live status and exit criteria.
+
 ## Architecture
 
 **Online Boutique** is composed of 11 microservices written in different
@@ -138,6 +150,14 @@ Find **Protocol Buffers Descriptions** at the [`./protos` directory](/protos).
 ## Documentation
 
 - [Development](/docs/development-guide.md) to learn how to run and develop this app locally.
+- [TCC experiment plan](/docs/tcc-experiment-plan.md), the primary reference for the Partial Digital Twin experiment in this fork.
+- [TCC experiment roadmap](/docs/tcc-experiment-roadmap.md), the live implementation checklist and experiment completion criteria.
+- [Validity threat register](/docs/tcc-validity-threats.md), the pre-collection bias controls, residual risks, and exclusion rules.
+- [Conventional CI/CD reference](/docs/tcc-ci-cd-baseline.md), the control condition used to measure the PDT's incremental value.
+- [Candidate scenario catalog](/docs/tcc-candidate-scenarios.md), the safe controls and controlled functional, security, and infrastructure mutations.
+- [Local experimental CI](/experiment/ci), the no-cloud pre-staging gates and auditable decision contract.
+- [Experimental infrastructure](/infra), the reproducible GKE foundation for the TCC environments.
+- [Reproducible experiment tooling and evidence](/experiment), including baseline, staging, observability, and PDT state capture.
 
 ## Demos featuring Online Boutique
 

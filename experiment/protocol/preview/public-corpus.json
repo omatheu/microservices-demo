@@ -1,0 +1,236 @@
+{
+  "schema_version": "1.0.0",
+  "corpus_id": "corpus-2dbehag5ob5gu",
+  "protocol_id": "checkout-pdt-comparison-v1",
+  "protocol_sha256": "046d3d09299d3abf00efdad551986a5cdc99341c36ca23994feff05cb75fb2c5",
+  "generated_at": "2026-09-21T23:09:36.576046Z",
+  "confirmatory_eligible": false,
+  "candidate_count": 18,
+  "technical_repetitions_per_candidate": 3,
+  "oracle_manifest_commitment_sha256": "9eb342eb4332c8807be9af89c1e42435b8e02ae66d653863a2a8d0ee4a18b5c9",
+  "execution_order": [
+    {
+      "sequence": 1,
+      "candidate_id": "cand-vy7x6whgkvy6yakn",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 2,
+      "candidate_id": "cand-vah5dm7zvdido6se",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 3,
+      "candidate_id": "cand-j7elm5s6e2fdq43d",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 4,
+      "candidate_id": "cand-6grpy33nooik7nxu",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 5,
+      "candidate_id": "cand-2o5smnq7dectu6u4",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 6,
+      "candidate_id": "cand-o4bhapthyeext5il",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 7,
+      "candidate_id": "cand-y4igv2qw2ybou5fv",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 8,
+      "candidate_id": "cand-mkep2k2oy7ia7dsn",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 9,
+      "candidate_id": "cand-3lfjkw5tki6j3edx",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 10,
+      "candidate_id": "cand-kzjlvctjcjybdb3x",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 11,
+      "candidate_id": "cand-lz32ha5kwtwfy77b",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 12,
+      "candidate_id": "cand-hrezomkhtk52dn34",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 13,
+      "candidate_id": "cand-mvna6eoxsko4bvgw",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 14,
+      "candidate_id": "cand-pkwzee2vrusv6pl2",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 15,
+      "candidate_id": "cand-pplzfdf3sl5uhfrt",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 16,
+      "candidate_id": "cand-txogbtmbvakzvmsb",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 17,
+      "candidate_id": "cand-jc4oios7gkfwm2pk",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sequence": 18,
+      "candidate_id": "cand-my6dcfbgvu6czlf3",
+      "repetitions": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "block": 1,
+      "candidate_ids": [
+        "cand-vy7x6whgkvy6yakn",
+        "cand-vah5dm7zvdido6se",
+        "cand-j7elm5s6e2fdq43d"
+      ],
+      "cost_review_required_after_block": true
+    },
+    {
+      "block": 2,
+      "candidate_ids": [
+        "cand-6grpy33nooik7nxu",
+        "cand-2o5smnq7dectu6u4",
+        "cand-o4bhapthyeext5il"
+      ],
+      "cost_review_required_after_block": true
+    },
+    {
+      "block": 3,
+      "candidate_ids": [
+        "cand-y4igv2qw2ybou5fv",
+        "cand-mkep2k2oy7ia7dsn",
+        "cand-3lfjkw5tki6j3edx"
+      ],
+      "cost_review_required_after_block": true
+    },
+    {
+      "block": 4,
+      "candidate_ids": [
+        "cand-kzjlvctjcjybdb3x",
+        "cand-lz32ha5kwtwfy77b",
+        "cand-hrezomkhtk52dn34"
+      ],
+      "cost_review_required_after_block": true
+    },
+    {
+      "block": 5,
+      "candidate_ids": [
+        "cand-mvna6eoxsko4bvgw",
+        "cand-pkwzee2vrusv6pl2",
+        "cand-pplzfdf3sl5uhfrt"
+      ],
+      "cost_review_required_after_block": true
+    },
+    {
+      "block": 6,
+      "candidate_ids": [
+        "cand-txogbtmbvakzvmsb",
+        "cand-jc4oios7gkfwm2pk",
+        "cand-my6dcfbgvu6czlf3"
+      ],
+      "cost_review_required_after_block": true
+    }
+  ],
+  "mechanism_visibility": {
+    "opaque_candidate_ids_only": true,
+    "oracle_manifest_available": false,
+    "operator_and_label_available": false
+  }
+}

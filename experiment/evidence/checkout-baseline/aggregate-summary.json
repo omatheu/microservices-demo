@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-09-20T03:17:19Z",
+  "repetitions": 3,
+  "total_tests": 60,
+  "total_successes": 60,
+  "total_failures": 0,
+  "latency_ms": {
+    "p50": {
+      "min": 384.619,
+      "mean": 391.8283333333334,
+      "max": 397.323,
+      "standard_deviation": 5.326222259308689
+    },
+    "p95": {
+      "min": 419.410,
+      "mean": 441.009,
+      "max": 473.353,
+      "standard_deviation": 23.29596647490719
+    },
+    "p99": {
+      "min": 472.272,
+      "mean": 505.6356666666666,
+      "max": 522.877,
+      "standard_deviation": 23.596097563415487
+    }
+  }
+}

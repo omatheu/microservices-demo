@@ -32,7 +32,10 @@ RUN npm install --only=production
 
 FROM alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
 
-RUN apk add --no-cache nodejs
+RUN apk upgrade --no-cache \
+    && apk add --no-cache nodejs \
+    && addgroup -S -g 10001 app \
+    && adduser -S -D -H -u 10001 -G app app
 
 WORKDIR /usr/src/app
 
@@ -41,5 +44,7 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY . .
 
 EXPOSE 7000
+
+USER 10001:10001
 
 ENTRYPOINT [ "node", "server.js" ]

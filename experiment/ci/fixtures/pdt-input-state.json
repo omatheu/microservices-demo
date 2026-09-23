@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "snapshot_id": "test-operational-state-001",
+  "binding": {
+    "project_id": "test-project",
+    "cluster_name": "test-cluster",
+    "cluster_location": "us-central1",
+    "source_namespace": "operational",
+    "source_namespace_uid": "00000000-0000-4000-8000-000000000001",
+    "target_namespace": "pdt",
+    "twin_object": {
+      "kind": "Deployment",
+      "name": "checkoutservice"
+    },
+    "relationship": "observes-and-simulates"
+  },
+  "synchronized_state": {
+    "workloads": [
+      {
+        "name": "checkoutservice",
+        "replicas": 1,
+        "containers": [
+          {
+            "name": "server",
+            "image": "registry.example/checkoutservice@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "env": [],
+            "resources": {
+              "requests": {
+                "cpu": "100m",
+                "memory": "128Mi"
+              },
+              "limits": {
+                "cpu": "200m",
+                "memory": "256Mi"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

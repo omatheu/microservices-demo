@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
+  "model_id": "empirical-counterfactual-v1",
+  "prediction_target": "controlled-operational-validation",
+  "policy": {
+    "approve_when": "deploy-as-is satisfies every safety threshold",
+    "reconfigure_when": "deploy-as-is is unsafe and a changed deployment alternative satisfies every threshold",
+    "block_when": "no deployment alternative satisfies every threshold",
+    "tie_breaker": "lowest change_cost, then lowest p95 latency"
+  },
+  "confidence": {
+    "base": 0.5,
+    "maximum": 0.9,
+    "sample_target": 120,
+    "penalty_per_restart": 0.05
+  },
+  "limitations": [
+    "Predictions are local to the synchronized workload and GKE cluster.",
+    "The initial model uses empirical counterfactual observations and is recalibrated after operational validation.",
+    "A single cycle does not establish external validity."
+  ]
+}

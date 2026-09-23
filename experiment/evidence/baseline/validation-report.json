@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0.0",
+  "all_valid": true,
+  "phase": "phase-1-operational-baseline",
+  "minimum_repetitions": 3,
+  "operational": {
+    "aggregate_sha256": "1f7b487468b1e0d5e7a1bf0e4b2b82af81e302ab6747bd47f7c3912512fb0f25",
+    "completed_runs": 3,
+    "total_samples": 180,
+    "total_successes": 180,
+    "total_failures": 0,
+    "total_locust_requests": 818,
+    "total_locust_failures": 0,
+    "runs": [
+      {
+        "run_id": "baseline-20260920T022124Z",
+        "project_id": "microservices-demo-tcc",
+        "cluster_context": "gke_microservices-demo-tcc_us-central1_online-boutique-experiment",
+        "deployment_count": 12,
+        "samples": 60,
+        "successes": 60,
+        "failures": 0,
+        "locust_requests": 275,
+        "locust_failures": 0,
+        "latency_ms": {
+          "min": 343.984,
+          "mean": 436.368,
+          "p50": 422.078,
+          "p95": 533.689,
+          "p99": 1283.284,
+          "max": 1283.284
+        },
+        "evidence_sha256": {
+          "deployments-end.json": "712c152783e3ebed5f1fcbc02f1e062f62f3659cd714b201377cf37db979e735",
+          "deployments-start.json": "712c152783e3ebed5f1fcbc02f1e062f62f3659cd714b201377cf37db979e735",
+          "events-end.json": "470a0331b9e281c53b69a83dedde2c0fc2501be720c9e3a1efef62d7331cb5df",
+          "events-start.json": "5efaea1756d8640ea8a7125ca0fa8d2a47c737701e5d65960e9442f5e7d1dc2d",
+          "http-samples.csv": "52f21be55616c384678172a0449defc3a4d8e65e366250883eed779be56b6146",
+          "metadata.json": "8ba00cd0422f7dd9ebad71b3c64243aa3a028115cc57c0edb39d4005805d0fe7",
+          "pod-metrics-end.tsv": "a856cbad5a1e0e8da402ec61bc31a4914c01d999a5ca2df4751989100db7c941",
+          "pod-metrics-start.tsv": "18828ab8c0838ed2294f419b60de6e71d876044d921c672dd6a06fa2297f12b3",
+          "pods-end.json": "464b5684af549dc48a2861380fd9dba6d1ed69d6bc3a14ec2c4f1b17ec48a18c",
+          "pods-start.json": "b13571ea01b86547f66f4f037c84c1b8d108a3883bb0d36a5eba14ba3d39f61b",
+          "resourcequotas.json": "d778b6a9d7af054a5ad80bd3a898e94dae2936931e569290446b3f527a38ef6b",
+          "services.json": "93768a56411f3a810d7994b137cb540b81638d65235bdefc136c7b15e8fe2d73",
+          "status.json": "fc3f83dfc228b2b044b40ef0c02cdb8e5b87bfc68fc3467882a5f80a262fc0da",
+          "summary.json": "d713b19ec18ccfa9285186d588871719aef3ff4206ac34ac5e3d31b584353ff9",
+          "workload-configuration.json": "db845736d4f5a5ccc69009897b274b9566d87acd7c0c75e52af8de115b18e281"
+        }
+      },
+      {
+        "run_id": "baseline-20260920T022349Z",
+        "project_id": "microservices-demo-tcc",
+        "cluster_context": "gke_microservices-demo-tcc_us-central1_online-boutique-experiment",
+        "deployment_count": 12,
+        "samples": 60,
+        "successes": 60,
+        "failures": 0,
+        "locust_requests": 267,
+        "locust_failures": 0,
+        "latency_ms": {
+          "min": 342.021,
+          "mean": 429.881,
+          "p50": 426.67,
+          "p95": 503.599,
+          "p99": 631.172,
+          "max": 631.172
+        },
+        "evidence_sha256": {
+          "deployments-end.json": "712c152783e3ebed5f1fcbc02f1e062f62f3659cd714b201377cf37db979e735",
+          "deployments-start.json": "712c152783e3ebed5f1fcbc02f1e062f62f3659cd714b201377cf37db979e735",
+          "events-end.json": "470a0331b9e281c53b69a83dedde2c0fc2501be720c9e3a1efef62d7331cb5df",
+          "events-start.json": "470a0331b9e281c53b69a83dedde2c0fc2501be720c9e3a1efef62d7331cb5df",
+          "http-samples.csv": "e3e87472949632e36ee22283e9431a393881526719d1de964d5d5226d339adab",
+          "metadata.json": "4cdd2e895c047b84c1e5841599c027d1c6ac42ca2ea66e889c81757de651f2c9",
+          "pod-metrics-end.tsv": "e2845a30ccb4fc57e00e2b723ac702d5284b5e85ee44308789a1e99480f491f9",
+          "pod-metrics-start.tsv": "a856cbad5a1e0e8da402ec61bc31a4914c01d999a5ca2df4751989100db7c941",
+          "pods-end.json": "464b5684af549dc48a2861380fd9dba6d1ed69d6bc3a14ec2c4f1b17ec48a18c",
+          "pods-start.json": "464b5684af549dc48a2861380fd9dba6d1ed69d6bc3a14ec2c4f1b17ec48a18c",
+          "resourcequotas.json": "d778b6a9d7af054a5ad80bd3a898e94dae2936931e569290446b3f527a38ef6b",
+          "services.json": "93768a56411f3a810d7994b137cb540b81638d65235bdefc136c7b15e8fe2d73",
+          "status.json": "4f5f6d1fca22fe823567d4e53fec43bde5af0f5be0ef80a76cdf02910387d3c3",
+          "summary.json": "c9cfa65ed05a76fb7c2df6ede7ba96f6f1a83520f4d3912bebfcd386af4f2a56",
+          "workload-configuration.json": "db845736d4f5a5ccc69009897b274b9566d87acd7c0c75e52af8de115b18e281"
+        }
+      },
+      {
+        "run_id": "baseline-20260920T022612Z",
+        "project_id": "microservices-demo-tcc",
+        "cluster_context": "gke_microservices-demo-tcc_us-central1_online-boutique-experiment",
+        "deployment_count": 12,
+        "samples": 60,
+        "successes": 60,
+        "failures": 0,
+        "locust_requests": 276,
+        "locust_failures": 0,
+        "latency_ms": {
+          "min": 338.582,
+          "mean": 411.972,
+          "p50": 412.649,
+          "p95": 483.328,
+          "p99": 753.042,
+          "max": 753.042
+        },
+        "evidence_sha256": {
+          "deployments-end.json": "712c152783e3ebed5f1fcbc02f1e062f62f3659cd714b201377cf37db979e735",
+          "deployments-start.json": "712c152783e3ebed5f1fcbc02f1e062f62f3659cd714b201377cf37db979e735",
+          "events-end.json": "470a0331b9e281c53b69a83dedde2c0fc2501be720c9e3a1efef62d7331cb5df",
+          "events-start.json": "470a0331b9e281c53b69a83dedde2c0fc2501be720c9e3a1efef62d7331cb5df",
+          "http-samples.csv": "ce9bde52e28932d3e1c0e51eec921ed5eba2e7c9344b96cb2ded3d7f50f9ec3c",
+          "metadata.json": "fe516c6c2a851ad4e51b361d11914aa75a4e6cc5a604f16097a9728fcb0ea22a",
+          "pod-metrics-end.tsv": "812492b382d6d393d1ba474c9098b0ab6634a85f8a874ede4484590e943157fe",
+          "pod-metrics-start.tsv": "ee575b80e6bdac1b6971ca908bb6f95fe1dd03c4b56a2c7fd1f834fe4553f578",
+          "pods-end.json": "464b5684af549dc48a2861380fd9dba6d1ed69d6bc3a14ec2c4f1b17ec48a18c",
+          "pods-start.json": "464b5684af549dc48a2861380fd9dba6d1ed69d6bc3a14ec2c4f1b17ec48a18c",
+          "resourcequotas.json": "d778b6a9d7af054a5ad80bd3a898e94dae2936931e569290446b3f527a38ef6b",
+          "services.json": "93768a56411f3a810d7994b137cb540b81638d65235bdefc136c7b15e8fe2d73",
+          "status.json": "7c55974ae2df8316500b4981d3461b8a687e7c4e75681785e85382cd8592108e",
+          "summary.json": "5c28726078d61c29779dee50ab060a69fa75483bb4ead1642f752cd11de1236a",
+          "workload-configuration.json": "db845736d4f5a5ccc69009897b274b9566d87acd7c0c75e52af8de115b18e281"
+        }
+      }
+    ]
+  },
+  "checkout": {
+    "aggregate_sha256": "12953acafbfefefd9e9fd89e80788cdb4907930fb998dc7ab24a00617ad7f3f1",
+    "batch_id": "checkout-baseline-20260920T031605Z",
+    "raw_aggregate_sha256": "12953acafbfefefd9e9fd89e80788cdb4907930fb998dc7ab24a00617ad7f3f1",
+    "status_sha256": "3bc0f018fa9db46b2abf063df5ecef54a935ecb38210e5478580d144ea9b940a",
+    "repetitions": 3,
+    "total_tests": 60,
+    "total_successes": 60,
+    "total_failures": 0,
+    "repetition_evidence": [
+      {
+        "repetition": 1,
+        "tests": 20,
+        "successes": 20,
+        "failures": 0,
+        "latency_ms": {
+          "p50": 397.323,
+          "p95": 473.353,
+          "p99": 522.877
+        },
+        "summary_sha256": "02b7b9f2b6f3c7dd2675c5951e70a6aca80db076e86ec6690bdb31c32daa8c22",
+        "raw_samples_sha256": "4e7c4c47140145417b31587b7a048a9983bc592e008169abf4f2f524b2e42813"
+      },
+      {
+        "repetition": 2,
+        "tests": 20,
+        "successes": 20,
+        "failures": 0,
+        "latency_ms": {
+          "p50": 384.619,
+          "p95": 430.264,
+          "p99": 472.272
+        },
+        "summary_sha256": "47bad9733ce1d71384494687dfb5b07481f0a803afbe2eb3873704063c1f40be",
+        "raw_samples_sha256": "e0b1168def2872c2a80b8b76e0ae7512473744f5c4a15af5238c5ec2cdf7f862"
+      },
+      {
+        "repetition": 3,
+        "tests": 20,
+        "successes": 20,
+        "failures": 0,
+        "latency_ms": {
+          "p50": 393.543,
+          "p95": 419.41,
+          "p99": 521.758
+        },
+        "summary_sha256": "e5fbb0cdee5577b9aabdd68a898e11b5e300db2f9a32ff396a93df7862c0d646",
+        "raw_samples_sha256": "1b599c753ac8f99a26e6bc23f11c5653e09e3cb50614c573c2d78ea4aed937b4"
+      }
+    ]
+  },
+  "exit_criteria": {
+    "timestamped_runs": true,
+    "versioned_schema": true,
+    "raw_samples_match_aggregates": true,
+    "resources_and_configuration_captured": true,
+    "natural_variation_repeated": true,
+    "functional_checkout_repeated": true
+  },
+  "validated_at": "2026-09-21T23:07:59.287767Z"
+}

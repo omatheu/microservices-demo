@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_id": "checkout-pdt-comparison-v1",
+  "project_id": "microservices-demo-tcc",
+  "decision": "approved-for-protocol-freeze",
+  "reviewed_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "billing_data_as_of": "YYYY-MM-DDTHH:MM:SSZ",
+  "cost_data_available": true,
+  "confirmatory_incremental_spend_brl": 0,
+  "approved_incremental_spend_ceiling_brl": 200,
+  "mandatory_review_at_brl": 150,
+  "evidence": {
+    "path": "experiment/evidence/finance/REPLACE_WITH_COST_WINDOW.json",
+    "sha256": "REPLACE_WITH_64_CHARACTER_SHA256"
+  },
+  "cloud_execution_authorized": false
+}

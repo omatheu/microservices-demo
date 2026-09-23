@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "observed_at": "2026-09-20T22:42:03Z",
+  "observation_mode": "terraform-plan-only",
+  "stack": "infra/terraform-billing-export",
+  "configuration": {
+    "main_tf_sha256": "c270b944e731634f2a53e8aebe440044645fccae3f235af7de42836386f7aae0",
+    "variables_tf_sha256": "05ffca856ab1b5bdccdd48fb017b3e03bb39b8a07304e69b07b85c06181a8a0e",
+    "versions_tf_sha256": "d3b1c8287345353cbef481bdc4d0f845a901a3ed1e72ca4316cd299e02ff0c43",
+    "provider_lock_sha256": "35fcaf0c297dc46cf8133108906615d6bd55a6af121f8a0f5042255017f6d654"
+  },
+  "gate_disabled_plan": {
+    "enable_billing_export_dataset": false,
+    "resource_changes": 0
+  },
+  "gate_enabled_plan": {
+    "enable_billing_export_dataset": true,
+    "resource_changes": [
+      {
+        "address": "google_project_service.bigquery[0]",
+        "actions": [
+          "create"
+        ],
+        "service": "bigquery.googleapis.com"
+      },
+      {
+        "address": "google_bigquery_dataset.billing_export[0]",
+        "actions": [
+          "create"
+        ],
+        "dataset_id": "online_boutique_billing",
+        "location": "US"
+      }
+    ],
+    "unrelated_resource_changes": 0
+  },
+  "separation_assertions": {
+    "gke_changes": 0,
+    "kubernetes_changes": 0,
+    "artifact_registry_changes": 0,
+    "iam_changes": 0,
+    "budget_changes": 0
+  },
+  "plan_applied": false,
+  "billing_export_enabled": false,
+  "cloud_execution_authorized": false
+}

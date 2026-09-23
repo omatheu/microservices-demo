@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "candidate_id": "current",
+  "evidence_classification": "engineering-pilot-only",
+  "confirmatory_eligibility": false,
+  "description": "Versão atual do checkoutservice usada para validar o ciclo inicial do PDT.",
+  "alternatives": [
+    {
+      "id": "deploy-as-is",
+      "action": "deploy",
+      "configuration_changes": [],
+      "change_cost": 0
+    },
+    {
+      "id": "capacity-safe",
+      "action": "deploy",
+      "configuration_changes": [
+        {
+          "deployment": "checkoutservice",
+          "patch": {"spec": {"replicas": 2}}
+        },
+        {
+          "deployment": "checkoutservice",
+          "patch": {
+            "spec": {
+              "template": {
+                "spec": {
+                  "containers": [
+                    {
+                      "name": "server",
+                      "resources": {
+                        "requests": {"cpu": "200m", "memory": "128Mi", "ephemeral-storage": "1Gi"},
+                        "limits": {"cpu": "400m", "memory": "256Mi", "ephemeral-storage": "1Gi"}
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "change_cost": 2
+    },
+    {
+      "id": "block",
+      "action": "block",
+      "configuration_changes": [],
+      "change_cost": 10
+    }
+  ]
+}

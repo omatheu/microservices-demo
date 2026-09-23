@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "candidate_id": "engineering-artifact-binding-v2",
+  "evidence_classification": "engineering-pilot-only",
+  "confirmatory_eligibility": false,
+  "twin_object": "checkoutservice",
+  "scenario": "safe-artifact-binding-smoke",
+  "description": "Candidata segura usada somente para validar que staging e PDT executam o mesmo digest imutável.",
+  "alternatives": [
+    {
+      "id": "deploy-as-is",
+      "action": "deploy",
+      "configuration_changes": [],
+      "change_cost": 0
+    },
+    {
+      "id": "capacity-safe",
+      "action": "deploy",
+      "configuration_changes": [
+        {
+          "deployment": "checkoutservice",
+          "patch": {
+            "spec": {
+              "replicas": 2
+            }
+          }
+        },
+        {
+          "deployment": "checkoutservice",
+          "patch": {
+            "spec": {
+              "template": {
+                "spec": {
+                  "containers": [
+                    {
+                      "name": "server",
+                      "resources": {
+                        "requests": {
+                          "cpu": "200m",
+                          "memory": "128Mi",
+                          "ephemeral-storage": "1Gi"
+                        },
+                        "limits": {
+                          "cpu": "400m",
+                          "memory": "256Mi",
+                          "ephemeral-storage": "1Gi"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "change_cost": 2
+    },
+    {
+      "id": "block",
+      "action": "block",
+      "configuration_changes": [],
+      "change_cost": 10
+    }
+  ]
+}

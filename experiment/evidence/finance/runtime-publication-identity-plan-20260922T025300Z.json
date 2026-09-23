@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "observed_at": "2026-09-22T02:53:00Z",
+  "observation_mode": "terraform-plan-read-only-no-apply",
+  "project_id": "microservices-demo-tcc",
+  "terraform_version": "1.16.3",
+  "configuration_bindings": {
+    "github_actions": {
+      "path": "infra/terraform/github-actions.tf",
+      "sha256": "37170d2327228d69883d5d01ea8101ae7efbf7d4e30e6e6d1755daab3c98d083"
+    },
+    "variables": {
+      "path": "infra/terraform/variables.tf",
+      "sha256": "11c92e836e5de83a8da1632ed5ac1800161ff086e73cfb189080b1724af3816d"
+    },
+    "outputs": {
+      "path": "infra/terraform/outputs.tf",
+      "sha256": "689c1a1b85c5a1ac7e17b80c1486cee41338b40ba6ace6b84d0ce87dbe49804a"
+    }
+  },
+  "plan": {
+    "add": 3,
+    "change": 0,
+    "destroy": 0,
+    "resources": [
+      {
+        "address": "google_service_account.github_runtime_publisher[0]",
+        "purpose": "keyless runtime publication identity"
+      },
+      {
+        "address": "google_service_account_iam_member.github_runtime_publisher_federation[0]",
+        "role": "roles/iam.workloadIdentityUser",
+        "scope": "runtime publisher service account"
+      },
+      {
+        "address": "google_artifact_registry_repository_iam_member.github_runtime_publisher_writer[0]",
+        "role": "roles/artifactregistry.writer",
+        "scope": "us-central1/online-boutique-experiment"
+      }
+    ],
+    "planned_service_account": "github-tcc-runtime-publisher@microservices-demo-tcc.iam.gserviceaccount.com",
+    "billable_compute_storage_or_network_resources_added": 0,
+    "existing_resources_changed": 0,
+    "existing_resources_destroyed": 0
+  },
+  "isolation": {
+    "service_account_key_created": false,
+    "project_level_roles_granted": [],
+    "kubernetes_rbac_granted": false,
+    "gke_credentials_requested_by_workflow": false,
+    "artifact_registry_repository_scope_only": true,
+    "runtime_publication_authorization_separate_from_experiment_execution": true
+  },
+  "execution": {
+    "terraform_apply_performed": false,
+    "gcp_resources_changed": false,
+    "github_resources_changed": false,
+    "artifact_registry_images_published": false
+  },
+  "required_before_use": [
+    "explicit authorization to apply the three IAM resources",
+    "register GCP_RUNTIME_PUBLISHER_SERVICE_ACCOUNT in the protected tcc-experiment environment",
+    "create the tcc-runtime-publication label",
+    "keep TCC_COST_REVIEW_ACKNOWLEDGED false until the publication window is reviewed",
+    "apply tcc-runtime-publication and tcc-cost-reviewed mutually exclusively from tcc-experiment-cloud"
+  ],
+  "financial_interpretation": "The plan contains IAM and repository-scoped authorization only; it does not create compute, storage or network resources. It is not a spending authorization and was not applied. Image storage begins only after a separately authorized publication run."
+}
