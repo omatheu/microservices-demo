@@ -461,6 +461,15 @@ A auditoria pós-instalação passou em 12/13; resta somente incorporar o workfl
 revisado à `main`. Nenhuma imagem foi publicada e as duas travas financeiras
 permanecem desligadas.
 
+O PR #1 foi posteriormente mesclado em `main` no commit `895473c0`, depois de
+os três checks do head `269c9fbe` passarem. O workflow protegido agora está
+instalado, e uma auditoria pós-merge separou as dimensões: 12/12 controles de
+infraestrutura prontos e 0/1 controle de candidata, pois o PR já foi encerrado.
+Isso não é falha de infraestrutura nem autorização implícita: o próximo 13/13
+exige um novo PR candidato aberto e desarmado. Nenhum workflow cloud foi
+executado. A evidência está em
+[`../experiment/evidence/finance/runtime-publication-readiness-post-merge-20260924T223256Z.json`](../experiment/evidence/finance/runtime-publication-readiness-post-merge-20260924T223256Z.json).
+
 O passo seguinte também está automatizado localmente:
 `prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um
 bundle único com cinco políticas, dois manifests e o protocolo candidato, já

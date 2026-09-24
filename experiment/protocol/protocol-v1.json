@@ -327,7 +327,7 @@
     },
     "runtime_publication_readiness_auditor": {
       "path": "experiment/scripts/audit-runtime-publication-readiness.py",
-      "sha256": "84ee15a73b403964af3bff4cce79374417fd93efd5b633078245cad72d01faf2"
+      "sha256": "32c74bbd04de8d37d62adf40a9948221f818811017450d92ec48d4af260ac2eb"
     },
     "runtime_publication_terraform_plan_validator": {
       "path": "experiment/scripts/validate-runtime-publication-terraform-plan.py",

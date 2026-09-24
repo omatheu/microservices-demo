@@ -46,6 +46,7 @@ AUTHORIZATION_LABELS = {
     "tcc-experiment-cloud",
     "tcc-runtime-publication",
 }
+CANDIDATE_CHECK_IDS = {"pull-request-safe-disarmed-state"}
 
 
 def command_json(command):
@@ -359,7 +360,13 @@ def audit(snapshot, pull_request):
     add(
         "pull-request-safe-disarmed-state",
         pr_safe,
-        f"authorization_labels={armed_labels}",
+        (
+            f"state={pr.get('state') if isinstance(pr, dict) else 'unavailable'}; "
+            f"draft={pr.get('draft') if isinstance(pr, dict) else 'unavailable'}; "
+            "head_repository="
+            f"{pr.get('head', {}).get('repo', {}).get('full_name') if isinstance(pr, dict) else 'unavailable'}; "
+            f"authorization_labels={armed_labels}"
+        ),
     )
 
     service_account = snapshot.get("runtime_publisher_service_account")
@@ -416,7 +423,17 @@ def audit(snapshot, pull_request):
         f"repository_principal_bound={federation_ready}",
     )
 
-    blockers = [item["id"] for item in checks if not item["passed"]]
+    infrastructure_checks = [
+        item for item in checks if item["id"] not in CANDIDATE_CHECK_IDS
+    ]
+    candidate_checks = [item for item in checks if item["id"] in CANDIDATE_CHECK_IDS]
+    infrastructure_blockers = [
+        item["id"] for item in infrastructure_checks if not item["passed"]
+    ]
+    candidate_blockers = [
+        item["id"] for item in candidate_checks if not item["passed"]
+    ]
+    blockers = infrastructure_blockers + candidate_blockers
     return {
         "schema_version": "1.0.0",
         "mechanism": "runtime-publication-readiness-audit",
@@ -426,6 +443,15 @@ def audit(snapshot, pull_request):
         "pull_request_number": pull_request,
         "check_count": len(checks),
         "passed_count": len(checks) - len(blockers),
+        "infrastructure_check_count": len(infrastructure_checks),
+        "infrastructure_passed_count": len(infrastructure_checks)
+        - len(infrastructure_blockers),
+        "infrastructure_ready_for_candidate": not infrastructure_blockers,
+        "infrastructure_blocking_requirements": infrastructure_blockers,
+        "candidate_check_count": len(candidate_checks),
+        "candidate_passed_count": len(candidate_checks) - len(candidate_blockers),
+        "candidate_ready_for_controlled_enablement": not candidate_blockers,
+        "candidate_blocking_requirements": candidate_blockers,
         "ready_for_controlled_enablement": not blockers,
         "blocking_requirements": blockers,
         "checks": checks,

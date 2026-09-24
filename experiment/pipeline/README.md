@@ -189,6 +189,12 @@ rótulos cloud foi anexado ao PR #1; portanto essa configuração, por si só, n
 iniciou execução cloud. Em 22/09/2026, a identidade de publicação-only, seu
 vínculo OIDC e o Writer restrito ao repositório foram aplicados com 3 adições,
 0 alterações e 0 destruições. Seu secret, sua variável desligada e seu rótulo
-passivo também foram cadastrados. O auditor passou em 12/13: o workflow ainda
-precisa chegar à branch `main` antes da primeira execução protegida, e o novo
-gate humano precisa ser comprovado por uma execução de engenharia.
+passivo também foram cadastrados. Antes do merge, o auditor passou em 12/13
+porque o workflow ainda precisava chegar à branch `main`; o novo gate humano
+também continuava pendente de uma execução de engenharia.
+
+O PR #1 foi mesclado em `main` no commit `895473c0` após os três checks
+obrigatórios passarem. A auditoria pós-merge confirma 12/12 controles de
+infraestrutura prontos; o único controle de candidata está inativo porque não
+há mais um PR aberto. Nenhum workflow cloud foi executado, e a próxima candidata
+deve começar sem rótulos e com ambas as variáveis financeiras em `false`.

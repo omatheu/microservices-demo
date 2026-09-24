@@ -276,6 +276,12 @@ pós-apply não possui drift, as variáveis financeiras continuam `false`, o PR 
 continua desarmado e nenhuma imagem foi publicada. A auditoria passou em 12/13;
 o único bloqueio é o workflow revisado ainda não estar na `main`.
 
+Após o merge, o workflow está em `main`. O auditor agora explicita duas
+dimensões: os 12 controles estruturais estão prontos, enquanto o único controle
+da candidata está inativo porque o PR #1 foi encerrado. Um novo PR candidato
+aberto e desarmado é necessário para alcançar 13/13; isso não liga variáveis,
+não anexa rótulos e não autoriza publicação.
+
 Depois da revisão dos dois manifests propostos, o próximo passo também é
 gerado sem tocar na árvore ativa:
 
