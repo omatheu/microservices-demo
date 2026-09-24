@@ -273,8 +273,9 @@ eventos posteriores e separados.
 Em 22/09/2026 UTC, uma autorização posterior levou à aplicação daquele mesmo
 plano binário: 3 recursos IAM adicionados, 0 alterados e 0 destruídos. O estado
 pós-apply não possui drift, as variáveis financeiras continuam `false`, o PR #1
-continua desarmado e nenhuma imagem foi publicada. A auditoria passou em 12/13;
-o único bloqueio é o workflow revisado ainda não estar na `main`.
+continuava desarmado e nenhuma imagem havia sido publicada. Na auditoria
+pré-merge, 12/13 controles passaram; o único bloqueio naquele momento era o
+workflow revisado ainda não estar na `main`.
 
 Após o merge, o workflow está em `main`. O auditor agora explicita duas
 dimensões: os 12 controles estruturais estão prontos, enquanto o único controle

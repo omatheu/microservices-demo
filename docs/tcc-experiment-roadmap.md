@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 21 de setembro de 2026.
+> **Última verificação:** 24 de setembro de 2026.
 
 ## Objetivo do experimento
 
@@ -323,9 +323,10 @@ decisão pareada, um job sem identidade GCP aguarda o ambiente protegido
 `tcc-deployment-approval`, consulta o histórico oficial de aprovações do run e
 registra o revisor em um recibo ligado por hash ao gate e à ação. O ambiente foi
 criado no GitHub com `omatheu` como revisor obrigatório e somente a branch
-`main` permitida. O item permanece aberto até o workflow alcançar `main` e uma
-execução de engenharia comprovar a pausa e a retomada; a aprovação continua sem
-autorizar execução cloud ou mutação operacional.
+`main` permitida, e o workflow já foi incorporado à branch padrão pelo PR #1.
+O item permanece aberto até uma nova execução de engenharia comprovar a pausa e
+a retomada; a aprovação continua sem autorizar execução cloud ou mutação
+operacional.
 
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,
@@ -394,10 +395,11 @@ para PR do próprio repositório com candidata opaca, dois rótulos explícitos,
 aprovação do ambiente protegido e trava financeira. A identidade federada, o
 ambiente protegido, os secrets, a variável financeira inicialmente `false`, os
 rótulos e a proteção de `main` já foram aplicados. Nenhum rótulo foi anexado ao
-PR #1. Ainda faltam incorporar os workflows à branch padrão e validar uma
-execução cloud de engenharia por PR. O workflow sem cloud já foi validado no PR
-#1: seus 22 gates passaram, a evidência foi publicada e os workflows herdados
-sem proteção foram aposentados.
+PR #1. Os dois workflows foram incorporados à branch padrão pelo merge desse
+PR. O workflow sem cloud foi validado nele: seus 22 gates passaram, a evidência
+foi publicada e os workflows herdados sem proteção foram aposentados. Resta
+validar uma execução cloud de engenharia por um novo PR explicitamente
+autorizado.
 
 A prontidão para o congelamento agora possui auditoria executável em
 `experiment/scripts/audit-protocol-freeze.py`. Ela mantém a coleta bloqueada e
@@ -457,9 +459,9 @@ O relatório de 9/9 preserva a validação pré-apply e não constitui autoriza�
 por si só. O apply posterior criou exatamente os três recursos, e um novo plano
 confirmou zero drift. O recibo está em
 [`../experiment/evidence/finance/runtime-publication-controls-installation-20260922T033857Z.json`](../experiment/evidence/finance/runtime-publication-controls-installation-20260922T033857Z.json).
-A auditoria pós-instalação passou em 12/13; resta somente incorporar o workflow
-revisado à `main`. Nenhuma imagem foi publicada e as duas travas financeiras
-permanecem desligadas.
+Na auditoria pós-instalação anterior ao merge, 12/13 controles passaram e
+restava somente incorporar o workflow revisado à `main`. Nenhuma imagem foi
+publicada e as duas travas financeiras permaneceram desligadas.
 
 O PR #1 foi posteriormente mesclado em `main` no commit `895473c0`, depois de
 os três checks do head `269c9fbe` passarem. O workflow protegido agora está
