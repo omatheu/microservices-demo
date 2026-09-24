@@ -297,6 +297,10 @@
       "path": "experiment/scripts/run-comparative-candidate.sh",
       "sha256": "646cb32d1b12c85404520a38870767534fa6ccce53c940723f08c945caee2739"
     },
+    "experimental_workload_cleanup": {
+      "path": "experiment/scripts/cleanup-experimental-workloads.sh",
+      "sha256": "6eac521294f6106ceed90b3316b40211d08c6e52909bc7d2616517d85c6a38a0"
+    },
     "deployment_action_preparer": {
       "path": "experiment/scripts/prepare-deployment-action.py",
       "sha256": "6c15de807426c745c26c12fc65ca55f3fbef02dfd0d8ca6ba5aed0b7f94a6d63"
@@ -335,7 +339,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "9cd71c4f6064998cf48ed45c82baae218be96072b10e34642fd8cdea60eee28a"
+      "sha256": "2c917e03aafa83d99d65f3e7a5f4d662c2dde231b35eae7602e513d844962988"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -343,7 +347,7 @@
     },
     "cloud_experiment_workflow": {
       "path": ".github/workflows/tcc-pr-experiment.yaml",
-      "sha256": "27fbd381e3b31ef0c4d2b9704f508f8f018b0dbe94528cd29d6e4b20075a0c0e"
+      "sha256": "f66bf1779855c302d97aea8f6fbb97452177cc33726d584d148fed84f8fb485a"
     },
     "billing_export_infrastructure": {
       "path": "infra/terraform-billing-export/main.tf",

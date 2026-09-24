@@ -237,6 +237,7 @@ jobs:
           install_components: gke-gcloud-auth-plugin
 
       - name: Bind Docker and kubectl to the experiment project
+        id: cluster
         shell: bash
         run: |
           set -euo pipefail
@@ -244,10 +245,12 @@ jobs:
           gcloud container clusters get-credentials online-boutique-experiment \
             --region us-central1 \
             --project microservices-demo-tcc
+          echo "connected=true" >> "${GITHUB_OUTPUT}"
 
       - name: Publish and attest the exact engineering runtime images
         id: publish_runtimes
         if: steps.candidate.outputs.mode == 'engineering'
+        timeout-minutes: 45
         shell: bash
         env:
           SOURCE_COMMIT: ${{ needs.authorize.outputs.head_sha }}
@@ -318,6 +321,7 @@ jobs:
 
       - name: Run the paired conventional and PDT pipeline
         id: paired
+        timeout-minutes: 105
         shell: bash
         env:
           MODE: ${{ steps.candidate.outputs.mode }}
@@ -343,6 +347,17 @@ jobs:
           ' "${pipeline_dir}/summary.json")
           echo "human_gate_required=${human_gate_required}" >> "${GITHUB_OUTPUT}"
 
+      - name: Enforce cleanup of billable experimental workloads
+        if: always() && steps.cluster.outputs.connected == 'true'
+        timeout-minutes: 15
+        shell: bash
+        env:
+          ALLOW_EXPERIMENTAL_CLEANUP: "true"
+          OUTPUT_FILE: ${{ runner.temp }}/experimental-cleanup.json
+        run: |
+          set -euo pipefail
+          ./experiment/scripts/cleanup-experimental-workloads.sh
+
       - name: Upload paired experimental evidence
         if: always()
         uses: actions/upload-artifact@v7
@@ -354,6 +369,7 @@ jobs:
             experiment/evidence/pdt-state/operational-state-*/
             experiment/evidence/pdt-cycles/pdt-${{ steps.candidate.outputs.candidate_id }}-*/
             experiment/evidence/pipeline/paired-${{ steps.candidate.outputs.candidate_id }}-*/
+            ${{ runner.temp }}/experimental-cleanup.json
           if-no-files-found: warn
           retention-days: 14
 

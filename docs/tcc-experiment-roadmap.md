@@ -661,6 +661,8 @@ intervalo de confiança quando o número de repetições permitir.
 - [ ] habilitar o Standard usage cost export no Console do Cloud Billing;
 - [ ] exportar e conferir custo diariamente durante execuções;
 - [x] definir rotina de desligamento ao final de cada janela;
+- [x] exigir cleanup final fail-closed dos workloads de `staging`, `pdt` e
+  `pdt-system` no workflow;
 - [x] remover workloads ociosos;
 - [ ] excluir o cluster ao concluir a coleta;
 - [ ] verificar faturamento final após o atraso de contabilização.
@@ -668,6 +670,13 @@ intervalo de confiança quando o número de repetições permitir.
 O orçamento do Google Cloud gera alertas, mas não constitui um limite rígido de
 gastos. As quotas, a execução sequencial dos ambientes e a destruição dos
 recursos são as contenções efetivas.
+
+O workflow protegido agora reserva uma janela própria após a execução pareada
+para um cleanup independente dos runners internos. O script valida o contexto
+exato do cluster, restringe a mutação aos controladores de `staging`, `pdt` e
+`pdt-system`, não remove volumes e falha se qualquer pod ativo permanecer. Essa
+proteção foi implementada e testada localmente, mas ainda não foi exercitada no
+cluster porque nenhuma nova execução cloud foi autorizada.
 
 ## Definição de experimento completo
 

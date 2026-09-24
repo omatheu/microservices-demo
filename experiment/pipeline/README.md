@@ -177,6 +177,16 @@ andamento, para não interromper o cleanup. Ele usa o projeto
 Registry com retenção curta já provisionado. Nenhum passo faz deploy no
 namespace operacional.
 
+Além do cleanup interno de staging e PDT, o workflow limita separadamente a
+publicação e a execução pareada para preservar uma etapa final independente no
+limite total do job. Essa etapa roda mesmo quando o pipeline pareado falha,
+desde que a conexão com o cluster tenha sido concluída, e remove somente
+Deployments de `staging` e `pdt` e Jobs de `pdt-system`. Ela
+recusa qualquer contexto Kubernetes diferente do cluster revisado, não toca
+`operational`, `oracle` ou volumes persistentes e produz evidência JSON exigindo
+zero pods ativos. O script é
+[`cleanup-experimental-workloads.sh`](../scripts/cleanup-experimental-workloads.sh).
+
 Em 21/09/2026, a identidade federada e essas configurações do GitHub foram
 aplicadas. O ambiente `tcc-deployment-approval` também foi criado com
 `omatheu` como revisor obrigatório, política restrita à branch `main` e sem

@@ -341,8 +341,9 @@ arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
 explícita do pesquisador.
 
 O auditor de congelamento, o auditor da publicação dos runtimes, o validador do
-plano Terraform, o preparador do candidato, o finalizador e o próprio validador
-agora também fazem parte dos 29 inputs selados do protocolo. Assim, as regras
+plano Terraform, o preparador do candidato, o finalizador, o cleanup restrito
+dos workloads experimentais e o próprio validador agora também fazem parte dos
+30 inputs selados do protocolo. Assim, as regras
 que decidem a prontidão e materializam a proposta final não podem ser trocadas
 silenciosamente depois da aprovação do desenho.
 

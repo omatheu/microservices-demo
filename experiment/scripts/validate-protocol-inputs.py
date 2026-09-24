@@ -12,6 +12,7 @@ REQUIRED_INPUTS = {
     "ci_policy",
     "conventional_ci_runner",
     "comparative_pipeline_runner",
+    "experimental_workload_cleanup",
     "deployment_action_preparer",
     "human_gate_recorder",
     "confirmatory_analyzer",
