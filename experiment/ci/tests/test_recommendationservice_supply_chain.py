@@ -32,8 +32,13 @@ class RecommendationServiceSupplyChainTests(unittest.TestCase):
         self.assertIn("pip install --no-cache-dir --upgrade", dockerfile)
         self.assertIn("pip uninstall --yes pip", dockerfile)
         self.assertIn("COPY --from=builder /opt/venv /opt/venv", dockerfile)
+        self.assertIn("COPY --chown=10001:10001 . .", dockerfile)
         self.assertIn("python -m compileall -q /recommendationservice", dockerfile)
         self.assertIn("USER 10001:10001", dockerfile)
+        self.assertLess(
+            dockerfile.index("USER 10001:10001"),
+            dockerfile.index("python -m compileall -q /recommendationservice"),
+        )
 
 
 if __name__ == "__main__":
