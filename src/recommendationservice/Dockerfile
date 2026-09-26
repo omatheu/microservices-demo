@@ -55,6 +55,7 @@ ENV PATH="/opt/venv/bin:${PATH}"
 
 # Add the application
 COPY . .
+RUN python -m compileall -q /recommendationservice
 
 # set listen port
 ENV PORT="8080"
