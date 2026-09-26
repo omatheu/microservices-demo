@@ -414,6 +414,8 @@ durante a decisão.
 - [x] estratificar casos independentes e dependentes do estado operacional;
 - [x] definir tamanho do corpus por viabilidade e custo antes de observar resultados;
 - [x] validar geração de identificadores opacos e separação do manifesto em uma prévia inelegível;
+- [x] validar localmente build, SBOM, scans e CI convencional das 14
+  candidatas de runtime do corpus de engenharia;
 - [ ] congelar sementes, repetições, ordem e regra de parada;
 - [x] propor teto de duração, custo incremental e capacidade-tempo por decisão;
 - [ ] vedar o conjunto de avaliação contra calibração do PDT.
@@ -437,10 +439,25 @@ determinística e cobertura de todas as combinações de parâmetros. O controle
 `INF-REPLICA-01` foi deliberadamente redesenhado como falha óbvia que um
 staging competente deve bloquear; `DEP-CURRENCY-01` passou a produzir uma
 alteração semântica condicional real. Isso impede contar um no-op ou uma
-mutação equivalente como evidência favorável ao PDT. A validação de execução
-das imagens materializadas, a publicação imutável dos runtimes e uma execução
-cloud do oráculo ainda são pré-requisitos para congelar o protocolo; a
-implementação independente do oráculo já está concluída.
+mutação equivalente como evidência favorável ao PDT. A validação local das
+imagens materializadas foi concluída para as 14 candidatas de runtime; a
+publicação imutável dos runtimes e uma execução cloud do oráculo ainda são
+pré-requisitos para congelar o protocolo. A implementação independente do
+oráculo já está concluída.
+
+A matriz local final, vinculada ao commit `c32a34b2`, executou os 22 gates da
+CI e 17 validações de artefato. As quatro candidatas seguras passaram. Das dez
+prejudiciais, nove passaram e somente `FUNC-AMOUNT-01` foi bloqueada por testes
+unitários e contratos semânticos. Isso é prontidão de engenharia, não resultado
+experimental: não houve staging, PDT, revelação pré-decisão, GCP ou publicação.
+Os falsos bloqueios observados durante a preparação foram eliminados antes da
+rodada registrada, inclusive o autoteste que reaplicava a mutação sobre o
+próprio arquivo candidato. A evidência sanitizada está em
+[`runtime-candidate-matrix-preflight-20260926T200948Z.json`](../experiment/evidence/ci-cd/runtime-candidate-matrix-preflight-20260926T200948Z.json).
+Como os rótulos reservados desse corpus de engenharia foram revelados e agora
+constam na evidência versionada, ele não pode ser promovido a corpus
+confirmatório. Depois do congelamento será necessário gerar uma nova instância
+cega com chave, IDs, ordem e compromisso próprios.
 
 Cada candidata será avaliada de forma pareada por staging e PDT. Os dois usam
 as mesmas invariantes e SLOs. Primeiro é selada a decisão da CI/CD convencional
@@ -627,9 +644,11 @@ pré-artefato de um corpus de engenharia atual: as quatro foram bloqueadas pela
 CI, as quatro verificações independentes foram válidas e todas observaram dano
 em concordância com o rótulo reservado. O registro sanitizado está em
 [`../experiment/evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json`](../experiment/evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json).
-A execução continua inelegível para a análise principal. Ainda faltam validar
-o caminho Kubernetes com candidatas materializadas, validar todas as imagens e
-realizar a execução cega confirmatória posterior às decisões seladas.
+A execução continua inelegível para a análise principal. As imagens das 14
+candidatas de runtime já passaram pelo preflight local; ainda faltam publicá-las
+e vinculá-las por digest, validar o caminho Kubernetes com as candidatas
+materializadas e realizar a execução cega confirmatória posterior às decisões
+seladas.
 
 O runner agora permite ao oráculo percorrer todas as alternativas implantáveis
 que a definição candidata e a decisão PDT selada têm em comum, mesmo quando o

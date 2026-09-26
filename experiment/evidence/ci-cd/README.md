@@ -6,6 +6,36 @@ relatórios dos scanners, SBOM, resultados por gate e uma decisão pré-staging.
 O conteúdo gerado só constitui evidência confirmatória quando o protocolo e a
 política estiverem congelados e a execução usar `MODE=confirmatory`.
 
+## Matriz local das candidatas de runtime em 26/09/2026
+
+As 14 candidatas de runtime do corpus de engenharia `corpus-bfgvbgq63vyd4`
+foram materializadas e seladas separadamente sobre o commit `c32a34b2`. Cada
+uma percorreu os 22 gates locais da CI convencional, build das imagens
+afetadas, geração de SBOM e scans de filesystem e imagem.
+
+O resultado foi 13 `PASS` e um `BLOCK`. As quatro candidatas seguras passaram;
+entre as dez prejudiciais, nove passaram e `FUNC-AMOUNT-01` foi bloqueada pelos
+testes unitários e contratos semânticos. Foram 17 validações de artefato — 14
+do `checkoutservice` e uma de cada `paymentservice`, `currencyservice` e
+`recommendationservice` — todas com zero achados HIGH/CRITICAL.
+
+A preparação revelou dois vieses de infraestrutura, e as rodadas afetadas
+foram descartadas: o adaptador Python não permitia atualizar bytecode como
+usuário não privilegiado, e o autoteste do materializador reutilizava o arquivo
+já mutado da candidata como fixture. A rodada registrada usa fontes do
+commit-base para o autoteste e uma imagem Python gravável somente pelo UID/GID
+`10001`, sem conceder privilégios.
+
+O registro sanitizado está em
+[`runtime-candidate-matrix-preflight-20260926T200948Z.json`](runtime-candidate-matrix-preflight-20260926T200948Z.json).
+Ele é somente evidência de prontidão de engenharia: não houve staging, PDT,
+GCP, registry ou publicação de imagens; os worktrees, patches, ordens de
+trabalho e logs privados foram destruídos após a extração dos hashes. Volumes
+Docker não foram removidos nem modificados. Como os rótulos foram revelados e
+versionados depois dessa execução, esse corpus fica aposentado para qualquer
+coleta confirmatória; um novo corpus cego deverá ser gerado somente após o
+congelamento do protocolo.
+
 ## Preflight local das imagens de runtime em 26/09/2026
 
 As três imagens adicionais necessárias ao PDT e ao oráculo foram reconstruídas
