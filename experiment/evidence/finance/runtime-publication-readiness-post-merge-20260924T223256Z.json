@@ -1,0 +1,97 @@
+{
+  "blocking_requirements": [
+    "pull-request-safe-disarmed-state"
+  ],
+  "candidate_blocking_requirements": [
+    "pull-request-safe-disarmed-state"
+  ],
+  "candidate_check_count": 1,
+  "candidate_passed_count": 0,
+  "candidate_ready_for_controlled_enablement": false,
+  "captured_at": "2026-09-24T22:32:56Z",
+  "check_count": 13,
+  "checks": [
+    {
+      "detail": "default_branch=main",
+      "id": "repository-default-branch",
+      "passed": true
+    },
+    {
+      "detail": "reviewed_sha256=27fbd381e3b31ef0c4d2b9704f508f8f018b0dbe94528cd29d6e4b20075a0c0e",
+      "id": "workflow-installed-on-default-branch",
+      "passed": true
+    },
+    {
+      "detail": "missing=[]",
+      "id": "required-labels-defined",
+      "passed": true
+    },
+    {
+      "detail": "required_reviewer_logins=['omatheu']",
+      "id": "protected-environment-review",
+      "passed": true
+    },
+    {
+      "detail": "custom_branch_policies=True; allowed_branches=['main']",
+      "id": "protected-environment-branch-policy",
+      "passed": true
+    },
+    {
+      "detail": "missing=[]",
+      "id": "protected-environment-secrets",
+      "passed": true
+    },
+    {
+      "detail": "invalid_or_missing={}",
+      "id": "financial-kill-switches-disabled",
+      "passed": true
+    },
+    {
+      "detail": "state=closed; draft=False; head_repository=omatheu/microservices-demo; authorization_labels=[]",
+      "id": "pull-request-safe-disarmed-state",
+      "passed": false
+    },
+    {
+      "detail": "service account is active",
+      "id": "runtime-publisher-service-account",
+      "passed": true
+    },
+    {
+      "detail": "user_managed_key_count=0",
+      "id": "runtime-publisher-no-user-managed-keys",
+      "passed": true
+    },
+    {
+      "detail": "repository_writer_bound=True",
+      "id": "runtime-publisher-repository-writer",
+      "passed": true
+    },
+    {
+      "detail": "project_role_bound=False",
+      "id": "runtime-publisher-no-project-role",
+      "passed": true
+    },
+    {
+      "detail": "repository_principal_bound=True",
+      "id": "runtime-publisher-workload-identity",
+      "passed": true
+    }
+  ],
+  "cloud_mutation_performed": false,
+  "collection_errors": {},
+  "environment": "tcc-experiment",
+  "github_mutation_performed": false,
+  "infrastructure_blocking_requirements": [],
+  "infrastructure_check_count": 12,
+  "infrastructure_passed_count": 12,
+  "infrastructure_ready_for_candidate": true,
+  "mechanism": "runtime-publication-readiness-audit",
+  "passed_count": 12,
+  "project_id": "microservices-demo-tcc",
+  "publication_authorized": false,
+  "pull_request_number": 1,
+  "read_only": true,
+  "ready_for_controlled_enablement": false,
+  "repository": "omatheu/microservices-demo",
+  "schema_version": "1.0.0"
+}

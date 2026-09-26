@@ -32,6 +32,31 @@ ou a infraestrutura que condiciona sua execução. O objeto geminado permanece o
 `checkoutservice`. Janelas e repetições reduzem o ruído da medição, mas não
 contam como candidatas independentes na análise estatística.
 
+Os gates determinísticos da CI local executam uma vez por candidata. As partes
+dinâmicas de staging e PDT planejam três repetições e usam a mesma regra
+candidata-nível: pelo menos dois votos seguros são necessários para aprovar uma
+ação. Se a tentativa original e a única substituta de uma repetição falharem
+por infraestrutura, um ledger pré-rótulo permite continuar com duas repetições
+válidas; uma divisão 1/1 bloqueia de forma conservadora. Ausência sem ledger,
+duplicidade ou troca de artefato não produz aprovação. Com menos de duas
+repetições válidas, a candidata é excluída antes da abertura do rótulo. A regra
+é idêntica para controle e tratamento para não favorecer o PDT.
+
+Na agregação do PDT, cada alternativa recebe um voto seguro ou inseguro por
+repetição válida. `deploy-as-is` tem precedência quando alcança dois votos
+seguros; caso contrário, alternativas reconfiguradas com maioria são ordenadas
+por menor custo, mediana de p95 e identificador. A confiança publicada é o
+menor valor das repetições válidas, e a ação preparada usa o snapshot da última
+repetição válida. Essas escolhas foram fixadas antes da coleta para impedir um
+desempate retrospectivo favorável ao tratamento.
+
+O orquestrador confirmatório materializa essa ordem sem concorrência: CI local
+uma vez; todas as repetições de staging; decisão convencional agregada e selada;
+somente depois, as repetições PDT; decisão prescritiva agregada; e gate humano.
+Uma condição nunca é reavaliada depois de conhecer a decisão da condição
+seguinte. Se uma repetição PDT permanecer inválida depois da substituição, a
+candidata é excluída antes do oráculo em vez de recalcular o controle já selado.
+
 ## Condições comparadas
 
 ### Controle: CI/CD convencional completa
@@ -273,8 +298,15 @@ eventos posteriores e separados.
 Em 22/09/2026 UTC, uma autorização posterior levou à aplicação daquele mesmo
 plano binário: 3 recursos IAM adicionados, 0 alterados e 0 destruídos. O estado
 pós-apply não possui drift, as variáveis financeiras continuam `false`, o PR #1
-continua desarmado e nenhuma imagem foi publicada. A auditoria passou em 12/13;
-o único bloqueio é o workflow revisado ainda não estar na `main`.
+continuava desarmado e nenhuma imagem havia sido publicada. Na auditoria
+pré-merge, 12/13 controles passaram; o único bloqueio naquele momento era o
+workflow revisado ainda não estar na `main`.
+
+Após o merge, o workflow está em `main`. O auditor agora explicita duas
+dimensões: os 12 controles estruturais estão prontos, enquanto o único controle
+da candidata está inativo porque o PR #1 foi encerrado. Um novo PR candidato
+aberto e desarmado é necessário para alcançar 13/13; isso não liga variáveis,
+não anexa rótulos e não autoriza publicação.
 
 Depois da revisão dos dois manifests propostos, o próximo passo também é
 gerado sem tocar na árvore ativa:
@@ -334,8 +366,10 @@ arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
 explícita do pesquisador.
 
 O auditor de congelamento, o auditor da publicação dos runtimes, o validador do
-plano Terraform, o preparador do candidato, o finalizador e o próprio validador
-agora também fazem parte dos 29 inputs selados do protocolo. Assim, as regras
+plano Terraform, o preparador do candidato, o finalizador, o cleanup restrito
+dos workloads experimentais, os dois agregadores de repetição, o orquestrador
+confirmatório e o próprio validador agora também fazem parte dos 33 inputs
+selados do protocolo. Assim, as regras
 que decidem a prontidão e materializam a proposta final não podem ser trocadas
 silenciosamente depois da aprovação do desenho.
 

@@ -100,6 +100,16 @@ O campo `cloud_mutation_performed: false` desse arquivo descreve o auditor
 somente leitura; o recibo separado registra as mutações de instalação que o
 precederam.
 
+Depois do merge do PR #1, o workflow revisado passou a existir em `main` e o
+auditor foi refinado para separar prontidão estrutural de prontidão da
+candidata. A leitura de 24/09/2026 UTC comprova **12/12 controles de
+infraestrutura prontos** e **0/1 controle de candidata**, porque o PR #1 está
+corretamente fechado após o merge. O resultado geral permanece 12/13 e não
+autoriza publicação. A evidência está em
+[`runtime-publication-readiness-post-merge-20260924T223256Z.json`](./runtime-publication-readiness-post-merge-20260924T223256Z.json).
+O próximo 13/13 depende de um novo PR candidato aberto, do próprio repositório,
+não draft e inicialmente sem qualquer rótulo de autorização.
+
 Uma leitura posterior da conta de faturamento retornou somente o projeto
 `microservices-demo-tcc` e somente o repositório Docker do experimento, com
 7.843.495 bytes. A projeção conservadora após as três imagens é 236.019.643

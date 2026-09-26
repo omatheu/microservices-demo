@@ -57,6 +57,29 @@ tratamento sem permitir que o PDT substitua qualquer gate convencional:
 5. produz o gate humano e, quando aplicável, prepara a ação e o rollback para o
    ambiente-oráculo, sempre com `operational_mutation_performed: false`.
 
+O caminho confirmatório terá uma decisão candidata-nível, e não uma decisão
+isolada da repetição 1. O agregador convencional exige o plano de três
+repetições de staging com a mesma candidata e os mesmos artefatos e aprova
+somente com dois votos `PASS`. Uma repetição inválida requer o ledger das duas
+tentativas de infraestrutura antes do rótulo. O agregador PDT equivalente agora
+aplica a mesma maioria a cada alternativa, usa mediana de p95 no desempate,
+confiança mínima e o snapshot da última repetição válida. Ambos permanecem fora
+do caminho de engenharia de uma repetição. No modo confirmatório, o workflow
+agora seleciona `run-repeated-comparative-candidate.sh`: executa CI local uma
+vez, três stagings sequenciais, sela o controle agregado, executa os ciclos PDT
+somente após essa vedação, agrega o tratamento e produz um único gate humano.
+Cada repetição admite uma única substituição por falha de infraestrutura e cada
+tentativa é seguida pelo cleanup restrito. O runner recusa iniciar enquanto o
+protocolo não estiver congelado, portanto a integração não habilita coleta por
+si só.
+
+O passo pareado possui limite próprio de 180 minutos. O job reserva tempo
+adicional para publicação/verificação dos runtimes, setup, cleanup final e
+upload de evidências, mas somente o passo pareado pode manter workloads de
+staging/PDT ativos. Esse limite cobre o teto predeclarado de 135 minutos de
+medição por candidata mais overhead e não substitui a revisão financeira por
+bloco.
+
 Depois da revisão, o recibo humano pode ser produzido sem executar o cluster:
 
 ```bash
@@ -177,6 +200,16 @@ andamento, para não interromper o cleanup. Ele usa o projeto
 Registry com retenção curta já provisionado. Nenhum passo faz deploy no
 namespace operacional.
 
+Além do cleanup interno de staging e PDT, o workflow limita separadamente a
+publicação e a execução pareada para preservar uma etapa final independente no
+limite total do job. Essa etapa roda mesmo quando o pipeline pareado falha,
+desde que a conexão com o cluster tenha sido concluída, e remove somente
+Deployments de `staging` e `pdt` e Jobs de `pdt-system`. Ela
+recusa qualquer contexto Kubernetes diferente do cluster revisado, não toca
+`operational`, `oracle` ou volumes persistentes e produz evidência JSON exigindo
+zero pods ativos. O script é
+[`cleanup-experimental-workloads.sh`](../scripts/cleanup-experimental-workloads.sh).
+
 Em 21/09/2026, a identidade federada e essas configurações do GitHub foram
 aplicadas. O ambiente `tcc-deployment-approval` também foi criado com
 `omatheu` como revisor obrigatório, política restrita à branch `main` e sem
@@ -189,6 +222,12 @@ rótulos cloud foi anexado ao PR #1; portanto essa configuração, por si só, n
 iniciou execução cloud. Em 22/09/2026, a identidade de publicação-only, seu
 vínculo OIDC e o Writer restrito ao repositório foram aplicados com 3 adições,
 0 alterações e 0 destruições. Seu secret, sua variável desligada e seu rótulo
-passivo também foram cadastrados. O auditor passou em 12/13: o workflow ainda
-precisa chegar à branch `main` antes da primeira execução protegida, e o novo
-gate humano precisa ser comprovado por uma execução de engenharia.
+passivo também foram cadastrados. Antes do merge, o auditor passou em 12/13
+porque o workflow ainda precisava chegar à branch `main`; o novo gate humano
+também continuava pendente de uma execução de engenharia.
+
+O PR #1 foi mesclado em `main` no commit `895473c0` após os três checks
+obrigatórios passarem. A auditoria pós-merge confirma 12/12 controles de
+infraestrutura prontos; o único controle de candidata está inativo porque não
+há mais um PR aberto. Nenhum workflow cloud foi executado, e a próxima candidata
+deve começar sem rótulos e com ambas as variáveis financeiras em `false`.

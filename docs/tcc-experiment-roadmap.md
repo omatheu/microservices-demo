@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 21 de setembro de 2026.
+> **Última verificação:** 24 de setembro de 2026.
 
 ## Objetivo do experimento
 
@@ -175,7 +175,9 @@ um simples namespace de staging.
 - [x] produzir `PASS` ou `FAIL`, com justificativa;
 - [x] impedir acesso ao snapshot operacional durante a decisão;
 - [x] implementar a consolidação da CI local e do staging em decisão auditável;
+- [x] implementar a agregação candidata-nível de três repetições do staging;
 - [ ] executar a mesma candidata opaca nos gates locais e no staging;
+- [x] implementar a orquestração sequencial das três repetições de staging e PDT;
 - [ ] orquestrar a esteira em CI com identidade cloud de curta duração;
 - [ ] exigir gate humano antes de qualquer implantação operacional.
 
@@ -224,6 +226,27 @@ de `cartservice` e `checkoutservice`, que por sua vez exercitam catálogo,
 câmbio, entrega e pagamento. O checkbox permanece aberto até uma execução
 cloud autorizada comprovar esses casos contra uma candidata implantada.
 
+A decisão convencional confirmatória também deixou de depender de uma única
+janela: `aggregate-conventional-repetitions.py` exige o plano das três
+repetições predeclaradas, o mesmo artefato imutável e a mesma definição de
+candidata, e aplica a regra majoritária 2/3. Uma repetição só pode faltar quando
+um ledger pré-rótulo comprova que a tentativa original e a única substituta
+falharam por infraestrutura; duas repetições seguras ainda são necessárias para
+aprovar. CI local continua executada uma vez por candidata por ser
+determinística. O agregador está testado e selado como input do protocolo, mas
+ainda não foi conectado ao workflow: isso só ocorrerá junto da agregação
+simétrica do PDT, para evitar executar condições com números de repetições
+diferentes.
+
+O orquestrador confirmatório também está implementado localmente. Ele executa a
+CI determinística uma vez, tenta cada repetição de staging no máximo duas vezes,
+sela a decisão convencional agregada e somente então inicia as repetições PDT
+com os mesmos artefatos. Cada tentativa termina em cleanup verificado. Uma
+falha de infraestrutura persistente gera ledger antes do rótulo; se ela ocorrer
+depois do controle já selado e impedir uma comparação pareada, a candidata é
+excluída em vez de alterar retrospectivamente a decisão do controle. O caminho
+permanece sem evidência cloud até uma execução explicitamente autorizada.
+
 ### Fase 4 — Núcleo do Partial Digital Twin
 
 Objetivo: fechar o ciclo observar, simular, avaliar e decidir.
@@ -236,6 +259,7 @@ Objetivo: fechar o ciclo observar, simular, avaliar e decidir.
 - [x] executar as alternativas de maneira isolada;
 - [x] estimar latência, erros e correção funcional;
 - [x] calcular confiança da previsão;
+- [x] implementar a agregação candidata-nível das repetições PDT;
 - [ ] calcular fidelidade após comparação operacional;
 - [x] selecionar uma ação segura;
 - [x] emitir decisão estruturada e auditável.
@@ -282,6 +306,15 @@ previsão do PDT com o perfil basal observado pelo oráculo e registra erro
 assinado, absoluto e relativo, sem usar o rótulo pretendido. O checkbox de
 fidelidade permanece aberto até existirem observações cloud válidas.
 
+O agregador candidata-nível do PDT aplica a mesma maioria 2/3 do controle para
+cada alternativa. `deploy-as-is` só é aprovado com dois votos seguros; caso
+contrário, uma alternativa reconfigurada precisa alcançar a mesma maioria e é
+selecionada por menor custo e depois menor mediana de p95. A confiança agregada
+é o mínimo observado e a ação fica ligada ao snapshot da última repetição
+válida. O mesmo ledger pré-rótulo é obrigatório para uma repetição inválida.
+Essa lógica está testada e selada, mas ainda aguarda o orquestrador sequencial
+antes de qualquer execução confirmatória.
+
 ### Fase 5 — Gate PDT incremental e semiautônomo
 
 Objetivo: acrescentar a previsão à esteira convencional e orientar uma ação
@@ -323,9 +356,10 @@ decisão pareada, um job sem identidade GCP aguarda o ambiente protegido
 `tcc-deployment-approval`, consulta o histórico oficial de aprovações do run e
 registra o revisor em um recibo ligado por hash ao gate e à ação. O ambiente foi
 criado no GitHub com `omatheu` como revisor obrigatório e somente a branch
-`main` permitida. O item permanece aberto até o workflow alcançar `main` e uma
-execução de engenharia comprovar a pausa e a retomada; a aprovação continua sem
-autorizar execução cloud ou mutação operacional.
+`main` permitida, e o workflow já foi incorporado à branch padrão pelo PR #1.
+O item permanece aberto até uma nova execução de engenharia comprovar a pausa e
+a retomada; a aprovação continua sem autorizar execução cloud ou mutação
+operacional.
 
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,
@@ -394,10 +428,11 @@ para PR do próprio repositório com candidata opaca, dois rótulos explícitos,
 aprovação do ambiente protegido e trava financeira. A identidade federada, o
 ambiente protegido, os secrets, a variável financeira inicialmente `false`, os
 rótulos e a proteção de `main` já foram aplicados. Nenhum rótulo foi anexado ao
-PR #1. Ainda faltam incorporar os workflows à branch padrão e validar uma
-execução cloud de engenharia por PR. O workflow sem cloud já foi validado no PR
-#1: seus 22 gates passaram, a evidência foi publicada e os workflows herdados
-sem proteção foram aposentados.
+PR #1. Os dois workflows foram incorporados à branch padrão pelo merge desse
+PR. O workflow sem cloud foi validado nele: seus 22 gates passaram, a evidência
+foi publicada e os workflows herdados sem proteção foram aposentados. Resta
+validar uma execução cloud de engenharia por um novo PR explicitamente
+autorizado.
 
 A prontidão para o congelamento agora possui auditoria executável em
 `experiment/scripts/audit-protocol-freeze.py`. Ela mantém a coleta bloqueada e
@@ -457,9 +492,18 @@ O relatório de 9/9 preserva a validação pré-apply e não constitui autoriza�
 por si só. O apply posterior criou exatamente os três recursos, e um novo plano
 confirmou zero drift. O recibo está em
 [`../experiment/evidence/finance/runtime-publication-controls-installation-20260922T033857Z.json`](../experiment/evidence/finance/runtime-publication-controls-installation-20260922T033857Z.json).
-A auditoria pós-instalação passou em 12/13; resta somente incorporar o workflow
-revisado à `main`. Nenhuma imagem foi publicada e as duas travas financeiras
-permanecem desligadas.
+Na auditoria pós-instalação anterior ao merge, 12/13 controles passaram e
+restava somente incorporar o workflow revisado à `main`. Nenhuma imagem foi
+publicada e as duas travas financeiras permaneceram desligadas.
+
+O PR #1 foi posteriormente mesclado em `main` no commit `895473c0`, depois de
+os três checks do head `269c9fbe` passarem. O workflow protegido agora está
+instalado, e uma auditoria pós-merge separou as dimensões: 12/12 controles de
+infraestrutura prontos e 0/1 controle de candidata, pois o PR já foi encerrado.
+Isso não é falha de infraestrutura nem autorização implícita: o próximo 13/13
+exige um novo PR candidato aberto e desarmado. Nenhum workflow cloud foi
+executado. A evidência está em
+[`../experiment/evidence/finance/runtime-publication-readiness-post-merge-20260924T223256Z.json`](../experiment/evidence/finance/runtime-publication-readiness-post-merge-20260924T223256Z.json).
 
 O passo seguinte também está automatizado localmente:
 `prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um
@@ -650,6 +694,8 @@ intervalo de confiança quando o número de repetições permitir.
 - [ ] habilitar o Standard usage cost export no Console do Cloud Billing;
 - [ ] exportar e conferir custo diariamente durante execuções;
 - [x] definir rotina de desligamento ao final de cada janela;
+- [x] exigir cleanup final fail-closed dos workloads de `staging`, `pdt` e
+  `pdt-system` no workflow;
 - [x] remover workloads ociosos;
 - [ ] excluir o cluster ao concluir a coleta;
 - [ ] verificar faturamento final após o atraso de contabilização.
@@ -657,6 +703,13 @@ intervalo de confiança quando o número de repetições permitir.
 O orçamento do Google Cloud gera alertas, mas não constitui um limite rígido de
 gastos. As quotas, a execução sequencial dos ambientes e a destruição dos
 recursos são as contenções efetivas.
+
+O workflow protegido agora reserva uma janela própria após a execução pareada
+para um cleanup independente dos runners internos. O script valida o contexto
+exato do cluster, restringe a mutação aos controladores de `staging`, `pdt` e
+`pdt-system`, não remove volumes e falha se qualquer pod ativo permanecer. Essa
+proteção foi implementada e testada localmente, mas ainda não foi exercitada no
+cluster porque nenhuma nova execução cloud foi autorizada.
 
 ## Definição de experimento completo
 

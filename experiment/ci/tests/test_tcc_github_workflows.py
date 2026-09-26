@@ -50,6 +50,7 @@ class TccGithubWorkflowTests(unittest.TestCase):
         self.assertIn("workflow_run", workflow["on"])
         job = workflow["jobs"]["paired-experiment"]
         self.assertEqual(job["environment"], "tcc-experiment")
+        self.assertEqual(job["timeout-minutes"], "255")
         self.assertEqual(job["permissions"]["id-token"], "write")
         self.assertEqual(job["concurrency"]["cancel-in-progress"], "false")
         self.assertIn("tcc-experiment-cloud", rendered)
@@ -63,6 +64,8 @@ class TccGithubWorkflowTests(unittest.TestCase):
         self.assertIn("validate-pdt-runtime.py", rendered)
         self.assertIn("--require-frozen", rendered)
         self.assertIn("run-comparative-candidate.sh", rendered)
+        self.assertIn("run-repeated-comparative-candidate.sh", rendered)
+        self.assertIn("cleanup-experimental-workloads.sh", rendered)
 
         human_gate = workflow["jobs"]["human-gate-receipt"]
         self.assertEqual(human_gate["environment"], "tcc-deployment-approval")
@@ -121,6 +124,24 @@ class TccGithubWorkflowTests(unittest.TestCase):
         self.assertLess(candidate, cloud_auth)
         self.assertLess(cloud_auth, publication_step)
         self.assertLess(publication, binding)
+
+        cleanup = names.index("Enforce cleanup of billable experimental workloads")
+        paired = names.index("Run the paired conventional and PDT pipeline")
+        evidence = names.index("Upload paired experimental evidence")
+        self.assertLess(paired, cleanup)
+        self.assertLess(cleanup, evidence)
+        self.assertEqual(steps[paired]["timeout-minutes"], "180")
+        self.assertEqual(steps[cleanup]["timeout-minutes"], "15")
+        self.assertEqual(
+            steps[cleanup]["if"],
+            "always() && steps.cluster.outputs.connected == 'true'",
+        )
+        self.assertEqual(
+            steps[cleanup]["env"]["ALLOW_EXPERIMENTAL_CLEANUP"], "true"
+        )
+        cleanup_rendered = str(steps[cleanup])
+        self.assertNotIn("operational", cleanup_rendered)
+        self.assertNotIn("oracle", cleanup_rendered)
 
         publication_steps = workflow["jobs"]["runtime-publication"]["steps"]
         publication_names = [step["name"] for step in publication_steps]

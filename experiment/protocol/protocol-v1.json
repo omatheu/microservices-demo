@@ -251,6 +251,16 @@
     "functional_rule": "Any reproducible contract violation in a valid repetition marks that repetition harmful.",
     "nonfunctional_rule": "At least two of three valid repetitions must violate a frozen SLO for candidate-level harm.",
     "minimum_valid_repetitions": 2,
+    "mechanism_repetition_rule": {
+      "planned_repetitions": 3,
+      "minimum_valid_repetitions": 2,
+      "safe_votes_to_approve": 2,
+      "applies_symmetrically_to_control_and_treatment": true,
+      "incomplete_outcome": "retry-once-before-label-then-exclude-or-block",
+      "pdt_metric_aggregation": "median",
+      "pdt_confidence_aggregation": "minimum",
+      "pdt_action_snapshot": "latest-valid-repetition"
+    },
     "infrastructure_retry_rule": "One replacement attempt is allowed for a repetition classified as infrastructure-invalid before opening the oracle label.",
     "candidate_exclusion_rule": "Exclude without replacement only when fewer than two repetitions remain valid after the single authorized retry; preserve a hash-bound pre-label ledger for every invalid attempt and report the opaque candidate identity and reason."
   },
@@ -293,9 +303,17 @@
       "path": "experiment/scripts/run-conventional-ci-local.sh",
       "sha256": "b22498248cbf32dac4ec5086a14d4a9d748c77f6b7c9535a7cb21a7ead9cbd20"
     },
+    "conventional_repetition_aggregator": {
+      "path": "experiment/scripts/aggregate-conventional-repetitions.py",
+      "sha256": "99d7bc3cb8a8af86f5aaf1572b7cd4296c2b0d8f32d81fe4352b9a343e8ae1d4"
+    },
     "comparative_pipeline_runner": {
       "path": "experiment/scripts/run-comparative-candidate.sh",
       "sha256": "646cb32d1b12c85404520a38870767534fa6ccce53c940723f08c945caee2739"
+    },
+    "experimental_workload_cleanup": {
+      "path": "experiment/scripts/cleanup-experimental-workloads.sh",
+      "sha256": "6eac521294f6106ceed90b3316b40211d08c6e52909bc7d2616517d85c6a38a0"
     },
     "deployment_action_preparer": {
       "path": "experiment/scripts/prepare-deployment-action.py",
@@ -308,6 +326,10 @@
     "confirmatory_analyzer": {
       "path": "experiment/scripts/analyze-confirmatory-results.py",
       "sha256": "abdcaee4cfbff26ad5bfb0ac1ae2bfe8dd5635bef01108a1baeeb57d565a04c4"
+    },
+    "confirmatory_repetition_runner": {
+      "path": "experiment/scripts/run-repeated-comparative-candidate.sh",
+      "sha256": "e5085d11fa602adb5b3d9659d2f2a79d6911c202d5382d24248fb67ed1a8ce24"
     },
     "analysis_dataset_composer": {
       "path": "experiment/scripts/compose-analysis-dataset.py",
@@ -327,7 +349,7 @@
     },
     "runtime_publication_readiness_auditor": {
       "path": "experiment/scripts/audit-runtime-publication-readiness.py",
-      "sha256": "84ee15a73b403964af3bff4cce79374417fd93efd5b633078245cad72d01faf2"
+      "sha256": "32c74bbd04de8d37d62adf40a9948221f818811017450d92ec48d4af260ac2eb"
     },
     "runtime_publication_terraform_plan_validator": {
       "path": "experiment/scripts/validate-runtime-publication-terraform-plan.py",
@@ -335,7 +357,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "9cd71c4f6064998cf48ed45c82baae218be96072b10e34642fd8cdea60eee28a"
+      "sha256": "4a93e57196282808b8166d1997a021fa52cabe78fd97dcd9ecaac5c294917eb8"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -343,7 +365,7 @@
     },
     "cloud_experiment_workflow": {
       "path": ".github/workflows/tcc-pr-experiment.yaml",
-      "sha256": "27fbd381e3b31ef0c4d2b9704f508f8f018b0dbe94528cd29d6e4b20075a0c0e"
+      "sha256": "236eccadc6bb220e8c0966d9fbe9b6738adfe53fcd61c84f4ce65c0e8b9e2535"
     },
     "billing_export_infrastructure": {
       "path": "infra/terraform-billing-export/main.tf",
@@ -388,6 +410,10 @@
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
       "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+    },
+    "pdt_repetition_aggregator": {
+      "path": "experiment/scripts/aggregate-pdt-repetitions.py",
+      "sha256": "fc7011789726c5f6f3e3c2cf8a7fb2d4f8299de751decf2ca0bb61cc0d7603be"
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",

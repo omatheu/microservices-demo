@@ -92,6 +92,12 @@ class AuditRuntimePublicationReadinessTests(unittest.TestCase):
 
         self.assertEqual(13, result["check_count"])
         self.assertEqual(13, result["passed_count"])
+        self.assertEqual(12, result["infrastructure_check_count"])
+        self.assertEqual(12, result["infrastructure_passed_count"])
+        self.assertTrue(result["infrastructure_ready_for_candidate"])
+        self.assertEqual(1, result["candidate_check_count"])
+        self.assertEqual(1, result["candidate_passed_count"])
+        self.assertTrue(result["candidate_ready_for_controlled_enablement"])
         self.assertTrue(result["ready_for_controlled_enablement"])
         self.assertEqual([], result["blocking_requirements"])
         self.assertTrue(result["read_only"])
@@ -147,6 +153,24 @@ class AuditRuntimePublicationReadinessTests(unittest.TestCase):
             "pull-request-safe-disarmed-state", result["blocking_requirements"]
         )
         self.assertIn("runtime-publisher-no-project-role", result["blocking_requirements"])
+
+    def test_merged_pull_request_keeps_infrastructure_ready_but_candidate_inactive(self):
+        value = snapshot()
+        value["pull_request"]["state"] = "closed"
+        value["pull_request"]["merged_at"] = "2026-09-23T05:01:03Z"
+
+        result = MODULE.audit(value, 1)
+
+        self.assertEqual(12, result["passed_count"])
+        self.assertTrue(result["infrastructure_ready_for_candidate"])
+        self.assertEqual([], result["infrastructure_blocking_requirements"])
+        self.assertFalse(result["candidate_ready_for_controlled_enablement"])
+        self.assertEqual(0, result["candidate_passed_count"])
+        self.assertEqual(
+            ["pull-request-safe-disarmed-state"],
+            result["candidate_blocking_requirements"],
+        )
+        self.assertFalse(result["ready_for_controlled_enablement"])
 
     def test_unreadable_project_policy_fails_closed(self):
         value = snapshot()
