@@ -309,7 +309,7 @@
     },
     "comparative_pipeline_runner": {
       "path": "experiment/scripts/run-comparative-candidate.sh",
-      "sha256": "646cb32d1b12c85404520a38870767534fa6ccce53c940723f08c945caee2739"
+      "sha256": "602864b0f67bdfe26a08104909608e9e3a0bd1a955e5c269e61b9cd5ab944bf4"
     },
     "experimental_workload_cleanup": {
       "path": "experiment/scripts/cleanup-experimental-workloads.sh",
@@ -329,7 +329,7 @@
     },
     "confirmatory_repetition_runner": {
       "path": "experiment/scripts/run-repeated-comparative-candidate.sh",
-      "sha256": "e5085d11fa602adb5b3d9659d2f2a79d6911c202d5382d24248fb67ed1a8ce24"
+      "sha256": "7a9f5ff04404842b83b3afbe2a828cc4f01655c20dfa569c8cf4b34e3663b849"
     },
     "analysis_dataset_composer": {
       "path": "experiment/scripts/compose-analysis-dataset.py",
@@ -429,7 +429,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "e41e7a1ec5e9b51c68820d0803cc86de0be16a75f29527daeeb61d61af865203"
+      "sha256": "80272edb041dafe445617b419fbdc91d5b81e77b52cb3231260178e73195529d"
     }
   },
   "required_before_freeze": [

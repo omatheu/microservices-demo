@@ -24,6 +24,14 @@ class ComparativeCandidateRunnerTests(unittest.TestCase):
             'cp "$snapshot_file" "${pipeline_dir}/pdt-input-state.json"',
             rendered,
         )
+        self.assertIn(
+            'cp "$snapshot_file" "${pipeline_dir}/oracle-binding-snapshot.json"',
+            rendered,
+        )
+        self.assertIn(
+            'cp "$oracle_snapshot_file" "${pipeline_dir}/oracle-binding-snapshot.json"',
+            rendered,
+        )
 
     def test_cloud_execution_is_fail_closed_before_cluster_access(self):
         candidate = json.loads(CANDIDATE_PATH.read_text(encoding="utf-8"))

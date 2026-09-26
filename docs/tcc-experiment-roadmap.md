@@ -568,6 +568,7 @@ PDT, não apenas sua decisão.
 - [x] implementar perfis não funcionais e compositor da observação do oráculo;
 - [x] gerar runtime Kubernetes mínimo, privado e vinculado aos artefatos selados;
 - [x] implementar o runner do ciclo do oráculo com cleanup obrigatório e trava financeira;
+- [x] implementar a orquestração candidata-nível da matriz de alternativas e repetições;
 - [ ] validar o runner em execução de engenharia no namespace `oracle`;
 - [x] implementar adjudicação independente das candidatas bloqueadas antes de existir artefato implantável;
 - [ ] validar essa adjudicação nas candidatas pré-artefato materializadas e seladas;
@@ -610,6 +611,19 @@ três repetições e produz o resumo candidata-nível previsto no protocolo. O
 compositor e o analisador final já exigem e consomem esse agregado sem tratar
 repetições técnicas como amostras independentes. Os itens quantitativos
 continuam pendentes de execução real.
+
+O orquestrador candidata-nível também está implementado localmente. Ele libera
+o item privado somente depois das decisões e, quando aplicável, da aprovação
+humana; executa a matriz de forma sequencial; adjudica o ground truth; agrega a
+fidelidade apenas sobre repetições PDT válidas; e separa fisicamente evidência
+pública de resultados privados. A esteira pareada foi alinhada à regra
+pré-registrada de duas repetições válidas: uma repetição PDT que permaneça
+inválida após a única substituição não exclui mais automaticamente a candidata
+quando ainda existem duas válidas e um ledger pré-rótulo completo. A exclusão
+continua obrigatória abaixo desse mínimo. Os runners também persistem um
+`oracle-binding-snapshot.json` canônico antes da abertura do rótulo, inclusive
+quando o controle bloqueia depois de staging. A integração desse orquestrador
+ao workflow protegido e sua execução no cluster continuam pendentes.
 
 ### Fase 8 — Análise final
 

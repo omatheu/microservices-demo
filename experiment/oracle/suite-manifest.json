@@ -89,6 +89,10 @@
       "sha256": "33f0b7130bf400ae3d07e56de4711d3532b35e8dd891a1351e490db01645c283"
     },
     {
+      "path": "experiment/scripts/run-oracle-candidate.py",
+      "sha256": "fe41abb5883be24582e63ea1b1b4ca0d6e21342fdf2166898fbed98fa9f025cf"
+    },
+    {
       "path": "experiment/scripts/validate-human-gate-receipt.py",
       "sha256": "d87148a328f6c7c9a1fabf04697f5bd0765b12bcad9f20c2f67d5c936e63aeca"
     },

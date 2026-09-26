@@ -84,6 +84,26 @@ Falhas funcionais da candidata não encerram o runner: o harness permanece
 disponível e as transforma em observações. Falhas do harness ou da referência
 independente invalidam a execução.
 
+O orquestrador candidata-nível
+[`../scripts/run-oracle-candidate.py`](../scripts/run-oracle-candidate.py)
+executa esse runner sequencialmente para o produto cartesiano de todas as
+alternativas implantáveis e das três repetições. Antes de liberar o item
+privado, ele confere o término da esteira pareada, o snapshot canônico
+`oracle-binding-snapshot.json`, os hashes das previsões por repetição, o ledger
+pré-rótulo e, quando aplicável, a cadeia do gate humano. Depois da matriz, ele
+encadeia adjudicação e agregação de fidelidade. Os artefatos que contêm
+operador, parâmetros, rótulo pretendido ou resultado adjudicado ficam em
+`private/` com permissões restritivas; `public/summary.json` contém apenas
+identidades opacas, contagens e hashes e é recusado se qualquer chave privada
+aparecer em qualquer profundidade.
+
+As esteiras pareadas de uma e de três repetições agora persistem o mesmo nome
+canônico de snapshot. Quando staging bloqueia depois do build, esse snapshot é
+capturado depois do selo da decisão e antes da liberação do rótulo. Quando o
+controle aprova, ele é exatamente o snapshot da última repetição PDT válida
+que alimenta a ação agregada. Assim, ambos os caminhos permanecem vinculados à
+mesma instância operacional sem depender de caminhos temporários do runner.
+
 Exemplo de invocação, somente depois do congelamento e da revisão financeira:
 
 ```bash
@@ -131,7 +151,7 @@ perfis de desempenho, limites de saúde e a regra de duas repetições prejudici
 entre pelo menos duas válidas. `adjudicate-oracle.py` já implementa e testa essa
 regra sem usar o rótulo pretendido como entrada da classificação.
 
-[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 24
+[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 25
 arquivos que definem a política, o harness, os avaliadores e o runner. O
 validador `validate-oracle-suite.py` falha se qualquer arquivo mudar. O
 manifesto permanece `pre-registration-candidate` e seus dois digests de imagem
