@@ -50,6 +50,13 @@ menor valor das repetições válidas, e a ação preparada usa o snapshot da ú
 repetição válida. Essas escolhas foram fixadas antes da coleta para impedir um
 desempate retrospectivo favorável ao tratamento.
 
+O orquestrador confirmatório materializa essa ordem sem concorrência: CI local
+uma vez; todas as repetições de staging; decisão convencional agregada e selada;
+somente depois, as repetições PDT; decisão prescritiva agregada; e gate humano.
+Uma condição nunca é reavaliada depois de conhecer a decisão da condição
+seguinte. Se uma repetição PDT permanecer inválida depois da substituição, a
+candidata é excluída antes do oráculo em vez de recalcular o controle já selado.
+
 ## Condições comparadas
 
 ### Controle: CI/CD convencional completa
@@ -360,9 +367,9 @@ explícita do pesquisador.
 
 O auditor de congelamento, o auditor da publicação dos runtimes, o validador do
 plano Terraform, o preparador do candidato, o finalizador, o cleanup restrito
-dos workloads experimentais, os dois agregadores de repetição e o próprio
-validador agora também fazem parte dos 32 inputs selados do protocolo. Assim,
-as regras
+dos workloads experimentais, os dois agregadores de repetição, o orquestrador
+confirmatório e o próprio validador agora também fazem parte dos 33 inputs
+selados do protocolo. Assim, as regras
 que decidem a prontidão e materializam a proposta final não podem ser trocadas
 silenciosamente depois da aprovação do desenho.
 

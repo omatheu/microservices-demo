@@ -152,7 +152,7 @@ jobs:
       - authorize
     if: needs.authorize.outputs.authorized == 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 255
     environment: tcc-experiment
     concurrency:
       group: tcc-experiment-cloud
@@ -321,7 +321,7 @@ jobs:
 
       - name: Run the paired conventional and PDT pipeline
         id: paired
-        timeout-minutes: 105
+        timeout-minutes: 180
         shell: bash
         env:
           MODE: ${{ steps.candidate.outputs.mode }}
@@ -336,7 +336,13 @@ jobs:
           COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
         run: |
           set -euo pipefail
-          ./experiment/scripts/run-comparative-candidate.sh 2>&1 | tee "${RUNNER_TEMP}/paired-experiment.log"
+          if [[ "${MODE}" == "confirmatory" ]]; then
+            ./experiment/scripts/run-repeated-comparative-candidate.sh \
+              2>&1 | tee "${RUNNER_TEMP}/paired-experiment.log"
+          else
+            ./experiment/scripts/run-comparative-candidate.sh \
+              2>&1 | tee "${RUNNER_TEMP}/paired-experiment.log"
+          fi
           pipeline_dir=$(tail -n 1 "${RUNNER_TEMP}/paired-experiment.log")
           [[ -d "${pipeline_dir}" && -f "${pipeline_dir}/summary.json" ]]
           echo "pipeline_dir=${pipeline_dir}" >> "${GITHUB_OUTPUT}"

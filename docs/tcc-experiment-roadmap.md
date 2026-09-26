@@ -177,6 +177,7 @@ um simples namespace de staging.
 - [x] implementar a consolidação da CI local e do staging em decisão auditável;
 - [x] implementar a agregação candidata-nível de três repetições do staging;
 - [ ] executar a mesma candidata opaca nos gates locais e no staging;
+- [x] implementar a orquestração sequencial das três repetições de staging e PDT;
 - [ ] orquestrar a esteira em CI com identidade cloud de curta duração;
 - [ ] exigir gate humano antes de qualquer implantação operacional.
 
@@ -236,6 +237,15 @@ determinística. O agregador está testado e selado como input do protocolo, mas
 ainda não foi conectado ao workflow: isso só ocorrerá junto da agregação
 simétrica do PDT, para evitar executar condições com números de repetições
 diferentes.
+
+O orquestrador confirmatório também está implementado localmente. Ele executa a
+CI determinística uma vez, tenta cada repetição de staging no máximo duas vezes,
+sela a decisão convencional agregada e somente então inicia as repetições PDT
+com os mesmos artefatos. Cada tentativa termina em cleanup verificado. Uma
+falha de infraestrutura persistente gera ledger antes do rótulo; se ela ocorrer
+depois do controle já selado e impedir uma comparação pareada, a candidata é
+excluída em vez de alterar retrospectivamente a decisão do controle. O caminho
+permanece sem evidência cloud até uma execução explicitamente autorizada.
 
 ### Fase 4 — Núcleo do Partial Digital Twin
 

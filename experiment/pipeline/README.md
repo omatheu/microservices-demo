@@ -64,8 +64,21 @@ somente com dois votos `PASS`. Uma repetição inválida requer o ledger das dua
 tentativas de infraestrutura antes do rótulo. O agregador PDT equivalente agora
 aplica a mesma maioria a cada alternativa, usa mediana de p95 no desempate,
 confiança mínima e o snapshot da última repetição válida. Ambos permanecem fora
-do workflow cloud até o orquestrador sequencial estar concluído; até lá, a
-execução existente continua classificada como engenharia.
+do caminho de engenharia de uma repetição. No modo confirmatório, o workflow
+agora seleciona `run-repeated-comparative-candidate.sh`: executa CI local uma
+vez, três stagings sequenciais, sela o controle agregado, executa os ciclos PDT
+somente após essa vedação, agrega o tratamento e produz um único gate humano.
+Cada repetição admite uma única substituição por falha de infraestrutura e cada
+tentativa é seguida pelo cleanup restrito. O runner recusa iniciar enquanto o
+protocolo não estiver congelado, portanto a integração não habilita coleta por
+si só.
+
+O passo pareado possui limite próprio de 180 minutos. O job reserva tempo
+adicional para publicação/verificação dos runtimes, setup, cleanup final e
+upload de evidências, mas somente o passo pareado pode manter workloads de
+staging/PDT ativos. Esse limite cobre o teto predeclarado de 135 minutos de
+medição por candidata mais overhead e não substitui a revisão financeira por
+bloco.
 
 Depois da revisão, o recibo humano pode ser produzido sem executar o cluster:
 

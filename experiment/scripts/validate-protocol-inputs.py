@@ -17,6 +17,7 @@ REQUIRED_INPUTS = {
     "deployment_action_preparer",
     "human_gate_recorder",
     "confirmatory_analyzer",
+    "confirmatory_repetition_runner",
     "analysis_dataset_composer",
     "protocol_freeze_auditor",
     "protocol_freeze_candidate_preparer",
