@@ -56,6 +56,7 @@ ENV PATH="/opt/venv/bin:${PATH}"
 # Add the application with ownership matching the runtime identity. This keeps
 # bytecode refreshes and read-only CI validation usable without root privileges.
 COPY --chown=10001:10001 . .
+RUN chown 10001:10001 /recommendationservice
 
 USER 10001:10001
 RUN python -m compileall -q /recommendationservice

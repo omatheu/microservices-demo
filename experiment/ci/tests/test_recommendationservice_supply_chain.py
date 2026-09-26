@@ -33,6 +33,7 @@ class RecommendationServiceSupplyChainTests(unittest.TestCase):
         self.assertIn("pip uninstall --yes pip", dockerfile)
         self.assertIn("COPY --from=builder /opt/venv /opt/venv", dockerfile)
         self.assertIn("COPY --chown=10001:10001 . .", dockerfile)
+        self.assertIn("chown 10001:10001 /recommendationservice", dockerfile)
         self.assertIn("python -m compileall -q /recommendationservice", dockerfile)
         self.assertIn("USER 10001:10001", dockerfile)
         self.assertLess(
