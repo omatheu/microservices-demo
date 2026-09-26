@@ -357,7 +357,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "4a93e57196282808b8166d1997a021fa52cabe78fd97dcd9ecaac5c294917eb8"
+      "sha256": "eaa2ed390b8750a6bca7ea188cf884e9c64dbfcba598934df155da5c9ec3cc16"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -422,6 +422,10 @@
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
       "sha256": "0c18ba57d5e35f9986fef1bbc4c59fd49d3bbe2660d8bc6d455ffed516dbf268"
+    },
+    "blinded_corpus_manager": {
+      "path": "experiment/scripts/manage-blinded-corpus.py",
+      "sha256": "303da77e3cd804f24e89c95fa22cf487c393a7a4800d02e4eb717d09c825ea97"
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",

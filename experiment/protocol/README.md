@@ -368,10 +368,18 @@ explícita do pesquisador.
 O auditor de congelamento, o auditor da publicação dos runtimes, o validador do
 plano Terraform, o preparador do candidato, o finalizador, o cleanup restrito
 dos workloads experimentais, os dois agregadores de repetição, o orquestrador
-confirmatório e o próprio validador agora também fazem parte dos 33 inputs
-selados do protocolo. Assim, as regras
+confirmatório, o gerenciador determinístico do corpus cego e o próprio
+validador agora também fazem parte dos 34 inputs selados do protocolo. Assim, as regras
 que decidem a prontidão e materializam a proposta final não podem ser trocadas
 silenciosamente depois da aprovação do desenho.
+
+Depois do congelamento, o manifesto privado do oráculo pode ser reconstruído
+no job protegido sem armazená-lo no repositório. O comando `derive-oracle`
+recebe apenas o corpus público já comprometido e a chave privada, recompõe a
+mesma saída pelo `generated_at` público, exige igualdade integral do corpus
+público e grava o manifesto com permissão `0600`. Ele recusa protocolo em
+rascunho sem `--allow-draft`, arquivo público adulterado e sobrescrita de uma
+saída existente. A chave e a saída privada nunca são publicadas como artefato.
 
 Os dois workflows GitHub também são inputs selados. Qualquer mudança no
 gatilho do pull request, nas travas financeiras, na identidade cloud ou na
