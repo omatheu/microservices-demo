@@ -329,6 +329,16 @@ declara `cloud_execution_authorized: false`. O bundle inteiro deve ser aplicado
 e revisado como uma única mudança antes das aprovações financeira e do
 pesquisador.
 
+O preflight local foi repetido em 26/09/2026 para o commit `4504cfab`. As três
+imagens foram construídas, seus SBOMs foram gerados e os scans fixados da
+esteira encontraram zero vulnerabilidades HIGH/CRITICAL. Não houve publicação,
+acesso ao GCP ou mutação cloud. A projeção conservadora de armazenamento ficou
+em `236.046.622` de `500.000.000` bytes, mas isso não concede aprovação
+financeira. O registro está em
+[`../evidence/ci-cd/runtime-image-preflight-20260926T164347Z.json`](../evidence/ci-cd/runtime-image-preflight-20260926T164347Z.json)
+e permanece inelegível como evidência confirmatória e como proveniência de
+publicação.
+
 Depois que o bundle estiver aplicado, as aprovações reais existirem nos
 caminhos canônicos e a auditoria passar nos 17 checks, a proposta final de
 congelamento é gerada por:

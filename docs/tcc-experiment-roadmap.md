@@ -473,15 +473,17 @@ protegido, e produz propostas PDT/oráculo com uma única proveniência. O binde
 está integrado ao workflow, mas não foi executado porque nenhuma publicação
 cloud nova foi autorizada. Ele não congela o protocolo nem altera o GCP.
 
-O preflight local das três imagens foi repetido em 22/09/2026 para o commit
-`6ecffab7`: os três builds, SBOMs e scans HIGH/CRITICAL passaram, sem push ou
-acesso ao GCP, e a projeção conservadora de armazenamento permaneceu abaixo da
-franquia considerada. A comparação com o artefato anterior mostrou que os
+O preflight local das três imagens foi repetido em 26/09/2026 para o commit
+`4504cfab`: os três builds, SBOMs e scans HIGH/CRITICAL passaram, com zero
+achados bloqueantes, sem push ou acesso ao GCP. A projeção conservadora ficou em
+`236.046.622` de `500.000.000` bytes, com `263.953.378` bytes de margem sob a
+franquia assumida. A comparação com o preflight de `6ecffab7` confirmou que os
 rebuilds não são bit-a-bit idênticos apesar de os inputs materiais serem os
-mesmos. O caminho de publicação foi então endurecido: o resumo protegido passa
-a vincular os SHA-256 dos relatórios brutos, e o binder revalida conteúdo, tag,
-image ID e ausência de achados antes de aceitar os digests remotos. O registro
-local é inelegível para publicação ou coleta confirmatória.
+mesmos. Por isso, o resumo protegido vincula os SHA-256 dos relatórios brutos e
+o binder revalida conteúdo, tag, image ID e ausência de achados antes de aceitar
+os digests remotos. A evidência
+[`runtime-image-preflight-20260926T164347Z.json`](../experiment/evidence/ci-cd/runtime-image-preflight-20260926T164347Z.json)
+é local e inelegível para publicação ou coleta confirmatória.
 
 O contrato publisher → binder também foi exercitado ponta a ponta sem cloud:
 os scripts reais produziram e consumiram o mesmo pacote com Docker e `gcloud`

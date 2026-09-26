@@ -6,6 +6,21 @@ relatórios dos scanners, SBOM, resultados por gate e uma decisão pré-staging.
 O conteúdo gerado só constitui evidência confirmatória quando o protocolo e a
 política estiverem congelados e a execução usar `MODE=confirmatory`.
 
+## Preflight local das imagens de runtime em 26/09/2026
+
+As três imagens adicionais necessárias ao PDT e ao oráculo foram reconstruídas
+no commit `4504cfab`. Os três SBOMs foram gerados e os scans fixados da esteira
+encontraram zero vulnerabilidades HIGH/CRITICAL. Nenhuma imagem foi publicada,
+nenhum recurso GCP foi acessado ou alterado e a execução continua inelegível
+como evidência confirmatória ou proveniência de publicação.
+
+A soma conservadora dos tamanhos locais foi de `228.203.127` bytes. Somada ao
+inventário remoto previamente observado, a projeção é `236.046.622` de
+`500.000.000` bytes, com `263.953.378` bytes de margem sob a franquia assumida.
+Isso não constitui garantia de cobrança nem autorização financeira. O registro
+auditável está em
+[`runtime-image-preflight-20260926T164347Z.json`](runtime-image-preflight-20260926T164347Z.json).
+
 ## Validação de engenharia de 20/09/2026
 
 A execução `ci-engineering-artifact-binding-v2-20260920T063313Z` aprovou os 20
