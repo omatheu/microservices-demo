@@ -73,6 +73,10 @@
       "sha256": "49d2c45067e7799ae49de23efcaaa41f261a23a4a623a7bfe8a6152dd84ac1e4"
     },
     {
+      "path": "experiment/scripts/prepare-sealed-preartifact-inputs.py",
+      "sha256": "165abea87876a7ec55e64f88357b7801afdb7a05330f6bd4d3df2734d732201c"
+    },
+    {
       "path": "experiment/scripts/prepare-oracle-runtime.py",
       "sha256": "fe9e18597488fefa85bb296e2a3717ba2dab8d624a7ec0c814354d8e82cc07af"
     },
@@ -91,6 +95,10 @@
     {
       "path": "experiment/scripts/run-oracle-candidate.py",
       "sha256": "fe41abb5883be24582e63ea1b1b4ca0d6e21342fdf2166898fbed98fa9f025cf"
+    },
+    {
+      "path": "experiment/scripts/cleanup-oracle-workloads.sh",
+      "sha256": "84e7966e82368aca6e3cdf041526a4776e09fdb6a8f20943bcafe6cd5326cd88"
     },
     {
       "path": "experiment/scripts/validate-human-gate-receipt.py",

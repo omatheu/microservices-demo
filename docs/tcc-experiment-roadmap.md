@@ -361,6 +361,15 @@ O item permanece aberto até uma nova execução de engenharia comprovar a pausa
 a retomada; a aprovação continua sem autorizar execução cloud ou mutação
 operacional.
 
+O job pós-decisão do Oracle também está definido localmente no mesmo workflow,
+mas permanece desarmado. Ele só se torna elegível com o label adicional
+`tcc-oracle-cloud`, protocolo congelado, revisão financeira e uma confirmação
+específica de execução do Oracle. Scripts e protocolo são carregados do
+commit-base confiável da `main`; a candidata não recebe os secrets. A evidência
+privada é cifrada antes de upload e o cleanup é restrito ao namespace `oracle`.
+O RBAC mínimo desse namespace está declarado no Terraform, separado das
+permissões gerais de staging/PDT, porém ainda não foi aplicado ao cluster.
+
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,
 decisão convencional, decisão PDT, gate, ação e histórico bruto do GitHub, e
@@ -624,6 +633,15 @@ continua obrigatória abaixo desse mínimo. Os runners também persistem um
 `oracle-binding-snapshot.json` canônico antes da abertura do rótulo, inclusive
 quando o controle bloqueia depois de staging. A integração desse orquestrador
 ao workflow protegido e sua execução no cluster continuam pendentes.
+
+O caminho pré-artefato agora também possui preparação reprodutível: patch e
+work order privados são reconstruídos apenas do commit, árvore e base selados
+pela CI e do manifesto do Oracle. O rótulo pretendido não entra nesses
+artefatos. A definição do workflow já encadeia esse caminho e o caminho
+Kubernetes, deriva o manifesto com código da base confiável, cifra toda
+evidência privada e persiste publicamente somente hashes e recibos sem rótulo.
+Ainda faltam cadastrar os dois secrets protegidos, aplicar o RBAC declarativo,
+gerar o corpus confirmatório e executar a validação real autorizada.
 
 ### Fase 8 — Análise final
 

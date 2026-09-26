@@ -77,6 +77,65 @@ class TccGithubWorkflowTests(unittest.TestCase):
         self.assertIn("/actions/runs/${GITHUB_RUN_ID}/approvals", rendered)
         self.assertIn("human-gate-receipt-pr-", rendered)
 
+        oracle = workflow["jobs"]["oracle-candidate"]
+        self.assertEqual(oracle["environment"], "tcc-experiment")
+        self.assertEqual(oracle["timeout-minutes"], "255")
+        self.assertEqual(
+            oracle["permissions"],
+            {"actions": "read", "contents": "read", "id-token": "write"},
+        )
+        self.assertEqual(oracle["concurrency"]["cancel-in-progress"], "false")
+        self.assertIn("oracle_authorized == 'true'", oracle["if"])
+        self.assertIn("mode == 'confirmatory'", oracle["if"])
+        self.assertIn("human-gate-receipt.result == 'success'", oracle["if"])
+        self.assertIn("human-gate-receipt.result == 'skipped'", oracle["if"])
+
+    def test_oracle_job_is_explicitly_armed_and_keeps_private_inputs_out_of_pr_code(self):
+        workflow = load(CLOUD_WORKFLOW)
+        rendered = CLOUD_WORKFLOW.read_text(encoding="utf-8")
+        oracle = workflow["jobs"]["oracle-candidate"]
+        oracle_rendered = str(oracle)
+        paired_rendered = str(workflow["jobs"]["paired-experiment"])
+        names = [step["name"] for step in oracle["steps"]]
+
+        self.assertIn("tcc-oracle-cloud", rendered)
+        self.assertIn('.base.ref == "main"', rendered)
+        self.assertIn("TCC_ORACLE_EXECUTION_ACKNOWLEDGED", oracle_rendered)
+        self.assertIn("TCC_ORACLE_BLINDING_KEY_B64", oracle_rendered)
+        self.assertIn("TCC_ORACLE_ARCHIVE_PASSPHRASE", oracle_rendered)
+        self.assertNotIn("TCC_ORACLE_BLINDING_KEY_B64", paired_rendered)
+        self.assertNotIn("TCC_ORACLE_ARCHIVE_PASSPHRASE", paired_rendered)
+        self.assertIn("needs.authorize.outputs.base_sha", oracle_rendered)
+        self.assertIn("needs.authorize.outputs.head_sha", oracle_rendered)
+        self.assertIn("path': 'trusted", oracle_rendered)
+        self.assertIn("path': 'candidate-source", oracle_rendered)
+        self.assertIn("derive-oracle", oracle_rendered)
+        self.assertIn("prepare-sealed-preartifact-inputs.py", oracle_rendered)
+        self.assertIn("run-oracle-candidate.py", oracle_rendered)
+        self.assertIn("cleanup-oracle-workloads.sh", oracle_rendered)
+        self.assertIn("oracle-private.tar.gpg", oracle_rendered)
+        self.assertNotIn("oracle-candidate/private/", str(oracle["steps"][-2]))
+
+        financial = names.index(
+            "Require the Oracle and per-block financial kill switches"
+        )
+        derive = names.index("Derive the private Oracle manifest with trusted code")
+        cloud_auth = names.index(
+            "Authenticate the Oracle runtime through Workload Identity Federation"
+        )
+        execute = names.index("Execute the independent candidate Oracle")
+        cleanup = names.index("Enforce Oracle namespace cleanup")
+        encrypt = names.index("Encrypt private Oracle evidence before persistence")
+        self.assertLess(financial, derive)
+        self.assertLess(derive, cloud_auth)
+        self.assertLess(cloud_auth, execute)
+        self.assertLess(execute, cleanup)
+        self.assertLess(cleanup, encrypt)
+        self.assertEqual(
+            oracle["steps"][cleanup]["if"],
+            "always() && steps.oracle_cluster.outputs.connected == 'true'",
+        )
+
     def test_runtime_publication_is_separate_and_has_no_cluster_access_path(self):
         workflow = load(CLOUD_WORKFLOW)
         rendered = CLOUD_WORKFLOW.read_text(encoding="utf-8")

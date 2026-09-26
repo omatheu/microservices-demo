@@ -298,6 +298,78 @@ resource "kubernetes_role_binding_v1" "github_experiment_pdt_controller" {
   }
 }
 
+resource "kubernetes_role_v1" "github_experiment_oracle_runner" {
+  count = var.enable_github_actions_federation ? 1 : 0
+
+  metadata {
+    name      = "github-tcc-oracle-runner"
+    namespace = kubernetes_namespace_v1.experiment["oracle"].metadata[0].name
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["serviceaccounts", "services"]
+    verbs      = ["create", "delete", "get", "list", "patch", "update", "watch"]
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["events", "pods", "resourcequotas"]
+    verbs      = ["get", "list", "watch"]
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["pods/log"]
+    verbs      = ["get"]
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["pods/portforward"]
+    verbs      = ["create"]
+  }
+
+  rule {
+    api_groups = ["apps"]
+    resources  = ["deployments"]
+    verbs      = ["create", "delete", "get", "list", "patch", "update", "watch"]
+  }
+
+  rule {
+    api_groups = ["apps"]
+    resources  = ["replicasets"]
+    verbs      = ["get", "list", "watch"]
+  }
+
+  rule {
+    api_groups = ["networking.k8s.io"]
+    resources  = ["networkpolicies"]
+    verbs      = ["create", "delete", "get", "list", "patch", "update", "watch"]
+  }
+}
+
+resource "kubernetes_role_binding_v1" "github_experiment_oracle_runner" {
+  count = var.enable_github_actions_federation ? 1 : 0
+
+  metadata {
+    name      = "github-tcc-oracle-runner"
+    namespace = kubernetes_namespace_v1.experiment["oracle"].metadata[0].name
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = kubernetes_role_v1.github_experiment_oracle_runner[0].metadata[0].name
+  }
+
+  subject {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "User"
+    name      = google_service_account.github_experiment[0].email
+  }
+}
+
 resource "kubernetes_role_v1" "github_experiment_operational_reader" {
   count = var.enable_github_actions_federation ? 1 : 0
 

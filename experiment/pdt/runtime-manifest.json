@@ -50,7 +50,7 @@
     },
     {
       "path": "infra/terraform/github-actions.tf",
-      "sha256": "37170d2327228d69883d5d01ea8101ae7efbf7d4e30e6e6d1755daab3c98d083"
+      "sha256": "d5de6c007a7702485cb55b355e0813f735d0e021ad710e68c6f762b9cafd4be0"
     },
     {
       "path": "infra/terraform/variables.tf",

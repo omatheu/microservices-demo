@@ -365,7 +365,7 @@
     },
     "cloud_experiment_workflow": {
       "path": ".github/workflows/tcc-pr-experiment.yaml",
-      "sha256": "236eccadc6bb220e8c0966d9fbe9b6738adfe53fcd61c84f4ce65c0e8b9e2535"
+      "sha256": "39110802cd3538e5b1c767cb3794c382e465686bac8a7d3f5561a896cae5b75c"
     },
     "billing_export_infrastructure": {
       "path": "infra/terraform-billing-export/main.tf",
@@ -417,7 +417,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "241ab9d010c49f94d2080a0f18c82ac54da2c90d3483010f546babd396b1eba8"
+      "sha256": "30983310a61f88be04ac52a816cd6e6b7d8678c96958df22f529fd37c9f633bb"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
@@ -429,7 +429,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "80272edb041dafe445617b419fbdc91d5b81e77b52cb3231260178e73195529d"
+      "sha256": "0bd6ea782e107b94fb689cbecd54aa7a1bebe76454a3281dc9931f65c26fada4"
     }
   },
   "required_before_freeze": [

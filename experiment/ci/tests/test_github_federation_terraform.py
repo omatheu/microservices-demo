@@ -59,6 +59,25 @@ class GithubFederationTerraformTests(unittest.TestCase):
         self.assertNotIn('["services"]', controller)
         self.assertNotIn('["secrets"]', controller)
 
+    def test_oracle_permission_is_namespaced_and_excludes_secrets(self):
+        federation = FEDERATION.read_text(encoding="utf-8")
+        oracle = federation.split(
+            'resource "kubernetes_role_v1" "github_experiment_oracle_runner"', 1
+        )[1].split(
+            'resource "kubernetes_role_binding_v1" "github_experiment_oracle_runner"',
+            1,
+        )[0]
+
+        self.assertIn('experiment["oracle"]', oracle)
+        self.assertIn('["serviceaccounts", "services"]', oracle)
+        self.assertIn('["deployments"]', oracle)
+        self.assertIn('["networkpolicies"]', oracle)
+        self.assertIn('["pods/portforward"]', oracle)
+        self.assertNotIn('["secrets"]', oracle)
+        self.assertNotIn('["configmaps"]', oracle)
+        self.assertNotIn('["jobs"]', oracle)
+        self.assertNotIn("persistentvolume", oracle.lower())
+
     def test_project_roles_remain_the_declared_minimum(self):
         federation = FEDERATION.read_text(encoding="utf-8")
         roles = federation.split("github_project_roles = toset([", 1)[1].split("])", 1)[0]

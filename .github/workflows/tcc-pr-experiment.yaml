@@ -20,6 +20,7 @@ jobs:
       pull-requests: read
     outputs:
       authorized: ${{ steps.pr.outputs.authorized }}
+      oracle_authorized: ${{ steps.pr.outputs.oracle_authorized }}
       runtime_publication_authorized: ${{ steps.pr.outputs.runtime_publication_authorized }}
       pull_request_number: ${{ steps.pr.outputs.pull_request_number }}
       base_sha: ${{ steps.pr.outputs.base_sha }}
@@ -35,26 +36,36 @@ jobs:
         run: |
           set -euo pipefail
           echo "authorized=false" >> "${GITHUB_OUTPUT}"
+          echo "oracle_authorized=false" >> "${GITHUB_OUTPUT}"
           echo "runtime_publication_authorized=false" >> "${GITHUB_OUTPUT}"
           [[ "${PR_NUMBER}" =~ ^[1-9][0-9]*$ ]] || exit 0
           gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > "${RUNNER_TEMP}/pull-request.json"
           same_repository=$(jq -r --arg repository "${GITHUB_REPOSITORY}" '.head.repo.full_name == $repository' "${RUNNER_TEMP}/pull-request.json")
+          trusted_base=$(jq -r --arg repository "${GITHUB_REPOSITORY}" '
+            .base.repo.full_name == $repository and .base.ref == "main"
+          ' "${RUNNER_TEMP}/pull-request.json")
           current_revision=$(jq -r --arg sha "${EXPECTED_HEAD_SHA}" '.head.sha == $sha' "${RUNNER_TEMP}/pull-request.json")
           draft=$(jq -r '.draft' "${RUNNER_TEMP}/pull-request.json")
           experiment_label=$(jq -r 'any(.labels[]; .name == "tcc-experiment-cloud")' "${RUNNER_TEMP}/pull-request.json")
+          oracle_label=$(jq -r 'any(.labels[]; .name == "tcc-oracle-cloud")' "${RUNNER_TEMP}/pull-request.json")
           runtime_publication_label=$(jq -r 'any(.labels[]; .name == "tcc-runtime-publication")' "${RUNNER_TEMP}/pull-request.json")
           cost_label=$(jq -r 'any(.labels[]; .name == "tcc-cost-reviewed")' "${RUNNER_TEMP}/pull-request.json")
-          if [[ "${same_repository}" != "true" || "${current_revision}" != "true" || "${draft}" == "true" || "${cost_label}" != "true" ]]; then
+          if [[ "${same_repository}" != "true" || "${trusted_base}" != "true" || "${current_revision}" != "true" || "${draft}" == "true" || "${cost_label}" != "true" ]]; then
             exit 0
           fi
           if [[ "${experiment_label}" == "${runtime_publication_label}" ]]; then
             exit 0
+          fi
+          oracle_authorized=false
+          if [[ "${experiment_label}" == "true" && "${oracle_label}" == "true" ]]; then
+            oracle_authorized=true
           fi
           {
             echo "pull_request_number=${PR_NUMBER}"
             echo "base_sha=$(jq -er '.base.sha' "${RUNNER_TEMP}/pull-request.json")"
             echo "head_sha=$(jq -er '.head.sha' "${RUNNER_TEMP}/pull-request.json")"
             echo "authorized=${experiment_label}"
+            echo "oracle_authorized=${oracle_authorized}"
             echo "runtime_publication_authorized=${runtime_publication_label}"
           } >> "${GITHUB_OUTPUT}"
 
@@ -162,6 +173,8 @@ jobs:
       id-token: write
     outputs:
       human_gate_required: ${{ steps.paired.outputs.human_gate_required }}
+      candidate_id: ${{ steps.candidate.outputs.candidate_id }}
+      mode: ${{ steps.candidate.outputs.mode }}
     steps:
       - name: Require the per-block financial kill switch
         shell: bash
@@ -452,3 +465,359 @@ jobs:
           path: ${{ steps.receipt.outputs.pipeline_dir }}/
           if-no-files-found: error
           retention-days: 30
+
+  oracle-candidate:
+    name: Independent post-decision Oracle
+    needs:
+      - authorize
+      - paired-experiment
+      - human-gate-receipt
+    if: >-
+      always() &&
+      needs.authorize.outputs.oracle_authorized == 'true' &&
+      needs.paired-experiment.result == 'success' &&
+      needs.paired-experiment.outputs.mode == 'confirmatory' &&
+      ((needs.paired-experiment.outputs.human_gate_required == 'true' &&
+        needs.human-gate-receipt.result == 'success') ||
+       (needs.paired-experiment.outputs.human_gate_required == 'false' &&
+        needs.human-gate-receipt.result == 'skipped'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 255
+    environment: tcc-experiment
+    concurrency:
+      group: tcc-experiment-cloud
+      cancel-in-progress: false
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    steps:
+      - name: Require the Oracle and per-block financial kill switches
+        shell: bash
+        env:
+          COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
+          ORACLE_EXECUTION_ACKNOWLEDGED: ${{ vars.TCC_ORACLE_EXECUTION_ACKNOWLEDGED }}
+        run: |
+          set -euo pipefail
+          [[ "${COST_REVIEW_ACKNOWLEDGED}" == "true" ]]
+          [[ "${ORACLE_EXECUTION_ACKNOWLEDGED}" == "true" ]]
+
+      - name: Check out trusted scripts from the reviewed base revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.authorize.outputs.base_sha }}
+          fetch-depth: 0
+          path: trusted
+          persist-credentials: false
+
+      - name: Check out the sealed candidate source as data
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.authorize.outputs.head_sha }}
+          fetch-depth: 0
+          path: candidate-source
+          persist-credentials: false
+
+      - name: Install trusted Oracle prerequisites
+        shell: bash
+        working-directory: trusted
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install --yes gnupg jq python3-venv
+          python3 -m venv "${RUNNER_TEMP}/tcc-oracle-venv"
+          "${RUNNER_TEMP}/tcc-oracle-venv/bin/python" -m pip install --disable-pip-version-check \
+            PyYAML==6.0.1
+          echo "${RUNNER_TEMP}/tcc-oracle-venv/bin" >> "${GITHUB_PATH}"
+
+      - name: Download sealed paired evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: paired-experiment-pr-${{ needs.authorize.outputs.pull_request_number }}-${{ needs.authorize.outputs.head_sha }}
+          path: ${{ runner.temp }}/paired-evidence
+
+      - name: Resolve the sealed candidate evidence
+        id: inputs
+        shell: bash
+        working-directory: trusted
+        env:
+          EXPECTED_CANDIDATE_ID: ${{ needs.paired-experiment.outputs.candidate_id }}
+        run: |
+          set -euo pipefail
+          mapfile -t summaries < <(find "${RUNNER_TEMP}/paired-evidence" \
+            -type f -path '*/pipeline/paired-*/summary.json' -print)
+          [[ ${#summaries[@]} -eq 1 ]]
+          pipeline_dir=$(dirname "${summaries[0]}")
+          candidate_definition="${pipeline_dir}/candidate-definition.json"
+          control="${pipeline_dir}/conventional-decision.json"
+          local_ci="${pipeline_dir}/local-ci-decision.json"
+          [[ -f "${candidate_definition}" && -f "${control}" && -f "${local_ci}" ]]
+          [[ $(jq -er '.candidate_id' "${candidate_definition}") == "${EXPECTED_CANDIDATE_ID}" ]]
+          [[ $(jq -er '.candidate_id' "${control}") == "${EXPECTED_CANDIDATE_ID}" ]]
+          path_kind=$(jq -r '
+            if .decision == "block"
+              and .staging.executed == false
+              and .immutable_artifacts == []
+            then "preartifact"
+            else "runtime"
+            end
+          ' "${control}")
+          evidence_root=$(dirname "$(dirname "${pipeline_dir}")")
+          {
+            echo "pipeline_dir=${pipeline_dir}"
+            echo "candidate_definition=${candidate_definition}"
+            echo "control=${control}"
+            echo "local_ci=${local_ci}"
+            echo "evidence_root=${evidence_root}"
+            echo "path_kind=${path_kind}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Download protected human receipt when required
+        if: needs.paired-experiment.outputs.human_gate_required == 'true'
+        uses: actions/download-artifact@v8
+        with:
+          name: human-gate-receipt-pr-${{ needs.authorize.outputs.pull_request_number }}-${{ needs.authorize.outputs.head_sha }}
+          path: ${{ runner.temp }}/human-gate-receipt
+
+      - name: Merge the protected receipt into the sealed evidence
+        if: needs.paired-experiment.outputs.human_gate_required == 'true'
+        shell: bash
+        env:
+          PIPELINE_DIR: ${{ steps.inputs.outputs.pipeline_dir }}
+        run: |
+          set -euo pipefail
+          for name in human-gate-decision.json github-environment-approvals.json; do
+            mapfile -t matches < <(find "${RUNNER_TEMP}/human-gate-receipt" \
+              -type f -name "${name}" -print)
+            [[ ${#matches[@]} -eq 1 ]]
+            [[ ! -e "${PIPELINE_DIR}/${name}" ]]
+            cp "${matches[0]}" "${PIPELINE_DIR}/${name}"
+          done
+
+      - name: Require frozen trusted protocol, runtimes and public corpus
+        shell: bash
+        working-directory: trusted
+        run: |
+          set -euo pipefail
+          python3 experiment/scripts/validate-protocol-inputs.py \
+            --repo-root . --protocol experiment/protocol/protocol-v1.json
+          jq -e '
+            .status == "frozen"
+            and .confirmatory_collection_allowed == true
+            and (.frozen_at | type == "string" and length > 0)
+          ' experiment/protocol/protocol-v1.json >/dev/null
+          python3 experiment/scripts/validate-pdt-runtime.py \
+            --repo-root . --manifest experiment/pdt/runtime-manifest.json \
+            --require-frozen
+          python3 experiment/scripts/validate-oracle-suite.py \
+            --repo-root . --manifest experiment/oracle/suite-manifest.json \
+            --require-frozen
+          public_corpus=experiment/protocol/corpus/public-corpus.json
+          [[ -f "${public_corpus}" ]]
+          protocol_sha256=$(sha256sum experiment/protocol/protocol-v1.json | cut -d ' ' -f1)
+          jq -e --arg protocol_sha256 "${protocol_sha256}" '
+            .confirmatory_eligible == true
+            and .protocol_sha256 == $protocol_sha256
+            and .mechanism_visibility.oracle_manifest_available == false
+            and .mechanism_visibility.operator_and_label_available == false
+          ' "${public_corpus}" >/dev/null
+
+      - name: Derive the private Oracle manifest with trusted code
+        id: private_oracle
+        shell: bash
+        working-directory: trusted
+        env:
+          ORACLE_BLINDING_KEY_B64: ${{ secrets.TCC_ORACLE_BLINDING_KEY_B64 }}
+        run: |
+          set -euo pipefail
+          umask 077
+          [[ -n "${ORACLE_BLINDING_KEY_B64}" ]]
+          private_dir="${RUNNER_TEMP}/oracle-private"
+          mkdir -p "${private_dir}"
+          key_file="${private_dir}/blinding-key.bin"
+          manifest="${private_dir}/oracle-manifest.json"
+          trap 'rm -f "${key_file}"' EXIT
+          printf '%s' "${ORACLE_BLINDING_KEY_B64}" | base64 --decode > "${key_file}"
+          unset ORACLE_BLINDING_KEY_B64
+          python3 experiment/scripts/manage-blinded-corpus.py derive-oracle \
+            --protocol experiment/protocol/protocol-v1.json \
+            --key "${key_file}" \
+            --public experiment/protocol/corpus/public-corpus.json \
+            --oracle-output "${manifest}"
+          rm "${key_file}"
+          trap - EXIT
+          [[ $(stat -c '%a' "${manifest}") == "600" ]]
+          echo "manifest=${manifest}" >> "${GITHUB_OUTPUT}"
+
+      - name: Prepare sealed preartifact inputs when no image exists
+        id: preartifact
+        if: steps.inputs.outputs.path_kind == 'preartifact'
+        shell: bash
+        working-directory: trusted
+        env:
+          CANDIDATE_ID: ${{ needs.paired-experiment.outputs.candidate_id }}
+          CANDIDATE_DEFINITION: ${{ steps.inputs.outputs.candidate_definition }}
+          CONTROL: ${{ steps.inputs.outputs.control }}
+          LOCAL_CI: ${{ steps.inputs.outputs.local_ci }}
+          ORACLE_MANIFEST: ${{ steps.private_oracle.outputs.manifest }}
+          SOURCE_WORKSPACE: ${{ github.workspace }}/candidate-source
+        run: |
+          set -euo pipefail
+          umask 077
+          private_dir="${RUNNER_TEMP}/oracle-private/preartifact"
+          mkdir -p "${private_dir}"
+          work_order="${private_dir}/work-order.json"
+          candidate_patch="${private_dir}/candidate.patch"
+          python3 experiment/scripts/prepare-sealed-preartifact-inputs.py \
+            --source-workspace "${SOURCE_WORKSPACE}" \
+            --oracle-manifest "${ORACLE_MANIFEST}" \
+            --candidate-id "${CANDIDATE_ID}" \
+            --candidate-definition "${CANDIDATE_DEFINITION}" \
+            --conventional-decision "${CONTROL}" \
+            --local-ci-decision "${LOCAL_CI}" \
+            --work-order-output "${work_order}" \
+            --patch-output "${candidate_patch}"
+          {
+            echo "work_order=${work_order}"
+            echo "candidate_patch=${candidate_patch}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Authenticate the Oracle runtime through Workload Identity Federation
+        if: steps.inputs.outputs.path_kind == 'runtime'
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_EXPERIMENT_SERVICE_ACCOUNT }}
+
+      - name: Install kubectl for the Oracle runtime
+        if: steps.inputs.outputs.path_kind == 'runtime'
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.37.0
+
+      - name: Install Google Cloud SDK and GKE auth for the Oracle runtime
+        if: steps.inputs.outputs.path_kind == 'runtime'
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: gke-gcloud-auth-plugin
+
+      - name: Bind kubectl to the reviewed experiment cluster
+        id: oracle_cluster
+        if: steps.inputs.outputs.path_kind == 'runtime'
+        shell: bash
+        run: |
+          set -euo pipefail
+          gcloud container clusters get-credentials online-boutique-experiment \
+            --region us-central1 \
+            --project microservices-demo-tcc
+          echo "connected=true" >> "${GITHUB_OUTPUT}"
+
+      - name: Execute the independent candidate Oracle
+        id: oracle
+        timeout-minutes: 220
+        shell: bash
+        working-directory: trusted
+        env:
+          CANDIDATE_ID: ${{ needs.paired-experiment.outputs.candidate_id }}
+          CANDIDATE_DEFINITION: ${{ steps.inputs.outputs.candidate_definition }}
+          PIPELINE_DIR: ${{ steps.inputs.outputs.pipeline_dir }}
+          EVIDENCE_ROOT: ${{ steps.inputs.outputs.evidence_root }}
+          PATH_KIND: ${{ steps.inputs.outputs.path_kind }}
+          ORACLE_MANIFEST: ${{ steps.private_oracle.outputs.manifest }}
+          WORK_ORDER: ${{ steps.preartifact.outputs.work_order }}
+          CANDIDATE_PATCH: ${{ steps.preartifact.outputs.candidate_patch }}
+          SOURCE_WORKSPACE: ${{ github.workspace }}/candidate-source
+          ALLOW_EXPERIMENTAL_CLOUD_EXECUTION: "true"
+          COST_REVIEW_ACKNOWLEDGED: ${{ vars.TCC_COST_REVIEW_ACKNOWLEDGED }}
+          ALLOW_ORACLE_CLOUD_EXECUTION: ${{ vars.TCC_ORACLE_EXECUTION_ACKNOWLEDGED }}
+        run: |
+          set -euo pipefail
+          command=(
+            python3 experiment/scripts/run-oracle-candidate.py
+            --mode confirmatory
+            --candidate-id "${CANDIDATE_ID}"
+            --candidate-definition "${CANDIDATE_DEFINITION}"
+            --pipeline-directory "${PIPELINE_DIR}"
+            --evidence-root "${EVIDENCE_ROOT}"
+            --public-corpus experiment/protocol/corpus/public-corpus.json
+            --oracle-manifest "${ORACLE_MANIFEST}"
+            --oracle-harness-image "$(jq -er '.images.oracle_harness' experiment/oracle/suite-manifest.json)"
+            --currency-reference-image "$(jq -er '.images.currency_reference' experiment/oracle/suite-manifest.json)"
+            --output-directory "${RUNNER_TEMP}/oracle-candidate"
+          )
+          if [[ "${PATH_KIND}" == "preartifact" ]]; then
+            command+=(
+              --work-order "${WORK_ORDER}"
+              --candidate-patch "${CANDIDATE_PATCH}"
+              --source-workspace "${SOURCE_WORKSPACE}"
+            )
+          fi
+          "${command[@]}" | tee "${RUNNER_TEMP}/oracle-candidate.log"
+
+      - name: Enforce Oracle namespace cleanup
+        if: always() && steps.oracle_cluster.outputs.connected == 'true'
+        timeout-minutes: 15
+        shell: bash
+        working-directory: trusted
+        env:
+          ALLOW_ORACLE_CLEANUP: "true"
+          OUTPUT_FILE: ${{ runner.temp }}/oracle-cleanup.json
+        run: |
+          set -euo pipefail
+          ./experiment/scripts/cleanup-oracle-workloads.sh
+
+      - name: Encrypt private Oracle evidence before persistence
+        if: always()
+        shell: bash
+        env:
+          ORACLE_ARCHIVE_PASSPHRASE: ${{ secrets.TCC_ORACLE_ARCHIVE_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          if [[ ! -d "${RUNNER_TEMP}/oracle-private" ]]; then
+            exit 0
+          fi
+          umask 077
+          [[ -n "${ORACLE_ARCHIVE_PASSPHRASE}" ]]
+          archive_dir="${RUNNER_TEMP}/oracle-private-archive"
+          mkdir -p "${archive_dir}"
+          tar_file="${archive_dir}/oracle-private.tar"
+          encrypted_file="${archive_dir}/oracle-private.tar.gpg"
+          passphrase_file="${archive_dir}/passphrase.txt"
+          printf '%s' "${ORACLE_ARCHIVE_PASSPHRASE}" > "${passphrase_file}"
+          unset ORACLE_ARCHIVE_PASSPHRASE
+          tar_arguments=(--create --file "${tar_file}" --directory "${RUNNER_TEMP}" oracle-private)
+          if [[ -d "${RUNNER_TEMP}/oracle-candidate/private" ]]; then
+            tar_arguments+=(oracle-candidate/private)
+          fi
+          tar "${tar_arguments[@]}"
+          if [[ -d "${GITHUB_WORKSPACE}/trusted/experiment/evidence/oracle" ]]; then
+            tar --append --file "${tar_file}" \
+              --directory "${GITHUB_WORKSPACE}/trusted" experiment/evidence/oracle
+          fi
+          gpg --batch --yes --pinentry-mode loopback \
+            --passphrase-file "${passphrase_file}" \
+            --symmetric --cipher-algo AES256 \
+            --output "${encrypted_file}" "${tar_file}"
+          rm "${passphrase_file}" "${tar_file}"
+          sha256sum "${encrypted_file}" > "${archive_dir}/oracle-private.tar.gpg.sha256"
+
+      - name: Upload public Oracle evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: oracle-public-pr-${{ needs.authorize.outputs.pull_request_number }}-${{ needs.authorize.outputs.head_sha }}
+          path: |
+            ${{ runner.temp }}/oracle-candidate/public/
+            ${{ runner.temp }}/oracle-cleanup.json
+            ${{ runner.temp }}/oracle-private-archive/oracle-private.tar.gpg.sha256
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Upload encrypted private Oracle evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: oracle-private-encrypted-pr-${{ needs.authorize.outputs.pull_request_number }}-${{ needs.authorize.outputs.head_sha }}
+          path: ${{ runner.temp }}/oracle-private-archive/oracle-private.tar.gpg
+          if-no-files-found: warn
+          retention-days: 90

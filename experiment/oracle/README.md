@@ -104,6 +104,26 @@ controle aprova, ele é exatamente o snapshot da última repetição PDT válida
 que alimenta a ação agregada. Assim, ambos os caminhos permanecem vinculados à
 mesma instância operacional sem depender de caminhos temporários do runner.
 
+Para bloqueios anteriores ao build,
+[`../scripts/prepare-sealed-preartifact-inputs.py`](../scripts/prepare-sealed-preartifact-inputs.py)
+reconstrói o patch e o work order privados a partir do único commit candidato,
+da árvore e do commit-base que a CI já selou. O preparador usa operador e
+parâmetros do manifesto privado, mas nunca copia o rótulo pretendido para o
+work order. Isso permite repetir a verificação independente sem versionar
+metadados do Oracle e sem executar scripts da revisão candidata com acesso à
+chave de cegamento.
+
+O workflow protegido contém um job Oracle separado, desarmado por padrão. Ele
+exige simultaneamente o label `tcc-oracle-cloud`, protocolo congelado, revisão
+financeira e a variável `TCC_ORACLE_EXECUTION_ACKNOWLEDGED=true`. Os scripts são
+carregados do commit-base confiável da `main`; a revisão candidata é tratada
+somente como fonte selada de dados e imagem. A chave HMAC aparece apenas no
+passo que deriva o manifesto privado e é removida em seguida. Evidência com
+operador, parâmetros, observações e adjudicação é cifrada com GnuPG antes de
+ser persistida; somente recibo, índices e hashes sem rótulo são enviados como
+artefato público. Um cleanup explícito e limitado ao namespace `oracle` é
+executado mesmo quando a coleta falha.
+
 Exemplo de invocação, somente depois do congelamento e da revisão financeira:
 
 ```bash
@@ -151,7 +171,7 @@ perfis de desempenho, limites de saúde e a regra de duas repetições prejudici
 entre pelo menos duas válidas. `adjudicate-oracle.py` já implementa e testa essa
 regra sem usar o rótulo pretendido como entrada da classificação.
 
-[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 25
+[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 27
 arquivos que definem a política, o harness, os avaliadores e o runner. O
 validador `validate-oracle-suite.py` falha se qualquer arquivo mudar. O
 manifesto permanece `pre-registration-candidate` e seus dois digests de imagem
