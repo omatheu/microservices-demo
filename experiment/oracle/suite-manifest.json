@@ -86,7 +86,7 @@
     },
     {
       "path": "experiment/scripts/run-oracle-repetition.sh",
-      "sha256": "0b7f22e5b5aaca2570f550f6d21f35493c59086749642af0433443d33206c00a"
+      "sha256": "6596c8af2c90695c6bf0442c7fd91e2f3acda8a8e80eeb0ba538119ca7febe96"
     },
     {
       "path": "experiment/scripts/validate-human-gate-receipt.py",

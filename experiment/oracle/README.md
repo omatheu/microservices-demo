@@ -92,6 +92,7 @@ CANDIDATE_ID=cand-exemplo \
 CANDIDATE_DEFINITION=/caminho/candidate-definition.json \
 CONVENTIONAL_DECISION=/caminho/conventional-decision.json \
 PDT_DECISION=/caminho/pdt-decision.json \
+PDT_PREDICTION_DECISION=/caminho/pdt-decision-repeticao-1.json \
 DEPLOYMENT_GATE=/caminho/gate.json \
 DEPLOYMENT_ACTION=/caminho/deployment-action.json \
 HUMAN_GATE_DECISION=/caminho/human-gate-decision.json \
@@ -155,6 +156,13 @@ medições, composição e cleanup.
 
 Quando há previsão PDT, o runner também chama
 [`../scripts/calculate-pdt-fidelity.py`](../scripts/calculate-pdt-fidelity.py).
+Em uma coleta repetida, `PDT_DECISION` aponta para a decisão candidata-nível
+que alimentou o gate humano, enquanto `PDT_PREDICTION_DECISION` aponta para a
+previsão daquela repetição. O runner confere que o hash dessa previsão aparece
+na lista de inputs da decisão agregada antes de calcular fidelidade. Em pilotos
+de uma única repetição, a segunda variável pode ser omitida e a decisão única é
+reutilizada. Essa separação impede comparar a observação de uma repetição com
+uma mediana agregada ou com o snapshot errado.
 O relatório `pdt-fidelity.json` compara sucesso, p95/p99 do checkout,
 indisponibilidade e reinícios da mesma candidata, alternativa e repetição. Ele
 registra erro assinado, absoluto e relativo, além da concordância entre a

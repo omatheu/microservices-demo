@@ -28,6 +28,12 @@ class RunOracleRepetitionTests(unittest.TestCase):
         self.assertIn('.action == "deploy"', self.script)
         self.assertIn('(.predicted_metrics | type == "object")', self.script)
         self.assertIn('.repetition == $repetition', self.script)
+        self.assertIn("PDT_PREDICTION_DECISION", self.script)
+        self.assertIn(
+            "PDT repetition prediction is not an input of the sealed candidate-level decision.",
+            self.script,
+        )
+        self.assertIn("pdt-prediction-decision.json", self.script)
         self.assertNotIn(
             '== "$alternative_id" ]] || {\n      echo "Oracle alternative differs from the protected human decision.',
             self.script,
@@ -39,6 +45,7 @@ class RunOracleRepetitionTests(unittest.TestCase):
         self.assertIn('fidelity_report="${run_dir}/pdt-fidelity.json"', self.script)
         self.assertIn('pdt_fidelity:', self.script)
         self.assertIn('fidelity_policy:', self.script)
+        self.assertIn('pdt_prediction_decision:', self.script)
 
     def test_cloud_execution_is_fail_closed_before_kubectl(self):
         with tempfile.TemporaryDirectory() as directory:
