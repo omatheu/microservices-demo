@@ -1,0 +1,169 @@
+{
+  "blocking_requirements": [
+    "workflow-installed-on-default-branch",
+    "required-labels-defined",
+    "protected-environment-secrets",
+    "execution-kill-switches-disabled",
+    "oracle-role-least-privilege",
+    "oracle-role-binding-exact",
+    "confirmatory-protocol-frozen",
+    "confirmatory-runtimes-frozen",
+    "confirmatory-public-corpus-bound",
+    "pull-request-safe-disarmed-state"
+  ],
+  "candidate_blocking_requirements": [
+    "pull-request-safe-disarmed-state"
+  ],
+  "candidate_check_count": 1,
+  "candidate_passed_count": 0,
+  "candidate_ready_for_controlled_enablement": false,
+  "captured_at": "2026-09-26T16:28:43Z",
+  "check_count": 22,
+  "checks": [
+    {
+      "detail": "default_branch=main",
+      "id": "repository-default-branch",
+      "passed": true
+    },
+    {
+      "detail": "workflow content on main differs from the reviewed local workflow",
+      "id": "workflow-installed-on-default-branch",
+      "passed": false
+    },
+    {
+      "detail": "missing=['tcc-oracle-cloud']",
+      "id": "required-labels-defined",
+      "passed": false
+    },
+    {
+      "detail": "required_reviewer_logins=['omatheu']",
+      "id": "protected-environment-review",
+      "passed": true
+    },
+    {
+      "detail": "allowed_branches=['main']",
+      "id": "protected-environment-branch-policy",
+      "passed": true
+    },
+    {
+      "detail": "missing=['TCC_ORACLE_ARCHIVE_PASSPHRASE', 'TCC_ORACLE_BLINDING_KEY_B64']",
+      "id": "protected-environment-secrets",
+      "passed": false
+    },
+    {
+      "detail": "invalid_or_missing={'TCC_ORACLE_EXECUTION_ACKNOWLEDGED': None}",
+      "id": "execution-kill-switches-disabled",
+      "passed": false
+    },
+    {
+      "detail": "state=closed; base=main; authorization_labels=[]",
+      "id": "pull-request-safe-disarmed-state",
+      "passed": false
+    },
+    {
+      "detail": "service account is active",
+      "id": "experiment-service-account",
+      "passed": true
+    },
+    {
+      "detail": "user_managed_key_count=0",
+      "id": "experiment-service-account-no-user-managed-keys",
+      "passed": true
+    },
+    {
+      "detail": "repository_principal_exact=True",
+      "id": "experiment-service-account-workload-identity",
+      "passed": true
+    },
+    {
+      "detail": "roles=['roles/container.clusterViewer', 'roles/monitoring.viewer', 'roles/serviceusage.serviceUsageConsumer']",
+      "id": "experiment-service-account-project-roles",
+      "passed": true
+    },
+    {
+      "detail": "provider binding is exact",
+      "id": "workload-identity-provider-restricted",
+      "passed": true
+    },
+    {
+      "detail": "namespace is active and labeled",
+      "id": "oracle-namespace-identity",
+      "passed": true
+    },
+    {
+      "detail": "role is absent or invalid",
+      "id": "oracle-role-least-privilege",
+      "passed": false
+    },
+    {
+      "detail": "binding is absent or differs",
+      "id": "oracle-role-binding-exact",
+      "passed": false
+    },
+    {
+      "detail": "resource_counts={'deployments.apps': 0, 'networkpolicies.networking.k8s.io': 0, 'pods': 0, 'serviceaccounts': 1, 'services': 0}",
+      "id": "oracle-namespace-quiescent",
+      "passed": true
+    },
+    {
+      "detail": "auditor_sha256=bdcce19181b3ef82bca5c0090f89ab72b681bced20273828d1986b3b5c8c1c55",
+      "id": "oracle-auditor-sealed-by-protocol",
+      "passed": true
+    },
+    {
+      "detail": "status=pre-registration-candidate",
+      "id": "confirmatory-protocol-frozen",
+      "passed": false
+    },
+    {
+      "detail": "runtimes are not frozen",
+      "id": "confirmatory-runtimes-frozen",
+      "passed": false
+    },
+    {
+      "detail": "final confirmatory corpus is absent or invalid",
+      "id": "confirmatory-public-corpus-bound",
+      "passed": false
+    },
+    {
+      "detail": "errors=[]",
+      "id": "collection-complete",
+      "passed": true
+    }
+  ],
+  "cloud_mutation_performed": false,
+  "collection_errors": {},
+  "environment": "tcc-experiment",
+  "evidence_bindings": {
+    "auditor_sha256": "bdcce19181b3ef82bca5c0090f89ab72b681bced20273828d1986b3b5c8c1c55",
+    "protocol_sha256": "d935a729210e122219b1ba4cf614a2d6095c1755efe43286581ee0cedaaf8020",
+    "reviewed_local_workflow_sha256": "39110802cd3538e5b1c767cb3794c382e465686bac8a7d3f5561a896cae5b75c",
+    "workflow_on_default_branch_sha256": "236eccadc6bb220e8c0966d9fbe9b6738adfe53fcd61c84f4ce65c0e8b9e2535"
+  },
+  "github_mutation_performed": false,
+  "infrastructure_blocking_requirements": [
+    "workflow-installed-on-default-branch",
+    "required-labels-defined",
+    "protected-environment-secrets",
+    "execution-kill-switches-disabled",
+    "oracle-role-least-privilege",
+    "oracle-role-binding-exact",
+    "confirmatory-protocol-frozen",
+    "confirmatory-runtimes-frozen",
+    "confirmatory-public-corpus-bound"
+  ],
+  "infrastructure_check_count": 21,
+  "infrastructure_passed_count": 12,
+  "infrastructure_ready_for_candidate": false,
+  "kube_context": "gke_microservices-demo-tcc_us-central1_online-boutique-experiment",
+  "mechanism": "oracle-execution-readiness-audit",
+  "oracle_execution_authorized": false,
+  "oracle_namespace": "oracle",
+  "passed_count": 12,
+  "project_id": "microservices-demo-tcc",
+  "pull_request_number": 3,
+  "read_only": true,
+  "ready_for_controlled_enablement": false,
+  "repository": "omatheu/microservices-demo",
+  "schema_version": "1.0.0"
+}

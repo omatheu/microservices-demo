@@ -370,6 +370,18 @@ privada é cifrada antes de upload e o cleanup é restrito ao namespace `oracle`
 O RBAC mínimo desse namespace está declarado no Terraform, separado das
 permissões gerais de staging/PDT, porém ainda não foi aplicado ao cluster.
 
+Um auditor Oracle somente leitura também está implementado e selado no
+protocolo. Ele verifica 22 controles antes de qualquer habilitação: conteúdo do
+workflow em `main`, proteção do ambiente, labels/secrets/variáveis, PR
+desarmado, identidade e provider OIDC exatos, papéis mínimos, Role/RoleBinding
+do namespace, ausência de workloads e congelamento de protocolo, runtimes e
+corpus. A leitura real de 26/09/2026 UTC passou em 12/22: os dez bloqueios
+restantes correspondem exatamente ao workflow ainda local, configuração
+Oracle ainda não instalada, artefatos metodológicos ainda não congelados e
+ausência de PR aberto. A auditoria não realizou mutação nem autorizou execução.
+A evidência pré-instalação está em
+[`../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T162843Z.json`](../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T162843Z.json).
+
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,
 decisão convencional, decisão PDT, gate, ação e histórico bruto do GitHub, e

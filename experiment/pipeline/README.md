@@ -231,3 +231,11 @@ obrigatórios passarem. A auditoria pós-merge confirma 12/12 controles de
 infraestrutura prontos; o único controle de candidata está inativo porque não
 há mais um PR aberto. Nenhum workflow cloud foi executado, e a próxima candidata
 deve começar sem rótulos e com ambas as variáveis financeiras em `false`.
+
+O job Oracle posterior às decisões possui uma superfície separada. Antes de
+qualquer habilitação, `audit-oracle-execution-readiness.py` exige o label
+passivo `tcc-oracle-cloud`, os secrets protegidos de cegamento e arquivo, a
+variável `TCC_ORACLE_EXECUTION_ACKNOWLEDGED=false`, o RBAC mínimo exato no
+namespace `oracle`, namespace vazio e protocolo/runtimes/corpus congelados. A
+auditoria é somente leitura e mantém `oracle_execution_authorized: false` mesmo
+quando todos os 22 controles passam.

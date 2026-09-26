@@ -124,6 +124,33 @@ ser persistida; somente recibo, índices e hashes sem rótulo são enviados como
 artefato público. Um cleanup explícito e limitado ao namespace `oracle` é
 executado mesmo quando a coleta falha.
 
+Antes de habilitar qualquer uma dessas travas, o auditor somente leitura
+[`../scripts/audit-oracle-execution-readiness.py`](../scripts/audit-oracle-execution-readiness.py)
+deve aprovar 22 controles. Ele confere o workflow exato em `main`, ambiente
+protegido, labels, nomes de secrets, kill switches desligados, PR próprio e
+desarmado, identidade OIDC sem chave, papéis de projeto exatos, provider
+restrito, Role/RoleBinding mínimo no namespace `oracle`, namespace sem workload,
+protocolo e runtimes congelados e corpus confirmatório ligado pelo hash do
+protocolo. O auditor não lê valores de secrets, não altera GitHub/GCP/Kubernetes
+e nunca autoriza a execução.
+
+```bash
+python3 experiment/scripts/audit-oracle-execution-readiness.py \
+  --pull-request <numero-do-pr> \
+  --repo-root . \
+  --require-ready
+```
+
+Em 26/09/2026 UTC, a primeira leitura real passou em 12 dos 22 controles após
+distinguir ausências confirmadas de falhas de coleta. Os bloqueios são
+deliberados: workflow Oracle ainda local, label e secrets ainda ausentes, kill
+switch Oracle ainda não cadastrado, RBAC ainda não aplicado, protocolo/runtimes
+ainda não congelados, corpus final ainda inexistente e nenhum PR aberto. A
+identidade sem chave, os três papéis mínimos, o provider OIDC, a proteção do
+ambiente, o namespace correto e sua ausência de workloads foram confirmados.
+A evidência está em
+[`../evidence/oracle/oracle-execution-readiness-preinstall-20260926T162843Z.json`](../evidence/oracle/oracle-execution-readiness-preinstall-20260926T162843Z.json).
+
 Exemplo de invocação, somente depois do congelamento e da revisão financeira:
 
 ```bash
