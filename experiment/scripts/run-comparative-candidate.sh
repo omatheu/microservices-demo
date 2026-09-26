@@ -168,7 +168,18 @@ python3 "${repo_root}/experiment/scripts/compose-conventional-decision.py" \
 
 control_result=$(jq -er '.decision' "$conventional_decision")
 if [[ "$control_result" == "block" ]]; then
+  oracle_snapshot_log="${pipeline_dir}/oracle-binding-snapshot.log"
+  "${repo_root}/experiment/scripts/capture-pdt-source-state.sh" \
+    2>&1 | tee "$oracle_snapshot_log"
+  oracle_snapshot_dir=$(tail -n 1 "$oracle_snapshot_log")
+  oracle_snapshot_file="${oracle_snapshot_dir}/pdt-input-state.json"
+  [[ -d "$oracle_snapshot_dir" && -f "$oracle_snapshot_file" ]] || {
+    echo "Oracle binding did not produce an immutable operational snapshot." >&2
+    exit 1
+  }
+  cp "$oracle_snapshot_file" "${pipeline_dir}/oracle-binding-snapshot.json"
   jq -n --arg pipeline_id "$pipeline_id" --arg candidate_id "$candidate_id" \
+    --arg oracle_snapshot_sha256 "$(sha256sum "${pipeline_dir}/oracle-binding-snapshot.json" | cut -d ' ' -f1)" \
     --slurpfile control "$conventional_decision" '
     {
       schema_version: "1.0.0",
@@ -180,6 +191,10 @@ if [[ "$control_result" == "block" ]]; then
       control_decision: $control[0].decision,
       treatment_decision: "block",
       treatment_source: "inherited-control-block",
+      oracle_binding_snapshot: {
+        path: "oracle-binding-snapshot.json",
+        sha256: $oracle_snapshot_sha256
+      },
       operational_mutation_performed: false
     }' >"${pipeline_dir}/summary.json"
   trap - ERR
@@ -197,6 +212,7 @@ snapshot_file="${snapshot_dir}/pdt-input-state.json"
   exit 1
 }
 cp "$snapshot_file" "${pipeline_dir}/pdt-input-state.json"
+cp "$snapshot_file" "${pipeline_dir}/oracle-binding-snapshot.json"
 
 pdt_log="${pipeline_dir}/pdt.log"
 env MODE="$mode" CANDIDATE_FILE="$candidate_definition" \
@@ -232,6 +248,7 @@ fi
 
 jq -n --arg pipeline_id "$pipeline_id" --arg candidate_id "$candidate_id" \
   --arg snapshot "$snapshot_file" \
+  --arg oracle_snapshot_sha256 "$(sha256sum "${pipeline_dir}/oracle-binding-snapshot.json" | cut -d ' ' -f1)" \
   --argjson action_plan_prepared "$action_plan_prepared" \
   --slurpfile control "$conventional_decision" \
   --slurpfile pdt "$pdt_decision" \
@@ -244,6 +261,10 @@ jq -n --arg pipeline_id "$pipeline_id" --arg candidate_id "$candidate_id" \
     staging_executed: true,
     pdt_executed: true,
     pdt_snapshot: $snapshot,
+    oracle_binding_snapshot: {
+      path: "oracle-binding-snapshot.json",
+      sha256: $oracle_snapshot_sha256
+    },
     control_decision: $control[0].decision,
     treatment_decision: $pdt[0].decision,
     deployment_gate: $gate[0].gate_state,

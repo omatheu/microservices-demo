@@ -69,6 +69,14 @@ class RepeatedComparativeCandidateRunnerTests(unittest.TestCase):
         self.assertIn("evaluate-deployment-gate.py", rendered)
         self.assertIn("prepare-deployment-action.py", rendered)
         self.assertIn("cleanup-experimental-workloads.sh", rendered)
+        self.assertIn("oracle-binding-snapshot.json", rendered)
+        self.assertIn(
+            'if (( ${#valid_pdt_repetitions[@]} < 2 )); then', rendered
+        )
+        self.assertNotIn(
+            'reason: "paired-PDT-repetition-remained-infrastructure-invalid-after-retry"',
+            rendered,
+        )
         self.assertLess(
             rendered.index("aggregate-conventional-repetitions.py"),
             rendered.index("run-pdt-cycle.sh"),

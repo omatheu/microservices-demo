@@ -38,6 +38,15 @@ def oracle(candidate):
     }
 
 
+def canonical_source(relative_path):
+    base_ref = os.environ.get("CANDIDATE_BASE_REF")
+    if base_ref:
+        return subprocess.check_output(
+            ["git", "-C", str(REPO_ROOT), "show", f"{base_ref}:{relative_path}"]
+        )
+    return (REPO_ROOT / relative_path).read_bytes()
+
+
 class MaterializeCandidateTests(unittest.TestCase):
     def workspace(self, root):
         root = pathlib.Path(root)
@@ -51,14 +60,16 @@ class MaterializeCandidateTests(unittest.TestCase):
         payment.mkdir(parents=True)
         currency = root / "src" / "currencyservice"
         currency.mkdir(parents=True)
-        shutil.copy2(REPO_ROOT / "src" / "checkoutservice" / "main.go", checkout)
-        shutil.copy2(
-            REPO_ROOT / "src" / "recommendationservice" / "recommendation_server.py",
-            recommendation,
-        )
-        shutil.copy2(REPO_ROOT / "src" / "paymentservice" / "server.js", payment)
-        shutil.copy2(REPO_ROOT / "src" / "currencyservice" / "server.js", currency)
-        shutil.copy2(REPO_ROOT / "kustomize" / "base" / "checkoutservice.yaml", kustomize)
+        sources = {
+            checkout / "main.go": "src/checkoutservice/main.go",
+            recommendation
+            / "recommendation_server.py": "src/recommendationservice/recommendation_server.py",
+            payment / "server.js": "src/paymentservice/server.js",
+            currency / "server.js": "src/currencyservice/server.js",
+            kustomize / "checkoutservice.yaml": "kustomize/base/checkoutservice.yaml",
+        }
+        for destination, relative_path in sources.items():
+            destination.write_bytes(canonical_source(relative_path))
         return root
 
     def test_safe_control_changes_source_without_oracle_leak(self):

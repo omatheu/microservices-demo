@@ -361,6 +361,33 @@ O item permanece aberto até uma nova execução de engenharia comprovar a pausa
 a retomada; a aprovação continua sem autorizar execução cloud ou mutação
 operacional.
 
+O job pós-decisão do Oracle também está definido localmente no mesmo workflow,
+mas permanece desarmado. Ele só se torna elegível com o label adicional
+`tcc-oracle-cloud`, protocolo congelado, revisão financeira e uma confirmação
+específica de execução do Oracle. Scripts e protocolo são carregados do
+commit-base confiável da `main`; a candidata não recebe os secrets. A evidência
+privada é cifrada antes de upload e o cleanup é restrito ao namespace `oracle`.
+O RBAC mínimo desse namespace está declarado no Terraform, separado das
+permissões gerais de staging/PDT, porém ainda não foi aplicado ao cluster.
+
+Um auditor Oracle somente leitura também está implementado e selado no
+protocolo. Ele verifica 22 controles antes de qualquer habilitação: conteúdo do
+workflow em `main`, proteção do ambiente, labels/secrets/variáveis, PR
+desarmado, identidade e provider OIDC exatos, papéis mínimos, Role/RoleBinding
+do namespace, ausência de workloads e congelamento de protocolo, runtimes e
+corpus. A leitura real de 26/09/2026 UTC passou em 12/22: os dez bloqueios
+restantes correspondem exatamente ao workflow ainda local, configuração
+Oracle ainda não instalada, artefatos metodológicos ainda não congelados e
+ausência de PR aberto. A auditoria não realizou mutação nem autorizou execução.
+A evidência pré-instalação está em
+[`../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json`](../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json).
+
+O plano binário do RBAC foi gerado com refresh desligado e validado em 10/10
+controles. Ele contém somente a Role e a RoleBinding Oracle como criações, 0
+alterações, 0 destruições e nenhum recurso faturável. O relatório sanitizado,
+que não autoriza `apply`, está em
+[`../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json`](../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json).
+
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,
 decisão convencional, decisão PDT, gate, ação e histórico bruto do GitHub, e
@@ -387,6 +414,8 @@ durante a decisão.
 - [x] estratificar casos independentes e dependentes do estado operacional;
 - [x] definir tamanho do corpus por viabilidade e custo antes de observar resultados;
 - [x] validar geração de identificadores opacos e separação do manifesto em uma prévia inelegível;
+- [x] validar localmente build, SBOM, scans e CI convencional das 14
+  candidatas de runtime do corpus de engenharia;
 - [ ] congelar sementes, repetições, ordem e regra de parada;
 - [x] propor teto de duração, custo incremental e capacidade-tempo por decisão;
 - [ ] vedar o conjunto de avaliação contra calibração do PDT.
@@ -410,10 +439,25 @@ determinística e cobertura de todas as combinações de parâmetros. O controle
 `INF-REPLICA-01` foi deliberadamente redesenhado como falha óbvia que um
 staging competente deve bloquear; `DEP-CURRENCY-01` passou a produzir uma
 alteração semântica condicional real. Isso impede contar um no-op ou uma
-mutação equivalente como evidência favorável ao PDT. A validação de execução
-das imagens materializadas, a publicação imutável dos runtimes e uma execução
-cloud do oráculo ainda são pré-requisitos para congelar o protocolo; a
-implementação independente do oráculo já está concluída.
+mutação equivalente como evidência favorável ao PDT. A validação local das
+imagens materializadas foi concluída para as 14 candidatas de runtime; a
+publicação imutável dos runtimes e uma execução cloud do oráculo ainda são
+pré-requisitos para congelar o protocolo. A implementação independente do
+oráculo já está concluída.
+
+A matriz local final, vinculada ao commit `c32a34b2`, executou os 22 gates da
+CI e 17 validações de artefato. As quatro candidatas seguras passaram. Das dez
+prejudiciais, nove passaram e somente `FUNC-AMOUNT-01` foi bloqueada por testes
+unitários e contratos semânticos. Isso é prontidão de engenharia, não resultado
+experimental: não houve staging, PDT, revelação pré-decisão, GCP ou publicação.
+Os falsos bloqueios observados durante a preparação foram eliminados antes da
+rodada registrada, inclusive o autoteste que reaplicava a mutação sobre o
+próprio arquivo candidato. A evidência sanitizada está em
+[`runtime-candidate-matrix-preflight-20260926T200948Z.json`](../experiment/evidence/ci-cd/runtime-candidate-matrix-preflight-20260926T200948Z.json).
+Como os rótulos reservados desse corpus de engenharia foram revelados e agora
+constam na evidência versionada, ele não pode ser promovido a corpus
+confirmatório. Depois do congelamento será necessário gerar uma nova instância
+cega com chave, IDs, ordem e compromisso próprios.
 
 Cada candidata será avaliada de forma pareada por staging e PDT. Os dois usam
 as mesmas invariantes e SLOs. Primeiro é selada a decisão da CI/CD convencional
@@ -446,15 +490,17 @@ protegido, e produz propostas PDT/oráculo com uma única proveniência. O binde
 está integrado ao workflow, mas não foi executado porque nenhuma publicação
 cloud nova foi autorizada. Ele não congela o protocolo nem altera o GCP.
 
-O preflight local das três imagens foi repetido em 22/09/2026 para o commit
-`6ecffab7`: os três builds, SBOMs e scans HIGH/CRITICAL passaram, sem push ou
-acesso ao GCP, e a projeção conservadora de armazenamento permaneceu abaixo da
-franquia considerada. A comparação com o artefato anterior mostrou que os
+O preflight local das três imagens foi repetido em 26/09/2026 para o commit
+`4504cfab`: os três builds, SBOMs e scans HIGH/CRITICAL passaram, com zero
+achados bloqueantes, sem push ou acesso ao GCP. A projeção conservadora ficou em
+`236.046.622` de `500.000.000` bytes, com `263.953.378` bytes de margem sob a
+franquia assumida. A comparação com o preflight de `6ecffab7` confirmou que os
 rebuilds não são bit-a-bit idênticos apesar de os inputs materiais serem os
-mesmos. O caminho de publicação foi então endurecido: o resumo protegido passa
-a vincular os SHA-256 dos relatórios brutos, e o binder revalida conteúdo, tag,
-image ID e ausência de achados antes de aceitar os digests remotos. O registro
-local é inelegível para publicação ou coleta confirmatória.
+mesmos. Por isso, o resumo protegido vincula os SHA-256 dos relatórios brutos e
+o binder revalida conteúdo, tag, image ID e ausência de achados antes de aceitar
+os digests remotos. A evidência
+[`runtime-image-preflight-20260926T164347Z.json`](../experiment/evidence/ci-cd/runtime-image-preflight-20260926T164347Z.json)
+é local e inelegível para publicação ou coleta confirmatória.
 
 O contrato publisher → binder também foi exercitado ponta a ponta sem cloud:
 os scripts reais produziram e consumiram o mesmo pacote com Docker e `gcloud`
@@ -568,9 +614,10 @@ PDT, não apenas sua decisão.
 - [x] implementar perfis não funcionais e compositor da observação do oráculo;
 - [x] gerar runtime Kubernetes mínimo, privado e vinculado aos artefatos selados;
 - [x] implementar o runner do ciclo do oráculo com cleanup obrigatório e trava financeira;
+- [x] implementar a orquestração candidata-nível da matriz de alternativas e repetições;
 - [ ] validar o runner em execução de engenharia no namespace `oracle`;
 - [x] implementar adjudicação independente das candidatas bloqueadas antes de existir artefato implantável;
-- [ ] validar essa adjudicação nas candidatas pré-artefato materializadas e seladas;
+- [x] validar essa adjudicação nas candidatas pré-artefato materializadas e seladas;
 - [ ] persistir as duas decisões antes de revelar o rótulo em uma execução completa;
 - [ ] executar cada candidata em ambiente-oráculo efêmero e sem exposição pública;
 - [ ] aplicar matriz de testes mais ampla que a usada pelos mecanismos;
@@ -590,12 +637,17 @@ o runtime mínimo e o runner Kubernetes único estão implementados e cobertos p
 testes locais. Para decisões aprovadas pelo controle, o runner exige uma cadeia
 íntegra até a aprovação do ambiente protegido do GitHub antes de acessar o
 cluster; o recibo humano não substitui as três travas financeiras/cloud. O
-verificador pré-artefato também está implementado e confere
-commit, árvore, patch e decisões seladas antes de reproduzir a propriedade
-violada sem usar o rótulo pretendido. Uma execução de engenharia validou a
-matriz funcional contra o `checkoutservice`, mas não integra a análise
-principal. Ainda faltam validar os dois caminhos com candidatas materializadas,
-validar todas as imagens e realizar a execução cega posterior às decisões
+verificador pré-artefato também está implementado e confere commit, árvore,
+patch e decisões seladas antes de reproduzir a propriedade violada sem usar o
+rótulo pretendido. Uma execução local materializou e selou as quatro candidatas
+pré-artefato de um corpus de engenharia atual: as quatro foram bloqueadas pela
+CI, as quatro verificações independentes foram válidas e todas observaram dano
+em concordância com o rótulo reservado. O registro sanitizado está em
+[`../experiment/evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json`](../experiment/evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json).
+A execução continua inelegível para a análise principal. As imagens das 14
+candidatas de runtime já passaram pelo preflight local; ainda faltam publicá-las
+e vinculá-las por digest, validar o caminho Kubernetes com as candidatas
+materializadas e realizar a execução cega confirmatória posterior às decisões
 seladas.
 
 O runner agora permite ao oráculo percorrer todas as alternativas implantáveis
@@ -610,6 +662,30 @@ três repetições e produz o resumo candidata-nível previsto no protocolo. O
 compositor e o analisador final já exigem e consomem esse agregado sem tratar
 repetições técnicas como amostras independentes. Os itens quantitativos
 continuam pendentes de execução real.
+
+O orquestrador candidata-nível também está implementado localmente. Ele libera
+o item privado somente depois das decisões e, quando aplicável, da aprovação
+humana; executa a matriz de forma sequencial; adjudica o ground truth; agrega a
+fidelidade apenas sobre repetições PDT válidas; e separa fisicamente evidência
+pública de resultados privados. A esteira pareada foi alinhada à regra
+pré-registrada de duas repetições válidas: uma repetição PDT que permaneça
+inválida após a única substituição não exclui mais automaticamente a candidata
+quando ainda existem duas válidas e um ledger pré-rótulo completo. A exclusão
+continua obrigatória abaixo desse mínimo. Os runners também persistem um
+`oracle-binding-snapshot.json` canônico antes da abertura do rótulo, inclusive
+quando o controle bloqueia depois de staging. A integração desse orquestrador
+ao workflow protegido e sua execução no cluster continuam pendentes.
+
+O caminho pré-artefato agora também possui preparação reprodutível: patch e
+work order privados são reconstruídos apenas do commit, árvore e base selados
+pela CI e do manifesto do Oracle. O rótulo pretendido não entra nesses
+artefatos. A definição do workflow já encadeia esse caminho e o caminho
+Kubernetes, deriva o manifesto com código da base confiável, cifra toda
+evidência privada e persiste publicamente somente hashes e recibos sem rótulo.
+Os três tipos de verificação pré-artefato foram exercitados localmente nas
+quatro instâncias previstas pelo rascunho atual, sem GCP. Ainda faltam cadastrar
+os dois secrets protegidos, aplicar o RBAC declarativo, gerar o corpus
+confirmatório e executar a validação cloud autorizada do caminho Kubernetes.
 
 ### Fase 8 — Análise final
 

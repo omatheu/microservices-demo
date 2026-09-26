@@ -309,7 +309,7 @@
     },
     "comparative_pipeline_runner": {
       "path": "experiment/scripts/run-comparative-candidate.sh",
-      "sha256": "646cb32d1b12c85404520a38870767534fa6ccce53c940723f08c945caee2739"
+      "sha256": "602864b0f67bdfe26a08104909608e9e3a0bd1a955e5c269e61b9cd5ab944bf4"
     },
     "experimental_workload_cleanup": {
       "path": "experiment/scripts/cleanup-experimental-workloads.sh",
@@ -329,7 +329,7 @@
     },
     "confirmatory_repetition_runner": {
       "path": "experiment/scripts/run-repeated-comparative-candidate.sh",
-      "sha256": "e5085d11fa602adb5b3d9659d2f2a79d6911c202d5382d24248fb67ed1a8ce24"
+      "sha256": "7a9f5ff04404842b83b3afbe2a828cc4f01655c20dfa569c8cf4b34e3663b849"
     },
     "analysis_dataset_composer": {
       "path": "experiment/scripts/compose-analysis-dataset.py",
@@ -351,13 +351,21 @@
       "path": "experiment/scripts/audit-runtime-publication-readiness.py",
       "sha256": "32c74bbd04de8d37d62adf40a9948221f818811017450d92ec48d4af260ac2eb"
     },
+    "oracle_execution_readiness_auditor": {
+      "path": "experiment/scripts/audit-oracle-execution-readiness.py",
+      "sha256": "c3a3c61da36d4a29eb7f6cdab333f93cf091e2daebef561c52ccc2f800c4d749"
+    },
+    "oracle_rbac_terraform_plan_validator": {
+      "path": "experiment/scripts/validate-oracle-rbac-terraform-plan.py",
+      "sha256": "483efc08a3cc84cb4dbc90e9c537455a68fed44f53537ab265265382f850f876"
+    },
     "runtime_publication_terraform_plan_validator": {
       "path": "experiment/scripts/validate-runtime-publication-terraform-plan.py",
       "sha256": "fd9d31b894b33bf886f04c338c152060fd131b47b439645bbeeef9c3e0aca032"
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "eaa2ed390b8750a6bca7ea188cf884e9c64dbfcba598934df155da5c9ec3cc16"
+      "sha256": "925f5a28b8d354c7308ad280e55377d394fe7f767179ec8e52434ca4dbd67f55"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -365,7 +373,7 @@
     },
     "cloud_experiment_workflow": {
       "path": ".github/workflows/tcc-pr-experiment.yaml",
-      "sha256": "236eccadc6bb220e8c0966d9fbe9b6738adfe53fcd61c84f4ce65c0e8b9e2535"
+      "sha256": "39110802cd3538e5b1c767cb3794c382e465686bac8a7d3f5561a896cae5b75c"
     },
     "billing_export_infrastructure": {
       "path": "infra/terraform-billing-export/main.tf",
@@ -417,7 +425,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "241ab9d010c49f94d2080a0f18c82ac54da2c90d3483010f546babd396b1eba8"
+      "sha256": "30983310a61f88be04ac52a816cd6e6b7d8678c96958df22f529fd37c9f633bb"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
@@ -429,7 +437,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "e41e7a1ec5e9b51c68820d0803cc86de0be16a75f29527daeeb61d61af865203"
+      "sha256": "0bd6ea782e107b94fb689cbecd54aa7a1bebe76454a3281dc9931f65c26fada4"
     }
   },
   "required_before_freeze": [

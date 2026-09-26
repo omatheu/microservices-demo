@@ -21,8 +21,11 @@ baseline, conventional gates, PDT controller, mutation operators, and
 independent oracle are implemented. Confirmatory collection has not started:
 the protocol is still a pre-registration candidate, runtime image digests and
 the financial review are pending, and cloud execution remains explicitly
-locked. See the [experiment roadmap](/docs/tcc-experiment-roadmap.md) for the
-authoritative live status and exit criteria.
+locked. A read-only Oracle readiness audit now verifies GitHub protection,
+keyless identity, least-privilege Kubernetes RBAC, frozen artifacts and an
+empty Oracle namespace before execution can be enabled. See the
+[experiment roadmap](/docs/tcc-experiment-roadmap.md) for the authoritative
+live status and exit criteria.
 
 ## Architecture
 

@@ -329,6 +329,16 @@ declara `cloud_execution_authorized: false`. O bundle inteiro deve ser aplicado
 e revisado como uma única mudança antes das aprovações financeira e do
 pesquisador.
 
+O preflight local foi repetido em 26/09/2026 para o commit `4504cfab`. As três
+imagens foram construídas, seus SBOMs foram gerados e os scans fixados da
+esteira encontraram zero vulnerabilidades HIGH/CRITICAL. Não houve publicação,
+acesso ao GCP ou mutação cloud. A projeção conservadora de armazenamento ficou
+em `236.046.622` de `500.000.000` bytes, mas isso não concede aprovação
+financeira. O registro está em
+[`../evidence/ci-cd/runtime-image-preflight-20260926T164347Z.json`](../evidence/ci-cd/runtime-image-preflight-20260926T164347Z.json)
+e permanece inelegível como evidência confirmatória e como proveniência de
+publicação.
+
 Depois que o bundle estiver aplicado, as aprovações reais existirem nos
 caminhos canônicos e a auditoria passar nos 17 checks, a proposta final de
 congelamento é gerada por:
@@ -365,11 +375,13 @@ confere estrutura e hashes do protocolo, operadores, estados das políticas,
 arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
 explícita do pesquisador.
 
-O auditor de congelamento, o auditor da publicação dos runtimes, o validador do
-plano Terraform, o preparador do candidato, o finalizador, o cleanup restrito
-dos workloads experimentais, os dois agregadores de repetição, o orquestrador
-confirmatório, o gerenciador determinístico do corpus cego e o próprio
-validador agora também fazem parte dos 34 inputs selados do protocolo. Assim, as regras
+O auditor de congelamento, os auditores da publicação dos runtimes e da
+execução Oracle, os validadores dos planos Terraform de publicação e RBAC, o
+preparador do candidato, o finalizador, o cleanup restrito dos workloads
+experimentais, os dois
+agregadores de repetição, o orquestrador confirmatório, o gerenciador
+determinístico do corpus cego e o próprio validador agora também fazem parte
+dos 36 inputs selados do protocolo. Assim, as regras
 que decidem a prontidão e materializam a proposta final não podem ser trocadas
 silenciosamente depois da aprovação do desenho.
 

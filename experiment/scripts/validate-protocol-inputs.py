@@ -23,6 +23,8 @@ REQUIRED_INPUTS = {
     "protocol_freeze_candidate_preparer",
     "protocol_freeze_finalizer",
     "runtime_publication_readiness_auditor",
+    "oracle_execution_readiness_auditor",
+    "oracle_rbac_terraform_plan_validator",
     "runtime_publication_terraform_plan_validator",
     "protocol_input_validator",
     "pull_request_workflow",

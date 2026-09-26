@@ -276,7 +276,18 @@ fi
 
 control_result=$(jq -er '.decision' "$conventional_decision")
 if [[ "$control_result" == "block" ]]; then
+  oracle_snapshot_log="${pipeline_dir}/oracle-binding-snapshot.log"
+  "${repo_root}/experiment/scripts/capture-pdt-source-state.sh" \
+    2>&1 | tee "$oracle_snapshot_log"
+  oracle_snapshot_dir=$(tail -n 1 "$oracle_snapshot_log")
+  oracle_snapshot_file="${oracle_snapshot_dir}/pdt-input-state.json"
+  [[ -d "$oracle_snapshot_dir" && -f "$oracle_snapshot_file" ]] || {
+    echo "Oracle binding did not produce an immutable operational snapshot." >&2
+    exit 1
+  }
+  cp "$oracle_snapshot_file" "${pipeline_dir}/oracle-binding-snapshot.json"
   jq -n --arg pipeline_id "$pipeline_id" --arg candidate_id "$candidate_id" \
+    --arg oracle_snapshot_sha256 "$(sha256sum "${pipeline_dir}/oracle-binding-snapshot.json" | cut -d ' ' -f1)" \
     --slurpfile control "$conventional_decision" '
     {
       schema_version: "1.0.0",
@@ -289,6 +300,10 @@ if [[ "$control_result" == "block" ]]; then
       control_decision: $control[0].decision,
       treatment_decision: "block",
       treatment_source: "inherited-control-block",
+      oracle_binding_snapshot: {
+        path: "oracle-binding-snapshot.json",
+        sha256: $oracle_snapshot_sha256
+      },
       human_confirmation_required: false,
       operational_mutation_performed: false
     }' >"${pipeline_dir}/summary.json"
@@ -354,6 +369,7 @@ for repetition in "${valid_staging_repetitions[@]}"; do
   fi
 done
 
+pdt_ledger="$staging_ledger"
 if [[ "$pdt_infrastructure_invalid" == "true" ]]; then
   pdt_ledger="${pipeline_dir}/paired-infrastructure-invalid-ledger.json"
   paired_entries='[]'
@@ -386,6 +402,9 @@ if [[ "$pdt_infrastructure_invalid" == "true" ]]; then
       valid_repetitions: $valid,
       invalid_repetitions: $invalid
     }' >"$pdt_ledger"
+fi
+
+if (( ${#valid_pdt_repetitions[@]} < 2 )); then
   jq -n --arg pipeline_id "$pipeline_id" --arg candidate_id "$candidate_id" \
     --arg ledger "$pdt_ledger" '
     {
@@ -394,7 +413,7 @@ if [[ "$pdt_infrastructure_invalid" == "true" ]]; then
       candidate_id: $candidate_id,
       execution_mode: "confirmatory",
       outcome: "excluded-before-oracle-label",
-      reason: "paired-PDT-repetition-remained-infrastructure-invalid-after-retry",
+      reason: "insufficient-valid-paired-repetitions-after-retry",
       infrastructure_invalid_ledger: $ledger,
       control_decision_sealed: true,
       oracle_label_revealed: false,
@@ -418,10 +437,15 @@ pdt_args=(
 for decision_file in "${pdt_decisions[@]}"; do
   pdt_args+=(--pdt-decision "$decision_file")
 done
-if [[ -n "$staging_ledger" ]]; then
-  pdt_args+=(--infrastructure-invalid-ledger "$staging_ledger")
+if [[ -n "$pdt_ledger" ]]; then
+  pdt_args+=(--infrastructure-invalid-ledger "$pdt_ledger")
 fi
 "${pdt_args[@]}"
+
+latest_snapshot_index=$((${#snapshot_files[@]} - 1))
+latest_snapshot=${snapshot_files[$latest_snapshot_index]}
+[[ $(jq -er '.snapshot_id' "$latest_snapshot") == $(jq -er '.snapshot_id' "$pdt_decision") ]]
+cp "$latest_snapshot" "${pipeline_dir}/oracle-binding-snapshot.json"
 
 gate_file="${pipeline_dir}/gate.json"
 python3 "${repo_root}/experiment/scripts/evaluate-deployment-gate.py" \
@@ -432,9 +456,6 @@ python3 "${repo_root}/experiment/scripts/evaluate-deployment-gate.py" \
 action_plan="${pipeline_dir}/deployment-action.json"
 action_plan_prepared=false
 if [[ $(jq -er '.gate_state' "$gate_file") == "awaiting-human-confirmation" ]]; then
-  latest_snapshot_index=$((${#snapshot_files[@]} - 1))
-  latest_snapshot=${snapshot_files[$latest_snapshot_index]}
-  [[ $(jq -er '.snapshot_id' "$latest_snapshot") == $(jq -er '.snapshot_id' "$pdt_decision") ]]
   python3 "${repo_root}/experiment/scripts/prepare-deployment-action.py" \
     --candidate-definition "$candidate_definition" \
     --snapshot "$latest_snapshot" \
@@ -447,6 +468,7 @@ fi
 
 jq -n --arg pipeline_id "$pipeline_id" --arg candidate_id "$candidate_id" \
   --argjson action_plan_prepared "$action_plan_prepared" \
+  --arg oracle_snapshot_sha256 "$(sha256sum "${pipeline_dir}/oracle-binding-snapshot.json" | cut -d ' ' -f1)" \
   --slurpfile control "$conventional_decision" \
   --slurpfile pdt "$pdt_decision" \
   --slurpfile gate "$gate_file" '
@@ -462,6 +484,10 @@ jq -n --arg pipeline_id "$pipeline_id" --arg candidate_id "$candidate_id" \
     control_decision: $control[0].decision,
     treatment_decision: $pdt[0].decision,
     deployment_gate: $gate[0].gate_state,
+    oracle_binding_snapshot: {
+      path: "oracle-binding-snapshot.json",
+      sha256: $oracle_snapshot_sha256
+    },
     human_confirmation_required: $gate[0].human_confirmation.required,
     deployment_action_prepared: $action_plan_prepared,
     deployment_action_scope: (

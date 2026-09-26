@@ -39,7 +39,7 @@ class ValidateOracleSuiteTests(unittest.TestCase):
     def test_candidate_suite_files_are_bound_but_images_remain_pending(self):
         result = MODULE.validate(REPO_ROOT, manifest())
 
-        self.assertEqual(result["file_count"], 24)
+        self.assertEqual(result["file_count"], 27)
         self.assertIn(
             "experiment/scripts/bind-runtime-publication.py",
             {item["path"] for item in manifest()["files"]},

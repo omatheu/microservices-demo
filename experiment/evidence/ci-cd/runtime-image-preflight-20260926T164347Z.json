@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_kind": "local-runtime-image-preflight",
+  "generated_at": "2026-09-26T16:43:47Z",
+  "source": {
+    "repository": "omatheu/microservices-demo",
+    "commit": "4504cfabb62b8742e8b8fa47f96e089604eb073a",
+    "tree": "82bceacba6a2e0b1b55821f1fa2f6ebe6d3938bf",
+    "branch": "feat/tcc-oracle-candidate-orchestration"
+  },
+  "execution": {
+    "platform": "linux/amd64",
+    "docker_version": "29.8.1",
+    "syft_image": "ghcr.io/anchore/syft@sha256:500e2d872ac019436926e8322b4fc1f39441d94d21f6f4046c6ff29b30e8cb02",
+    "trivy_image": "aquasec/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969",
+    "blocking_severities": [
+      "HIGH",
+      "CRITICAL"
+    ],
+    "ignore_unfixed": true,
+    "images_published": false,
+    "gcp_project_accessed": false,
+    "cloud_authorization_granted": false,
+    "cloud_mutation_performed": false
+  },
+  "images": [
+    {
+      "name": "checkout-pdt-controller",
+      "local_tag": "online-boutique/checkout-pdt-controller:preflight-4504cfabb62b8742e8b8fa47f96e089604eb073a",
+      "image_id": "sha256:51a480c945b156c918c3abde5ef558ed9b0265a3d20ad5adab81ced9e6df8b0f",
+      "size_bytes": 48913388,
+      "sbom_component_count": 940,
+      "sbom_sha256": "3fff6ecec0a23633b90894d0f48f3abdd1eb2e18e21b5e127fdc2656cfd99233",
+      "high_findings": 0,
+      "critical_findings": 0,
+      "scan_sha256": "790e4378e2bc1032039821cc1fb74b077af8c7b5a747a227ae67f08770621cd5"
+    },
+    {
+      "name": "oracle-harness",
+      "local_tag": "online-boutique/oracle-harness:preflight-4504cfabb62b8742e8b8fa47f96e089604eb073a",
+      "image_id": "sha256:5bc2fe4e93f95f80c6ff65aefa4d17da3328d60dfe65311618ef3e0475991b18",
+      "size_bytes": 15282390,
+      "sbom_component_count": 961,
+      "sbom_sha256": "b4d574a35baa048de506633de4f48a55bd8fa16fbf2ee306e9aad9b2dff3e735",
+      "high_findings": 0,
+      "critical_findings": 0,
+      "scan_sha256": "5bfd5676f07ef0d0980d9f2225973a2d653eb4f69ff7e5b36e794423306829ed"
+    },
+    {
+      "name": "currency-reference",
+      "local_tag": "online-boutique/currency-reference:preflight-4504cfabb62b8742e8b8fa47f96e089604eb073a",
+      "image_id": "sha256:d75fd5b05eb41e87c8674951259238898bc3212ba62881b17e42682d6336bbeb",
+      "size_bytes": 164007349,
+      "sbom_component_count": 742,
+      "sbom_sha256": "22534defe5937f822e037fd150ff5facc6e36f0e9306041ddc42fa43b43a83f5",
+      "high_findings": 0,
+      "critical_findings": 0,
+      "scan_sha256": "bd740bd0589e905544a79e91b4c3d17b26535d032c50f7030489213a4e8ecfeb",
+      "informational_non_blocking_findings": {
+        "LOW": 1,
+        "MEDIUM": 8
+      }
+    }
+  ],
+  "storage_assessment": {
+    "artifact_registry_inventory_evidence": "../finance/pre-freeze-readiness-post-pr2-20260926T004340Z.json",
+    "artifact_registry_inventory_evidence_sha256": "1c7c9efbad0ea5a73dcec8912e2b989b890d06f3e77fa4508a0049ef6cca4f1c",
+    "current_registry_size_bytes": 7843495,
+    "local_image_size_sum_bytes": 228203127,
+    "projected_upper_bound_bytes": 236046622,
+    "allowance_source_evidence": "../finance/artifact-registry-storage-readiness-20260920T222357Z.json",
+    "allowance_source_evidence_sha256": "0baa2e34ebccbb68e70f37b84eb8e946bdde14f93a3871b870a26242bc58c8e8",
+    "assumed_allowance_bytes": 500000000,
+    "projected_headroom_bytes": 263953378,
+    "fits_assumed_allowance": true,
+    "financial_clearance_granted": false
+  },
+  "comparison_with_prior_preflight": {
+    "evidence": "runtime-image-preflight-20260922T021540Z.json",
+    "evidence_sha256": "750d1541de5e86e242d0f8d5a3caa88e44740a4a5218f110c25f7149cda2d120",
+    "source_commit": "6ecffab7d03fca1ae434515ef2b6ab5c55caf989",
+    "source_tree": "2f5dab3f3381cb4e48e0436a61a6cde0c8cedd28",
+    "material_image_inputs_changed": false,
+    "all_image_ids_equal": false,
+    "image_ids": {
+      "checkout-pdt-controller": {
+        "prior": "sha256:d77961ed486daca6431570cd474fa2fc6222c85cdfc2090841bfc81fdd188083",
+        "current": "sha256:51a480c945b156c918c3abde5ef558ed9b0265a3d20ad5adab81ced9e6df8b0f"
+      },
+      "oracle-harness": {
+        "prior": "sha256:1e11bc0ae96b7f0fc019590942d78505cbf680ff61c6ec372b6cddf5738343a9",
+        "current": "sha256:5bc2fe4e93f95f80c6ff65aefa4d17da3328d60dfe65311618ef3e0475991b18"
+      },
+      "currency-reference": {
+        "prior": "sha256:92697ff2c63dc4a2e8a65941c469f5ce377e14f1d9a783bcb2defbfab78e0a3d",
+        "current": "sha256:d75fd5b05eb41e87c8674951259238898bc3212ba62881b17e42682d6336bbeb"
+      }
+    },
+    "interpretation": "The material image inputs are unchanged, but rebuilds are not bit-for-bit identical. The protected workflow must scan the exact built images and bind their registry digests before runtime use."
+  },
+  "result": "pass-local-engineering-preflight",
+  "confirmatory_eligible": false,
+  "publication_provenance_eligible": false,
+  "raw_local_reports_retained_in_repository": false,
+  "limitations": [
+    "This local run does not replace the protected GitHub environment or its approval trail.",
+    "No image was published, so no registry digest is bound to the runtime manifests.",
+    "The storage calculation is a conservative projection from local uncompressed image sizes, not a billing guarantee.",
+    "The Artifact Registry allowance remains an assumption tied to the cited finance evidence and requires a fresh preflight before publication.",
+    "LOW and MEDIUM findings are informational under the frozen HIGH/CRITICAL blocking policy."
+  ]
+}

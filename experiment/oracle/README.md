@@ -84,6 +84,78 @@ Falhas funcionais da candidata não encerram o runner: o harness permanece
 disponível e as transforma em observações. Falhas do harness ou da referência
 independente invalidam a execução.
 
+O orquestrador candidata-nível
+[`../scripts/run-oracle-candidate.py`](../scripts/run-oracle-candidate.py)
+executa esse runner sequencialmente para o produto cartesiano de todas as
+alternativas implantáveis e das três repetições. Antes de liberar o item
+privado, ele confere o término da esteira pareada, o snapshot canônico
+`oracle-binding-snapshot.json`, os hashes das previsões por repetição, o ledger
+pré-rótulo e, quando aplicável, a cadeia do gate humano. Depois da matriz, ele
+encadeia adjudicação e agregação de fidelidade. Os artefatos que contêm
+operador, parâmetros, rótulo pretendido ou resultado adjudicado ficam em
+`private/` com permissões restritivas; `public/summary.json` contém apenas
+identidades opacas, contagens e hashes e é recusado se qualquer chave privada
+aparecer em qualquer profundidade.
+
+As esteiras pareadas de uma e de três repetições agora persistem o mesmo nome
+canônico de snapshot. Quando staging bloqueia depois do build, esse snapshot é
+capturado depois do selo da decisão e antes da liberação do rótulo. Quando o
+controle aprova, ele é exatamente o snapshot da última repetição PDT válida
+que alimenta a ação agregada. Assim, ambos os caminhos permanecem vinculados à
+mesma instância operacional sem depender de caminhos temporários do runner.
+
+Para bloqueios anteriores ao build,
+[`../scripts/prepare-sealed-preartifact-inputs.py`](../scripts/prepare-sealed-preartifact-inputs.py)
+reconstrói o patch e o work order privados a partir do único commit candidato,
+da árvore e do commit-base que a CI já selou. O preparador usa operador e
+parâmetros do manifesto privado, mas nunca copia o rótulo pretendido para o
+work order. Isso permite repetir a verificação independente sem versionar
+metadados do Oracle e sem executar scripts da revisão candidata com acesso à
+chave de cegamento.
+
+O workflow protegido contém um job Oracle separado, desarmado por padrão. Ele
+exige simultaneamente o label `tcc-oracle-cloud`, protocolo congelado, revisão
+financeira e a variável `TCC_ORACLE_EXECUTION_ACKNOWLEDGED=true`. Os scripts são
+carregados do commit-base confiável da `main`; a revisão candidata é tratada
+somente como fonte selada de dados e imagem. A chave HMAC aparece apenas no
+passo que deriva o manifesto privado e é removida em seguida. Evidência com
+operador, parâmetros, observações e adjudicação é cifrada com GnuPG antes de
+ser persistida; somente recibo, índices e hashes sem rótulo são enviados como
+artefato público. Um cleanup explícito e limitado ao namespace `oracle` é
+executado mesmo quando a coleta falha.
+
+Antes de habilitar qualquer uma dessas travas, o auditor somente leitura
+[`../scripts/audit-oracle-execution-readiness.py`](../scripts/audit-oracle-execution-readiness.py)
+deve aprovar 22 controles. Ele confere o workflow exato em `main`, ambiente
+protegido, labels, nomes de secrets, kill switches desligados, PR próprio e
+desarmado, identidade OIDC sem chave, papéis de projeto exatos, provider
+restrito, Role/RoleBinding mínimo no namespace `oracle`, namespace sem workload,
+protocolo e runtimes congelados e corpus confirmatório ligado pelo hash do
+protocolo. O auditor não lê valores de secrets, não altera GitHub/GCP/Kubernetes
+e nunca autoriza a execução.
+
+```bash
+python3 experiment/scripts/audit-oracle-execution-readiness.py \
+  --pull-request <numero-do-pr> \
+  --repo-root . \
+  --require-ready
+```
+
+Em 26/09/2026 UTC, a primeira leitura real passou em 12 dos 22 controles após
+distinguir ausências confirmadas de falhas de coleta. Os bloqueios são
+deliberados: workflow Oracle ainda local, label e secrets ainda ausentes, kill
+switch Oracle ainda não cadastrado, RBAC ainda não aplicado, protocolo/runtimes
+ainda não congelados, corpus final ainda inexistente e nenhum PR aberto. A
+identidade sem chave, os três papéis mínimos, o provider OIDC, a proteção do
+ambiente, o namespace correto e sua ausência de workloads foram confirmados.
+A evidência está em
+[`../evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json`](../evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json).
+
+O plano Terraform do RBAC também foi validado sem `apply`: 10/10 controles
+confirmaram exatamente uma Role e uma RoleBinding no namespace `oracle`, sem
+alterações, destruições ou recursos faturáveis. A evidência está em
+[`../evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json`](../evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json).
+
 Exemplo de invocação, somente depois do congelamento e da revisão financeira:
 
 ```bash
@@ -131,7 +203,7 @@ perfis de desempenho, limites de saúde e a regra de duas repetições prejudici
 entre pelo menos duas válidas. `adjudicate-oracle.py` já implementa e testa essa
 regra sem usar o rótulo pretendido como entrada da classificação.
 
-[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 24
+[`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 27
 arquivos que definem a política, o harness, os avaliadores e o runner. O
 validador `validate-oracle-suite.py` falha se qualquer arquivo mudar. O
 manifesto permanece `pre-registration-candidate` e seus dois digests de imagem
@@ -203,8 +275,12 @@ privilégio proibido. Falha da ferramenta é classificada como execução invál
 nunca como dano. O rótulo pretendido só é comparado depois de calculado o
 rótulo observado.
 
+Uma execução de engenharia materializou e selou as quatro candidatas
+pré-artefato do rascunho atual. A CI bloqueou todas, e os três verificadores
+independentes produziram quatro observações válidas, todas prejudiciais e
+concordantes com os rótulos reservados. A evidência sanitizada está em
+[`../evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json`](../evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json).
 Ainda falta validar o runner no cluster contra todas as imagens materializadas,
-validar o caminho pré-artefato contra as candidatas materializadas, publicar e
-congelar os digests do harness e da referência. Até isso acontecer, a política
-permanece `pre-registration-candidate` e nenhuma observação pode ser incluída
-na análise principal.
+publicar e congelar os digests do harness e da referência. Até isso acontecer,
+a política permanece `pre-registration-candidate` e nenhuma observação pode
+ser incluída na análise principal.
