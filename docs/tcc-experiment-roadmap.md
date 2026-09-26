@@ -600,7 +600,7 @@ PDT, não apenas sua decisão.
 - [x] implementar a orquestração candidata-nível da matriz de alternativas e repetições;
 - [ ] validar o runner em execução de engenharia no namespace `oracle`;
 - [x] implementar adjudicação independente das candidatas bloqueadas antes de existir artefato implantável;
-- [ ] validar essa adjudicação nas candidatas pré-artefato materializadas e seladas;
+- [x] validar essa adjudicação nas candidatas pré-artefato materializadas e seladas;
 - [ ] persistir as duas decisões antes de revelar o rótulo em uma execução completa;
 - [ ] executar cada candidata em ambiente-oráculo efêmero e sem exposição pública;
 - [ ] aplicar matriz de testes mais ampla que a usada pelos mecanismos;
@@ -620,13 +620,16 @@ o runtime mínimo e o runner Kubernetes único estão implementados e cobertos p
 testes locais. Para decisões aprovadas pelo controle, o runner exige uma cadeia
 íntegra até a aprovação do ambiente protegido do GitHub antes de acessar o
 cluster; o recibo humano não substitui as três travas financeiras/cloud. O
-verificador pré-artefato também está implementado e confere
-commit, árvore, patch e decisões seladas antes de reproduzir a propriedade
-violada sem usar o rótulo pretendido. Uma execução de engenharia validou a
-matriz funcional contra o `checkoutservice`, mas não integra a análise
-principal. Ainda faltam validar os dois caminhos com candidatas materializadas,
-validar todas as imagens e realizar a execução cega posterior às decisões
-seladas.
+verificador pré-artefato também está implementado e confere commit, árvore,
+patch e decisões seladas antes de reproduzir a propriedade violada sem usar o
+rótulo pretendido. Uma execução local materializou e selou as quatro candidatas
+pré-artefato de um corpus de engenharia atual: as quatro foram bloqueadas pela
+CI, as quatro verificações independentes foram válidas e todas observaram dano
+em concordância com o rótulo reservado. O registro sanitizado está em
+[`../experiment/evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json`](../experiment/evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json).
+A execução continua inelegível para a análise principal. Ainda faltam validar
+o caminho Kubernetes com candidatas materializadas, validar todas as imagens e
+realizar a execução cega confirmatória posterior às decisões seladas.
 
 O runner agora permite ao oráculo percorrer todas as alternativas implantáveis
 que a definição candidata e a decisão PDT selada têm em comum, mesmo quando o
@@ -660,8 +663,10 @@ pela CI e do manifesto do Oracle. O rótulo pretendido não entra nesses
 artefatos. A definição do workflow já encadeia esse caminho e o caminho
 Kubernetes, deriva o manifesto com código da base confiável, cifra toda
 evidência privada e persiste publicamente somente hashes e recibos sem rótulo.
-Ainda faltam cadastrar os dois secrets protegidos, aplicar o RBAC declarativo,
-gerar o corpus confirmatório e executar a validação real autorizada.
+Os três tipos de verificação pré-artefato foram exercitados localmente nas
+quatro instâncias previstas pelo rascunho atual, sem GCP. Ainda faltam cadastrar
+os dois secrets protegidos, aplicar o RBAC declarativo, gerar o corpus
+confirmatório e executar a validação cloud autorizada do caminho Kubernetes.
 
 ### Fase 8 — Análise final
 

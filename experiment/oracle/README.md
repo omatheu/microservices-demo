@@ -275,8 +275,12 @@ privilégio proibido. Falha da ferramenta é classificada como execução invál
 nunca como dano. O rótulo pretendido só é comparado depois de calculado o
 rótulo observado.
 
+Uma execução de engenharia materializou e selou as quatro candidatas
+pré-artefato do rascunho atual. A CI bloqueou todas, e os três verificadores
+independentes produziram quatro observações válidas, todas prejudiciais e
+concordantes com os rótulos reservados. A evidência sanitizada está em
+[`../evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json`](../evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json).
 Ainda falta validar o runner no cluster contra todas as imagens materializadas,
-validar o caminho pré-artefato contra as candidatas materializadas, publicar e
-congelar os digests do harness e da referência. Até isso acontecer, a política
-permanece `pre-registration-candidate` e nenhuma observação pode ser incluída
-na análise principal.
+publicar e congelar os digests do harness e da referência. Até isso acontecer,
+a política permanece `pre-registration-candidate` e nenhuma observação pode
+ser incluída na análise principal.
