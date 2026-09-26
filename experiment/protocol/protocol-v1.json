@@ -325,7 +325,7 @@
     },
     "confirmatory_analyzer": {
       "path": "experiment/scripts/analyze-confirmatory-results.py",
-      "sha256": "abdcaee4cfbff26ad5bfb0ac1ae2bfe8dd5635bef01108a1baeeb57d565a04c4"
+      "sha256": "5c5acf7b2e3299d70d8a5a82d9388b04b6f2fb67e071d563c56bc4015f3a8499"
     },
     "confirmatory_repetition_runner": {
       "path": "experiment/scripts/run-repeated-comparative-candidate.sh",
@@ -333,7 +333,7 @@
     },
     "analysis_dataset_composer": {
       "path": "experiment/scripts/compose-analysis-dataset.py",
-      "sha256": "0bd48cde192df7c80b8c996d43e801b5a5d12f638799473cad7bc7549bc52225"
+      "sha256": "1d439672213ab1580d5fc7c33fe34c7020076e4655816c2e07d5f83f0366e9dd"
     },
     "protocol_freeze_auditor": {
       "path": "experiment/scripts/audit-protocol-freeze.py",
@@ -357,7 +357,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "4a93e57196282808b8166d1997a021fa52cabe78fd97dcd9ecaac5c294917eb8"
+      "sha256": "eaa2ed390b8750a6bca7ea188cf884e9c64dbfcba598934df155da5c9ec3cc16"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -423,9 +423,13 @@
       "path": "experiment/mutations/registry.json",
       "sha256": "0c18ba57d5e35f9986fef1bbc4c59fd49d3bbe2660d8bc6d455ffed516dbf268"
     },
+    "blinded_corpus_manager": {
+      "path": "experiment/scripts/manage-blinded-corpus.py",
+      "sha256": "303da77e3cd804f24e89c95fa22cf487c393a7a4800d02e4eb717d09c825ea97"
+    },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "5acaab4071043e4e711493ec59495129868a1a04ae5bf74e9a4835b07b3c399e"
+      "sha256": "e41e7a1ec5e9b51c68820d0803cc86de0be16a75f29527daeeb61d61af865203"
     }
   },
   "required_before_freeze": [

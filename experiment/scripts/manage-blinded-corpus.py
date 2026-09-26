@@ -329,6 +329,42 @@ def generate_command(args):
     print(json.dumps(summary, sort_keys=True))
 
 
+def derive_oracle_command(args):
+    protocol_path = Path(args.protocol)
+    protocol = load_json(protocol_path)
+    validate_protocol(protocol)
+    if protocol["status"] != "frozen" and not args.allow_draft:
+        raise ValueError("draft protocol oracle derivation requires --allow-draft")
+
+    key = read_key(args.key)
+    ensure_private_file(args.key)
+    public = load_json(args.public)
+    expected_public, oracle = build_corpus(
+        protocol,
+        sha256_file(protocol_path),
+        key,
+        public.get("generated_at"),
+    )
+    if public != expected_public:
+        raise ValueError("public corpus differs from deterministic protocol output")
+
+    summary = validate_corpus(
+        protocol,
+        sha256_file(protocol_path),
+        key,
+        public,
+        oracle,
+    )
+    write_json_exclusive(args.oracle_output, oracle, 0o600)
+    summary.update(
+        {
+            "public_input": str(Path(args.public)),
+            "oracle_output": str(Path(args.oracle_output)),
+        }
+    )
+    print(json.dumps(summary, sort_keys=True))
+
+
 def validate_command(args):
     protocol_path = Path(args.protocol)
     protocol = load_json(protocol_path)
@@ -361,6 +397,14 @@ def parse_args():
     generate.add_argument("--oracle-output", required=True)
     generate.add_argument("--allow-draft", action="store_true")
     generate.set_defaults(handler=generate_command)
+
+    derive_oracle = subparsers.add_parser("derive-oracle")
+    derive_oracle.add_argument("--protocol", required=True)
+    derive_oracle.add_argument("--key", required=True)
+    derive_oracle.add_argument("--public", required=True)
+    derive_oracle.add_argument("--oracle-output", required=True)
+    derive_oracle.add_argument("--allow-draft", action="store_true")
+    derive_oracle.set_defaults(handler=derive_oracle_command)
 
     validate = subparsers.add_parser("validate")
     validate.add_argument("--protocol", required=True)

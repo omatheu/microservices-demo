@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0.0",
+  "captured_at": "2026-09-26T00:43:40Z",
+  "observation_mode": "read-only pre-freeze readiness audit",
+  "project_id": "microservices-demo-tcc",
+  "repository": {
+    "name": "omatheu/microservices-demo",
+    "default_branch": "main",
+    "merge_commit": "182c7dff465c142a310fa3bf2aa18486fc1f6c90",
+    "source_tree": "82d31fcdabda498d0638ee52fc5d87df63e65c83",
+    "open_pull_request_count": 0
+  },
+  "protocol": {
+    "protocol_id": "checkout-pdt-comparison-v1",
+    "status": "pre-registration-candidate",
+    "sha256": "66e24879c071c2b35dbf1c6534f301d4af8ebd3ec2101e7f9590fd22c345ed26",
+    "confirmatory_collection_allowed": false,
+    "checks_passed": 6,
+    "check_count": 17,
+    "ready_to_freeze": false,
+    "blocking_requirements": [
+      "ci-policy-frozen",
+      "staging-thresholds-frozen",
+      "pdt-model-policy-frozen",
+      "pdt-fidelity-policy-frozen",
+      "oracle-policy-frozen",
+      "pdt-controller-image-bound",
+      "pdt-runtime-frozen",
+      "oracle-images-bound",
+      "oracle-suite-frozen",
+      "researcher-approval",
+      "financial-review"
+    ]
+  },
+  "runtime_publication": {
+    "infrastructure_checks_passed": 12,
+    "infrastructure_check_count": 12,
+    "infrastructure_ready_for_candidate": true,
+    "candidate_checks_passed": 0,
+    "candidate_check_count": 1,
+    "candidate_ready_for_controlled_enablement": false,
+    "blocking_requirement": "open same-repository non-draft disarmed pull request",
+    "publication_authorized": false
+  },
+  "cluster": {
+    "name": "online-boutique-experiment",
+    "location": "us-central1",
+    "status": "RUNNING",
+    "autopilot": true,
+    "current_master_version": "1.35.7-gke.1222000",
+    "operational_deployments_ready": 12,
+    "operational_deployment_count": 12,
+    "operational_pods_ready": 12,
+    "operational_pod_count": 12,
+    "experimental_active_pods": {
+      "staging": 0,
+      "pdt": 0,
+      "pdt-system": 0,
+      "oracle": 0,
+      "observability": 0
+    }
+  },
+  "financial_controls": {
+    "currency": "BRL",
+    "budgets": [
+      {
+        "display_name": "Online Boutique TCC - experimental spend guard",
+        "amount_brl": 200.0,
+        "credit_treatment": "EXCLUDE_ALL_CREDITS",
+        "threshold_percentages": [
+          25,
+          50,
+          75,
+          90,
+          100
+        ]
+      },
+      {
+        "display_name": "Online Boutique TCC - gross cost guard",
+        "amount_brl": 1751.1,
+        "credit_treatment": "EXCLUDE_ALL_CREDITS",
+        "threshold_percentages": [
+          25,
+          50,
+          75,
+          90,
+          95,
+          100
+        ]
+      }
+    ],
+    "standard_usage_cost_export": {
+      "dataset_id": "online_boutique_billing",
+      "location": "US",
+      "table_count": 0,
+      "cost_data_available": false,
+      "billing_query_executed": false
+    },
+    "financial_review_eligible": false,
+    "reason": "The protected dataset has no gcp_billing_export_v1_* table, so current gross spend cannot be evidenced under the frozen review schema."
+  },
+  "artifact_registry": {
+    "repository": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment",
+    "file_count": 17,
+    "size_bytes": 7843495,
+    "image_count": 1,
+    "images": [
+      {
+        "name": "checkoutservice",
+        "tag": "engineering-artifact-binding-v2",
+        "digest": "sha256:fc60c11a7146a53a5f87df486517453b4c91073e919d0d0b6342c5a318a3734f"
+      }
+    ],
+    "required_runtime_images_published": false
+  },
+  "queries": [
+    "audit-protocol-freeze.py",
+    "audit-runtime-publication-readiness.py",
+    "gcloud container clusters describe",
+    "kubectl get namespaces,deployments,pods",
+    "gcloud billing budgets list",
+    "bq ls online_boutique_billing",
+    "gcloud artifacts repositories describe",
+    "gcloud artifacts docker images list",
+    "gcloud artifacts files list",
+    "gh pr list"
+  ],
+  "cloud_mutation_performed": false,
+  "github_mutation_performed": false,
+  "cloud_execution_authorized": false
+}

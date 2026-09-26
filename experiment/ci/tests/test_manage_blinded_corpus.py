@@ -1,7 +1,10 @@
 import copy
+import contextlib
 import importlib.util
+import io
 import json
 import pathlib
+import stat
 import tempfile
 import types
 import unittest
@@ -87,6 +90,100 @@ class ManageBlindedCorpusTests(unittest.TestCase):
 
             with self.assertRaisesRegex(ValueError, "requires --allow-draft"):
                 MODULE.generate_command(args)
+
+    def test_private_oracle_manifest_can_be_derived_from_public_commitment(self):
+        value = protocol()
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            temporary = pathlib.Path(temporary_directory)
+            protocol_path = temporary / "protocol.json"
+            key_path = temporary / "key.bin"
+            public_path = temporary / "public.json"
+            oracle_path = temporary / "oracle.json"
+            protocol_path.write_text(json.dumps(value), encoding="utf-8")
+            key_path.write_bytes(b"a" * 32)
+            key_path.chmod(0o600)
+            public, expected_oracle = MODULE.build_corpus(
+                value,
+                MODULE.sha256_file(protocol_path),
+                b"a" * 32,
+                "2026-09-20T00:00:00Z",
+            )
+            public_path.write_text(json.dumps(public), encoding="utf-8")
+
+            args = types.SimpleNamespace(
+                protocol=str(protocol_path),
+                key=str(key_path),
+                public=str(public_path),
+                oracle_output=str(oracle_path),
+                allow_draft=True,
+            )
+            with contextlib.redirect_stdout(io.StringIO()):
+                MODULE.derive_oracle_command(args)
+
+            self.assertEqual(
+                json.loads(oracle_path.read_text(encoding="utf-8")),
+                expected_oracle,
+            )
+            self.assertEqual(stat.S_IMODE(oracle_path.stat().st_mode), 0o600)
+
+    def test_private_oracle_derivation_rejects_tampered_public_corpus(self):
+        value = protocol()
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            temporary = pathlib.Path(temporary_directory)
+            protocol_path = temporary / "protocol.json"
+            key_path = temporary / "key.bin"
+            public_path = temporary / "public.json"
+            oracle_path = temporary / "oracle.json"
+            protocol_path.write_text(json.dumps(value), encoding="utf-8")
+            key_path.write_bytes(b"a" * 32)
+            key_path.chmod(0o600)
+            public, _ = MODULE.build_corpus(
+                value,
+                MODULE.sha256_file(protocol_path),
+                b"a" * 32,
+                "2026-09-20T00:00:00Z",
+            )
+            public["execution_order"][0]["candidate_id"] = "cand-aaaaaaaaaaaaaaaa"
+            public_path.write_text(json.dumps(public), encoding="utf-8")
+            args = types.SimpleNamespace(
+                protocol=str(protocol_path),
+                key=str(key_path),
+                public=str(public_path),
+                oracle_output=str(oracle_path),
+                allow_draft=True,
+            )
+
+            with self.assertRaisesRegex(ValueError, "public corpus differs"):
+                MODULE.derive_oracle_command(args)
+            self.assertFalse(oracle_path.exists())
+
+    def test_draft_private_oracle_derivation_requires_explicit_override(self):
+        value = protocol()
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            temporary = pathlib.Path(temporary_directory)
+            protocol_path = temporary / "protocol.json"
+            key_path = temporary / "key.bin"
+            public_path = temporary / "public.json"
+            protocol_path.write_text(json.dumps(value), encoding="utf-8")
+            key_path.write_bytes(b"a" * 32)
+            key_path.chmod(0o600)
+            public, _ = MODULE.build_corpus(
+                value,
+                MODULE.sha256_file(protocol_path),
+                b"a" * 32,
+                "2026-09-20T00:00:00Z",
+            )
+            public_path.write_text(json.dumps(public), encoding="utf-8")
+            args = types.SimpleNamespace(
+                protocol=str(protocol_path),
+                key=str(key_path),
+                public=str(public_path),
+                oracle_output=str(temporary / "oracle.json"),
+                allow_draft=False,
+            )
+
+            with self.assertRaisesRegex(ValueError, "requires --allow-draft"):
+                MODULE.derive_oracle_command(args)
 
 
 if __name__ == "__main__":

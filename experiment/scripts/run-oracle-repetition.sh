@@ -8,6 +8,8 @@ candidate_id=${CANDIDATE_ID:-}
 candidate_definition=${CANDIDATE_DEFINITION:-}
 conventional_decision=${CONVENTIONAL_DECISION:-}
 pdt_decision=${PDT_DECISION:-}
+pdt_prediction_decision=${PDT_PREDICTION_DECISION:-}
+pdt_invalid_repetition_ledger=${PDT_INVALID_REPETITION_LEDGER:-}
 deployment_gate=${DEPLOYMENT_GATE:-}
 deployment_action=${DEPLOYMENT_ACTION:-}
 human_gate_decision=${HUMAN_GATE_DECISION:-}
@@ -36,6 +38,7 @@ run_dir=""
 runtime_manifest=""
 human_gate_validation=""
 treatment_decision="block"
+prediction_available=false
 
 require_command() {
   command -v "$1" >/dev/null 2>&1 || {
@@ -129,6 +132,10 @@ if [[ "$control_decision" == "approve" ]]; then
       exit 1
     }
   done
+  if [[ -z "$pdt_prediction_decision" ]] \
+    && [[ $(jq -r '.mechanism // ""' "$pdt_decision") != "candidate-level-pdt-decision" ]]; then
+    pdt_prediction_decision=$pdt_decision
+  fi
   treatment_decision=$(jq -er '.decision | select(. == "approve" or . == "block" or . == "reconfigure")' "$pdt_decision")
   if [[ "$treatment_decision" == "approve" || "$treatment_decision" == "reconfigure" ]]; then
     for required_file in "$deployment_action" "$human_gate_decision" \
@@ -177,21 +184,69 @@ if [[ "$control_decision" == "approve" ]]; then
       exit 1
     fi
   fi
-  if ! jq -e --arg candidate "$candidate_id" --arg alternative "$alternative_id" \
-    --arg mode "$mode" --argjson repetition "$repetition" '
-    .candidate == $candidate
-    and .repetition == $repetition
-    and .execution_mode == $mode
-    and .operational_mutation_performed == false
-    and ([.alternatives_evaluated[] |
-      select(
-        .id == $alternative
-        and .action == "deploy"
-        and (.predicted_metrics | type == "object")
-      )] | length == 1)
-  ' "$pdt_decision" >/dev/null; then
-    echo "Oracle alternative lacks a matching sealed PDT prediction for this repetition." >&2
-    exit 1
+  pdt_decision_sha256=$(sha256sum "$pdt_decision" | cut -d ' ' -f1)
+  if [[ -n "$pdt_prediction_decision" ]]; then
+    if [[ ! -f "$pdt_prediction_decision" ]] || ! jq -e \
+      --arg candidate "$candidate_id" --arg alternative "$alternative_id" \
+      --arg mode "$mode" --argjson repetition "$repetition" \
+      --arg candidate_sha256 "$candidate_definition_sha256" \
+      --slurpfile control "$conventional_decision" '
+      .candidate == $candidate
+      and .repetition == $repetition
+      and .execution_mode == $mode
+      and .operational_mutation_performed == false
+      and .artifact_binding.candidate_definition_sha256 == $candidate_sha256
+      and .artifact_binding.staging_binding_verified == true
+      and .artifact_binding.immutable_artifacts == $control[0].immutable_artifacts
+      and ([.alternatives_evaluated[] |
+        select(
+          .id == $alternative
+          and .action == "deploy"
+          and (.predicted_metrics | type == "object")
+        )] | length == 1)
+    ' "$pdt_prediction_decision" >/dev/null; then
+      echo "Oracle alternative lacks a matching sealed PDT prediction for this repetition." >&2
+      exit 1
+    fi
+    pdt_prediction_decision_sha256=$(sha256sum "$pdt_prediction_decision" | cut -d ' ' -f1)
+    if [[ "$pdt_decision_sha256" != "$pdt_prediction_decision_sha256" ]] \
+      && ! jq -e --arg sha256 "$pdt_prediction_decision_sha256" \
+        --argjson repetition "$repetition" '
+        .mechanism == "candidate-level-pdt-decision"
+        and .repetition == null
+        and ([.evidence.pdt_decisions[] |
+          select(.repetition == $repetition and .sha256 == $sha256)] | length == 1)
+      ' "$pdt_decision" >/dev/null; then
+        echo "PDT repetition prediction is not an input of the sealed candidate-level decision." >&2
+        exit 1
+    fi
+    prediction_available=true
+  else
+    [[ -f "$pdt_invalid_repetition_ledger" ]] || {
+      echo "Missing PDT prediction requires a pre-label infrastructure-invalid ledger." >&2
+      exit 1
+    }
+    pdt_invalid_repetition_ledger_sha256=$(sha256sum "$pdt_invalid_repetition_ledger" | cut -d ' ' -f1)
+    if ! jq -e --arg candidate "$candidate_id" --argjson repetition "$repetition" '
+      .candidate_id == $candidate
+      and .classification == "infrastructure-invalid"
+      and .label_revealed == false
+      and (.valid_repetitions | index($repetition) == null)
+      and ([.invalid_repetitions[] |
+        select(
+          .repetition == $repetition
+          and .attempts == 2
+          and (.reasons | type == "array" and length == 2)
+          and all(.reasons[]; type == "string" and length > 0)
+        )] | length == 1)
+    ' "$pdt_invalid_repetition_ledger" >/dev/null \
+      || ! jq -e --arg sha256 "$pdt_invalid_repetition_ledger_sha256" '
+        .mechanism == "candidate-level-pdt-decision"
+        and .evidence.infrastructure_invalid_ledger.sha256 == $sha256
+      ' "$pdt_decision" >/dev/null; then
+      echo "Missing PDT prediction is not authorized by the sealed pre-label ledger." >&2
+      exit 1
+    fi
   fi
 fi
 if ! jq -e --arg candidate "$candidate_id" --arg sha256 "$candidate_definition_sha256" \
@@ -220,6 +275,10 @@ if ! jq -e --arg mode "$mode" '
   and .controls.post_decision_only == true
   and .controls.model_mutation_allowed == false
   and .controls.confirmatory_corpus_recalibration_allowed == false
+  and .controls.minimum_valid_repetitions == 2
+  and .controls.missing_repetitions_require_prelabel_infrastructure_ledger == true
+  and .controls.complete_matrix_scope
+    == "every-deployable-alternative-x-every-valid-pdt-repetition"
   and (
     $mode != "confirmatory"
     or (.status == "frozen" and (.frozen_at | type == "string" and length > 0))
@@ -340,6 +399,12 @@ cp "$snapshot_file" "${run_dir}/pdt-input-state.json"
 cp "$policy_file" "${run_dir}/oracle-policy.json"
 if [[ "$control_decision" == "approve" ]]; then
   cp "$pdt_decision" "${run_dir}/pdt-decision.json"
+  if [[ "$prediction_available" == "true" ]]; then
+    cp "$pdt_prediction_decision" "${run_dir}/pdt-prediction-decision.json"
+  else
+    cp "$pdt_invalid_repetition_ledger" \
+      "${run_dir}/pdt-invalid-repetition-ledger.json"
+  fi
   cp "$deployment_gate" "${run_dir}/deployment-gate.json"
   if [[ "$treatment_decision" == "approve" || "$treatment_decision" == "reconfigure" ]]; then
     cp "$deployment_action" "${run_dir}/deployment-action.json"
@@ -483,19 +548,27 @@ python3 "${repo_root}/experiment/scripts/compose-oracle-observation.py" \
   --output "${run_dir}/observation.json" >"${run_dir}/compose-observation.log"
 
 fidelity_report=""
-if [[ "$control_decision" == "approve" ]]; then
+if [[ "$control_decision" == "approve" && "$prediction_available" == "true" ]]; then
   fidelity_report="${run_dir}/pdt-fidelity.json"
   python3 "${repo_root}/experiment/scripts/calculate-pdt-fidelity.py" \
     --policy "$fidelity_policy" --oracle-policy "$policy_file" \
-    --pdt-decision "$pdt_decision" \
+    --pdt-decision "$pdt_prediction_decision" \
     --oracle-observation "${run_dir}/observation.json" \
     --output "$fidelity_report" >"${run_dir}/fidelity.log"
 fi
 
 pdt_decision_sha256=""
+pdt_prediction_decision_sha256=""
+pdt_invalid_repetition_ledger_sha256=""
 fidelity_report_sha256=""
 if [[ -n "$pdt_decision" ]]; then
   pdt_decision_sha256=$(sha256sum "$pdt_decision" | cut -d ' ' -f1)
+fi
+if [[ -n "$pdt_prediction_decision" ]]; then
+  pdt_prediction_decision_sha256=$(sha256sum "$pdt_prediction_decision" | cut -d ' ' -f1)
+fi
+if [[ -n "$pdt_invalid_repetition_ledger" ]]; then
+  pdt_invalid_repetition_ledger_sha256=$(sha256sum "$pdt_invalid_repetition_ledger" | cut -d ' ' -f1)
 fi
 if [[ -n "$fidelity_report" ]]; then
   fidelity_report_sha256=$(sha256sum "$fidelity_report" | cut -d ' ' -f1)
@@ -513,6 +586,8 @@ jq -n \
   --arg oracle_policy_sha256 "$(sha256sum "$policy_file" | cut -d ' ' -f1)" \
   --arg fidelity_policy_sha256 "$(sha256sum "$fidelity_policy" | cut -d ' ' -f1)" \
   --arg pdt_decision_sha256 "$pdt_decision_sha256" \
+  --arg pdt_prediction_decision_sha256 "$pdt_prediction_decision_sha256" \
+  --arg pdt_invalid_repetition_ledger_sha256 "$pdt_invalid_repetition_ledger_sha256" \
   --arg fidelity_report_sha256 "$fidelity_report_sha256" \
   --arg runtime_sha256 "$(sha256sum "$runtime_manifest" | cut -d ' ' -f1)" '
   {
@@ -534,6 +609,16 @@ jq -n \
       oracle_policy: $oracle_policy_sha256,
       fidelity_policy: $fidelity_policy_sha256,
       pdt_decision: (if $pdt_decision_sha256 == "" then null else $pdt_decision_sha256 end),
+      pdt_prediction_decision: (
+        if $pdt_prediction_decision_sha256 == "" then null
+        else $pdt_prediction_decision_sha256
+        end
+      ),
+      pdt_invalid_repetition_ledger: (
+        if $pdt_invalid_repetition_ledger_sha256 == "" then null
+        else $pdt_invalid_repetition_ledger_sha256
+        end
+      ),
       runtime: $runtime_sha256
     },
     pdt_fidelity: (

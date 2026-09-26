@@ -116,6 +116,15 @@ def validate_fidelity(
         if isinstance(fidelity, dict)
         else None
     )
+    minimum_valid_repetitions = protocol.get("aggregation", {}).get(
+        "minimum_valid_repetitions"
+    )
+    valid_repetitions = (
+        coverage.get("valid_repetitions") if isinstance(coverage, dict) else None
+    )
+    invalid_repetitions = (
+        coverage.get("invalid_repetitions") if isinstance(coverage, dict) else None
+    )
     if (
         not isinstance(fidelity, dict)
         or fidelity.get("schema_version") != "1.0.0"
@@ -141,6 +150,23 @@ def validate_fidelity(
         not isinstance(coverage, dict)
         or coverage.get("complete") is not True
         or coverage.get("repetitions") != planned_repetitions
+        or coverage.get("minimum_valid_repetitions") != minimum_valid_repetitions
+        or not isinstance(valid_repetitions, list)
+        or not all(
+            isinstance(value, int) and not isinstance(value, bool)
+            for value in valid_repetitions
+        )
+        or valid_repetitions != sorted(set(valid_repetitions))
+        or not isinstance(invalid_repetitions, list)
+        or not all(
+            isinstance(value, int) and not isinstance(value, bool)
+            for value in invalid_repetitions
+        )
+        or invalid_repetitions != sorted(set(invalid_repetitions))
+        or sorted(valid_repetitions + invalid_repetitions) != planned_repetitions
+        or not isinstance(minimum_valid_repetitions, int)
+        or isinstance(minimum_valid_repetitions, bool)
+        or len(valid_repetitions) < minimum_valid_repetitions
         or not isinstance(coverage.get("deployable_alternatives"), list)
         or not coverage["deployable_alternatives"]
         or len(coverage["deployable_alternatives"])
@@ -153,7 +179,7 @@ def validate_fidelity(
         or isinstance(coverage.get("observed_reports"), bool)
         or coverage.get("observed_reports") != coverage["expected_reports"]
         or coverage["expected_reports"]
-        != len(coverage["deployable_alternatives"]) * len(planned_repetitions)
+        != len(coverage["deployable_alternatives"]) * len(valid_repetitions)
     ):
         raise ValueError(f"{candidate_id} fidelity coverage is incomplete")
     agreements = classification.get("agreements") if isinstance(classification, dict) else None
@@ -177,7 +203,7 @@ def validate_fidelity(
     ):
         raise ValueError(f"{candidate_id} fidelity classification is inconsistent")
     for alternative_id, item in by_alternative.items():
-        expected_comparisons = len(planned_repetitions)
+        expected_comparisons = len(valid_repetitions)
         if (
             not isinstance(item, dict)
             or set(item) != {"agreements", "comparisons", "agreement_rate"}
@@ -243,7 +269,7 @@ def validate_fidelity(
     expected_identities = {
         (alternative_id, repetition)
         for alternative_id in coverage["deployable_alternatives"]
-        for repetition in planned_repetitions
+        for repetition in valid_repetitions
     }
     if not isinstance(report_index, list) or len(report_index) != len(expected_identities):
         raise ValueError(f"{candidate_id} fidelity report index is incomplete")
@@ -281,6 +307,8 @@ def validate_fidelity(
     if (
         not isinstance(controls, dict)
         or controls.get("complete_matrix_required") is not True
+        or controls.get("complete_valid_repetition_matrix_required") is not True
+        or controls.get("missing_repetitions_require_prelabel_ledger") is not True
         or controls.get("model_mutation_performed") is not False
         or controls.get("recalibration_allowed") is not False
         or controls.get("confirmatory_reports_are_evaluation_only") is not True

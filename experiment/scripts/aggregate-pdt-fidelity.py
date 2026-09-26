@@ -5,6 +5,7 @@
 import argparse
 import datetime
 import hashlib
+import importlib.util
 import json
 import math
 import os
@@ -15,6 +16,21 @@ import sys
 
 
 DIGEST = re.compile(r"^[0-9a-f]{64}$")
+
+
+def load_repetition_controls():
+    path = pathlib.Path(__file__).with_name("aggregate-conventional-repetitions.py")
+    spec = importlib.util.spec_from_file_location(
+        "aggregate_conventional_repetitions", path
+    )
+    module = importlib.util.module_from_spec(spec)
+    if spec.loader is None:
+        raise ValueError("could not load the shared repetition controls")
+    spec.loader.exec_module(module)
+    return module
+
+
+REPETITION_CONTROLS = load_repetition_controls()
 
 
 def load(path):
@@ -73,8 +89,30 @@ def validate_design(protocol, policy, candidate, allow_draft):
     repetitions = protocol.get("research_design", {}).get(
         "technical_repetitions_per_candidate"
     )
+    aggregation = protocol.get("aggregation")
+    repetition_rule = (
+        aggregation.get("mechanism_repetition_rule")
+        if isinstance(aggregation, dict)
+        else None
+    )
+    minimum_valid = (
+        aggregation.get("minimum_valid_repetitions")
+        if isinstance(aggregation, dict)
+        else None
+    )
     if not isinstance(repetitions, int) or isinstance(repetitions, bool) or repetitions < 2:
         raise ValueError("protocol repetition count is invalid")
+    if (
+        not isinstance(minimum_valid, int)
+        or isinstance(minimum_valid, bool)
+        or not 2 <= minimum_valid <= repetitions
+        or not isinstance(repetition_rule, dict)
+        or repetition_rule.get("planned_repetitions") != repetitions
+        or repetition_rule.get("minimum_valid_repetitions") != minimum_valid
+        or repetition_rule.get("applies_symmetrically_to_control_and_treatment")
+        is not True
+    ):
+        raise ValueError("protocol fidelity repetition rule is invalid")
     metric_entries = policy.get("metrics")
     if not isinstance(metric_entries, list) or not metric_entries:
         raise ValueError("fidelity policy metric inventory is empty")
@@ -88,6 +126,11 @@ def validate_design(protocol, policy, candidate, allow_draft):
         or controls.get("post_decision_only") is not True
         or controls.get("model_mutation_allowed") is not False
         or controls.get("confirmatory_corpus_recalibration_allowed") is not False
+        or controls.get("minimum_valid_repetitions") != minimum_valid
+        or controls.get("missing_repetitions_require_prelabel_infrastructure_ledger")
+        is not True
+        or controls.get("complete_matrix_scope")
+        != "every-deployable-alternative-x-every-valid-pdt-repetition"
     ):
         raise ValueError("fidelity policy anti-leakage controls are invalid")
     candidate_id = candidate.get("candidate_id")
@@ -114,7 +157,14 @@ def validate_design(protocol, policy, candidate, allow_draft):
     )
     if not confirmatory and not allow_draft:
         raise ValueError("candidate fidelity aggregation requires a frozen design")
-    return candidate_id, sorted(alternatives), list(range(1, repetitions + 1)), metric_entries, confirmatory
+    return (
+        candidate_id,
+        sorted(alternatives),
+        list(range(1, repetitions + 1)),
+        minimum_valid,
+        metric_entries,
+        confirmatory,
+    )
 
 
 def validate_metric(item, expected):
@@ -248,12 +298,14 @@ def aggregate(
     candidate,
     candidate_sha256,
     reports,
+    invalid_repetition_ledger=None,
     allow_draft=False,
 ):
     (
         candidate_id,
         alternatives,
         repetitions,
+        minimum_valid_repetitions,
         metric_entries,
         confirmatory,
     ) = validate_design(protocol, policy, candidate, allow_draft)
@@ -273,15 +325,24 @@ def aggregate(
     identities = [
         (item["alternative_id"], item["repetition"]) for item in normalized
     ]
+    valid_repetitions = sorted({item["repetition"] for item in normalized})
+    if not minimum_valid_repetitions <= len(valid_repetitions) <= len(repetitions):
+        raise ValueError("fidelity reports do not contain enough valid repetitions")
+    invalid_repetitions = REPETITION_CONTROLS.validate_invalid_repetition_ledger(
+        invalid_repetition_ledger,
+        candidate_id,
+        len(repetitions),
+        valid_repetitions,
+    )
     expected = [
         (alternative_id, repetition)
         for alternative_id in alternatives
-        for repetition in repetitions
+        for repetition in valid_repetitions
     ]
     if len(identities) != len(set(identities)):
         raise ValueError("fidelity reports contain a duplicate alternative/repetition")
     if set(identities) != set(expected):
-        raise ValueError("fidelity reports do not cover the complete candidate matrix")
+        raise ValueError("fidelity reports do not cover the complete valid candidate matrix")
     artifact_bindings = [item["immutable_artifacts"] for item in normalized]
     if any(binding != artifact_bindings[0] for binding in artifact_bindings[1:]):
         raise ValueError("fidelity reports do not share one immutable artifact set")
@@ -344,6 +405,9 @@ def aggregate(
         "coverage": {
             "deployable_alternatives": alternatives,
             "repetitions": repetitions,
+            "minimum_valid_repetitions": minimum_valid_repetitions,
+            "valid_repetitions": valid_repetitions,
+            "invalid_repetitions": invalid_repetitions,
             "expected_reports": len(expected),
             "observed_reports": len(normalized),
             "complete": True,
@@ -367,6 +431,8 @@ def aggregate(
         ],
         "controls": {
             "complete_matrix_required": True,
+            "complete_valid_repetition_matrix_required": True,
+            "missing_repetitions_require_prelabel_ledger": True,
             "model_mutation_performed": False,
             "recalibration_allowed": False,
             "confirmatory_reports_are_evaluation_only": True,
@@ -393,6 +459,7 @@ def main():
     parser.add_argument("--policy", type=pathlib.Path, required=True)
     parser.add_argument("--candidate-definition", type=pathlib.Path, required=True)
     parser.add_argument("--report", type=pathlib.Path, action="append", required=True)
+    parser.add_argument("--infrastructure-invalid-ledger", type=pathlib.Path)
     parser.add_argument("--output", type=pathlib.Path, required=True)
     parser.add_argument("--allow-draft", action="store_true")
     args = parser.parse_args()
@@ -405,6 +472,11 @@ def main():
             load(args.candidate_definition),
             sha256_file(args.candidate_definition),
             [load(path) for path in args.report],
+            invalid_repetition_ledger=(
+                load(args.infrastructure_invalid_ledger)
+                if args.infrastructure_invalid_ledger
+                else None
+            ),
             allow_draft=args.allow_draft,
         )
         result["generated_at"] = datetime.datetime.now(
@@ -413,6 +485,14 @@ def main():
         result["input_reports"] = [
             {"path": str(path), "sha256": sha256_file(path)} for path in args.report
         ]
+        result["infrastructure_invalid_ledger"] = (
+            {
+                "path": str(args.infrastructure_invalid_ledger),
+                "sha256": sha256_file(args.infrastructure_invalid_ledger),
+            }
+            if args.infrastructure_invalid_ledger
+            else None
+        )
         write_json_exclusive(args.output, result)
     except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as error:
         print(f"PDT fidelity aggregation failed: {error}", file=sys.stderr)

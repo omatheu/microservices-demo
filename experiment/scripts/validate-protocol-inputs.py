@@ -41,6 +41,7 @@ REQUIRED_INPUTS = {
     "pdt_repetition_aggregator",
     "pdt_runtime_manifest",
     "mutation_registry",
+    "blinded_corpus_manager",
     "oracle_suite_manifest",
 }
 

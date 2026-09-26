@@ -505,6 +505,13 @@ exige um novo PR candidato aberto e desarmado. Nenhum workflow cloud foi
 executado. A evidência está em
 [`../experiment/evidence/finance/runtime-publication-readiness-post-merge-20260924T223256Z.json`](../experiment/evidence/finance/runtime-publication-readiness-post-merge-20260924T223256Z.json).
 
+O PR #2 foi mesclado em `main` no commit `182c7dff`, depois de os três checks
+do pull request passarem. Ele incorporou a agregação simétrica das três
+repetições, o cleanup fail-closed e o orquestrador confirmatório sequencial. O
+CI de `main` também passou. O workflow protegido executou apenas a autorização:
+publicação, staging/PDT e gate humano foram `skipped`, porque o PR não recebeu
+rótulos cloud e as travas financeiras permaneceram desligadas.
+
 O passo seguinte também está automatizado localmente:
 `prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um
 bundle único com cinco políticas, dois manifests e o protocolo candidato, já
@@ -531,12 +538,16 @@ continuam pendentes e não foram antecipadas sem autorização financeira.
 O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery e
 o dataset protegido `online_boutique_billing` já existem; a consulta versionada
 limita cada leitura a 100 MB. A exportação padrão do Cloud Billing continua
-sem produzir dados: a verificação somente leitura de 22/09/2026 UTC encontrou
+sem produzir dados: a verificação somente leitura de 26/09/2026 UTC encontrou
 zero tabelas no dataset e, por isso, não executou query faturável. O cluster continua
 `RUNNING`, com 12/12 deployments e pods operacionais disponíveis; staging,
 PDT, plano de controle, oráculo e observabilidade permanecem vazios. O registro
 está em
-[`../experiment/evidence/finance/protocol-freeze-readiness-20260922T013315Z.json`](../experiment/evidence/finance/protocol-freeze-readiness-20260922T013315Z.json).
+[`../experiment/evidence/finance/pre-freeze-readiness-post-pr2-20260926T004340Z.json`](../experiment/evidence/finance/pre-freeze-readiness-post-pr2-20260926T004340Z.json).
+Essa mesma auditoria registrou 6/17 requisitos do congelamento e 12/12 controles
+estruturais da publicação. Não existe PR aberto elegível, os três runtimes
+confirmatórios ainda não foram publicados e nenhuma autorização cloud foi
+concedida.
 Ainda não existe evidência de custo monetário corrente apta à revisão
 financeira do protocolo.
 
