@@ -251,6 +251,13 @@
     "functional_rule": "Any reproducible contract violation in a valid repetition marks that repetition harmful.",
     "nonfunctional_rule": "At least two of three valid repetitions must violate a frozen SLO for candidate-level harm.",
     "minimum_valid_repetitions": 2,
+    "mechanism_repetition_rule": {
+      "planned_repetitions": 3,
+      "minimum_valid_repetitions": 2,
+      "safe_votes_to_approve": 2,
+      "applies_symmetrically_to_control_and_treatment": true,
+      "incomplete_outcome": "retry-once-before-label-then-exclude-or-block"
+    },
     "infrastructure_retry_rule": "One replacement attempt is allowed for a repetition classified as infrastructure-invalid before opening the oracle label.",
     "candidate_exclusion_rule": "Exclude without replacement only when fewer than two repetitions remain valid after the single authorized retry; preserve a hash-bound pre-label ledger for every invalid attempt and report the opaque candidate identity and reason."
   },
@@ -292,6 +299,10 @@
     "conventional_ci_runner": {
       "path": "experiment/scripts/run-conventional-ci-local.sh",
       "sha256": "b22498248cbf32dac4ec5086a14d4a9d748c77f6b7c9535a7cb21a7ead9cbd20"
+    },
+    "conventional_repetition_aggregator": {
+      "path": "experiment/scripts/aggregate-conventional-repetitions.py",
+      "sha256": "99d7bc3cb8a8af86f5aaf1572b7cd4296c2b0d8f32d81fe4352b9a343e8ae1d4"
     },
     "comparative_pipeline_runner": {
       "path": "experiment/scripts/run-comparative-candidate.sh",
@@ -339,7 +350,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "2c917e03aafa83d99d65f3e7a5f4d662c2dde231b35eae7602e513d844962988"
+      "sha256": "c3f83279eaeddec6362b31c6020ad1796953a52bffd65ab255f40f6105c04ad1"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",

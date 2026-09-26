@@ -175,6 +175,7 @@ um simples namespace de staging.
 - [x] produzir `PASS` ou `FAIL`, com justificativa;
 - [x] impedir acesso ao snapshot operacional durante a decisão;
 - [x] implementar a consolidação da CI local e do staging em decisão auditável;
+- [x] implementar a agregação candidata-nível de três repetições do staging;
 - [ ] executar a mesma candidata opaca nos gates locais e no staging;
 - [ ] orquestrar a esteira em CI com identidade cloud de curta duração;
 - [ ] exigir gate humano antes de qualquer implantação operacional.
@@ -223,6 +224,18 @@ pagamento expirado deve falhar e preservar o item. Ele usa as instâncias reais
 de `cartservice` e `checkoutservice`, que por sua vez exercitam catálogo,
 câmbio, entrega e pagamento. O checkbox permanece aberto até uma execução
 cloud autorizada comprovar esses casos contra uma candidata implantada.
+
+A decisão convencional confirmatória também deixou de depender de uma única
+janela: `aggregate-conventional-repetitions.py` exige o plano das três
+repetições predeclaradas, o mesmo artefato imutável e a mesma definição de
+candidata, e aplica a regra majoritária 2/3. Uma repetição só pode faltar quando
+um ledger pré-rótulo comprova que a tentativa original e a única substituta
+falharam por infraestrutura; duas repetições seguras ainda são necessárias para
+aprovar. CI local continua executada uma vez por candidata por ser
+determinística. O agregador está testado e selado como input do protocolo, mas
+ainda não foi conectado ao workflow: isso só ocorrerá junto da agregação
+simétrica do PDT, para evitar executar condições com números de repetições
+diferentes.
 
 ### Fase 4 — Núcleo do Partial Digital Twin
 

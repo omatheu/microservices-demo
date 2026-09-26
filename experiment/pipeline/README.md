@@ -57,6 +57,15 @@ tratamento sem permitir que o PDT substitua qualquer gate convencional:
 5. produz o gate humano e, quando aplicável, prepara a ação e o rollback para o
    ambiente-oráculo, sempre com `operational_mutation_performed: false`.
 
+O caminho confirmatório terá uma decisão candidata-nível, e não uma decisão
+isolada da repetição 1. O agregador convencional exige o plano de três
+repetições de staging com a mesma candidata e os mesmos artefatos e aprova
+somente com dois votos `PASS`. Uma repetição inválida requer o ledger das duas
+tentativas de infraestrutura antes do rótulo. Ele permanece fora do workflow
+cloud enquanto o agregador
+simétrico das três decisões PDT e o orquestrador sequencial não estiverem
+concluídos; até lá, a execução existente continua classificada como engenharia.
+
 Depois da revisão, o recibo humano pode ser produzido sem executar o cluster:
 
 ```bash

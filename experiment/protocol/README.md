@@ -32,6 +32,16 @@ ou a infraestrutura que condiciona sua execução. O objeto geminado permanece o
 `checkoutservice`. Janelas e repetições reduzem o ruído da medição, mas não
 contam como candidatas independentes na análise estatística.
 
+Os gates determinísticos da CI local executam uma vez por candidata. As partes
+dinâmicas de staging e PDT planejam três repetições e usam a mesma regra
+candidata-nível: pelo menos dois votos seguros são necessários para aprovar uma
+ação. Se a tentativa original e a única substituta de uma repetição falharem
+por infraestrutura, um ledger pré-rótulo permite continuar com duas repetições
+válidas; uma divisão 1/1 bloqueia de forma conservadora. Ausência sem ledger,
+duplicidade ou troca de artefato não produz aprovação. Com menos de duas
+repetições válidas, a candidata é excluída antes da abertura do rótulo. A regra
+é idêntica para controle e tratamento para não favorecer o PDT.
+
 ## Condições comparadas
 
 ### Controle: CI/CD convencional completa

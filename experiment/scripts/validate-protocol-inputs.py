@@ -11,6 +11,7 @@ DIGEST_PATTERN = re.compile(r"^[a-f0-9]{64}$")
 REQUIRED_INPUTS = {
     "ci_policy",
     "conventional_ci_runner",
+    "conventional_repetition_aggregator",
     "comparative_pipeline_runner",
     "experimental_workload_cleanup",
     "deployment_action_preparer",
