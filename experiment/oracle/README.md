@@ -163,6 +163,12 @@ na lista de inputs da decisão agregada antes de calcular fidelidade. Em pilotos
 de uma única repetição, a segunda variável pode ser omitida e a decisão única é
 reutilizada. Essa separação impede comparar a observação de uma repetição com
 uma mediana agregada ou com o snapshot errado.
+Se uma repetição PDT permaneceu inválida depois da substituição permitida,
+`PDT_PREDICTION_DECISION` fica ausente e
+`PDT_INVALID_REPETITION_LEDGER` deve provar as duas falhas anteriores à abertura
+do rótulo. O oráculo ainda mede o resultado real daquela repetição, mas não
+inventa uma previsão nem um erro de fidelidade; o agregado usa somente a matriz
+completa das duas ou três repetições PDT válidas.
 O relatório `pdt-fidelity.json` compara sucesso, p95/p99 do checkout,
 indisponibilidade e reinícios da mesma candidata, alternativa e repetição. Ele
 registra erro assinado, absoluto e relativo, além da concordância entre a
@@ -173,10 +179,13 @@ relatório altere a decisão ou recalibre o modelo com o corpus confirmatório.
 
 Depois de completar todas as alternativas e repetições de uma candidata,
 [`../scripts/aggregate-pdt-fidelity.py`](../scripts/aggregate-pdt-fidelity.py)
-exige a matriz cartesiana inteira antes de produzir o agregado candidata-nível.
-Relatório ausente, duplicado, misto entre engenharia/confirmatório ou com
-aritmética adulterada é recusado. Assim, repetições técnicas não são tratadas
-indevidamente como unidades experimentais independentes.
+exige a matriz cartesiana inteira de alternativas por repetições PDT válidas
+antes de produzir o agregado candidata-nível. Três repetições são planejadas;
+duas só são aceitas quando o ledger pré-rótulo comprova que a tentativa original
+e a única substituta da terceira falharam por infraestrutura. Relatório ausente
+sem ledger, duplicado, misto entre engenharia/confirmatório ou com aritmética
+adulterada é recusado. Assim, repetições técnicas não são tratadas indevidamente
+como unidades experimentais independentes nem inventadas por imputação.
 
 O manifesto de coleta referencia esse agregado em `pdt_fidelity` para toda
 candidata aprovada pelo controle. O compositor verifica o hash e a matriz, e o

@@ -87,6 +87,9 @@ def fidelity(identifier, proto, value, agreements):
         "coverage": {
             "deployable_alternatives": ["capacity-safe", "deploy-as-is"],
             "repetitions": [1, 2, 3],
+            "minimum_valid_repetitions": 2,
+            "valid_repetitions": [1, 2, 3],
+            "invalid_repetitions": [],
             "expected_reports": 6,
             "observed_reports": 6,
             "complete": True,
@@ -116,11 +119,56 @@ def fidelity(identifier, proto, value, agreements):
         ],
         "controls": {
             "complete_matrix_required": True,
+            "complete_valid_repetition_matrix_required": True,
+            "missing_repetitions_require_prelabel_ledger": True,
             "model_mutation_performed": False,
             "recalibration_allowed": False,
             "confirmatory_reports_are_evaluation_only": True,
         },
     }
+
+
+def make_partial_fidelity(value):
+    value["coverage"].update(
+        {
+            "valid_repetitions": [1, 2],
+            "invalid_repetitions": [3],
+            "expected_reports": 4,
+            "observed_reports": 4,
+        }
+    )
+    value["report_index"] = [
+        item for item in value["report_index"] if item["repetition"] in {1, 2}
+    ]
+    agreements = sum(item["classification_agreement"] for item in value["report_index"])
+    value["classification"].update(
+        {
+            "agreements": agreements,
+            "comparisons": 4,
+            "agreement_rate": agreements / 4,
+        }
+    )
+    for alternative_id, item in value["classification"]["by_alternative"].items():
+        alternative_agreements = sum(
+            row["classification_agreement"]
+            for row in value["report_index"]
+            if row["alternative_id"] == alternative_id
+        )
+        item.update(
+            {
+                "agreements": alternative_agreements,
+                "comparisons": 2,
+                "agreement_rate": alternative_agreements / 2,
+            }
+        )
+    for metric in value["metrics"].values():
+        metric["report_count"] = 4
+        for name in ("signed_error", "absolute_error", "relative_error"):
+            if metric[name] is not None:
+                metric[name]["count"] = 4
+        if metric["undefined_relative_error_count"]:
+            metric["undefined_relative_error_count"] = 4
+    return value
 
 
 def candidate(identifier, actual, control, treatment, proto, value, agreements):
@@ -400,6 +448,24 @@ class AnalyzeConfirmatoryResultsTests(unittest.TestCase):
         value["candidates"][0]["treatment"]["fidelity"]["report_index"].pop()
         with self.assertRaisesRegex(ValueError, "report index is incomplete"):
             MODULE.analyze(proto, protocol_hash(proto), value, allow_draft=True)
+
+    def test_analysis_accepts_complete_valid_fidelity_matrix_with_ledgered_gap(self):
+        proto = protocol()
+        value = dataset(proto)
+        value["candidates"][0]["treatment"]["fidelity"] = make_partial_fidelity(
+            value["candidates"][0]["treatment"]["fidelity"]
+        )
+
+        result = MODULE.analyze(
+            proto, protocol_hash(proto), value, allow_draft=True
+        )
+
+        self.assertEqual(
+            1.0,
+            result["candidate_results"][0]["pdt_fidelity"][
+                "classification_agreement_rate"
+            ],
+        )
 
     def test_control_blocked_candidate_cannot_claim_pdt_fidelity(self):
         proto = protocol()

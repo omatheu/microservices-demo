@@ -34,6 +34,12 @@ class RunOracleRepetitionTests(unittest.TestCase):
             self.script,
         )
         self.assertIn("pdt-prediction-decision.json", self.script)
+        self.assertIn("PDT_INVALID_REPETITION_LEDGER", self.script)
+        self.assertIn(
+            "Missing PDT prediction is not authorized by the sealed pre-label ledger.",
+            self.script,
+        )
+        self.assertIn("prediction_available=true", self.script)
         self.assertNotIn(
             '== "$alternative_id" ]] || {\n      echo "Oracle alternative differs from the protected human decision.',
             self.script,
@@ -46,6 +52,7 @@ class RunOracleRepetitionTests(unittest.TestCase):
         self.assertIn('pdt_fidelity:', self.script)
         self.assertIn('fidelity_policy:', self.script)
         self.assertIn('pdt_prediction_decision:', self.script)
+        self.assertIn('pdt_invalid_repetition_ledger:', self.script)
 
     def test_cloud_execution_is_fail_closed_before_kubectl(self):
         with tempfile.TemporaryDirectory() as directory:

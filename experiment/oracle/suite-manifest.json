@@ -10,7 +10,7 @@
     },
     {
       "path": "experiment/pdt/fidelity-policy.json",
-      "sha256": "7a2d2383768f06e3692b4210f55e21854eb7805d6adcc219850269c2718ece79"
+      "sha256": "199a5b6782182e39400305ee79e213a03dffde8202b997ee9de275146dcc28e3"
     },
     {
       "path": "experiment/oracle/harness/Dockerfile",
@@ -42,7 +42,7 @@
     },
     {
       "path": "experiment/scripts/aggregate-pdt-fidelity.py",
-      "sha256": "2b21cc5dd95d3b1c46c967455fb140a6b98b9a2c3a07f596f459d6aff532f359"
+      "sha256": "7e04c5873b4baca69901044f4008a6bc73aa1bccb30fc532dcd061bbf5e1cd75"
     },
     {
       "path": "experiment/scripts/bind-runtime-publication.py",
@@ -86,7 +86,7 @@
     },
     {
       "path": "experiment/scripts/run-oracle-repetition.sh",
-      "sha256": "6596c8af2c90695c6bf0442c7fd91e2f3acda8a8e80eeb0ba538119ca7febe96"
+      "sha256": "33f0b7130bf400ae3d07e56de4711d3532b35e8dd891a1351e490db01645c283"
     },
     {
       "path": "experiment/scripts/validate-human-gate-receipt.py",

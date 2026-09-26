@@ -30,6 +30,14 @@ def protocol():
             "technical_repetitions_per_candidate": 3,
             "unit_of_analysis": "candidate after aggregation of technical repetitions",
         },
+        "aggregation": {
+            "minimum_valid_repetitions": 2,
+            "mechanism_repetition_rule": {
+                "planned_repetitions": 3,
+                "minimum_valid_repetitions": 2,
+                "applies_symmetrically_to_control_and_treatment": True,
+            },
+        },
     }
 
 
@@ -141,8 +149,27 @@ def reports():
     ]
 
 
+def invalid_ledger(valid=(1, 2), invalid=(3,)):
+    return {
+        "schema_version": "1.0.0",
+        "candidate_id": CANDIDATE_ID,
+        "classification": "infrastructure-invalid",
+        "label_revealed": False,
+        "planned_repetitions": [1, 2, 3],
+        "valid_repetitions": list(valid),
+        "invalid_repetitions": [
+            {
+                "repetition": repetition,
+                "attempts": 2,
+                "reasons": ["cluster-timeout", "replacement-cluster-timeout"],
+            }
+            for repetition in invalid
+        ],
+    }
+
+
 class AggregatePdtFidelityTests(unittest.TestCase):
-    def aggregate(self, values=None):
+    def aggregate(self, values=None, ledger=None):
         return MODULE.aggregate(
             protocol(),
             PROTOCOL_SHA256,
@@ -151,6 +178,7 @@ class AggregatePdtFidelityTests(unittest.TestCase):
             candidate(),
             CANDIDATE_SHA256,
             reports() if values is None else values,
+            invalid_repetition_ledger=ledger,
             allow_draft=True,
         )
 
@@ -173,14 +201,40 @@ class AggregatePdtFidelityTests(unittest.TestCase):
             ],
         )
         self.assertFalse(result["controls"]["recalibration_allowed"])
+        self.assertEqual([1, 2, 3], result["coverage"]["valid_repetitions"])
+        self.assertEqual([], result["coverage"]["invalid_repetitions"])
 
     def test_missing_or_duplicate_report_is_rejected(self):
         values = reports()
-        with self.assertRaisesRegex(ValueError, "complete candidate matrix"):
+        with self.assertRaisesRegex(ValueError, "complete valid candidate matrix"):
             self.aggregate(values[:-1])
 
         with self.assertRaisesRegex(ValueError, "duplicate"):
             self.aggregate(values + [copy.deepcopy(values[0])])
+
+    def test_two_valid_repetitions_require_and_accept_prelabel_ledger(self):
+        values = [item for item in reports() if item["repetition"] in {1, 2}]
+
+        with self.assertRaisesRegex(ValueError, "ledger is incomplete"):
+            self.aggregate(values)
+
+        result = self.aggregate(values, ledger=invalid_ledger())
+
+        self.assertTrue(result["coverage"]["complete"])
+        self.assertEqual([1, 2], result["coverage"]["valid_repetitions"])
+        self.assertEqual([3], result["coverage"]["invalid_repetitions"])
+        self.assertEqual(4, result["coverage"]["expected_reports"])
+        self.assertEqual(4, result["classification"]["comparisons"])
+
+    def test_partial_matrix_cannot_hide_one_alternative_repetition(self):
+        values = [
+            item
+            for item in reports()
+            if not (item["alternative_id"] == "capacity-safe" and item["repetition"] == 3)
+        ]
+
+        with self.assertRaisesRegex(ValueError, "complete valid candidate matrix"):
+            self.aggregate(values)
 
     def test_tampered_error_arithmetic_is_rejected(self):
         values = reports()

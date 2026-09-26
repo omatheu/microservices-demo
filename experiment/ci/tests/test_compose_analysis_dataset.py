@@ -89,6 +89,9 @@ def fidelity(candidate_id, protocol_id, protocol_sha, definition_sha, artifacts)
         "coverage": {
             "deployable_alternatives": ["deploy-as-is"],
             "repetitions": [1, 2, 3],
+            "minimum_valid_repetitions": 2,
+            "valid_repetitions": [1, 2, 3],
+            "invalid_repetitions": [],
             "expected_reports": 3,
             "observed_reports": 3,
             "complete": True,
@@ -116,11 +119,43 @@ def fidelity(candidate_id, protocol_id, protocol_sha, definition_sha, artifacts)
         ],
         "controls": {
             "complete_matrix_required": True,
+            "complete_valid_repetition_matrix_required": True,
+            "missing_repetitions_require_prelabel_ledger": True,
             "model_mutation_performed": False,
             "recalibration_allowed": False,
             "confirmatory_reports_are_evaluation_only": True,
         },
     }
+
+
+def make_partial_fidelity(value):
+    value["coverage"].update(
+        {
+            "valid_repetitions": [1, 2],
+            "invalid_repetitions": [3],
+            "expected_reports": 2,
+            "observed_reports": 2,
+        }
+    )
+    value["classification"].update(
+        {"agreements": 2, "comparisons": 2, "agreement_rate": 1.0}
+    )
+    value["classification"]["by_alternative"]["deploy-as-is"] = {
+        "agreements": 2,
+        "comparisons": 2,
+        "agreement_rate": 1.0,
+    }
+    value["report_index"] = [
+        item for item in value["report_index"] if item["repetition"] in {1, 2}
+    ]
+    for metric in value["metrics"].values():
+        metric["report_count"] = 2
+        for name in ("signed_error", "absolute_error", "relative_error"):
+            if metric[name] is not None:
+                metric[name]["count"] = 2
+        if metric["undefined_relative_error_count"]:
+            metric["undefined_relative_error_count"] = 2
+    return value
 
 
 class ComposeAnalysisDatasetTests(unittest.TestCase):
@@ -251,6 +286,24 @@ class ComposeAnalysisDatasetTests(unittest.TestCase):
             MODULE.compose(
                 proto, proto_sha, public, public_sha, manifest, root, allow_draft=True
             )
+
+    def test_fidelity_accepts_complete_valid_matrix_with_prelabel_missingness(self):
+        temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
+        self.addCleanup(temporary.cleanup)
+        fidelity_path = root / manifest["candidates"][0]["pdt_fidelity"]["path"]
+        value = make_partial_fidelity(
+            json.loads(fidelity_path.read_text(encoding="utf-8"))
+        )
+        fidelity_path.write_text(json.dumps(value), encoding="utf-8")
+        manifest["candidates"][0]["pdt_fidelity"]["sha256"] = digest(fidelity_path)
+
+        result = MODULE.compose(
+            proto, proto_sha, public, public_sha, manifest, root, allow_draft=True
+        )
+
+        coverage = result["candidates"][0]["treatment"]["fidelity"]["coverage"]
+        self.assertEqual([1, 2], coverage["valid_repetitions"])
+        self.assertEqual([3], coverage["invalid_repetitions"])
 
         temporary, root, proto, proto_sha, public, public_sha, manifest = self.fixture()
         self.addCleanup(temporary.cleanup)

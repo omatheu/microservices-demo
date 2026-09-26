@@ -325,7 +325,7 @@
     },
     "confirmatory_analyzer": {
       "path": "experiment/scripts/analyze-confirmatory-results.py",
-      "sha256": "abdcaee4cfbff26ad5bfb0ac1ae2bfe8dd5635bef01108a1baeeb57d565a04c4"
+      "sha256": "5c5acf7b2e3299d70d8a5a82d9388b04b6f2fb67e071d563c56bc4015f3a8499"
     },
     "confirmatory_repetition_runner": {
       "path": "experiment/scripts/run-repeated-comparative-candidate.sh",
@@ -333,7 +333,7 @@
     },
     "analysis_dataset_composer": {
       "path": "experiment/scripts/compose-analysis-dataset.py",
-      "sha256": "0bd48cde192df7c80b8c996d43e801b5a5d12f638799473cad7bc7549bc52225"
+      "sha256": "1d439672213ab1580d5fc7c33fe34c7020076e4655816c2e07d5f83f0366e9dd"
     },
     "protocol_freeze_auditor": {
       "path": "experiment/scripts/audit-protocol-freeze.py",
@@ -429,7 +429,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "d5754eee07c81f4e6cffded95ad056e61f69273053ef32160571f5c9f8eb3b98"
+      "sha256": "e41e7a1ec5e9b51c68820d0803cc86de0be16a75f29527daeeb61d61af865203"
     }
   },
   "required_before_freeze": [
