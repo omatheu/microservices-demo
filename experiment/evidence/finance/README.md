@@ -66,6 +66,15 @@ infraestrutura. O relatório preserva a validação pré-apply e declara
 explicitamente que ele próprio não executou mutação, publicação ou autorização
 de custo.
 
+O plano separado do RBAC Oracle foi gerado em 26/09/2026 UTC com refresh
+desligado e sem `apply`. O validador selado passou em 10/10 controles: somente
+`kubernetes_role_v1.github_experiment_oracle_runner[0]` e sua RoleBinding seriam
+criadas; há 0 alterações, 0 destruições e nenhum recurso de compute, storage,
+rede ou faturamento contínuo. A evidência sanitizada está em
+[`oracle-rbac-terraform-plan-validation-20260926T163444Z.json`](./oracle-rbac-terraform-plan-validation-20260926T163444Z.json).
+O plano binário contém estado e não é versionado; o relatório vincula seu
+SHA-256 e não autoriza `apply`, custo ou execução Oracle.
+
 O auditor somente leitura
 [`audit-runtime-publication-readiness.py`](../../scripts/audit-runtime-publication-readiness.py)
 transforma essas pendências em 13 controles verificáveis. A leitura de

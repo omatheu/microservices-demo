@@ -366,11 +366,12 @@ arquivos e imagens imutáveis do oráculo, revisão financeira e aprovação
 explícita do pesquisador.
 
 O auditor de congelamento, os auditores da publicação dos runtimes e da
-execução Oracle, o validador do plano Terraform, o preparador do candidato, o
-finalizador, o cleanup restrito dos workloads experimentais, os dois
+execução Oracle, os validadores dos planos Terraform de publicação e RBAC, o
+preparador do candidato, o finalizador, o cleanup restrito dos workloads
+experimentais, os dois
 agregadores de repetição, o orquestrador confirmatório, o gerenciador
 determinístico do corpus cego e o próprio validador agora também fazem parte
-dos 35 inputs selados do protocolo. Assim, as regras
+dos 36 inputs selados do protocolo. Assim, as regras
 que decidem a prontidão e materializam a proposta final não podem ser trocadas
 silenciosamente depois da aprovação do desenho.
 

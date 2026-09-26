@@ -1,11 +1,12 @@
 # Evidências do oráculo
 
-O snapshot somente leitura
-[`oracle-execution-readiness-preinstall-20260926T162843Z.json`](./oracle-execution-readiness-preinstall-20260926T162843Z.json)
+O snapshot somente leitura mais recente
+[`oracle-execution-readiness-preinstall-20260926T163506Z.json`](./oracle-execution-readiness-preinstall-20260926T163506Z.json)
 registra o estado anterior à instalação dos controles Oracle: 12/22 checks
 passaram, nenhuma falha de coleta ocorreu, o namespace estava vazio e nenhuma
 execução foi autorizada. Ele deve ser preservado para comparação com a futura
-auditoria pós-instalação.
+auditoria pós-instalação. O snapshot anterior permanece como trilha da revisão
+que revelou a normalização `namespace: default` do sujeito Kubernetes.
 
 Este diretório contém somente execuções posteriores à separação entre os
 mecanismos de decisão e o oráculo. Pilotos com `evidence_classification` igual

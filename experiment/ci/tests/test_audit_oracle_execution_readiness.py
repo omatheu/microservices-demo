@@ -197,6 +197,7 @@ def snapshot():
                     "apiGroup": "rbac.authorization.k8s.io",
                     "kind": "User",
                     "name": MODULE.EXPERIMENT_SERVICE_ACCOUNT_EMAIL,
+                    "namespace": "default",
                 }
             ],
         },

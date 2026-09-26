@@ -353,7 +353,11 @@
     },
     "oracle_execution_readiness_auditor": {
       "path": "experiment/scripts/audit-oracle-execution-readiness.py",
-      "sha256": "bdcce19181b3ef82bca5c0090f89ab72b681bced20273828d1986b3b5c8c1c55"
+      "sha256": "c3a3c61da36d4a29eb7f6cdab333f93cf091e2daebef561c52ccc2f800c4d749"
+    },
+    "oracle_rbac_terraform_plan_validator": {
+      "path": "experiment/scripts/validate-oracle-rbac-terraform-plan.py",
+      "sha256": "483efc08a3cc84cb4dbc90e9c537455a68fed44f53537ab265265382f850f876"
     },
     "runtime_publication_terraform_plan_validator": {
       "path": "experiment/scripts/validate-runtime-publication-terraform-plan.py",
@@ -361,7 +365,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "2cf55435dcfdedc76099bdec49f8a86d042bba3633c80e785b96d3ada922210e"
+      "sha256": "925f5a28b8d354c7308ad280e55377d394fe7f767179ec8e52434ca4dbd67f55"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",

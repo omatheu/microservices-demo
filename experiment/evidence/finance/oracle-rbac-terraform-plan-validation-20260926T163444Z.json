@@ -1,0 +1,81 @@
+{
+  "apply_authorized": false,
+  "blocking_requirements": [],
+  "check_count": 10,
+  "checks": [
+    {
+      "detail": "resource_change_count=48",
+      "id": "terraform-plan-json-structure",
+      "passed": true
+    },
+    {
+      "detail": "changed_addresses=['kubernetes_role_binding_v1.github_experiment_oracle_runner[0]', 'kubernetes_role_v1.github_experiment_oracle_runner[0]']",
+      "id": "exact-oracle-rbac-change-set",
+      "passed": true
+    },
+    {
+      "detail": "actions=[['create'], ['create']]",
+      "id": "create-only-no-update-or-destroy",
+      "passed": true
+    },
+    {
+      "detail": "target=oracle/github-tcc-oracle-runner",
+      "id": "oracle-role-target-is-exact",
+      "passed": true
+    },
+    {
+      "detail": "rule_count=7",
+      "id": "oracle-role-rules-are-exact",
+      "passed": true
+    },
+    {
+      "detail": "subject=github-tcc-experiment@microservices-demo-tcc.iam.gserviceaccount.com",
+      "id": "oracle-role-binding-is-exact",
+      "passed": true
+    },
+    {
+      "detail": "critical_values_known=True",
+      "id": "authorization-values-known-before-apply",
+      "passed": true
+    },
+    {
+      "detail": "reference_graph_exact=True",
+      "id": "oracle-rbac-reference-graph-is-exact",
+      "passed": true
+    },
+    {
+      "detail": "changed_types=['kubernetes_role_binding_v1', 'kubernetes_role_v1']",
+      "id": "no-compute-storage-network-or-billable-resource",
+      "passed": true
+    },
+    {
+      "detail": "plan_sha256=5206d9312c8bfb323661e393af3196bd28ae1d1077d3aecfc0954372966da798",
+      "id": "terraform-plan-digest-recorded",
+      "passed": true
+    }
+  ],
+  "cost_authorized": false,
+  "expected_change_count": 2,
+  "gcp_mutation_performed": false,
+  "github_mutation_performed": false,
+  "kubernetes_mutation_performed": false,
+  "mechanism": "oracle-rbac-terraform-plan-validator",
+  "namespace": "oracle",
+  "observed_change_count": 2,
+  "ongoing_billable_resources_added": false,
+  "oracle_execution_authorized": false,
+  "passed_count": 10,
+  "plan_matches_approved_scope": true,
+  "plan_sha256": "5206d9312c8bfb323661e393af3196bd28ae1d1077d3aecfc0954372966da798",
+  "project_id": "microservices-demo-tcc",
+  "read_only_validation": true,
+  "schema_version": "1.0.0",
+  "terraform_apply_performed": false,
+  "terraform_configuration": {
+    "path": "infra/terraform/github-actions.tf",
+    "sha256": "d5de6c007a7702485cb55b355e0813f735d0e021ad710e68c6f762b9cafd4be0"
+  },
+  "terraform_version": "1.16.3",
+  "validated_at": "2026-09-26T16:34:44Z",
+  "validator_sha256": "483efc08a3cc84cb4dbc90e9c537455a68fed44f53537ab265265382f850f876"
+}

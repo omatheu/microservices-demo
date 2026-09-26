@@ -380,7 +380,13 @@ restantes correspondem exatamente ao workflow ainda local, configuração
 Oracle ainda não instalada, artefatos metodológicos ainda não congelados e
 ausência de PR aberto. A auditoria não realizou mutação nem autorizou execução.
 A evidência pré-instalação está em
-[`../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T162843Z.json`](../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T162843Z.json).
+[`../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json`](../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json).
+
+O plano binário do RBAC foi gerado com refresh desligado e validado em 10/10
+controles. Ele contém somente a Role e a RoleBinding Oracle como criações, 0
+alterações, 0 destruições e nenhum recurso faturável. O relatório sanitizado,
+que não autoriza `apply`, está em
+[`../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json`](../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json).
 
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,

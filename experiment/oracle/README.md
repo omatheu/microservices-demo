@@ -149,7 +149,12 @@ ainda não congelados, corpus final ainda inexistente e nenhum PR aberto. A
 identidade sem chave, os três papéis mínimos, o provider OIDC, a proteção do
 ambiente, o namespace correto e sua ausência de workloads foram confirmados.
 A evidência está em
-[`../evidence/oracle/oracle-execution-readiness-preinstall-20260926T162843Z.json`](../evidence/oracle/oracle-execution-readiness-preinstall-20260926T162843Z.json).
+[`../evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json`](../evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json).
+
+O plano Terraform do RBAC também foi validado sem `apply`: 10/10 controles
+confirmaram exatamente uma Role e uma RoleBinding no namespace `oracle`, sem
+alterações, destruições ou recursos faturáveis. A evidência está em
+[`../evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json`](../evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json).
 
 Exemplo de invocação, somente depois do congelamento e da revisão financeira:
 

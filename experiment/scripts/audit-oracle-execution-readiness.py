@@ -797,6 +797,7 @@ def audit(snapshot, pull_request):
                 "apiGroup": "rbac.authorization.k8s.io",
                 "kind": "User",
                 "name": EXPERIMENT_SERVICE_ACCOUNT_EMAIL,
+                "namespace": "default",
             }
         ]
     )

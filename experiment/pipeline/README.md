@@ -239,3 +239,8 @@ variável `TCC_ORACLE_EXECUTION_ACKNOWLEDGED=false`, o RBAC mínimo exato no
 namespace `oracle`, namespace vazio e protocolo/runtimes/corpus congelados. A
 auditoria é somente leitura e mantém `oracle_execution_authorized: false` mesmo
 quando todos os 22 controles passam.
+
+O plano Terraform correspondente foi validado separadamente em 10/10
+controles: exatamente duas criações namespaced, nenhuma alteração/destruição e
+nenhum recurso faturável. Planejamento e validação não constituem autorização
+de `apply`.
