@@ -249,6 +249,7 @@ Objetivo: fechar o ciclo observar, simular, avaliar e decidir.
 - [x] executar as alternativas de maneira isolada;
 - [x] estimar latência, erros e correção funcional;
 - [x] calcular confiança da previsão;
+- [x] implementar a agregação candidata-nível das repetições PDT;
 - [ ] calcular fidelidade após comparação operacional;
 - [x] selecionar uma ação segura;
 - [x] emitir decisão estruturada e auditável.
@@ -294,6 +295,15 @@ cada alternativa e repetição, ele exige identidade e hashes selados, compara a
 previsão do PDT com o perfil basal observado pelo oráculo e registra erro
 assinado, absoluto e relativo, sem usar o rótulo pretendido. O checkbox de
 fidelidade permanece aberto até existirem observações cloud válidas.
+
+O agregador candidata-nível do PDT aplica a mesma maioria 2/3 do controle para
+cada alternativa. `deploy-as-is` só é aprovado com dois votos seguros; caso
+contrário, uma alternativa reconfigurada precisa alcançar a mesma maioria e é
+selecionada por menor custo e depois menor mediana de p95. A confiança agregada
+é o mínimo observado e a ação fica ligada ao snapshot da última repetição
+válida. O mesmo ledger pré-rótulo é obrigatório para uma repetição inválida.
+Essa lógica está testada e selada, mas ainda aguarda o orquestrador sequencial
+antes de qualquer execução confirmatória.
 
 ### Fase 5 — Gate PDT incremental e semiautônomo
 

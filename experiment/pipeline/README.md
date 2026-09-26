@@ -61,10 +61,11 @@ O caminho confirmatório terá uma decisão candidata-nível, e não uma decisã
 isolada da repetição 1. O agregador convencional exige o plano de três
 repetições de staging com a mesma candidata e os mesmos artefatos e aprova
 somente com dois votos `PASS`. Uma repetição inválida requer o ledger das duas
-tentativas de infraestrutura antes do rótulo. Ele permanece fora do workflow
-cloud enquanto o agregador
-simétrico das três decisões PDT e o orquestrador sequencial não estiverem
-concluídos; até lá, a execução existente continua classificada como engenharia.
+tentativas de infraestrutura antes do rótulo. O agregador PDT equivalente agora
+aplica a mesma maioria a cada alternativa, usa mediana de p95 no desempate,
+confiança mínima e o snapshot da última repetição válida. Ambos permanecem fora
+do workflow cloud até o orquestrador sequencial estar concluído; até lá, a
+execução existente continua classificada como engenharia.
 
 Depois da revisão, o recibo humano pode ser produzido sem executar o cluster:
 

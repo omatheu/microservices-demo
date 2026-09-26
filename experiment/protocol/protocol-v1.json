@@ -256,7 +256,10 @@
       "minimum_valid_repetitions": 2,
       "safe_votes_to_approve": 2,
       "applies_symmetrically_to_control_and_treatment": true,
-      "incomplete_outcome": "retry-once-before-label-then-exclude-or-block"
+      "incomplete_outcome": "retry-once-before-label-then-exclude-or-block",
+      "pdt_metric_aggregation": "median",
+      "pdt_confidence_aggregation": "minimum",
+      "pdt_action_snapshot": "latest-valid-repetition"
     },
     "infrastructure_retry_rule": "One replacement attempt is allowed for a repetition classified as infrastructure-invalid before opening the oracle label.",
     "candidate_exclusion_rule": "Exclude without replacement only when fewer than two repetitions remain valid after the single authorized retry; preserve a hash-bound pre-label ledger for every invalid attempt and report the opaque candidate identity and reason."
@@ -350,7 +353,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "c3f83279eaeddec6362b31c6020ad1796953a52bffd65ab255f40f6105c04ad1"
+      "sha256": "c3b884a7240c2a448aa0b282bf52719fae6469630db574e9970b746fb9358439"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -403,6 +406,10 @@
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
       "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+    },
+    "pdt_repetition_aggregator": {
+      "path": "experiment/scripts/aggregate-pdt-repetitions.py",
+      "sha256": "fc7011789726c5f6f3e3c2cf8a7fb2d4f8299de751decf2ca0bb61cc0d7603be"
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",

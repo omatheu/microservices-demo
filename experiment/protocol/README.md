@@ -42,6 +42,14 @@ duplicidade ou troca de artefato não produz aprovação. Com menos de duas
 repetições válidas, a candidata é excluída antes da abertura do rótulo. A regra
 é idêntica para controle e tratamento para não favorecer o PDT.
 
+Na agregação do PDT, cada alternativa recebe um voto seguro ou inseguro por
+repetição válida. `deploy-as-is` tem precedência quando alcança dois votos
+seguros; caso contrário, alternativas reconfiguradas com maioria são ordenadas
+por menor custo, mediana de p95 e identificador. A confiança publicada é o
+menor valor das repetições válidas, e a ação preparada usa o snapshot da última
+repetição válida. Essas escolhas foram fixadas antes da coleta para impedir um
+desempate retrospectivo favorável ao tratamento.
+
 ## Condições comparadas
 
 ### Controle: CI/CD convencional completa
@@ -352,8 +360,9 @@ explícita do pesquisador.
 
 O auditor de congelamento, o auditor da publicação dos runtimes, o validador do
 plano Terraform, o preparador do candidato, o finalizador, o cleanup restrito
-dos workloads experimentais e o próprio validador agora também fazem parte dos
-30 inputs selados do protocolo. Assim, as regras
+dos workloads experimentais, os dois agregadores de repetição e o próprio
+validador agora também fazem parte dos 32 inputs selados do protocolo. Assim,
+as regras
 que decidem a prontidão e materializam a proposta final não podem ser trocadas
 silenciosamente depois da aprovação do desenho.
 

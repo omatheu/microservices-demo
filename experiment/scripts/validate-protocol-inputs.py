@@ -37,6 +37,7 @@ REQUIRED_INPUTS = {
     "staging_contract_probe",
     "staging_thresholds",
     "pdt_model_policy",
+    "pdt_repetition_aggregator",
     "pdt_runtime_manifest",
     "mutation_registry",
     "oracle_suite_manifest",
