@@ -390,6 +390,10 @@ controles. Ele contém somente a Role e a RoleBinding Oracle como criações, 0
 alterações, 0 destruições e nenhum recurso faturável. O relatório sanitizado,
 que não autoriza `apply`, está em
 [`../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json`](../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json).
+Uma regeneração pós-PR #4 com refresh real confirmou o mesmo escopo e voltou a
+passar em 10/10 controles. O relatório atualizado está em
+[`../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json`](../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json).
+Nenhum `apply` foi executado.
 
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,

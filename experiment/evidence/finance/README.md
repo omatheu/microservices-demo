@@ -79,6 +79,14 @@ rede ou faturamento contínuo. A evidência sanitizada está em
 O plano binário contém estado e não é versionado; o relatório vincula seu
 SHA-256 e não autoriza `apply`, custo ou execução Oracle.
 
+Depois do merge do PR #4, o plano foi regenerado com refresh real do estado
+remoto. O resultado continuou limitado às mesmas duas criações, com 0
+alterações, 0 destruições e 10/10 controles aprovados. A evidência atualizada
+está em
+[`oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json`](./oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json).
+O plano binário permanece fora do Git e nenhuma aplicação foi autorizada ou
+executada.
+
 O auditor somente leitura
 [`audit-runtime-publication-readiness.py`](../../scripts/audit-runtime-publication-readiness.py)
 transforma essas pendências em 13 controles verificáveis. A leitura de
