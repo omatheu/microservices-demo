@@ -451,6 +451,34 @@ confere projeto, moeda BRL, janela, timestamp, custo bruto, linhas retornadas e
 o teto de 100 MB; um snapshot de prontidão sem custo observado não pode
 substituir essa evidência.
 
+Depois que `query-billing-cost-window.sh` produzir uma observação real, o
+preparador financeiro pode verificar a elegibilidade sem criar uma aprovação:
+
+```bash
+python3 experiment/scripts/prepare-financial-review.py \
+  --repo-root . \
+  --cost-evidence experiment/evidence/finance/<cost-window>.json \
+  --require-eligible
+```
+
+Ele reutiliza o validador selado do protocolo, vincula caminho e SHA-256 e
+recusa moeda, soma, janela, timestamp, projeto, teto ou query incompatíveis. A
+aprovação canônica só pode ser criada após revisão humana explícita, com
+confirmação literal e no caminho único esperado pelo finalizador:
+
+```bash
+python3 experiment/scripts/prepare-financial-review.py \
+  --repo-root . \
+  --cost-evidence experiment/evidence/finance/<cost-window>.json \
+  --approve \
+  --acknowledge APPROVE_FINANCIAL_REVIEW_FOR_PROTOCOL_FREEZE \
+  --output experiment/protocol/approvals/cost-review-v1.json
+```
+
+O arquivo resultante mantém `cloud_execution_authorized: false`. Ele aprova
+somente o uso da observação financeira para congelar o protocolo; publicação,
+execução paga e labels cloud continuam exigindo autorizações independentes.
+
 ## Dados excluídos da comparação principal
 
 As execuções de `current` e `checkout-cpu-restriction-v1` são pilotos de

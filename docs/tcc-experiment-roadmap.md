@@ -618,6 +618,14 @@ publicados e nenhuma autorização cloud foi concedida.
 Ainda não existe evidência de custo monetário corrente apta à revisão
 financeira do protocolo.
 
+O caminho posterior à chegada dessa evidência já está fechado localmente:
+`prepare-financial-review.py` valida a saída real do billing contra o auditor
+selado, vincula caminho e SHA-256 e, somente com confirmação humana literal,
+gera a revisão no caminho canônico. Adulteração, custo no limiar obrigatório,
+timestamp futuro, caminho inseguro e saída alternativa são recusados. O
+documento resultante não autoriza cloud; a ausência atual da tabela de export
+continua sendo o bloqueio financeiro real.
+
 **Critério de saída:** protocolo versionado antes da coleta e corpus contendo
 controles seguros, mutações funcionais e não funcionais, sem rótulos acessíveis
 aos mecanismos.

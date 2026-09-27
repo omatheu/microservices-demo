@@ -178,6 +178,15 @@ o auditor confere que `confirmatory_incremental_spend_brl` é exatamente o custo
 bruto observado. O snapshot de prontidão, que não contém custo corrente, é
 deliberadamente inelegível como substituto.
 
+O elo entre a observação e a revisão canônica agora é automatizado por
+[`prepare-financial-review.py`](../../scripts/prepare-financial-review.py). O
+modo padrão apenas mede elegibilidade; o modo de aprovação exige confirmação
+literal, recusa sobrescrever uma aprovação existente e aceita somente
+`experiment/protocol/approvals/cost-review-v1.json` como destino. Dez testes
+cobrem adulteração, teto, timestamps, caminho, confirmação e compatibilidade
+com o auditor congelado. O preparador sempre grava
+`cloud_execution_authorized: false` e não substitui a decisão humana.
+
 O plano do stack isolado foi validado sem aplicação. Com a trava desligada não
 há mudança; com a trava ligada aparecem somente a API do BigQuery e o dataset
 `US`, sem alterações em GKE, Kubernetes, Artifact Registry, IAM ou orçamento.
