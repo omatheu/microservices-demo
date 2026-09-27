@@ -395,6 +395,13 @@ passar em 10/10 controles. O relatório atualizado está em
 [`../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json`](../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json).
 Nenhum `apply` foi executado.
 
+O menor lote autorizável de preparação Oracle também está registrado em
+[`../experiment/evidence/finance/oracle-passive-controls-change-request-20260927T002627Z.json`](../experiment/evidence/finance/oracle-passive-controls-change-request-20260927T002627Z.json).
+Ele contém apenas as duas criações RBAC e quatro controles passivos no GitHub,
+mantém a trava em `false` e exclui imagens, labels em PR, workloads e execução.
+Se aplicado exatamente como proposto, a expectativa verificável é avançar de
+13/21 para 18/21 controles estruturais, ainda sem candidata elegível.
+
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,
 decisão convencional, decisão PDT, gate, ação e histórico bruto do GitHub, e

@@ -87,6 +87,14 @@ está em
 O plano binário permanece fora do Git e nenhuma aplicação foi autorizada ou
 executada.
 
+O lote mínimo seguinte foi separado em uma solicitação de mudança auditável:
+as duas criações RBAC, o rótulo passivo, os dois secrets protegidos e a variável
+Oracle mantida em `false`. O documento exclui publicação, labels em PR,
+workloads e execução cloud, e prevê que o auditor avance para 18/21 controles
+estruturais sem tornar uma candidata elegível. A proposta está em
+[`oracle-passive-controls-change-request-20260927T002627Z.json`](./oracle-passive-controls-change-request-20260927T002627Z.json)
+e continua com `apply_authorized: false` até autorização explícita.
+
 O auditor somente leitura
 [`audit-runtime-publication-readiness.py`](../../scripts/audit-runtime-publication-readiness.py)
 transforma essas pendências em 13 controles verificáveis. A leitura de

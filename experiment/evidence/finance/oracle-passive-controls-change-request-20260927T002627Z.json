@@ -1,0 +1,110 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-09-27T00:26:27Z",
+  "status": "proposed-not-authorized",
+  "purpose": "Install passive Oracle controls without enabling or executing cloud experimentation.",
+  "repository": "omatheu/microservices-demo",
+  "source_commit": "6bc36d2e7affddc91bec0b62ef16b681f23d1cee",
+  "source_tree": "5339508b068339658177257c577ea56f2ecae28a",
+  "project_id": "microservices-demo-tcc",
+  "requested_changes": {
+    "kubernetes": [
+      {
+        "address": "kubernetes_role_v1.github_experiment_oracle_runner[0]",
+        "action": "create",
+        "target": "oracle/github-tcc-oracle-runner"
+      },
+      {
+        "address": "kubernetes_role_binding_v1.github_experiment_oracle_runner[0]",
+        "action": "create",
+        "target": "oracle/github-tcc-oracle-runner"
+      }
+    ],
+    "github": [
+      {
+        "action": "create-label-if-absent",
+        "name": "tcc-oracle-cloud",
+        "attach_to_pull_request": false
+      },
+      {
+        "action": "create-protected-environment-secret",
+        "environment": "tcc-experiment",
+        "name": "TCC_ORACLE_BLINDING_KEY_B64",
+        "value_policy": "generate cryptographically random value at installation; never persist in repository or command output"
+      },
+      {
+        "action": "create-protected-environment-secret",
+        "environment": "tcc-experiment",
+        "name": "TCC_ORACLE_ARCHIVE_PASSPHRASE",
+        "value_policy": "generate cryptographically random value at installation; never persist in repository or command output"
+      },
+      {
+        "action": "create-or-update-protected-environment-variable",
+        "environment": "tcc-experiment",
+        "name": "TCC_ORACLE_EXECUTION_ACKNOWLEDGED",
+        "value": "false"
+      }
+    ]
+  },
+  "validated_terraform_plan": {
+    "sha256": "8a88bbec1bf4ef2017c5f432ae5cb01961d5b35188133ad700865ca387fdb8cf",
+    "validation_evidence": "oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json",
+    "checks_passed": 10,
+    "check_count": 10,
+    "additions": 2,
+    "changes": 0,
+    "destructions": 0,
+    "ongoing_billable_resources_added": false
+  },
+  "expected_readiness_after_installation": {
+    "oracle_infrastructure_checks_passed": 18,
+    "oracle_infrastructure_check_count": 21,
+    "oracle_candidate_checks_passed": 0,
+    "oracle_candidate_check_count": 1,
+    "ready_for_controlled_enablement": false,
+    "remaining_infrastructure_blockers": [
+      "confirmatory-protocol-frozen",
+      "confirmatory-runtimes-frozen",
+      "confirmatory-public-corpus-bound"
+    ],
+    "remaining_candidate_blocker": "open same-repository non-draft disarmed pull request"
+  },
+  "cost_scope": {
+    "new_compute_resources": 0,
+    "new_storage_resources": 0,
+    "new_network_resources": 0,
+    "new_continuously_running_workloads": 0,
+    "cost_guarantee": false,
+    "note": "The proposed Kubernetes RBAC and GitHub control objects do not provision a billable GCP workload. The existing running cluster remains outside this change set and may continue to incur cost."
+  },
+  "explicitly_excluded": [
+    "terraform apply before renewed plan validation and explicit user authorization",
+    "setting TCC_ORACLE_EXECUTION_ACKNOWLEDGED to true",
+    "attaching any cloud-authorization label to a pull request",
+    "publishing container images",
+    "creating staging, PDT, controller, or Oracle workloads",
+    "executing a GitHub cloud workflow",
+    "modifying the operational namespace",
+    "enabling or querying Cloud Billing export",
+    "authorizing experiment cost or confirmatory collection"
+  ],
+  "pre_apply_requirements": [
+    "obtain explicit user authorization for this exact change set",
+    "regenerate the Terraform plan with current remote state",
+    "require the Oracle RBAC validator to pass 10/10",
+    "require exactly two creates, zero changes, and zero destroys",
+    "confirm the Oracle namespace contains no active workload",
+    "keep all cloud execution and publication switches disabled"
+  ],
+  "post_apply_requirements": [
+    "run the Oracle readiness auditor in read-only mode",
+    "require 18/21 infrastructure checks and 0/1 candidate checks",
+    "verify the Oracle namespace still contains no active workload",
+    "record a mutation receipt without secret values"
+  ],
+  "explicit_user_authorization_required": true,
+  "apply_authorized": false,
+  "cloud_execution_authorized": false,
+  "confirmatory_collection_authorized": false,
+  "preparation_mutation_performed": false
+}
