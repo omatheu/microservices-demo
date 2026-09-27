@@ -626,6 +626,13 @@ timestamp futuro, caminho inseguro e saída alternativa são recusados. O
 documento resultante não autoriza cloud; a ausência atual da tabela de export
 continua sendo o bloqueio financeiro real.
 
+A aprovação do pesquisador também deixou de depender de edição manual:
+`prepare-researcher-approval.py` exige que 16/17 controles já estejam prontos e
+que a própria aprovação seja o único bloqueio. O modo de assinatura exige
+identidade e confirmação literal, vincula o SHA-256 exato do protocolo e mantém
+`cloud_execution_authorized: false`. O dry-run real atual recusou a assinatura
+em 6/17 e reproduziu os onze bloqueios existentes, como esperado.
+
 **Critério de saída:** protocolo versionado antes da coleta e corpus contendo
 controles seguros, mutações funcionais e não funcionais, sem rótulos acessíveis
 aos mecanismos.
