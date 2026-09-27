@@ -401,6 +401,13 @@ Ele contém apenas as duas criações RBAC e quatro controles passivos no GitHub
 mantém a trava em `false` e exclui imagens, labels em PR, workloads e execução.
 Se aplicado exatamente como proposto, a expectativa verificável é avançar de
 13/21 para 18/21 controles estruturais, ainda sem candidata elegível.
+Um instalador fail-closed agora materializa a parte GitHub do lote: o dry-run é
+somente leitura, o modo de aplicação exige confirmação literal e recibo novo,
+o kill switch é desligado antes dos secrets, PR armado é recusado e valores
+secretos nunca entram no recibo. Sete testes adversariais e a suíte completa de
+356 testes passaram. A leitura real confirmou as quatro ações pendentes sem
+mutação em
+[`../experiment/evidence/oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json`](../experiment/evidence/oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json).
 
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,

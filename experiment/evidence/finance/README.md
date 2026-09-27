@@ -95,6 +95,16 @@ estruturais sem tornar uma candidata elegível. A proposta está em
 [`oracle-passive-controls-change-request-20260927T002627Z.json`](./oracle-passive-controls-change-request-20260927T002627Z.json)
 e continua com `apply_authorized: false` até autorização explícita.
 
+O instalador
+[`install-oracle-passive-github-controls.py`](../../scripts/install-oracle-passive-github-controls.py)
+materializa somente a parte GitHub dessa proposta. Seu modo padrão é uma
+auditoria somente leitura; o modo de aplicação exige confirmação literal e
+recibo novo, força a variável para `false` antes dos secrets, recusa PR armado,
+preserva secrets existentes e não expõe os valores gerados. O dry-run real
+pós-PR #4 confirmou exatamente quatro ações pendentes e nenhum PR aberto com
+label de autorização. Nenhuma mutação foi executada. O resultado está em
+[`../oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json`](../oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json).
+
 O auditor somente leitura
 [`audit-runtime-publication-readiness.py`](../../scripts/audit-runtime-publication-readiness.py)
 transforma essas pendências em 13 controles verificáveis. A leitura de
