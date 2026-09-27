@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 24 de setembro de 2026.
+> **Última verificação:** 27 de setembro de 2026.
 
 ## Objetivo do experimento
 
@@ -375,11 +375,14 @@ protocolo. Ele verifica 22 controles antes de qualquer habilitação: conteúdo 
 workflow em `main`, proteção do ambiente, labels/secrets/variáveis, PR
 desarmado, identidade e provider OIDC exatos, papéis mínimos, Role/RoleBinding
 do namespace, ausência de workloads e congelamento de protocolo, runtimes e
-corpus. A leitura real de 26/09/2026 UTC passou em 12/22: os dez bloqueios
-restantes correspondem exatamente ao workflow ainda local, configuração
-Oracle ainda não instalada, artefatos metodológicos ainda não congelados e
-ausência de PR aberto. A auditoria não realizou mutação nem autorizou execução.
-A evidência pré-instalação está em
+corpus. A leitura pós-merge do PR #4, em 27/09/2026 UTC, passou em 13/22:
+13/21 controles estruturais e 0/1 controle de candidata. O workflow já está em
+`main`; os bloqueios restantes são o rótulo passivo, os dois secrets, a variável
+Oracle desligada/ausente, Role e RoleBinding ainda não aplicadas, protocolo,
+runtimes e corpus ainda não congelados e ausência de PR aberto. A auditoria não
+realizou mutação nem autorizou execução. A evidência consolidada está em
+[`../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json`](../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json);
+a evidência pré-instalação permanece em
 [`../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json`](../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json).
 
 O plano binário do RBAC foi gerado com refresh desligado e validado em 10/10
@@ -584,16 +587,16 @@ continuam pendentes e não foram antecipadas sem autorização financeira.
 O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery e
 o dataset protegido `online_boutique_billing` já existem; a consulta versionada
 limita cada leitura a 100 MB. A exportação padrão do Cloud Billing continua
-sem produzir dados: a verificação somente leitura de 26/09/2026 UTC encontrou
+sem produzir dados: a verificação somente leitura de 27/09/2026 UTC encontrou
 zero tabelas no dataset e, por isso, não executou query faturável. O cluster continua
 `RUNNING`, com 12/12 deployments e pods operacionais disponíveis; staging,
 PDT, plano de controle, oráculo e observabilidade permanecem vazios. O registro
 está em
-[`../experiment/evidence/finance/pre-freeze-readiness-post-pr2-20260926T004340Z.json`](../experiment/evidence/finance/pre-freeze-readiness-post-pr2-20260926T004340Z.json).
+[`../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json`](../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json).
 Essa mesma auditoria registrou 6/17 requisitos do congelamento e 12/12 controles
-estruturais da publicação. Não existe PR aberto elegível, os três runtimes
-confirmatórios ainda não foram publicados e nenhuma autorização cloud foi
-concedida.
+estruturais da publicação, além de 13/21 controles estruturais do Oracle. Não
+existe PR aberto elegível, os três runtimes confirmatórios ainda não foram
+publicados e nenhuma autorização cloud foi concedida.
 Ainda não existe evidência de custo monetário corrente apta à revisão
 financeira do protocolo.
 

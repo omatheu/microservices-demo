@@ -4,17 +4,21 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O snapshot mais recente, de 26/09/2026 UTC, confirma que os dois orçamentos e o
+O snapshot mais recente, de 27/09/2026 UTC, confirma que os dois orçamentos e o
 dataset protegido estão configurados, mas o dataset ainda possui zero tabelas:
 o Cloud Billing não criou `gcp_billing_export_v1_*`. Nenhuma query faturável foi
 executada. Por isso, a revisão financeira exigida para congelar o protocolo
 ainda não pode ser aprovada e a coleta confirmatória permanece bloqueada. A
 evidência somente leitura está em
-[`pre-freeze-readiness-post-pr2-20260926T004340Z.json`](./pre-freeze-readiness-post-pr2-20260926T004340Z.json).
+[`pre-freeze-readiness-post-pr4-20260927T002039Z.json`](./pre-freeze-readiness-post-pr4-20260927T002039Z.json).
 Ela registra também o protocolo em 6/17 controles, a infraestrutura de
-publicação em 12/12, 12/12 deployments e pods operacionais disponíveis, os
-cinco namespaces auxiliares vazios e apenas a imagem de engenharia anterior do
-`checkoutservice` no Artifact Registry. O snapshot anterior permanece em
+publicação em 12/12, a prontidão estrutural do Oracle em 13/21, 12/12
+deployments e pods operacionais disponíveis, os cinco namespaces auxiliares
+vazios e apenas a imagem de engenharia anterior do `checkoutservice` no
+Artifact Registry. O PR #4 foi incorporado sem rótulos de autorização; nenhuma
+publicação ou execução cloud foi habilitada. O snapshot anterior permanece em
+[`pre-freeze-readiness-post-pr2-20260926T004340Z.json`](./pre-freeze-readiness-post-pr2-20260926T004340Z.json),
+e o registro inicial permanece em
 [`protocol-freeze-readiness-20260922T013315Z.json`](./protocol-freeze-readiness-20260922T013315Z.json).
 
 ## Plano de publicação dos runtimes
