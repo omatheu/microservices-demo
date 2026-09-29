@@ -814,7 +814,7 @@ intervalo de confiança quando o número de repetições permitir.
 - [x] staging e PDT sem exposição pública;
 - [x] preparar stack isolada e consulta limitada para exportação de faturamento;
 - [x] criar o dataset protegido `online_boutique_billing` e habilitar a API do BigQuery;
-- [ ] habilitar o Standard usage cost export no Console do Cloud Billing;
+- [x] habilitar o Standard usage cost export no Console do Cloud Billing;
 - [ ] exportar e conferir custo diariamente durante execuções;
 - [x] definir rotina de desligamento ao final de cada janela;
 - [x] exigir cleanup final fail-closed dos workloads de `staging`, `pdt` e
@@ -826,6 +826,13 @@ intervalo de confiança quando o número de repetições permitir.
 O orçamento do Google Cloud gera alertas, mas não constitui um limite rígido de
 gastos. As quotas, a execução sequencial dos ambientes e a destruição dos
 recursos são as contenções efetivas.
+
+Em 29/09/2026 UTC, o Standard usage cost export foi ativado para
+`microservices-demo-tcc.online_boutique_billing`. A conferência imediata listou
+zero tabelas, estado esperado antes da primeira entrega diária, e por isso não
+executou consulta faturável nem produziu revisão financeira. A evidência está
+em
+[`../experiment/evidence/finance/billing-export-activation-20260929T052504Z.json`](../experiment/evidence/finance/billing-export-activation-20260929T052504Z.json).
 
 O workflow protegido agora reserva uma janela própria após a execução pareada
 para um cleanup independente dos runners internos. O script valida o contexto

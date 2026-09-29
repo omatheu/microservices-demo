@@ -178,6 +178,13 @@ o auditor confere que `confirmatory_incremental_spend_brl` é exatamente o custo
 bruto observado. O snapshot de prontidão, que não contém custo corrente, é
 deliberadamente inelegível como substituto.
 
+O Standard usage cost export foi ativado em 29/09/2026 UTC para o dataset
+protegido `microservices-demo-tcc.online_boutique_billing`. A verificação
+imediata foi somente leitura e encontrou zero tabelas; nenhuma query foi
+executada e a revisão financeira permanece bloqueada até a primeira entrega
+diária. O recibo está em
+[`billing-export-activation-20260929T052504Z.json`](./billing-export-activation-20260929T052504Z.json).
+
 O elo entre a observação e a revisão canônica agora é automatizado por
 [`prepare-financial-review.py`](../../scripts/prepare-financial-review.py). O
 modo padrão apenas mede elegibilidade; o modo de aprovação exige confirmação

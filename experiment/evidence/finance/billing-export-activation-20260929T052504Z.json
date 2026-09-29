@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "observed_at": "2026-09-29T05:25:04Z",
+  "observation_mode": "console-activation-and-read-only-bigquery-verification",
+  "billing_account": "016329-9946EB-FE858E",
+  "project_id": "microservices-demo-tcc",
+  "standard_usage_cost_export": {
+    "status": "enabled",
+    "dataset_id": "online_boutique_billing",
+    "dataset_location": "US",
+    "console_confirmation": "Ativado"
+  },
+  "free_trial": {
+    "remaining_credit_brl": 1572.01,
+    "remaining_days": 81,
+    "observed_from_console_banner": true
+  },
+  "data_plane_verification": {
+    "command_mode": "bq-list-only",
+    "standard_export_table_count": 0,
+    "billing_query_executed": false,
+    "expected_initial_state": "Cloud Billing has not delivered the first daily export yet"
+  },
+  "other_exports_enabled": false,
+  "gcp_workload_created": false,
+  "kubernetes_mutation_performed": false,
+  "runtime_publication_performed": false,
+  "cloud_execution_authorized": false,
+  "cost_review_ready": false
+}
