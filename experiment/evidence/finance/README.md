@@ -4,15 +4,21 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O snapshot mais recente, de 27/09/2026 UTC, confirma que os dois orçamentos e o
-dataset protegido estão configurados, mas o dataset ainda possui zero tabelas:
-o Cloud Billing não criou `gcp_billing_export_v1_*`. Nenhuma query faturável foi
+O estado mais recente, de 29/09/2026 UTC, confirma que o Standard usage cost
+export está ativo e que o dataset protegido em `US` concede escrita à
+identidade oficial do Cloud Billing. O dataset ainda possui zero tabelas:
+`gcp_billing_export_v1_*` ainda não foi entregue e nenhuma query faturável foi
 executada. Por isso, a revisão financeira exigida para congelar o protocolo
-ainda não pode ser aprovada e a coleta confirmatória permanece bloqueada. A
-evidência somente leitura está em
+ainda não pode ser aprovada e a coleta confirmatória permanece bloqueada. Os
+recibos estão em
+[`billing-export-activation-20260929T052504Z.json`](./billing-export-activation-20260929T052504Z.json)
+e
+[`billing-export-dataset-readiness-20260929T054404Z.json`](./billing-export-dataset-readiness-20260929T054404Z.json).
+
+O snapshot consolidado anterior, de 27/09/2026 UTC, está em
 [`pre-freeze-readiness-post-pr4-20260927T002039Z.json`](./pre-freeze-readiness-post-pr4-20260927T002039Z.json).
-Ela registra também o protocolo em 6/17 controles, a infraestrutura de
-publicação em 12/12, a prontidão estrutural do Oracle em 13/21, 12/12
+Ele registra o protocolo em 6/17 controles, a infraestrutura de
+publicação em 12/12, a prontidão estrutural então em 13/21, 12/12
 deployments e pods operacionais disponíveis, os cinco namespaces auxiliares
 vazios e apenas a imagem de engenharia anterior do `checkoutservice` no
 Artifact Registry. O PR #4 foi incorporado sem rótulos de autorização; nenhuma
@@ -84,8 +90,14 @@ remoto. O resultado continuou limitado às mesmas duas criações, com 0
 alterações, 0 destruições e 10/10 controles aprovados. A evidência atualizada
 está em
 [`oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json`](./oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json).
-O plano binário permanece fora do Git e nenhuma aplicação foi autorizada ou
-executada.
+Esse plano histórico permaneceu fora do Git e não foi aplicado naquele
+momento. Em 29/09/2026 UTC, um plano fresco passou novamente em 10/10 e o mesmo
+binário foi aplicado: duas adições, zero alterações e zero destruições. A
+auditoria Oracle confirmou Role e RoleBinding exatas, o namespace vazio e
+18/21 controles estruturais. O recibo de aplicação está em
+[`oracle-rbac-terraform-application-20260929T055307Z.json`](./oracle-rbac-terraform-application-20260929T055307Z.json),
+vinculado à validação pré-apply
+[`oracle-rbac-terraform-plan-validation-preapply-20260929T0550Z.json`](./oracle-rbac-terraform-plan-validation-preapply-20260929T0550Z.json).
 
 O lote mínimo seguinte foi separado em uma solicitação de mudança auditável:
 as duas criações RBAC, o rótulo passivo, os dois secrets protegidos e a variável
@@ -104,6 +116,14 @@ preserva secrets existentes e não expõe os valores gerados. O dry-run real
 pós-PR #4 confirmou exatamente quatro ações pendentes e nenhum PR aberto com
 label de autorização. Nenhuma mutação foi executada. O resultado está em
 [`../oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json`](../oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json).
+
+Depois do merge do PR #5, as quatro ações foram aplicadas. O recibo sanitizado
+confirma a variável Oracle em `false`, o label passivo sem vínculo a PR, os dois
+nomes de secrets presentes e nenhum valor divulgado. A auditoria posterior
+retornou zero ações restantes. Os registros estão em
+[`../oracle/oracle-passive-github-controls-installation-20260929T054946Z.json`](../oracle/oracle-passive-github-controls-installation-20260929T054946Z.json)
+e
+[`../oracle/oracle-passive-github-controls-post-install-readiness-20260929T055153Z.json`](../oracle/oracle-passive-github-controls-post-install-readiness-20260929T055153Z.json).
 
 O auditor somente leitura
 [`audit-runtime-publication-readiness.py`](../../scripts/audit-runtime-publication-readiness.py)

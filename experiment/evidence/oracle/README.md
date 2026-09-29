@@ -1,12 +1,24 @@
 # Evidências do oráculo
 
 O snapshot somente leitura mais recente
+[`oracle-execution-readiness-post-passive-20260929T055153Z.json`](./oracle-execution-readiness-post-passive-20260929T055153Z.json)
+registra o estado posterior ao lote passivo: 18/22 checks passaram, equivalentes
+a 18/21 controles estruturais e 0/1 controle de candidata. Role, RoleBinding,
+label, variável desabilitada e nomes dos dois secrets foram confirmados; o
+namespace permaneceu vazio e nenhuma execução foi autorizada.
+
+O recibo de instalação dos controles GitHub está em
+[`oracle-passive-github-controls-installation-20260929T054946Z.json`](./oracle-passive-github-controls-installation-20260929T054946Z.json),
+e a releitura idempotente está em
+[`oracle-passive-github-controls-post-install-readiness-20260929T055153Z.json`](./oracle-passive-github-controls-post-install-readiness-20260929T055153Z.json).
+Ambos omitem valores secretos e confirmam o kill switch em `false`.
+
+O snapshot
 [`oracle-execution-readiness-preinstall-20260926T163506Z.json`](./oracle-execution-readiness-preinstall-20260926T163506Z.json)
-registra o estado anterior à instalação dos controles Oracle: 12/22 checks
-passaram, nenhuma falha de coleta ocorreu, o namespace estava vazio e nenhuma
-execução foi autorizada. Ele deve ser preservado para comparação com a futura
-auditoria pós-instalação. O snapshot anterior permanece como trilha da revisão
-que revelou a normalização `namespace: default` do sujeito Kubernetes.
+preserva o estado anterior à instalação: 12/22 checks passaram, nenhuma falha
+de coleta ocorreu e nenhuma execução foi autorizada. O snapshot anterior
+permanece como trilha da revisão que revelou a normalização
+`namespace: default` do sujeito Kubernetes.
 
 Este diretório contém somente execuções posteriores à separação entre os
 mecanismos de decisão e o oráculo. Pilotos com `evidence_classification` igual

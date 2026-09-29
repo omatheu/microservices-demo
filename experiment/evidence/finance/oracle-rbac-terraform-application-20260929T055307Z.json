@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "applied_at": "2026-09-29T05:53:07Z",
+  "mechanism": "oracle-rbac-terraform-application-receipt",
+  "project_id": "microservices-demo-tcc",
+  "namespace": "oracle",
+  "validated_plan": {
+    "sha256": "a85a9d9374d17e668f41ec1877f3c070c723f2ac4cd458b59f8fb68bc4cd1808",
+    "validation_path": "experiment/evidence/finance/oracle-rbac-terraform-plan-validation-preapply-20260929T0550Z.json",
+    "validation_sha256": "f4fe5b942dc283477321c2c76a7462224d179df3439ef23687f1950e13d645f5",
+    "validation_checks_passed": 10,
+    "validation_check_count": 10
+  },
+  "apply_result": {
+    "added": 2,
+    "changed": 0,
+    "destroyed": 0,
+    "resources": [
+      {
+        "address": "kubernetes_role_v1.github_experiment_oracle_runner[0]",
+        "kind": "Role",
+        "name": "github-tcc-oracle-runner",
+        "uid": "8789ed8a-625d-43ab-900e-46c80cdabc9a"
+      },
+      {
+        "address": "kubernetes_role_binding_v1.github_experiment_oracle_runner[0]",
+        "kind": "RoleBinding",
+        "name": "github-tcc-oracle-runner",
+        "uid": "d7ceccc7-e8c5-4e06-b2d4-6711e77bf6ee"
+      }
+    ]
+  },
+  "post_apply": {
+    "terraform_no_changes": true,
+    "oracle_namespace_workloads": 0,
+    "oracle_readiness_path": "experiment/evidence/oracle/oracle-execution-readiness-post-passive-20260929T055153Z.json",
+    "oracle_readiness_sha256": "e5affb39fdca789042cb2a472b7b04f6e2721d00da8cbfcaf71b0e499df4f604",
+    "oracle_infrastructure_checks_passed": 18,
+    "oracle_infrastructure_check_count": 21
+  },
+  "ongoing_billable_resources_added": false,
+  "runtime_publication_performed": false,
+  "oracle_execution_authorized": false,
+  "cloud_execution_authorized": false
+}

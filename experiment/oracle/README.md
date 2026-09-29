@@ -152,10 +152,24 @@ ausência de workloads foram confirmados. A evidência consolidada está em
 e a primeira leitura permanece em
 [`../evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json`](../evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json).
 
+Em 29/09/2026 UTC, depois do merge do PR #5, os quatro controles passivos do
+GitHub e o RBAC mínimo foram instalados. A auditoria passou em 18/22:
+18/21 controles estruturais e 0/1 controle de candidata. Os únicos bloqueios
+estruturais restantes são protocolo, runtimes e corpus ainda não congelados; o
+controle de candidata permanece inativo porque o PR #5 está corretamente
+fechado. O kill switch está em `false`, nenhum label foi anexado e o namespace
+continua vazio. A evidência está em
+[`../evidence/oracle/oracle-execution-readiness-post-passive-20260929T055153Z.json`](../evidence/oracle/oracle-execution-readiness-post-passive-20260929T055153Z.json).
+
 O plano Terraform do RBAC também foi validado sem `apply`: 10/10 controles
 confirmaram exatamente uma Role e uma RoleBinding no namespace `oracle`, sem
 alterações, destruições ou recursos faturáveis. A evidência está em
 [`../evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json`](../evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json).
+
+Um plano fresco posterior ao PR #5 repetiu os 10/10 controles e foi aplicado
+sem desvio: duas adições, zero alterações e zero destruições. Um plano
+pós-apply confirmou `No changes`. O recibo está em
+[`../evidence/finance/oracle-rbac-terraform-application-20260929T055307Z.json`](../evidence/finance/oracle-rbac-terraform-application-20260929T055307Z.json).
 
 Os quatro controles passivos do GitHub possuem um instalador fail-closed
 separado. Sem argumentos ele apenas lê labels, nomes de secrets, variáveis e PRs
@@ -184,6 +198,14 @@ Oracle continua proibida. O change set revisável está em
 [`../evidence/finance/oracle-passive-controls-change-request-20260927T002627Z.json`](../evidence/finance/oracle-passive-controls-change-request-20260927T002627Z.json).
 O dry-run real, com quatro ações pendentes e nenhum PR armado, está em
 [`../evidence/oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json`](../evidence/oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json).
+
+As quatro ações foram aplicadas em 29/09/2026 UTC. O recibo confirma controles
+instalados, zero ações restantes, nenhum PR armado, nenhum valor secreto
+divulgado e execução Oracle ainda proibida. A auditoria independente posterior
+está em
+[`../evidence/oracle/oracle-passive-github-controls-post-install-readiness-20260929T055153Z.json`](../evidence/oracle/oracle-passive-github-controls-post-install-readiness-20260929T055153Z.json),
+e o recibo de instalação está em
+[`../evidence/oracle/oracle-passive-github-controls-installation-20260929T054946Z.json`](../evidence/oracle/oracle-passive-github-controls-installation-20260929T054946Z.json).
 
 Exemplo de invocação, somente depois do congelamento e da revisão financeira:
 

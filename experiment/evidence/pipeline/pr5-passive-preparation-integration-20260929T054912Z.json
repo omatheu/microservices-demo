@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "captured_at": "2026-09-29T05:54:00Z",
+  "repository": "omatheu/microservices-demo",
+  "pull_request": {
+    "number": 5,
+    "url": "https://github.com/omatheu/microservices-demo/pull/5",
+    "base": "main",
+    "head": "docs/tcc-post-pr4-readiness",
+    "head_sha": "1ca8e2e68b42cd005501228c45582054464f6fba",
+    "commit_count": 8,
+    "merged_at": "2026-09-29T05:49:12Z",
+    "merge_commit_sha": "148f366219d30d976ec2dc00a398731de50af089"
+  },
+  "required_checks": [
+    {
+      "name": "code-tests",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate experiment runtime images",
+      "conclusion": "success"
+    },
+    {
+      "name": "Conventional pre-staging gates",
+      "conclusion": "success"
+    }
+  ],
+  "protected_workflow": {
+    "run_id": 36527941726,
+    "url": "https://github.com/omatheu/microservices-demo/actions/runs/36527941726",
+    "authorization_job": "success",
+    "paired_staging_and_pdt": "skipped",
+    "runtime_publication": "skipped",
+    "human_gate": "skipped",
+    "oracle": "skipped"
+  },
+  "authorization_labels_attached": false,
+  "runtime_publication_performed": false,
+  "kubernetes_workload_execution_performed": false,
+  "oracle_execution_performed": false,
+  "cloud_execution_authorized": false
+}

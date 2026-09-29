@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 27 de setembro de 2026.
+> **Última verificação:** 29 de setembro de 2026.
 
 ## Objetivo do experimento
 
@@ -59,6 +59,13 @@ como Partial Digital Twin.
 - [x] Orçamento operacional adicional de R$200, com alertas em R$50, R$100, R$150, R$180 e R$200.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
+- [x] Controles passivos do Oracle instalados, com kill switch em `false` e
+  nenhum PR armado.
+- [x] Role e RoleBinding mínimas do Oracle aplicadas, sem workloads ou recurso
+  faturável adicional.
+- [x] Auditoria Oracle pós-instalação em 18/21 controles estruturais.
+- [x] Standard usage cost export ativo para o dataset protegido; primeira
+  tabela de custo ainda pendente.
 - [x] Overlay Kustomize do ambiente operacional.
 - [x] Políticas de rede da Online Boutique aplicadas.
 - [x] Online Boutique completa no namespace `operational`.
@@ -92,6 +99,27 @@ como Partial Digital Twin.
 - [ ] validação das previsões no ambiente-oráculo isolado;
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
+
+### Caminho crítico atual — 29/09/2026
+
+1. aguardar a primeira tabela do Standard Cloud Billing export, executar a
+   consulta limitada a 100 MB e registrar a revisão financeira;
+2. abrir uma candidata desarmada para publicar, sob autorização separada, as
+   três imagens confirmatórias e obter seus digests imutáveis;
+3. vincular os digests à mesma proveniência, validar o runner Oracle no cluster
+   e preparar o bundle único de congelamento;
+4. revisar e congelar políticas, SLOs, runtimes e protocolo, mantendo
+   `cloud_execution_authorized: false`;
+5. gerar somente então o corpus confirmatório cego, com nova chave, sementes,
+   ordem e compromisso criptográfico;
+6. executar a comparação pareada, o gate humano e o Oracle em blocos
+   sequenciais explicitamente autorizados;
+7. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
+   as evidências, remover a infraestrutura e conferir o custo final.
+
+Os controles passivos do Oracle e seu RBAC não pertencem mais ao caminho
+crítico: foram instalados e auditados sem armar execução. O bloqueio externo
+imediato é a primeira entrega do Billing Export.
 
 ## Fases restantes
 
@@ -368,7 +396,9 @@ específica de execução do Oracle. Scripts e protocolo são carregados do
 commit-base confiável da `main`; a candidata não recebe os secrets. A evidência
 privada é cifrada antes de upload e o cleanup é restrito ao namespace `oracle`.
 O RBAC mínimo desse namespace está declarado no Terraform, separado das
-permissões gerais de staging/PDT, porém ainda não foi aplicado ao cluster.
+permissões gerais de staging/PDT. Em 29/09/2026 UTC, somente a `Role` e a
+`RoleBinding` previstas foram aplicadas; nenhum workload foi criado e a
+execução Oracle permaneceu desligada.
 
 Um auditor Oracle somente leitura também está implementado e selado no
 protocolo. Ele verifica 22 controles antes de qualquer habilitação: conteúdo do
@@ -385,6 +415,18 @@ realizou mutação nem autorizou execução. A evidência consolidada está em
 a evidência pré-instalação permanece em
 [`../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json`](../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json).
 
+Depois do merge do PR #5, os quatro controles passivos do GitHub e o RBAC
+mínimo foram instalados. A auditoria de 29/09/2026 UTC passou em 18/22:
+18/21 controles estruturais e 0/1 controle de candidata. Restam, de forma
+deliberada, congelar protocolo, runtimes e corpus e abrir uma futura candidata
+desarmada. A variável `TCC_ORACLE_EXECUTION_ACKNOWLEDGED` continua `false`, o
+label não foi anexado a PR e o namespace permanece sem workloads. A evidência
+está em
+[`../experiment/evidence/oracle/oracle-execution-readiness-post-passive-20260929T055153Z.json`](../experiment/evidence/oracle/oracle-execution-readiness-post-passive-20260929T055153Z.json).
+Os três checks do PR passaram; no workflow protegido, staging/PDT, publicação,
+gate humano e Oracle foram todos `skipped`. O recibo da integração está em
+[`../experiment/evidence/pipeline/pr5-passive-preparation-integration-20260929T054912Z.json`](../experiment/evidence/pipeline/pr5-passive-preparation-integration-20260929T054912Z.json).
+
 O plano binário do RBAC foi gerado com refresh desligado e validado em 10/10
 controles. Ele contém somente a Role e a RoleBinding Oracle como criações, 0
 alterações, 0 destruições e nenhum recurso faturável. O relatório sanitizado,
@@ -393,7 +435,11 @@ que não autoriza `apply`, está em
 Uma regeneração pós-PR #4 com refresh real confirmou o mesmo escopo e voltou a
 passar em 10/10 controles. O relatório atualizado está em
 [`../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json`](../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json).
-Nenhum `apply` foi executado.
+Até essa validação histórica, nenhum `apply` havia sido executado. O plano foi
+regenerado depois do PR #5, voltou a passar em 10/10 e o mesmo binário foi
+aplicado em 29/09/2026 UTC: duas adições, zero alterações e zero destruições.
+Um plano posterior confirmou ausência de drift. O recibo está em
+[`../experiment/evidence/finance/oracle-rbac-terraform-application-20260929T055307Z.json`](../experiment/evidence/finance/oracle-rbac-terraform-application-20260929T055307Z.json).
 
 O menor lote autorizável de preparação Oracle também está registrado em
 [`../experiment/evidence/finance/oracle-passive-controls-change-request-20260927T002627Z.json`](../experiment/evidence/finance/oracle-passive-controls-change-request-20260927T002627Z.json).
@@ -408,6 +454,15 @@ secretos nunca entram no recibo. Sete testes adversariais e a suíte completa de
 356 testes passaram. A leitura real confirmou as quatro ações pendentes sem
 mutação em
 [`../experiment/evidence/oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json`](../experiment/evidence/oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json).
+
+O lote foi aplicado em 29/09/2026 UTC depois do merge do PR #5. O recibo não
+contém valores secretos e confirma quatro controles instalados, zero ações
+restantes, nenhum PR armado e a trava Oracle em `false`. Uma auditoria
+independente imediatamente posterior confirmou o mesmo estado. Os registros
+estão em
+[`../experiment/evidence/oracle/oracle-passive-github-controls-installation-20260929T054946Z.json`](../experiment/evidence/oracle/oracle-passive-github-controls-installation-20260929T054946Z.json)
+e
+[`../experiment/evidence/oracle/oracle-passive-github-controls-post-install-readiness-20260929T055153Z.json`](../experiment/evidence/oracle/oracle-passive-github-controls-post-install-readiness-20260929T055153Z.json).
 
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,
@@ -604,15 +659,18 @@ continuam pendentes e não foram antecipadas sem autorização financeira.
 
 O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery e
 o dataset protegido `online_boutique_billing` já existem; a consulta versionada
-limita cada leitura a 100 MB. A exportação padrão do Cloud Billing continua
-sem produzir dados: a verificação somente leitura de 27/09/2026 UTC encontrou
-zero tabelas no dataset e, por isso, não executou query faturável. O cluster continua
+limita cada leitura a 100 MB. A exportação padrão do Cloud Billing foi ativada
+em 29/09/2026 UTC. A conferência confirmou o dataset em `US`, a identidade
+oficial com escrita e ainda zero tabelas; por isso, nenhuma query faturável foi
+executada. O cluster continua
 `RUNNING`, com 12/12 deployments e pods operacionais disponíveis; staging,
 PDT, plano de controle, oráculo e observabilidade permanecem vazios. O registro
-está em
-[`../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json`](../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json).
-Essa mesma auditoria registrou 6/17 requisitos do congelamento e 12/12 controles
-estruturais da publicação, além de 13/21 controles estruturais do Oracle. Não
+financeiro atual está em
+[`../experiment/evidence/finance/billing-export-activation-20260929T052504Z.json`](../experiment/evidence/finance/billing-export-activation-20260929T052504Z.json)
+e
+[`../experiment/evidence/finance/billing-export-dataset-readiness-20260929T054404Z.json`](../experiment/evidence/finance/billing-export-dataset-readiness-20260929T054404Z.json).
+O auditor registra 6/17 requisitos do congelamento, 12/12 controles estruturais
+da publicação e, depois do lote passivo, 18/21 controles estruturais do Oracle. Não
 existe PR aberto elegível, os três runtimes confirmatórios ainda não foram
 publicados e nenhuma autorização cloud foi concedida.
 Ainda não existe evidência de custo monetário corrente apta à revisão
