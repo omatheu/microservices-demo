@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "observed_at": "2026-09-29T05:44:04Z",
+  "observation_mode": "read-only-bigquery-dataset-readiness",
+  "project_id": "microservices-demo-tcc",
+  "dataset": {
+    "dataset_id": "online_boutique_billing",
+    "location": "US",
+    "managed_by": "terraform",
+    "purpose": "tcc-cost-governance"
+  },
+  "billing_export_principal": {
+    "identity": "billing-export-bigquery@system.gserviceaccount.com",
+    "dataset_role": "OWNER",
+    "write_access_present": true
+  },
+  "standard_export_table_count": 0,
+  "billing_query_executed": false,
+  "configuration_ready": true,
+  "delivery_state": "awaiting-first-cloud-billing-export",
+  "gcp_mutation_performed": false,
+  "cloud_execution_authorized": false,
+  "cost_review_ready": false
+}

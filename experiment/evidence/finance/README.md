@@ -185,6 +185,13 @@ executada e a revisão financeira permanece bloqueada até a primeira entrega
 diária. O recibo está em
 [`billing-export-activation-20260929T052504Z.json`](./billing-export-activation-20260929T052504Z.json).
 
+Uma segunda verificação somente leitura confirmou que o dataset está em `US`
+e que a identidade oficial
+`billing-export-bigquery@system.gserviceaccount.com` possui acesso de escrita.
+Assim, a ausência inicial da tabela é estado de entrega pendente, não uma
+falha conhecida de localização ou permissão. A evidência está em
+[`billing-export-dataset-readiness-20260929T054404Z.json`](./billing-export-dataset-readiness-20260929T054404Z.json).
+
 O elo entre a observação e a revisão canônica agora é automatizado por
 [`prepare-financial-review.py`](../../scripts/prepare-financial-review.py). O
 modo padrão apenas mede elegibilidade; o modo de aprovação exige confirmação
