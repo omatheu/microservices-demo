@@ -24,6 +24,8 @@ class TccGithubWorkflowTests(unittest.TestCase):
         rendered = CI_WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("run-conventional-ci-local.sh", rendered)
         self.assertIn("compose-conventional-decision.py", rendered)
+        self.assertIn('.change_class == "release-relevant"', rendered)
+        self.assertIn('.change_class == "documentation-only"', rendered)
 
     def test_pull_request_builds_runtime_images_without_publishing(self):
         workflow = load(CI_WORKFLOW)

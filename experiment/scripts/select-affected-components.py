@@ -113,9 +113,17 @@ def select_components(matrix: dict[str, Any], raw_paths: Iterable[str], source: 
             incomplete_components.append(name)
 
     reasons = []
+    documentation_only = bool(changed_files) and len(ignored) == len(changed_files)
+    if affected_components:
+        change_class = "release-relevant"
+    elif documentation_only:
+        change_class = "documentation-only"
+    else:
+        change_class = "unclassified"
+
     if not changed_files:
         reasons.append("candidate has no changed files")
-    elif not affected_components:
+    elif not affected_components and not documentation_only:
         reasons.append("candidate has no release-relevant component changes")
     if incomplete_components:
         reasons.append(
@@ -132,6 +140,7 @@ def select_components(matrix: dict[str, Any], raw_paths: Iterable[str], source: 
         "schema_version": SCHEMA_VERSION,
         "selection_source": source,
         "matrix_scope": matrix["scope"],
+        "change_class": change_class,
         "changed_files": changed_files,
         "changed_files_sha256": changed_files_sha256,
         "affected_components": affected_components,
