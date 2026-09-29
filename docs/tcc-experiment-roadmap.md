@@ -75,12 +75,18 @@ como Partial Digital Twin.
 - [x] Quotas verificadas com consumo inicial de 1,57 CPU e 1.859 MiB em requests.
 - [x] Overlays de staging e PDT preparados sem Load Balancer e sem carga contínua.
 
-### Ainda não concluído
+### Situação dos principais entregáveis
+
+Os itens marcados como concluídos abaixo comprovam implementação ou validação
+de engenharia. Eles não constituem, isoladamente, evidência confirmatória do
+experimento. Os itens pendentes dependem de congelamento do protocolo,
+execução autorizada em cloud ou análise dos resultados.
+
+#### Implementados ou concluídos para engenharia
 
 - [x] captura persistente da linha de base operacional;
 - [x] plataforma de observabilidade do experimento;
 - [x] definição formal dos SLOs e limiares de segurança;
-- [ ] esteira convencional completa de CI/CD com staging;
 - [x] runner inicial de staging para pilotos de engenharia;
 - [x] sincronizador de estado operacional para o PDT;
 - [x] executor de alternativas contrafactuais;
@@ -88,13 +94,17 @@ como Partial Digital Twin.
 - [x] política prescritiva de seleção de ação;
 - [x] namespace isolado `pdt-system` para o plano de controle do twin;
 - [x] empacotar a lógica existente como o runtime `checkout-pdt-controller`;
+- [x] implementar os 13 operadores do corpus candidato e validar todos os seus espaços de parâmetros;
+- [x] gerar uma prévia opaca inelegível para a coleta confirmatória;
+- [x] implementar o oráculo de validação independente;
+
+#### Pendentes para conclusão confirmatória
+
+- [ ] esteira convencional completa de CI/CD com staging;
 - [ ] executar o controlador sob demanda no namespace `pdt-system`;
 - [ ] gate semiautônomo no pipeline;
 - [ ] congelar e versionar o protocolo experimental revisado;
-- [x] implementar os 13 operadores do corpus candidato e validar todos os seus espaços de parâmetros;
-- [x] gerar uma prévia opaca inelegível para a coleta confirmatória;
 - [ ] gerar o corpus opaco definitivo, somente após congelamento;
-- [x] implementar o oráculo de validação independente;
 - [ ] execução pareada e repetida das candidatas do corpus;
 - [ ] validação das previsões no ambiente-oráculo isolado;
 - [ ] consolidação estatística e análise dos resultados;
@@ -406,11 +416,12 @@ workflow em `main`, proteção do ambiente, labels/secrets/variáveis, PR
 desarmado, identidade e provider OIDC exatos, papéis mínimos, Role/RoleBinding
 do namespace, ausência de workloads e congelamento de protocolo, runtimes e
 corpus. A leitura pós-merge do PR #4, em 27/09/2026 UTC, passou em 13/22:
-13/21 controles estruturais e 0/1 controle de candidata. O workflow já está em
-`main`; os bloqueios restantes são o rótulo passivo, os dois secrets, a variável
-Oracle desligada/ausente, Role e RoleBinding ainda não aplicadas, protocolo,
-runtimes e corpus ainda não congelados e ausência de PR aberto. A auditoria não
-realizou mutação nem autorizou execução. A evidência consolidada está em
+13/21 controles estruturais e 0/1 controle de candidata. Naquele snapshot
+histórico, o workflow já estava em `main`; os bloqueios então registrados eram
+o rótulo passivo, os dois secrets, a variável Oracle desligada/ausente, Role e
+RoleBinding ainda não aplicadas, protocolo, runtimes e corpus ainda não
+congelados e ausência de PR aberto. A auditoria não realizou mutação nem
+autorizou execução. A evidência consolidada está em
 [`../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json`](../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json);
 a evidência pré-instalação permanece em
 [`../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json`](../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json).

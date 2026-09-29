@@ -226,4 +226,16 @@ jobs:
           set -euo pipefail
           [[ -n "${DECISION_FILE}" && -f "${DECISION_FILE}" ]]
           [[ "${RUNNER_EXIT_CODE}" == "0" ]]
-          jq -e '.local_decision == "pass" and .eligible_for_staging == true' "${DECISION_FILE}" >/dev/null
+          jq -e '
+            .local_decision == "pass"
+            and (
+              (
+                .change_class == "release-relevant"
+                and .eligible_for_staging == true
+              )
+              or (
+                .change_class == "documentation-only"
+                and .eligible_for_staging == false
+              )
+            )
+          ' "${DECISION_FILE}" >/dev/null

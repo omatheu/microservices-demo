@@ -301,7 +301,7 @@
     },
     "conventional_ci_runner": {
       "path": "experiment/scripts/run-conventional-ci-local.sh",
-      "sha256": "b22498248cbf32dac4ec5086a14d4a9d748c77f6b7c9535a7cb21a7ead9cbd20"
+      "sha256": "a5a464374741bad679ff364dc812514f2537d7bf4a8da340382219f49e1fb734"
     },
     "conventional_repetition_aggregator": {
       "path": "experiment/scripts/aggregate-conventional-repetitions.py",
@@ -369,7 +369,7 @@
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
-      "sha256": "2db78b0b77685bffbb128886d7924cf1b4847b4911074236c9606d6de45d0aa9"
+      "sha256": "937f74b4bdbfe584b44dd01d1bc32ea99eeba62d605fede3e63fbb0cacb8e1fb"
     },
     "cloud_experiment_workflow": {
       "path": ".github/workflows/tcc-pr-experiment.yaml",

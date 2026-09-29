@@ -25,6 +25,7 @@ class SelectAffectedComponentsTests(unittest.TestCase):
         result = self.select("src/checkoutservice/main.go")
 
         self.assertEqual(result["decision"], "pass")
+        self.assertEqual(result["change_class"], "release-relevant")
         self.assertEqual(
             [component["name"] for component in result["affected_components"]],
             ["checkoutservice"],
@@ -104,10 +105,19 @@ class SelectAffectedComponentsTests(unittest.TestCase):
             ["checkoutservice", "experiment-control"],
         )
 
-    def test_only_documentation_is_not_a_release_candidate(self):
+    def test_only_documentation_passes_without_becoming_a_release_candidate(self):
         result = self.select("README.md", "docs/tcc.md")
 
+        self.assertEqual(result["decision"], "pass")
+        self.assertEqual(result["change_class"], "documentation-only")
+        self.assertEqual(result["affected_components"], [])
+        self.assertEqual(result["reasons"], [])
+
+    def test_unclassified_noncritical_change_still_blocks(self):
+        result = self.select("misc/unclassified.txt")
+
         self.assertEqual(result["decision"], "block")
+        self.assertEqual(result["change_class"], "unclassified")
         self.assertTrue(
             any("no release-relevant component changes" in reason for reason in result["reasons"])
         )

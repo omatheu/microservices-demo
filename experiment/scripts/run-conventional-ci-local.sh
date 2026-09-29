@@ -753,14 +753,17 @@ run_gate "policy-coverage" "Executed required gates match the versioned policy" 
 jq -s '.' "${GATES_NDJSON}" >"${OUTPUT_DIR}/gates.json"
 
 FAILED_REQUIRED="$(jq '[.[] | select(.required == true and .status != "pass")] | length' "${OUTPUT_DIR}/gates.json")"
+CHANGE_CLASS="$(jq -er '.change_class' "${COMPONENT_SELECTION_FILE}")"
 LOCAL_DECISION="pass"
-ELIGIBLE_FOR_STAGING=true
+ELIGIBLE_FOR_STAGING=false
 CONFIRMATORY_ELIGIBLE=false
 if [[ "${FAILED_REQUIRED}" -gt 0 ]]; then
   LOCAL_DECISION="block"
-  ELIGIBLE_FOR_STAGING=false
-elif [[ "${MODE}" == "confirmatory" ]]; then
-  CONFIRMATORY_ELIGIBLE=true
+elif [[ "${CHANGE_CLASS}" == "release-relevant" ]]; then
+  ELIGIBLE_FOR_STAGING=true
+  if [[ "${MODE}" == "confirmatory" ]]; then
+    CONFIRMATORY_ELIGIBLE=true
+  fi
 fi
 
 FINISHED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -777,6 +780,7 @@ jq -n \
   --arg git_head_ref_commit "${GIT_HEAD_REF_COMMIT}" \
   --arg git_base_commit "${GIT_BASE_COMMIT}" \
   --arg local_decision "${LOCAL_DECISION}" \
+  --arg change_class "${CHANGE_CLASS}" \
   --arg component_selection_sha256 "${COMPONENT_SELECTION_SHA256}" \
   --argjson git_dirty "${GIT_DIRTY}" \
   --argjson failed_required_gates "${FAILED_REQUIRED}" \
@@ -822,6 +826,7 @@ jq -n \
     gates: $gates[0],
     failed_required_gates: $failed_required_gates,
     local_decision: $local_decision,
+    change_class: $change_class,
     eligible_for_staging: $eligible_for_staging,
     confirmatory_eligible: $confirmatory_eligible,
     final_pipeline_decision: false,
