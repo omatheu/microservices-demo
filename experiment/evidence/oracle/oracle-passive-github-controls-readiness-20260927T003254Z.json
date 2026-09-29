@@ -1,0 +1,72 @@
+{
+  "applied_controls": [],
+  "armed_pull_requests": [],
+  "captured_at": "2026-09-27T00:32:54Z",
+  "cloud_execution_authorized": false,
+  "controls_installed": false,
+  "environment": "tcc-experiment",
+  "execution_switch_value": null,
+  "gcp_mutation_performed": false,
+  "github_mutation_performed": false,
+  "kubernetes_mutation_performed": false,
+  "label_attachment_performed": false,
+  "mechanism": "oracle-passive-github-controls-installer",
+  "mode": "read-only-plan",
+  "oracle_execution_authorized": false,
+  "proposed_actions": [
+    {
+      "action": "set-disabled",
+      "kind": "environment-variable",
+      "name": "TCC_ORACLE_EXECUTION_ACKNOWLEDGED",
+      "value": "false"
+    },
+    {
+      "action": "create",
+      "attach_to_pull_request": false,
+      "kind": "repository-label",
+      "name": "tcc-oracle-cloud"
+    },
+    {
+      "action": "create-random-value",
+      "kind": "environment-secret",
+      "name": "TCC_ORACLE_ARCHIVE_PASSPHRASE",
+      "value_disclosed": false
+    },
+    {
+      "action": "create-random-value",
+      "kind": "environment-secret",
+      "name": "TCC_ORACLE_BLINDING_KEY_B64",
+      "value_disclosed": false
+    }
+  ],
+  "remaining_actions": [
+    {
+      "action": "set-disabled",
+      "kind": "environment-variable",
+      "name": "TCC_ORACLE_EXECUTION_ACKNOWLEDGED",
+      "value": "false"
+    },
+    {
+      "action": "create",
+      "attach_to_pull_request": false,
+      "kind": "repository-label",
+      "name": "tcc-oracle-cloud"
+    },
+    {
+      "action": "create-random-value",
+      "kind": "environment-secret",
+      "name": "TCC_ORACLE_ARCHIVE_PASSPHRASE",
+      "value_disclosed": false
+    },
+    {
+      "action": "create-random-value",
+      "kind": "environment-secret",
+      "name": "TCC_ORACLE_BLINDING_KEY_B64",
+      "value_disclosed": false
+    }
+  ],
+  "repository": "omatheu/microservices-demo",
+  "schema_version": "1.0.0",
+  "secret_names_present": [],
+  "secret_values_disclosed": false
+}

@@ -329,6 +329,33 @@ declara `cloud_execution_authorized: false`. O bundle inteiro deve ser aplicado
 e revisado como uma única mudança antes das aprovações financeira e do
 pesquisador.
 
+A aprovação do pesquisador também possui um preparador separado. Seu modo
+padrão executa a auditoria real e só considera a candidata elegível quando
+16/17 controles passam e `researcher-approval` é o único bloqueio:
+
+```bash
+python3 experiment/scripts/prepare-researcher-approval.py \
+  --repo-root . \
+  --require-eligible
+```
+
+Depois da revisão humana do protocolo exato, a aprovação canônica exige nome
+do pesquisador, confirmação literal e o único caminho aceito pelo finalizador:
+
+```bash
+python3 experiment/scripts/prepare-researcher-approval.py \
+  --repo-root . \
+  --approve \
+  --approved-by <pesquisador> \
+  --acknowledge APPROVE_RESEARCHER_PROTOCOL_FREEZE \
+  --output experiment/protocol/approvals/researcher-approval-v1.json
+```
+
+O documento vincula o SHA-256 da candidata, registra os três reconhecimentos
+metodológicos e mantém `cloud_execution_authorized: false`. Qualquer mudança no
+protocolo depois da assinatura invalida o vínculo e exige nova versão e nova
+aprovação.
+
 O preflight local foi repetido em 26/09/2026 para o commit `4504cfab`. As três
 imagens foram construídas, seus SBOMs foram gerados e os scans fixados da
 esteira encontraram zero vulnerabilidades HIGH/CRITICAL. Não houve publicação,
@@ -450,6 +477,34 @@ seguro e SHA-256 de uma saída real de `query-billing-cost-window.sh`. O auditor
 confere projeto, moeda BRL, janela, timestamp, custo bruto, linhas retornadas e
 o teto de 100 MB; um snapshot de prontidão sem custo observado não pode
 substituir essa evidência.
+
+Depois que `query-billing-cost-window.sh` produzir uma observação real, o
+preparador financeiro pode verificar a elegibilidade sem criar uma aprovação:
+
+```bash
+python3 experiment/scripts/prepare-financial-review.py \
+  --repo-root . \
+  --cost-evidence experiment/evidence/finance/<cost-window>.json \
+  --require-eligible
+```
+
+Ele reutiliza o validador selado do protocolo, vincula caminho e SHA-256 e
+recusa moeda, soma, janela, timestamp, projeto, teto ou query incompatíveis. A
+aprovação canônica só pode ser criada após revisão humana explícita, com
+confirmação literal e no caminho único esperado pelo finalizador:
+
+```bash
+python3 experiment/scripts/prepare-financial-review.py \
+  --repo-root . \
+  --cost-evidence experiment/evidence/finance/<cost-window>.json \
+  --approve \
+  --acknowledge APPROVE_FINANCIAL_REVIEW_FOR_PROTOCOL_FREEZE \
+  --output experiment/protocol/approvals/cost-review-v1.json
+```
+
+O arquivo resultante mantém `cloud_execution_authorized: false`. Ele aprova
+somente o uso da observação financeira para congelar o protocolo; publicação,
+execução paga e labels cloud continuam exigindo autorizações independentes.
 
 ## Dados excluídos da comparação principal
 

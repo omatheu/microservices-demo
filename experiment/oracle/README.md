@@ -141,20 +141,49 @@ python3 experiment/scripts/audit-oracle-execution-readiness.py \
   --require-ready
 ```
 
-Em 26/09/2026 UTC, a primeira leitura real passou em 12 dos 22 controles após
-distinguir ausências confirmadas de falhas de coleta. Os bloqueios são
-deliberados: workflow Oracle ainda local, label e secrets ainda ausentes, kill
-switch Oracle ainda não cadastrado, RBAC ainda não aplicado, protocolo/runtimes
-ainda não congelados, corpus final ainda inexistente e nenhum PR aberto. A
-identidade sem chave, os três papéis mínimos, o provider OIDC, a proteção do
-ambiente, o namespace correto e sua ausência de workloads foram confirmados.
-A evidência está em
+Em 27/09/2026 UTC, a leitura pós-merge do PR #4 passou em 13 dos 22
+controles. O workflow Oracle já está em `main`; os bloqueios deliberados são o
+label e os secrets ainda ausentes, kill switch Oracle ainda não cadastrado,
+RBAC ainda não aplicado, protocolo/runtimes ainda não congelados, corpus final
+ainda inexistente e nenhum PR aberto. A identidade sem chave, os três papéis
+mínimos, o provider OIDC, a proteção do ambiente, o namespace correto e sua
+ausência de workloads foram confirmados. A evidência consolidada está em
+[`../evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json`](../evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json),
+e a primeira leitura permanece em
 [`../evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json`](../evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json).
 
 O plano Terraform do RBAC também foi validado sem `apply`: 10/10 controles
 confirmaram exatamente uma Role e uma RoleBinding no namespace `oracle`, sem
 alterações, destruições ou recursos faturáveis. A evidência está em
-[`../evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json`](../evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json).
+[`../evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json`](../evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json).
+
+Os quatro controles passivos do GitHub possuem um instalador fail-closed
+separado. Sem argumentos ele apenas lê labels, nomes de secrets, variáveis e PRs
+abertos e imprime o plano; nenhum valor de secret é lido ou exibido:
+
+```bash
+python3 experiment/scripts/install-oracle-passive-github-controls.py
+```
+
+Uma aplicação exige autorização externa prévia, `--apply`, a confirmação
+literal e um caminho novo para o recibo. O instalador define primeiro
+`TCC_ORACLE_EXECUTION_ACKNOWLEDGED=false`, recusa qualquer PR aberto com label
+cloud, não substitui secrets existentes e gera valores novos apenas para os
+dois secrets ausentes. Ele nunca anexa o label a um PR e não toca GCP ou
+Kubernetes.
+
+```bash
+python3 experiment/scripts/install-oracle-passive-github-controls.py \
+  --apply \
+  --acknowledge INSTALL_PASSIVE_ORACLE_GITHUB_CONTROLS \
+  --output <novo-recibo-sem-secrets.json>
+```
+
+Mesmo depois dessa preparação, a variável permanece desligada e a execução do
+Oracle continua proibida. O change set revisável está em
+[`../evidence/finance/oracle-passive-controls-change-request-20260927T002627Z.json`](../evidence/finance/oracle-passive-controls-change-request-20260927T002627Z.json).
+O dry-run real, com quatro ações pendentes e nenhum PR armado, está em
+[`../evidence/oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json`](../evidence/oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json).
 
 Exemplo de invocação, somente depois do congelamento e da revisão financeira:
 

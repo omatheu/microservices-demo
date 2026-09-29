@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 24 de setembro de 2026.
+> **Última verificação:** 27 de setembro de 2026.
 
 ## Objetivo do experimento
 
@@ -375,11 +375,14 @@ protocolo. Ele verifica 22 controles antes de qualquer habilitação: conteúdo 
 workflow em `main`, proteção do ambiente, labels/secrets/variáveis, PR
 desarmado, identidade e provider OIDC exatos, papéis mínimos, Role/RoleBinding
 do namespace, ausência de workloads e congelamento de protocolo, runtimes e
-corpus. A leitura real de 26/09/2026 UTC passou em 12/22: os dez bloqueios
-restantes correspondem exatamente ao workflow ainda local, configuração
-Oracle ainda não instalada, artefatos metodológicos ainda não congelados e
-ausência de PR aberto. A auditoria não realizou mutação nem autorizou execução.
-A evidência pré-instalação está em
+corpus. A leitura pós-merge do PR #4, em 27/09/2026 UTC, passou em 13/22:
+13/21 controles estruturais e 0/1 controle de candidata. O workflow já está em
+`main`; os bloqueios restantes são o rótulo passivo, os dois secrets, a variável
+Oracle desligada/ausente, Role e RoleBinding ainda não aplicadas, protocolo,
+runtimes e corpus ainda não congelados e ausência de PR aberto. A auditoria não
+realizou mutação nem autorizou execução. A evidência consolidada está em
+[`../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json`](../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json);
+a evidência pré-instalação permanece em
 [`../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json`](../experiment/evidence/oracle/oracle-execution-readiness-preinstall-20260926T163506Z.json).
 
 O plano binário do RBAC foi gerado com refresh desligado e validado em 10/10
@@ -387,6 +390,24 @@ controles. Ele contém somente a Role e a RoleBinding Oracle como criações, 0
 alterações, 0 destruições e nenhum recurso faturável. O relatório sanitizado,
 que não autoriza `apply`, está em
 [`../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json`](../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-20260926T163444Z.json).
+Uma regeneração pós-PR #4 com refresh real confirmou o mesmo escopo e voltou a
+passar em 10/10 controles. O relatório atualizado está em
+[`../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json`](../experiment/evidence/finance/oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json).
+Nenhum `apply` foi executado.
+
+O menor lote autorizável de preparação Oracle também está registrado em
+[`../experiment/evidence/finance/oracle-passive-controls-change-request-20260927T002627Z.json`](../experiment/evidence/finance/oracle-passive-controls-change-request-20260927T002627Z.json).
+Ele contém apenas as duas criações RBAC e quatro controles passivos no GitHub,
+mantém a trava em `false` e exclui imagens, labels em PR, workloads e execução.
+Se aplicado exatamente como proposto, a expectativa verificável é avançar de
+13/21 para 18/21 controles estruturais, ainda sem candidata elegível.
+Um instalador fail-closed agora materializa a parte GitHub do lote: o dry-run é
+somente leitura, o modo de aplicação exige confirmação literal e recibo novo,
+o kill switch é desligado antes dos secrets, PR armado é recusado e valores
+secretos nunca entram no recibo. Sete testes adversariais e a suíte completa de
+356 testes passaram. A leitura real confirmou as quatro ações pendentes sem
+mutação em
+[`../experiment/evidence/oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json`](../experiment/evidence/oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json).
 
 O runner do oráculo agora também consome esse recibo de forma fail-closed para
 candidatas aprovadas pelo controle: recompõe os hashes de candidata, snapshot,
@@ -584,18 +605,33 @@ continuam pendentes e não foram antecipadas sem autorização financeira.
 O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery e
 o dataset protegido `online_boutique_billing` já existem; a consulta versionada
 limita cada leitura a 100 MB. A exportação padrão do Cloud Billing continua
-sem produzir dados: a verificação somente leitura de 26/09/2026 UTC encontrou
+sem produzir dados: a verificação somente leitura de 27/09/2026 UTC encontrou
 zero tabelas no dataset e, por isso, não executou query faturável. O cluster continua
 `RUNNING`, com 12/12 deployments e pods operacionais disponíveis; staging,
 PDT, plano de controle, oráculo e observabilidade permanecem vazios. O registro
 está em
-[`../experiment/evidence/finance/pre-freeze-readiness-post-pr2-20260926T004340Z.json`](../experiment/evidence/finance/pre-freeze-readiness-post-pr2-20260926T004340Z.json).
+[`../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json`](../experiment/evidence/finance/pre-freeze-readiness-post-pr4-20260927T002039Z.json).
 Essa mesma auditoria registrou 6/17 requisitos do congelamento e 12/12 controles
-estruturais da publicação. Não existe PR aberto elegível, os três runtimes
-confirmatórios ainda não foram publicados e nenhuma autorização cloud foi
-concedida.
+estruturais da publicação, além de 13/21 controles estruturais do Oracle. Não
+existe PR aberto elegível, os três runtimes confirmatórios ainda não foram
+publicados e nenhuma autorização cloud foi concedida.
 Ainda não existe evidência de custo monetário corrente apta à revisão
 financeira do protocolo.
+
+O caminho posterior à chegada dessa evidência já está fechado localmente:
+`prepare-financial-review.py` valida a saída real do billing contra o auditor
+selado, vincula caminho e SHA-256 e, somente com confirmação humana literal,
+gera a revisão no caminho canônico. Adulteração, custo no limiar obrigatório,
+timestamp futuro, caminho inseguro e saída alternativa são recusados. O
+documento resultante não autoriza cloud; a ausência atual da tabela de export
+continua sendo o bloqueio financeiro real.
+
+A aprovação do pesquisador também deixou de depender de edição manual:
+`prepare-researcher-approval.py` exige que 16/17 controles já estejam prontos e
+que a própria aprovação seja o único bloqueio. O modo de assinatura exige
+identidade e confirmação literal, vincula o SHA-256 exato do protocolo e mantém
+`cloud_execution_authorized: false`. O dry-run real atual recusou a assinatura
+em 6/17 e reproduziu os onze bloqueios existentes, como esperado.
 
 **Critério de saída:** protocolo versionado antes da coleta e corpus contendo
 controles seguros, mutações funcionais e não funcionais, sem rótulos acessíveis
@@ -778,7 +814,7 @@ intervalo de confiança quando o número de repetições permitir.
 - [x] staging e PDT sem exposição pública;
 - [x] preparar stack isolada e consulta limitada para exportação de faturamento;
 - [x] criar o dataset protegido `online_boutique_billing` e habilitar a API do BigQuery;
-- [ ] habilitar o Standard usage cost export no Console do Cloud Billing;
+- [x] habilitar o Standard usage cost export no Console do Cloud Billing;
 - [ ] exportar e conferir custo diariamente durante execuções;
 - [x] definir rotina de desligamento ao final de cada janela;
 - [x] exigir cleanup final fail-closed dos workloads de `staging`, `pdt` e
@@ -790,6 +826,13 @@ intervalo de confiança quando o número de repetições permitir.
 O orçamento do Google Cloud gera alertas, mas não constitui um limite rígido de
 gastos. As quotas, a execução sequencial dos ambientes e a destruição dos
 recursos são as contenções efetivas.
+
+Em 29/09/2026 UTC, o Standard usage cost export foi ativado para
+`microservices-demo-tcc.online_boutique_billing`. A conferência imediata listou
+zero tabelas, estado esperado antes da primeira entrega diária, e por isso não
+executou consulta faturável nem produziu revisão financeira. A evidência está
+em
+[`../experiment/evidence/finance/billing-export-activation-20260929T052504Z.json`](../experiment/evidence/finance/billing-export-activation-20260929T052504Z.json).
 
 O workflow protegido agora reserva uma janela própria após a execução pareada
 para um cleanup independente dos runners internos. O script valida o contexto

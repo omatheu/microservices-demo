@@ -4,17 +4,21 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O snapshot mais recente, de 26/09/2026 UTC, confirma que os dois orçamentos e o
+O snapshot mais recente, de 27/09/2026 UTC, confirma que os dois orçamentos e o
 dataset protegido estão configurados, mas o dataset ainda possui zero tabelas:
 o Cloud Billing não criou `gcp_billing_export_v1_*`. Nenhuma query faturável foi
 executada. Por isso, a revisão financeira exigida para congelar o protocolo
 ainda não pode ser aprovada e a coleta confirmatória permanece bloqueada. A
 evidência somente leitura está em
-[`pre-freeze-readiness-post-pr2-20260926T004340Z.json`](./pre-freeze-readiness-post-pr2-20260926T004340Z.json).
+[`pre-freeze-readiness-post-pr4-20260927T002039Z.json`](./pre-freeze-readiness-post-pr4-20260927T002039Z.json).
 Ela registra também o protocolo em 6/17 controles, a infraestrutura de
-publicação em 12/12, 12/12 deployments e pods operacionais disponíveis, os
-cinco namespaces auxiliares vazios e apenas a imagem de engenharia anterior do
-`checkoutservice` no Artifact Registry. O snapshot anterior permanece em
+publicação em 12/12, a prontidão estrutural do Oracle em 13/21, 12/12
+deployments e pods operacionais disponíveis, os cinco namespaces auxiliares
+vazios e apenas a imagem de engenharia anterior do `checkoutservice` no
+Artifact Registry. O PR #4 foi incorporado sem rótulos de autorização; nenhuma
+publicação ou execução cloud foi habilitada. O snapshot anterior permanece em
+[`pre-freeze-readiness-post-pr2-20260926T004340Z.json`](./pre-freeze-readiness-post-pr2-20260926T004340Z.json),
+e o registro inicial permanece em
 [`protocol-freeze-readiness-20260922T013315Z.json`](./protocol-freeze-readiness-20260922T013315Z.json).
 
 ## Plano de publicação dos runtimes
@@ -74,6 +78,32 @@ rede ou faturamento contínuo. A evidência sanitizada está em
 [`oracle-rbac-terraform-plan-validation-20260926T163444Z.json`](./oracle-rbac-terraform-plan-validation-20260926T163444Z.json).
 O plano binário contém estado e não é versionado; o relatório vincula seu
 SHA-256 e não autoriza `apply`, custo ou execução Oracle.
+
+Depois do merge do PR #4, o plano foi regenerado com refresh real do estado
+remoto. O resultado continuou limitado às mesmas duas criações, com 0
+alterações, 0 destruições e 10/10 controles aprovados. A evidência atualizada
+está em
+[`oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json`](./oracle-rbac-terraform-plan-validation-post-pr4-20260927T002511Z.json).
+O plano binário permanece fora do Git e nenhuma aplicação foi autorizada ou
+executada.
+
+O lote mínimo seguinte foi separado em uma solicitação de mudança auditável:
+as duas criações RBAC, o rótulo passivo, os dois secrets protegidos e a variável
+Oracle mantida em `false`. O documento exclui publicação, labels em PR,
+workloads e execução cloud, e prevê que o auditor avance para 18/21 controles
+estruturais sem tornar uma candidata elegível. A proposta está em
+[`oracle-passive-controls-change-request-20260927T002627Z.json`](./oracle-passive-controls-change-request-20260927T002627Z.json)
+e continua com `apply_authorized: false` até autorização explícita.
+
+O instalador
+[`install-oracle-passive-github-controls.py`](../../scripts/install-oracle-passive-github-controls.py)
+materializa somente a parte GitHub dessa proposta. Seu modo padrão é uma
+auditoria somente leitura; o modo de aplicação exige confirmação literal e
+recibo novo, força a variável para `false` antes dos secrets, recusa PR armado,
+preserva secrets existentes e não expõe os valores gerados. O dry-run real
+pós-PR #4 confirmou exatamente quatro ações pendentes e nenhum PR aberto com
+label de autorização. Nenhuma mutação foi executada. O resultado está em
+[`../oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json`](../oracle/oracle-passive-github-controls-readiness-20260927T003254Z.json).
 
 O auditor somente leitura
 [`audit-runtime-publication-readiness.py`](../../scripts/audit-runtime-publication-readiness.py)
@@ -147,6 +177,29 @@ revisão financeira deve referenciar essa saída por caminho relativo e SHA-256;
 o auditor confere que `confirmatory_incremental_spend_brl` é exatamente o custo
 bruto observado. O snapshot de prontidão, que não contém custo corrente, é
 deliberadamente inelegível como substituto.
+
+O Standard usage cost export foi ativado em 29/09/2026 UTC para o dataset
+protegido `microservices-demo-tcc.online_boutique_billing`. A verificação
+imediata foi somente leitura e encontrou zero tabelas; nenhuma query foi
+executada e a revisão financeira permanece bloqueada até a primeira entrega
+diária. O recibo está em
+[`billing-export-activation-20260929T052504Z.json`](./billing-export-activation-20260929T052504Z.json).
+
+Uma segunda verificação somente leitura confirmou que o dataset está em `US`
+e que a identidade oficial
+`billing-export-bigquery@system.gserviceaccount.com` possui acesso de escrita.
+Assim, a ausência inicial da tabela é estado de entrega pendente, não uma
+falha conhecida de localização ou permissão. A evidência está em
+[`billing-export-dataset-readiness-20260929T054404Z.json`](./billing-export-dataset-readiness-20260929T054404Z.json).
+
+O elo entre a observação e a revisão canônica agora é automatizado por
+[`prepare-financial-review.py`](../../scripts/prepare-financial-review.py). O
+modo padrão apenas mede elegibilidade; o modo de aprovação exige confirmação
+literal, recusa sobrescrever uma aprovação existente e aceita somente
+`experiment/protocol/approvals/cost-review-v1.json` como destino. Dez testes
+cobrem adulteração, teto, timestamps, caminho, confirmação e compatibilidade
+com o auditor congelado. O preparador sempre grava
+`cloud_execution_authorized: false` e não substitui a decisão humana.
 
 O plano do stack isolado foi validado sem aplicação. Com a trava desligada não
 há mudança; com a trava ligada aparecem somente a API do BigQuery e o dataset
