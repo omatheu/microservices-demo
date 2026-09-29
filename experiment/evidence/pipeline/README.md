@@ -11,6 +11,13 @@ O piloto local `gate-current-20260920T034300Z` terminou em
 mas não integra a análise confirmatória porque a candidata era conhecida e as
 políticas ainda não estavam congeladas.
 
+O recibo
+[`pr5-passive-preparation-integration-20260929T054912Z.json`](./pr5-passive-preparation-integration-20260929T054912Z.json)
+registra a integração do lote preparatório pós-PR #4. Os três checks do PR #5
+passaram e o workflow protegido executou somente a autorização desarmada:
+staging/PDT, publicação, gate humano e Oracle foram `skipped`. Nenhuma imagem,
+workload ou execução cloud foi autorizada.
+
 Em 21/09/2026 foi preparado o gate humano protegido do GitHub. O workflow
 somente cria um recibo depois de o ambiente `tcc-deployment-approval` ser
 aprovado; a identidade do revisor e o comentário são lidos do endpoint oficial

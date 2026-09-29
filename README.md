@@ -27,6 +27,13 @@ empty Oracle namespace before execution can be enabled. See the
 [experiment roadmap](/docs/tcc-experiment-roadmap.md) for the authoritative
 live status and exit criteria.
 
+As of 29 September 2026, the passive Oracle GitHub controls and its
+namespace-scoped Role/RoleBinding are installed, while the execution switch
+remains `false` and the namespace has no workloads. The latest audit passes
+18/21 structural controls; protocol, runtime and corpus freezing remain the
+three deliberate blockers. No Oracle execution or runtime publication was
+authorized by this preparation.
+
 ## Architecture
 
 **Online Boutique** is composed of 11 microservices written in different

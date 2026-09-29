@@ -1,0 +1,25 @@
+{
+  "applied_controls": [],
+  "armed_pull_requests": [],
+  "captured_at": "2026-09-29T05:52:04Z",
+  "cloud_execution_authorized": false,
+  "controls_installed": true,
+  "environment": "tcc-experiment",
+  "execution_switch_value": "false",
+  "gcp_mutation_performed": false,
+  "github_mutation_performed": false,
+  "kubernetes_mutation_performed": false,
+  "label_attachment_performed": false,
+  "mechanism": "oracle-passive-github-controls-installer",
+  "mode": "read-only-plan",
+  "oracle_execution_authorized": false,
+  "proposed_actions": [],
+  "remaining_actions": [],
+  "repository": "omatheu/microservices-demo",
+  "schema_version": "1.0.0",
+  "secret_names_present": [
+    "TCC_ORACLE_ARCHIVE_PASSPHRASE",
+    "TCC_ORACLE_BLINDING_KEY_B64"
+  ],
+  "secret_values_disclosed": false
+}
