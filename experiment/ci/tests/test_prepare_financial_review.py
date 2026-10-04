@@ -95,7 +95,13 @@ class PrepareFinancialReviewTests(unittest.TestCase):
         self.assertFalse(result["cloud_execution_authorized"])
         self.assertFalse(result["gcp_mutation_performed"])
         self.assertEqual([], result["blocking_requirements"])
-        self.assertEqual(12.34, result["observed_gross_cost_brl"])
+        self.assertEqual(12.34, result["observed_project_gross_cost_brl"])
+        self.assertEqual(212.34, result["projected_project_gross_cost_ceiling_brl"])
+        self.assertEqual(1751.1, result["project_gross_cost_budget_brl"])
+        self.assertAlmostEqual(
+            1538.76,
+            result["remaining_project_gross_budget_after_approved_ceiling_brl"],
+        )
 
     def test_approval_requires_exact_acknowledgement(self):
         with self.assertRaisesRegex(MODULE.ReviewError, "requires"):
@@ -135,10 +141,10 @@ class PrepareFinancialReviewTests(unittest.TestCase):
             result["blocking_requirements"],
         )
 
-    def test_cost_at_mandatory_review_threshold_is_ineligible(self):
+    def test_projected_total_above_project_budget_is_ineligible(self):
         value = cost_evidence()
-        value["gross_cost_brl"] = 150.0
-        value["credits_brl"] = -150.0
+        value["gross_cost_brl"] = 1600.0
+        value["credits_brl"] = -1600.0
         self.repository.write_evidence(value)
 
         result = self.prepare()

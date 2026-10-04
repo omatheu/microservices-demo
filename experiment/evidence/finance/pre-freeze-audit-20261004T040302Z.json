@@ -1,0 +1,95 @@
+{
+  "protocol_id": "checkout-pdt-comparison-v1",
+  "protocol_sha256": "52deb3b0c31fe518b027dd039a1fe367df4b8f903dd2ee105842db129853b399",
+  "ready_to_freeze": true,
+  "passed_count": 17,
+  "check_count": 17,
+  "blocking_requirements": [],
+  "checks": [
+    {
+      "id": "protocol-structure",
+      "passed": true,
+      "detail": "declared=18, operators=18"
+    },
+    {
+      "id": "collection-locked-before-freeze",
+      "passed": true,
+      "detail": "draft protocol must keep confirmatory collection disabled"
+    },
+    {
+      "id": "frozen-input-hashes",
+      "passed": true,
+      "detail": "verified 36 protocol input bindings"
+    },
+    {
+      "id": "mutation-operators-implemented",
+      "passed": true,
+      "detail": "implemented=13/13"
+    },
+    {
+      "id": "ci-policy-frozen",
+      "passed": true,
+      "detail": "status=frozen"
+    },
+    {
+      "id": "staging-thresholds-frozen",
+      "passed": true,
+      "detail": "status=frozen"
+    },
+    {
+      "id": "pdt-model-policy-frozen",
+      "passed": true,
+      "detail": "status=frozen"
+    },
+    {
+      "id": "pdt-fidelity-policy-frozen",
+      "passed": true,
+      "detail": "status=frozen"
+    },
+    {
+      "id": "oracle-policy-frozen",
+      "passed": true,
+      "detail": "status=frozen"
+    },
+    {
+      "id": "pdt-runtime-file-hashes",
+      "passed": true,
+      "detail": "verified 15 PDT runtime files"
+    },
+    {
+      "id": "pdt-controller-image-bound",
+      "passed": true,
+      "detail": "controller image requires an immutable digest and publication provenance"
+    },
+    {
+      "id": "pdt-runtime-frozen",
+      "passed": true,
+      "detail": "status=frozen"
+    },
+    {
+      "id": "oracle-file-hashes",
+      "passed": true,
+      "detail": "verified 27 oracle files"
+    },
+    {
+      "id": "oracle-images-bound",
+      "passed": true,
+      "detail": "both images require immutable digests and the same publication provenance"
+    },
+    {
+      "id": "oracle-suite-frozen",
+      "passed": true,
+      "detail": "status=frozen"
+    },
+    {
+      "id": "researcher-approval",
+      "passed": true,
+      "detail": "explicit protocol approval is required and does not authorize cloud execution"
+    },
+    {
+      "id": "financial-review",
+      "passed": true,
+      "detail": "ceiling=R$200, mandatory review=R$150"
+    }
+  ]
+}

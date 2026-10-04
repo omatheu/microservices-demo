@@ -80,9 +80,9 @@ SELECT
   ROUND(SUM(IFNULL((SELECT SUM(credit.amount) FROM UNNEST(credits) AS credit), 0)), 6) AS credits_brl,
   ROUND(SUM(cost + IFNULL((SELECT SUM(credit.amount) FROM UNNEST(credits) AS credit), 0)), 6) AS net_cost_brl,
   COUNT(*) AS line_items,
-  MIN(usage_start_time) AS first_usage_start_time,
-  MAX(usage_end_time) AS last_usage_end_time,
-  MAX(export_time) AS billing_data_as_of
+  FORMAT_TIMESTAMP('%Y-%m-%dT%H:%M:%SZ', MIN(usage_start_time), 'UTC') AS first_usage_start_time,
+  FORMAT_TIMESTAMP('%Y-%m-%dT%H:%M:%SZ', MAX(usage_end_time), 'UTC') AS last_usage_end_time,
+  FORMAT_TIMESTAMP('%Y-%m-%dT%H:%M:%SZ', MAX(export_time), 'UTC') AS billing_data_as_of
 FROM \`${project_id}.${dataset_id}.${table_id}\`
 WHERE project.id = @project_id
   AND usage_start_time >= @window_start
@@ -93,7 +93,7 @@ SQL
 bq --project_id="$project_id" --location="$dataset_location" query \
   --format=json \
   --use_legacy_sql=false \
-  --use_query_cache=true \
+  --use_cache=true \
   --maximum_bytes_billed="$maximum_bytes_billed" \
   --parameter="project_id:STRING:${project_id}" \
   --parameter="window_start:TIMESTAMP:${window_start}" \

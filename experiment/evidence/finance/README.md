@@ -4,13 +4,20 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O estado mais recente, de 29/09/2026 UTC, confirma que o Standard usage cost
-export está ativo e que o dataset protegido em `US` concede escrita à
-identidade oficial do Cloud Billing. O dataset ainda possui zero tabelas:
-`gcp_billing_export_v1_*` ainda não foi entregue e nenhuma query faturável foi
-executada. Por isso, a revisão financeira exigida para congelar o protocolo
-ainda não pode ser aprovada e a coleta confirmatória permanece bloqueada. Os
-recibos estão em
+O estado mais recente, de 04/10/2026 UTC, confirma que o Standard usage cost
+export está ativo e que a tabela particionada `gcp_billing_export_v1_*` já foi
+entregue no dataset protegido em `US`. A consulta versionada e limitada a
+100 MB observou R$519,736015 de custo bruto, R$-519,737769 em créditos e
+R$-0,001754 de custo líquido entre 19/09 e 03/10. O review preserva R$200 como
+teto incremental futuro e projeta R$719,736015 de custo bruto total, abaixo do
+orçamento de R$1.751,10. A evidência está elegível para aprovação humana, mas a
+aprovação canônica foi gerada após a confirmação literal do pesquisador e
+permanece não autorizadora de cloud. Os registros atuais estão em
+[`cost-window-20260919-20261004.json`](./cost-window-20260919-20261004.json) e
+[`financial-review-eligibility-20261004T030924Z.json`](./financial-review-eligibility-20261004T030924Z.json).
+O vínculo canônico está em
+[`../../protocol/approvals/cost-review-v1.json`](../../protocol/approvals/cost-review-v1.json).
+Os recibos históricos de ativação permanecem em
 [`billing-export-activation-20260929T052504Z.json`](./billing-export-activation-20260929T052504Z.json)
 e
 [`billing-export-dataset-readiness-20260929T054404Z.json`](./billing-export-dataset-readiness-20260929T054404Z.json).
@@ -194,9 +201,11 @@ A consulta é limitada a 100 MB, usa cache, exige exatamente uma tabela padrão,
 filtra `microservices-demo-tcc` e falha se não houver uma observação completa em
 BRL. O valor é uma estimativa exportada, não uma fatura finalizada. O arquivo de
 revisão financeira deve referenciar essa saída por caminho relativo e SHA-256;
-o auditor confere que `confirmatory_incremental_spend_brl` é exatamente o custo
-bruto observado. O snapshot de prontidão, que não contém custo corrente, é
-deliberadamente inelegível como substituto.
+o auditor vincula o custo bruto observado como baseline do projeto e comprova
+que essa baseline somada ao teto incremental futuro de R$200 permanece abaixo
+do orçamento bruto de R$1.751,10. Uma nova revisão é obrigatória ao atingir
+R$150 de gasto incremental após a baseline. O snapshot de prontidão, que não
+contém custo corrente, é deliberadamente inelegível como substituto.
 
 O Standard usage cost export foi ativado em 29/09/2026 UTC para o dataset
 protegido `microservices-demo-tcc.online_boutique_billing`. A verificação

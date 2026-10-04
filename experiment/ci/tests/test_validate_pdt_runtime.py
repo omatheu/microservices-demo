@@ -15,7 +15,12 @@ SPEC.loader.exec_module(MODULE)
 
 
 def manifest():
-    return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    value = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    value["status"] = "pre-registration-candidate"
+    value["frozen_at"] = None
+    value["controller_image"] = None
+    value["publication_binding"] = None
+    return value
 
 
 def publication_binding():
@@ -36,6 +41,15 @@ def publication_binding():
 
 
 class ValidatePdtRuntimeTests(unittest.TestCase):
+    def test_active_frozen_runtime_is_valid(self):
+        value = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+
+        result = MODULE.validate(REPO_ROOT, value, require_frozen=True)
+
+        self.assertTrue(result["image_ready"])
+        self.assertTrue(result["publication_bound"])
+        self.assertTrue(result["frozen"])
+
     def test_candidate_runtime_files_are_bound_but_image_is_pending(self):
         result = MODULE.validate(REPO_ROOT, manifest())
 

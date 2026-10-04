@@ -26,6 +26,20 @@ def load(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def candidate_manifests():
+    pdt = load(PDT_MANIFEST)
+    pdt["status"] = "pre-registration-candidate"
+    pdt["frozen_at"] = None
+    pdt["controller_image"] = None
+    pdt["publication_binding"] = None
+    oracle = load(ORACLE_MANIFEST)
+    oracle["status"] = "pre-registration-candidate"
+    oracle["frozen_at"] = None
+    oracle["images"] = {"oracle_harness": None, "currency_reference": None}
+    oracle["publication_binding"] = None
+    return pdt, oracle
+
+
 def summary():
     images = []
     for index, name in enumerate(
@@ -85,19 +99,19 @@ def summary():
 
 class BindRuntimePublicationTests(unittest.TestCase):
     def bind(self, value=None, pdt=None, oracle=None):
+        default_pdt, default_oracle = candidate_manifests()
         return MODULE.bind(
             REPO_ROOT,
             value or summary(),
             SUMMARY_SHA256,
-            pdt or load(PDT_MANIFEST),
-            oracle or load(ORACLE_MANIFEST),
+            pdt or default_pdt,
+            oracle or default_oracle,
             SOURCE_COMMIT,
             SOURCE_TREE,
         )
 
     def test_binds_all_digests_without_freezing_or_mutating_cloud(self):
-        original_pdt = load(PDT_MANIFEST)
-        original_oracle = load(ORACLE_MANIFEST)
+        original_pdt, original_oracle = candidate_manifests()
         pdt_before = copy.deepcopy(original_pdt)
         oracle_before = copy.deepcopy(original_oracle)
 
@@ -153,7 +167,7 @@ class BindRuntimePublicationTests(unittest.TestCase):
             self.bind(value=value)
 
     def test_refuses_to_replace_an_existing_binding(self):
-        pdt = load(PDT_MANIFEST)
+        pdt, _ = candidate_manifests()
         pdt["publication_binding"] = {"already": "bound"}
 
         with self.assertRaisesRegex(ValueError, "already contains"):

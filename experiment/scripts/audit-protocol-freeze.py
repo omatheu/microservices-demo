@@ -130,6 +130,7 @@ def validate_cost_review(repo_root, protocol, cost_review):
     limits = protocol.get("execution_limits", {})
     ceiling = limits.get("proposed_incremental_spend_ceiling_brl")
     review_at = limits.get("mandatory_cost_review_at_brl")
+    project_budget = limits.get("project_gross_cost_budget_brl")
     required_keys = {
         "schema_version",
         "protocol_id",
@@ -138,28 +139,43 @@ def validate_cost_review(repo_root, protocol, cost_review):
         "reviewed_at",
         "billing_data_as_of",
         "cost_data_available",
-        "confirmatory_incremental_spend_brl",
+        "project_gross_cost_observed_brl",
         "approved_incremental_spend_ceiling_brl",
-        "mandatory_review_at_brl",
+        "projected_project_gross_cost_ceiling_brl",
+        "project_gross_cost_budget_brl",
+        "mandatory_incremental_review_at_brl",
         "evidence",
         "cloud_execution_authorized",
     }
     if (
         not isinstance(cost_review, dict)
         or set(cost_review) != required_keys
-        or cost_review.get("schema_version") != "1.0.0"
+        or cost_review.get("schema_version") != "1.1.0"
         or cost_review.get("protocol_id") != protocol.get("protocol_id")
         or cost_review.get("project_id") != "microservices-demo-tcc"
         or cost_review.get("decision") != "approved-for-protocol-freeze"
         or cost_review.get("cloud_execution_authorized") is not False
         or cost_review.get("cost_data_available") is not True
         or cost_review.get("approved_incremental_spend_ceiling_brl") != ceiling
-        or cost_review.get("mandatory_review_at_brl") != review_at
-        or not finite_number(cost_review.get("confirmatory_incremental_spend_brl"))
+        or cost_review.get("project_gross_cost_budget_brl") != project_budget
+        or cost_review.get("mandatory_incremental_review_at_brl") != review_at
+        or not finite_number(cost_review.get("project_gross_cost_observed_brl"))
+        or not finite_number(
+            cost_review.get("projected_project_gross_cost_ceiling_brl")
+        )
         or not finite_number(ceiling)
         or not finite_number(review_at)
+        or not finite_number(project_budget)
         or not 0 < review_at <= ceiling
-        or not 0 <= cost_review["confirmatory_incremental_spend_brl"] < review_at
+        or not 0 <= cost_review["project_gross_cost_observed_brl"] < project_budget
+        or not math.isclose(
+            cost_review["projected_project_gross_cost_ceiling_brl"],
+            cost_review["project_gross_cost_observed_brl"] + ceiling,
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        )
+        or cost_review["projected_project_gross_cost_ceiling_brl"]
+        > project_budget
         or not isinstance(cost_review.get("reviewed_at"), str)
         or not RFC3339_PATTERN.fullmatch(cost_review["reviewed_at"])
         or not isinstance(cost_review.get("billing_data_as_of"), str)
@@ -182,7 +198,7 @@ def validate_cost_review(repo_root, protocol, cost_review):
         or gross_cost < 0
         or not math.isclose(
             gross_cost,
-            cost_review["confirmatory_incremental_spend_brl"],
+            cost_review["project_gross_cost_observed_brl"],
             rel_tol=1e-12,
             abs_tol=1e-12,
         )

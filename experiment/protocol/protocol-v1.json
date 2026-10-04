@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
   "protocol_id": "checkout-pdt-comparison-v1",
-  "status": "pre-registration-candidate",
-  "confirmatory_collection_allowed": false,
-  "frozen_at": null,
+  "status": "frozen",
+  "confirmatory_collection_allowed": true,
+  "frozen_at": "2026-10-04T04:03:02Z",
   "twin_object": "checkoutservice",
   "research_design": {
     "experimental_unit": "opaque release candidate",
@@ -279,6 +279,7 @@
   },
   "execution_limits": {
     "cloud_execution_authorization": "explicit-user-authorization-required-after-freeze",
+    "project_gross_cost_budget_brl": 1751.1,
     "proposed_incremental_spend_ceiling_brl": 200,
     "mandatory_cost_review_at_brl": 150,
     "billing_alert_is_hard_cap": false,
@@ -297,7 +298,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "76b60adcd54ea649609a25ba64c8ce159e82dbafef4562912d4e9932944d4656"
+      "sha256": "99e93db9f90a40d7c7d6042f2e394bbe479211ada227a6ae04aebd8aff768b78"
     },
     "conventional_ci_runner": {
       "path": "experiment/scripts/run-conventional-ci-local.sh",
@@ -337,7 +338,7 @@
     },
     "protocol_freeze_auditor": {
       "path": "experiment/scripts/audit-protocol-freeze.py",
-      "sha256": "5c580de7ad2a861ed89cea38ad7e99f1760794bc81a9250c47bcfa311f127fcf"
+      "sha256": "88cc7e893276a3b5df92f77f37727bdf5fb43f29a99c81c09f8244f830accb48"
     },
     "protocol_freeze_candidate_preparer": {
       "path": "experiment/scripts/prepare-protocol-freeze-candidate.py",
@@ -345,7 +346,7 @@
     },
     "protocol_freeze_finalizer": {
       "path": "experiment/scripts/finalize-protocol-freeze.py",
-      "sha256": "a08e355dcaefc3d62f3a61699a2478225269589fc3d40a15101869b3e3cab5f5"
+      "sha256": "a60d034880e9bbf9227b1d98d16b75b8187972c6cc95f705c0092768d7b1f9ac"
     },
     "runtime_publication_readiness_auditor": {
       "path": "experiment/scripts/audit-runtime-publication-readiness.py",
@@ -381,7 +382,7 @@
     },
     "billing_cost_query": {
       "path": "experiment/scripts/query-billing-cost-window.sh",
-      "sha256": "a18611845aa32b49487d2833352e171ab879bdcb9aff57399b7e880b709e6cc8"
+      "sha256": "e10caac9a55e113c13b482bb2e51ce6c07fc5fcb0979307193e0c2e15acbcc6b"
     },
     "validity_threat_register": {
       "path": "docs/tcc-validity-threats.md",
@@ -413,11 +414,11 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "ea288a5dee9991312018d77ac509766c0bc2c8b0b8048889e23aad8c508d5581"
+      "sha256": "ca4aa1ad80d20bd41a3aa4a40ae147f6c7363169cd45a4c7262d7038a7896491"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+      "sha256": "e2670110c46dfa195c99c7bdfef11ae9a43949d09f71e8627398772a5c786bd2"
     },
     "pdt_repetition_aggregator": {
       "path": "experiment/scripts/aggregate-pdt-repetitions.py",
@@ -425,7 +426,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "30983310a61f88be04ac52a816cd6e6b7d8678c96958df22f529fd37c9f633bb"
+      "sha256": "51bea060dff32ed2c72eff14727e8e3d1c1f0a37d84526186e1375f9837d8f30"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
@@ -437,7 +438,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "0bd6ea782e107b94fb689cbecd54aa7a1bebe76454a3281dc9931f65c26fada4"
+      "sha256": "ff48b52c18ab3da470eb500c8dfd1acfd927b212aeb891b881a742764ad25dc9"
     }
   },
   "required_before_freeze": [

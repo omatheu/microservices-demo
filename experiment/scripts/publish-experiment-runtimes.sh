@@ -94,8 +94,16 @@ for definition in "${images[@]}"; do
   sbom_sha256=$(sha256sum "${output_dir}/${sbom_file}" | awk '{print $1}')
   scan_sha256=$(sha256sum "${output_dir}/${scan_file}" | awk '{print $1}')
   docker push "$tag" | tee "${output_dir}/${name}-push.log"
-  registry_digest=$(awk '/^digest: sha256:[a-f0-9]{64} size:/{digest=$2} END{print digest}' \
-    "${output_dir}/${name}-push.log")
+  registry_digest=$(awk '
+    /digest: sha256:[a-f0-9]{64} size:/ {
+      for (field = 1; field <= NF; field++) {
+        if ($field == "digest:") {
+          digest = $(field + 1)
+        }
+      }
+    }
+    END {print digest}
+  ' "${output_dir}/${name}-push.log")
   if [[ ! "$registry_digest" =~ ^sha256:[a-f0-9]{64}$ ]]; then
     echo "$name: Docker did not report an immutable pushed digest." >&2
     exit 1
