@@ -20,11 +20,17 @@ ALTERNATIVE_ID = "deploy-as-is"
 
 
 def fidelity_policy():
-    return json.loads(FIDELITY_POLICY_PATH.read_text(encoding="utf-8"))
+    value = json.loads(FIDELITY_POLICY_PATH.read_text(encoding="utf-8"))
+    value["status"] = "pre-registration-candidate"
+    value["frozen_at"] = None
+    return value
 
 
 def oracle_policy():
-    return json.loads(ORACLE_POLICY_PATH.read_text(encoding="utf-8"))
+    value = json.loads(ORACLE_POLICY_PATH.read_text(encoding="utf-8"))
+    value["status"] = "pre-registration-candidate"
+    value["frozen_at"] = None
+    return value
 
 
 def pdt_decision():

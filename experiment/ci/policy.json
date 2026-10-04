@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
-  "status": "pre-registration-candidate",
-  "frozen_at": null,
+  "status": "frozen",
+  "frozen_at": "2026-10-04T03:42:42Z",
   "scope": "checkout-path-local-pre-staging-ci",
-    "required_gates": [
+  "required_gates": [
     "candidate-identity",
     "component-selection",
     "policy-readiness",
@@ -12,11 +12,11 @@
     "ci-contract-tests",
     "json-syntax",
     "protobuf-contracts",
-        "terraform-static",
-        "kustomize-render",
-        "kubernetes-policy-self-test",
-        "kubernetes-policy",
-        "checkout-unit-tests",
+    "terraform-static",
+    "kustomize-render",
+    "kubernetes-policy-self-test",
+    "kubernetes-policy",
+    "checkout-unit-tests",
     "checkout-semantic-contracts",
     "affected-component-tests",
     "secret-scanner-self-test",
@@ -36,29 +36,32 @@
     "trivy": "aquasec/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969",
     "syft": "ghcr.io/anchore/syft@sha256:500e2d872ac019436926e8322b4fc1f39441d94d21f6f4046c6ff29b30e8cb02"
   },
-    "tool_versions": {
-        "protoc": "libprotoc 3.21.12",
-        "pyyaml": "6.0.1",
-        "protobuf_python": "4.21.12"
-    },
-    "kubernetes_policy": {
-        "protected_namespaces": [
-            "staging",
-            "pdt",
-            "oracle"
-        ],
-        "forbidden_service_types": [
-            "LoadBalancer",
-            "NodePort"
-        ],
-        "require_run_as_non_root": true,
-        "require_restricted_container_security_context": true,
-        "forbid_host_namespaces": true,
-        "forbid_host_path": true,
-        "forbid_host_port": true
-    },
+  "tool_versions": {
+    "protoc": "libprotoc 3.21.12",
+    "pyyaml": "6.0.1",
+    "protobuf_python": "4.21.12"
+  },
+  "kubernetes_policy": {
+    "protected_namespaces": [
+      "staging",
+      "pdt",
+      "oracle"
+    ],
+    "forbidden_service_types": [
+      "LoadBalancer",
+      "NodePort"
+    ],
+    "require_run_as_non_root": true,
+    "require_restricted_container_security_context": true,
+    "forbid_host_namespaces": true,
+    "forbid_host_path": true,
+    "forbid_host_port": true
+  },
   "scanner_policy": {
-    "blocking_severities": ["HIGH", "CRITICAL"],
+    "blocking_severities": [
+      "HIGH",
+      "CRITICAL"
+    ],
     "ignore_unfixed_vulnerabilities": true,
     "semgrep_ruleset": "experiment/ci/semgrep-rules.yml",
     "semgrep_ruleset_sha256": "4af1ae3de52c6903536c25bb3b9ee77ae08f4b21036bd31e14d9fdeee391f00a",

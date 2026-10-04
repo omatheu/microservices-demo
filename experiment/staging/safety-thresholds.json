@@ -1,9 +1,12 @@
 {
   "schema_version": "1.0.0",
-  "status": "pre-registration-candidate",
-  "frozen_at": null,
+  "status": "frozen",
+  "frozen_at": "2026-10-04T03:42:42Z",
   "method": "predeclared-safe-staging-calibration",
-  "decision_values": ["PASS", "FAIL"],
+  "decision_values": [
+    "PASS",
+    "FAIL"
+  ],
   "thresholds": {
     "minimum_success_rate": 0.99,
     "maximum_latency_p95_ms": 1200,

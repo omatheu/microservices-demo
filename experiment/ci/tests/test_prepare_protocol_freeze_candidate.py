@@ -2,6 +2,7 @@ import copy
 import importlib.util
 import json
 import pathlib
+import tempfile
 import unittest
 
 
@@ -44,18 +45,111 @@ def publication_binding():
     }
 
 
-def bound_manifests():
+class CandidateRepository:
+    def __init__(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = pathlib.Path(self.temporary.name)
+        protocol = load(PROTOCOL_PATH)
+        pdt = load(PDT_MANIFEST_PATH)
+        oracle = load(ORACLE_MANIFEST_PATH)
+
+        special_paths = set(MODULE.POLICY_INPUTS) | {
+            MODULE.PDT_RUNTIME_PATH,
+            MODULE.ORACLE_SUITE_PATH,
+            MODULE.PROTOCOL_PATH,
+        }
+        inventory_paths = [binding["path"] for binding in protocol["frozen_inputs"].values()]
+        inventory_paths.extend(item["path"] for item in pdt["files"])
+        inventory_paths.extend(item["path"] for item in oracle["files"])
+        for path in inventory_paths:
+            relative = pathlib.Path(path)
+            if relative.as_posix() in special_paths:
+                continue
+            target = self.root / relative
+            if target.exists():
+                continue
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.symlink_to(REPO_ROOT / relative)
+
+        proposed = {}
+        for relative in MODULE.POLICY_INPUTS:
+            value = load(REPO_ROOT / relative)
+            value["status"] = "pre-registration-candidate"
+            value["frozen_at"] = None
+            proposed[relative] = value
+
+        pdt.update(
+            {
+                "status": "pre-registration-candidate",
+                "frozen_at": None,
+                "controller_image": None,
+                "publication_binding": None,
+            }
+        )
+        MODULE.replace_inventory_hash(
+            pdt,
+            "experiment/pdt/model-policy.json",
+            MODULE.sha256_bytes(MODULE.render(proposed["experiment/pdt/model-policy.json"])),
+            "PDT runtime manifest",
+        )
+        proposed[MODULE.PDT_RUNTIME_PATH] = pdt
+
+        oracle.update(
+            {
+                "status": "pre-registration-candidate",
+                "frozen_at": None,
+                "images": {"oracle_harness": None, "currency_reference": None},
+                "publication_binding": None,
+            }
+        )
+        for relative in (
+            "experiment/pdt/fidelity-policy.json",
+            "experiment/oracle/policy-v1.json",
+        ):
+            MODULE.replace_inventory_hash(
+                oracle,
+                relative,
+                MODULE.sha256_bytes(MODULE.render(proposed[relative])),
+                "oracle suite manifest",
+            )
+        proposed[MODULE.ORACLE_SUITE_PATH] = oracle
+
+        proposed_hashes = {
+            path: MODULE.sha256_bytes(MODULE.render(value))
+            for path, value in proposed.items()
+        }
+        for relative, input_name in MODULE.POLICY_INPUTS.items():
+            if input_name is not None:
+                protocol["frozen_inputs"][input_name]["sha256"] = proposed_hashes[relative]
+        protocol["frozen_inputs"]["pdt_runtime_manifest"]["sha256"] = proposed_hashes[
+            MODULE.PDT_RUNTIME_PATH
+        ]
+        protocol["frozen_inputs"]["oracle_suite_manifest"]["sha256"] = proposed_hashes[
+            MODULE.ORACLE_SUITE_PATH
+        ]
+        proposed[MODULE.PROTOCOL_PATH] = protocol
+
+        for relative, value in proposed.items():
+            target = self.root / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(MODULE.render(value))
+
+    def close(self):
+        self.temporary.cleanup()
+
+
+def bound_manifests(repo_root):
     prefix = (
         "us-central1-docker.pkg.dev/microservices-demo-tcc/"
         "online-boutique-experiment"
     )
     binding = publication_binding()
-    pdt = load(PDT_MANIFEST_PATH)
+    pdt = load(repo_root / MODULE.PDT_RUNTIME_PATH)
     pdt["controller_image"] = (
         f"{prefix}/checkout-pdt-controller@sha256:" + "d" * 64
     )
     pdt["publication_binding"] = copy.deepcopy(binding)
-    oracle = load(ORACLE_MANIFEST_PATH)
+    oracle = load(repo_root / MODULE.ORACLE_SUITE_PATH)
     oracle["images"] = {
         "oracle_harness": f"{prefix}/oracle-harness@sha256:" + "e" * 64,
         "currency_reference": f"{prefix}/currency-reference@sha256:" + "f" * 64,
@@ -65,15 +159,27 @@ def bound_manifests():
 
 
 class PrepareProtocolFreezeCandidateTests(unittest.TestCase):
+    def setUp(self):
+        self.repository = CandidateRepository()
+
+    def tearDown(self):
+        self.repository.close()
+
+    def protocol(self):
+        return load(self.repository.root / MODULE.PROTOCOL_PATH)
+
+    def bound_manifests(self):
+        return bound_manifests(self.repository.root)
+
     def test_prepares_one_coherent_non_authorizing_bundle(self):
-        protocol = load(PROTOCOL_PATH)
-        pdt, oracle = bound_manifests()
+        protocol = self.protocol()
+        pdt, oracle = self.bound_manifests()
         before_protocol = copy.deepcopy(protocol)
         before_pdt = copy.deepcopy(pdt)
         before_oracle = copy.deepcopy(oracle)
 
         rendered, receipt = MODULE.prepare(
-            REPO_ROOT, protocol, pdt, oracle, FROZEN_AT
+            self.repository.root, protocol, pdt, oracle, FROZEN_AT
         )
         values = {
             path: json.loads(content.decode()) for path, content in rendered.items()
@@ -136,39 +242,39 @@ class PrepareProtocolFreezeCandidateTests(unittest.TestCase):
         self.assertEqual(before_oracle, oracle)
 
     def test_rejects_mismatched_publication_provenance(self):
-        pdt, oracle = bound_manifests()
+        pdt, oracle = self.bound_manifests()
         oracle["publication_binding"]["workflow_run_id"] = "9999"
 
         with self.assertRaisesRegex(ValueError, "one valid publication"):
             MODULE.prepare(
-                REPO_ROOT, load(PROTOCOL_PATH), pdt, oracle, FROZEN_AT
+                self.repository.root, self.protocol(), pdt, oracle, FROZEN_AT
             )
 
     def test_rejects_extra_changes_hidden_in_bound_manifest(self):
-        pdt, oracle = bound_manifests()
+        pdt, oracle = self.bound_manifests()
         pdt["freeze_rule"] = "silently changed"
 
         with self.assertRaisesRegex(ValueError, "more than publication fields"):
             MODULE.prepare(
-                REPO_ROOT, load(PROTOCOL_PATH), pdt, oracle, FROZEN_AT
+                self.repository.root, self.protocol(), pdt, oracle, FROZEN_AT
             )
 
     def test_rejects_protocol_hash_drift_and_invalid_timestamp(self):
-        pdt, oracle = bound_manifests()
-        protocol = load(PROTOCOL_PATH)
+        pdt, oracle = self.bound_manifests()
+        protocol = self.protocol()
         protocol["frozen_inputs"]["ci_policy"]["sha256"] = "0" * 64
         with self.assertRaisesRegex(ValueError, "hash differs"):
-            MODULE.prepare(REPO_ROOT, protocol, pdt, oracle, FROZEN_AT)
+            MODULE.prepare(self.repository.root, protocol, pdt, oracle, FROZEN_AT)
 
         with self.assertRaisesRegex(ValueError, "RFC3339"):
             MODULE.prepare(
-                REPO_ROOT, load(PROTOCOL_PATH), pdt, oracle, "tomorrow"
+                self.repository.root, self.protocol(), pdt, oracle, "tomorrow"
             )
 
         with self.assertRaisesRegex(ValueError, "cannot precede"):
             MODULE.prepare(
-                REPO_ROOT,
-                load(PROTOCOL_PATH),
+                self.repository.root,
+                self.protocol(),
                 pdt,
                 oracle,
                 "2026-09-22T01:59:59Z",

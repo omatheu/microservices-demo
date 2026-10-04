@@ -85,19 +85,14 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_current_candidate_reports_explicit_freeze_blockers(self):
+    def test_current_candidate_reports_only_approval_blockers(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
-        self.assertIn("ci-policy-frozen", result["blocking_requirements"])
-        self.assertIn("staging-thresholds-frozen", result["blocking_requirements"])
-        self.assertIn("pdt-model-policy-frozen", result["blocking_requirements"])
-        self.assertIn("pdt-fidelity-policy-frozen", result["blocking_requirements"])
-        self.assertIn("pdt-controller-image-bound", result["blocking_requirements"])
-        self.assertIn("pdt-runtime-frozen", result["blocking_requirements"])
-        self.assertIn("oracle-images-bound", result["blocking_requirements"])
-        self.assertIn("researcher-approval", result["blocking_requirements"])
-        self.assertIn("financial-review", result["blocking_requirements"])
+        self.assertEqual(
+            ["researcher-approval", "financial-review"],
+            result["blocking_requirements"],
+        )
 
     def test_current_candidate_passes_implemented_and_hashed_inputs(self):
         result = MODULE.audit(REPO_ROOT, protocol())
