@@ -50,6 +50,9 @@ class CandidateRepository:
         self.temporary = tempfile.TemporaryDirectory()
         self.root = pathlib.Path(self.temporary.name)
         protocol = load(PROTOCOL_PATH)
+        protocol["status"] = "pre-registration-candidate"
+        protocol["confirmatory_collection_allowed"] = False
+        protocol["frozen_at"] = None
         pdt = load(PDT_MANIFEST_PATH)
         oracle = load(ORACLE_MANIFEST_PATH)
 

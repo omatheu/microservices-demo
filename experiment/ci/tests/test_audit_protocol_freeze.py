@@ -16,7 +16,11 @@ SPEC.loader.exec_module(MODULE)
 
 
 def protocol():
-    return json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+    value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+    value["status"] = "pre-registration-candidate"
+    value["confirmatory_collection_allowed"] = False
+    value["frozen_at"] = None
+    return value
 
 
 def publication_binding():
@@ -85,6 +89,13 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
+    def test_active_protocol_is_frozen_and_collection_ready(self):
+        value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+
+        self.assertEqual("frozen", value["status"])
+        self.assertTrue(value["confirmatory_collection_allowed"])
+        self.assertEqual("2026-10-04T04:03:02Z", value["frozen_at"])
+
     def test_current_candidate_reports_only_approval_blockers(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 

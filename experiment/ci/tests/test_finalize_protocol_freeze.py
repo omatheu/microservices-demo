@@ -19,7 +19,11 @@ FROZEN_AT = "2026-09-22T06:00:00Z"
 
 
 def protocol():
-    return json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+    value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+    value["status"] = "pre-registration-candidate"
+    value["confirmatory_collection_allowed"] = False
+    value["frozen_at"] = None
+    return value
 
 
 def audit_result():

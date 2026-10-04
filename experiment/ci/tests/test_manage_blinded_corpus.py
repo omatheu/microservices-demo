@@ -20,10 +20,23 @@ SPEC.loader.exec_module(MODULE)
 
 
 def protocol():
+    value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+    value["status"] = "pre-registration-candidate"
+    value["confirmatory_collection_allowed"] = False
+    value["frozen_at"] = None
+    return value
+
+
+def active_protocol():
     return json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
 
 class ManageBlindedCorpusTests(unittest.TestCase):
+    def test_active_protocol_generates_confirmatory_eligible_corpus(self):
+        public, _ = self.build(value=active_protocol())
+
+        self.assertTrue(public["confirmatory_eligible"])
+
     def build(self, key=b"a" * 32, value=None):
         return MODULE.build_corpus(
             value or protocol(),
@@ -77,11 +90,13 @@ class ManageBlindedCorpusTests(unittest.TestCase):
     def test_draft_generation_without_explicit_override_is_blocked(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             temporary = pathlib.Path(temporary_directory)
+            protocol_path = temporary / "protocol.json"
             key_path = temporary / "key.bin"
+            protocol_path.write_text(json.dumps(protocol()), encoding="utf-8")
             key_path.write_bytes(b"a" * 32)
             key_path.chmod(0o600)
             args = types.SimpleNamespace(
-                protocol=str(PROTOCOL_PATH),
+                protocol=str(protocol_path),
                 key=str(key_path),
                 public_output=str(temporary / "public.json"),
                 oracle_output=str(temporary / "oracle.json"),

@@ -63,9 +63,10 @@ como Partial Digital Twin.
   nenhum PR armado.
 - [x] Role e RoleBinding mínimas do Oracle aplicadas, sem workloads ou recurso
   faturável adicional.
-- [x] Auditoria Oracle pós-instalação em 18/21 controles estruturais.
-- [x] Standard usage cost export ativo para o dataset protegido; primeira
-  tabela de custo ainda pendente.
+- [x] Auditoria Oracle pós-freeze em 22/22 controles, pronta para habilitação
+  controlada e ainda sem autorização de execução.
+- [x] Standard usage cost export ativo para o dataset protegido, com consulta
+  real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
 - [x] Políticas de rede da Online Boutique aplicadas.
 - [x] Online Boutique completa no namespace `operational`.
@@ -97,14 +98,15 @@ execução autorizada em cloud ou análise dos resultados.
 - [x] implementar os 13 operadores do corpus candidato e validar todos os seus espaços de parâmetros;
 - [x] gerar uma prévia opaca inelegível para a coleta confirmatória;
 - [x] implementar o oráculo de validação independente;
+- [x] publicar e vincular por digest os três runtimes confirmatórios;
+- [x] congelar e versionar o protocolo experimental revisado;
+- [x] gerar e validar o corpus opaco definitivo após o congelamento;
 
 #### Pendentes para conclusão confirmatória
 
 - [ ] esteira convencional completa de CI/CD com staging;
 - [ ] executar o controlador sob demanda no namespace `pdt-system`;
 - [ ] gate semiautônomo no pipeline;
-- [ ] congelar e versionar o protocolo experimental revisado;
-- [ ] gerar o corpus opaco definitivo, somente após congelamento;
 - [ ] execução pareada e repetida das candidatas do corpus;
 - [ ] validação das previsões no ambiente-oráculo isolado;
 - [ ] consolidação estatística e análise dos resultados;
@@ -113,14 +115,13 @@ execução autorizada em cloud ou análise dos resultados.
 ### Caminho crítico atual — 04/10/2026
 
 1. [concluído em 04/10/2026] registrar a aprovação humana da revisão financeira;
-2. publicar, sob autorização separada, as
-   três imagens confirmatórias e obter seus digests imutáveis;
-3. vincular os digests à mesma proveniência, validar o runner Oracle no cluster
-   e preparar o bundle único de congelamento;
-4. revisar e congelar políticas, SLOs, runtimes e protocolo, mantendo
-   `cloud_execution_authorized: false`;
-5. gerar somente então o corpus confirmatório cego, com nova chave, sementes,
-   ordem e compromisso criptográfico;
+2. [concluído em 04/10/2026] publicar os três runtimes, capturar seus digests e
+   vinculá-los à mesma proveniência protegida;
+3. [concluído em 04/10/2026] congelar políticas, SLOs, runtimes e protocolo
+   após auditoria 17/17, mantendo `cloud_execution_authorized: false`;
+4. [concluído em 04/10/2026] gerar e validar o corpus confirmatório cego com
+   chave nova, ordem opaca e compromisso criptográfico;
+5. validar o runner Oracle no cluster em execução de engenharia autorizada;
 6. executar a comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
 7. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
@@ -437,6 +438,13 @@ Os três checks do PR passaram; no workflow protegido, staging/PDT, publicação
 gate humano e Oracle foram todos `skipped`. O recibo da integração está em
 [`../experiment/evidence/pipeline/pr5-passive-preparation-integration-20260929T054912Z.json`](../experiment/evidence/pipeline/pr5-passive-preparation-integration-20260929T054912Z.json).
 
+Em 04/10/2026 UTC, depois da publicação imutável, do congelamento 17/17 e da
+geração do corpus definitivo, a auditoria Oracle passou 22/22: 21/21 controles
+de infraestrutura e 1/1 controle da candidata. O namespace permanece vazio,
+os kill switches estão `false` e `oracle_execution_authorized` continua
+`false`. A evidência está em
+[`../experiment/evidence/oracle/oracle-execution-readiness-post-freeze-20261004T041050Z.json`](../experiment/evidence/oracle/oracle-execution-readiness-post-freeze-20261004T041050Z.json).
+
 O plano binário do RBAC foi gerado com refresh desligado e validado em 10/10
 controles. Ele contém somente a Role e a RoleBinding Oracle como criações, 0
 alterações, 0 destruições e nenhum recurso faturável. O relatório sanitizado,
@@ -492,7 +500,7 @@ ação prescritiva e a coleta posterior de ground truth.
 Objetivo: avaliar os mecanismos em candidatas cujo rótulo não esteja disponível
 durante a decisão.
 
-- [ ] congelar requisitos funcionais, SLOs e invariantes comuns;
+- [x] congelar requisitos funcionais, SLOs e invariantes comuns;
 - [x] definir operadores de mutação sem consultar resultados de avaliação;
 - [x] incluir candidatas seguras para medir bloqueios desnecessários;
 - [x] incluir falhas funcionais controladas no checkout/pagamento;
@@ -502,23 +510,22 @@ durante a decisão.
 - [x] validar geração de identificadores opacos e separação do manifesto em uma prévia inelegível;
 - [x] validar localmente build, SBOM, scans e CI convencional das 14
   candidatas de runtime do corpus de engenharia;
-- [ ] congelar sementes, repetições, ordem e regra de parada;
+- [x] congelar sementes, repetições, ordem e regra de parada;
 - [x] propor teto de duração, custo incremental e capacidade-tempo por decisão;
-- [ ] vedar o conjunto de avaliação contra calibração do PDT.
+- [x] vedar o conjunto de avaliação contra calibração do PDT.
 
 Os operadores candidatos e os controles estão catalogados em
 [`tcc-candidate-scenarios.md`](./tcc-candidate-scenarios.md).
 
-**Estado:** existe uma pré-inscrição executável em
+**Estado:** o protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-com 18 candidatas propostas, três repetições, seis blocos, regra de agregação,
-plano pareado e limites operacionais. O gerador HMAC criou uma prévia pública
-com IDs opacos e compromisso do manifesto reservado; operador, parâmetros e
-rótulo permanecem fora da árvore versionada. A prévia está marcada como
-`confirmatory_eligible: false`. O protocolo permanece em
-`pre-registration-candidate` até as políticas, os SLOs, os runtimes imutáveis,
-a revisão financeira e a aprovação do pesquisador serem validados; portanto,
-nenhum checkbox de congelamento é antecipado por essa prévia.
+foi congelado em 04/10/2026 com 18 candidatas, três repetições, seis blocos,
+regra de agregação, plano pareado e limites operacionais. A auditoria pré-freeze
+passou 17/17, vinculando a aprovação financeira, a aprovação do pesquisador e
+os três runtimes imutáveis. O corpus público definitivo contém apenas IDs e
+ordem opacos, está marcado `confirmatory_eligible: true` e compromete por hash o
+manifesto reservado; operador, parâmetros e rótulo permanecem fora da árvore
+versionada. Isso permite preparar a coleta, mas não autoriza cloud.
 
 Os 13 operadores definidos no protocolo agora possuem materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -526,10 +533,11 @@ determinística e cobertura de todas as combinações de parâmetros. O controle
 staging competente deve bloquear; `DEP-CURRENCY-01` passou a produzir uma
 alteração semântica condicional real. Isso impede contar um no-op ou uma
 mutação equivalente como evidência favorável ao PDT. A validação local das
-imagens materializadas foi concluída para as 14 candidatas de runtime; a
-publicação imutável dos runtimes e uma execução cloud do oráculo ainda são
-pré-requisitos para congelar o protocolo. A implementação independente do
-oráculo já está concluída.
+imagens materializadas foi concluída para as 14 candidatas de runtime. Os três
+runtimes confirmatórios foram publicados e vinculados por digest; a
+implementação independente do oráculo está concluída. A validação Kubernetes
+de engenharia e a coleta confirmatória continuam pendentes e exigem autorização
+cloud separada.
 
 A matriz local final, vinculada ao commit `c32a34b2`, executou os 22 gates da
 CI e 17 validações de artefato. As quatro candidatas seguras passaram. Das dez
@@ -569,12 +577,13 @@ A prontidão para o congelamento agora possui auditoria executável em
 expõe de forma objetiva as pendências de políticas/SLOs, imagens do oráculo,
 revisão financeira e aprovação explícita do pesquisador.
 
-O caminho de publicação até os manifests também está fechado localmente:
-`bind-runtime-publication.py` valida a evidência das três imagens contra o
+O caminho de publicação até os manifests foi concluído:
+`bind-runtime-publication.py` validou a evidência das três imagens contra o
 commit, a árvore, o registry aprovado, SBOM/scan e as travas do ambiente
-protegido, e produz propostas PDT/oráculo com uma única proveniência. O binder
-está integrado ao workflow, mas não foi executado porque nenhuma publicação
-cloud nova foi autorizada. Ele não congela o protocolo nem altera o GCP.
+protegido, e produziu os manifests PDT/oráculo com uma única proveniência. A
+publicação isolada foi executada pelo PR #8 sem credenciais GKE; staging, PDT e
+Oracle foram pulados. O binder não congelou sozinho o protocolo nem autorizou
+execução experimental.
 
 O preflight local das três imagens foi repetido em 26/09/2026 para o commit
 `4504cfab`: os três builds, SBOMs e scans HIGH/CRITICAL passaram, com zero
@@ -644,15 +653,15 @@ CI de `main` também passou. O workflow protegido executou apenas a autorizaçã
 publicação, staging/PDT e gate humano foram `skipped`, porque o PR não recebeu
 rótulos cloud e as travas financeiras permaneceram desligadas.
 
-O passo seguinte também está automatizado localmente:
+O congelamento foi preparado pelo caminho automatizado local:
 `prepare-protocol-freeze-candidate.py` recebe os manifests vinculados e gera um
 bundle único com cinco políticas, dois manifests e o protocolo candidato, já
 com todos os hashes dependentes recalculados. A ferramenta recusa proveniências
-divergentes, mudanças escondidas e hashes atuais inconsistentes; não aplica o
-bundle, não habilita a coleta e não autoriza cloud. Assim, o futuro
-pré-congelamento pode ser revisado e aplicado sem edições manuais parciais.
+divergentes, mudanças escondidas e hashes atuais inconsistentes. O bundle
+resultante foi revisado e aplicado como uma única mudança, sem edições manuais
+parciais e sem autorização cloud.
 
-A transição seguinte também está implementada de forma fail-closed:
+A transição final foi executada de forma fail-closed:
 `finalize-protocol-freeze.py` só gera uma proposta de protocolo `frozen` quando
 o auditor selado comprova 17/17 checks, as aprovações financeira e do
 pesquisador vinculam o mesmo candidato e todos os timestamps são coerentes. A
@@ -664,8 +673,8 @@ separado de autorizar uma execução paga.
 O `checkout-pdt-controller` agora existe como aplicação e imagem reproduzível,
 gera o plano vinculado aos inputs selados e produz a decisão prescritiva. Um
 gerador prepara sua execução como Job isolado, sem token da API e sem rede, no
-namespace `pdt-system`. A publicação do digest e a primeira execução do Job
-continuam pendentes e não foram antecipadas sem autorização financeira.
+namespace `pdt-system`. O digest foi publicado e vinculado; a primeira execução
+do Job continua pendente e não foi antecipada sem autorização cloud por bloco.
 
 O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery,
 o dataset protegido `online_boutique_billing` e a tabela padrão já existem; a
@@ -680,12 +689,10 @@ financeiro atual está em
 [`../experiment/evidence/finance/cost-window-20260919-20261004.json`](../experiment/evidence/finance/cost-window-20260919-20261004.json)
 e
 [`../experiment/evidence/finance/financial-review-eligibility-20261004T030924Z.json`](../experiment/evidence/finance/financial-review-eligibility-20261004T030924Z.json).
-O auditor registra 7/17 requisitos do congelamento, 12/12 controles estruturais
-da publicação e, depois do lote passivo, 18/21 controles estruturais do Oracle. Não
-existe publicação concluída para o PR aberto elegível, os três runtimes
-confirmatórios ainda não foram publicados e nenhuma autorização de execução
-experimental foi concedida. A evidência financeira foi aprovada e vinculada ao
-documento canônico.
+O auditor pré-freeze passou 17/17 requisitos. Os três runtimes confirmatórios
+foram publicados e vinculados ao PR #8; o protocolo e o corpus definitivo estão
+congelados. Nenhuma autorização de execução experimental foi concedida. A
+evidência financeira foi aprovada e vinculada ao documento canônico.
 
 `prepare-financial-review.py` valida a saída real do billing contra o auditor
 selado, vincula caminho e SHA-256 e, somente com confirmação humana literal,
@@ -698,10 +705,10 @@ A aprovação do pesquisador também deixou de depender de edição manual:
 `prepare-researcher-approval.py` exige que 16/17 controles já estejam prontos e
 que a própria aprovação seja o único bloqueio. O modo de assinatura exige
 identidade e confirmação literal, vincula o SHA-256 exato do protocolo e mantém
-`cloud_execution_authorized: false`. A assinatura continua bloqueada até que
-os outros 16 controles estejam prontos, como esperado.
+`cloud_execution_authorized: false`. A assinatura foi registrada após 16/17
+controles e permitiu concluir a auditoria 17/17 e a finalização do protocolo.
 
-**Critério de saída:** protocolo versionado antes da coleta e corpus contendo
+**Critério de saída atingido em 04/10/2026:** protocolo versionado antes da coleta e corpus contendo
 controles seguros, mutações funcionais e não funcionais, sem rótulos acessíveis
 aos mecanismos.
 
