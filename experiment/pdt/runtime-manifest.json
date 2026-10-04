@@ -18,7 +18,7 @@
     },
     {
       "path": "experiment/scripts/publish-experiment-runtimes.sh",
-      "sha256": "5720909ebc8f626566b6c82eed277419af392994646c0d9e01b33195c8a63cd5"
+      "sha256": "1dbcd8dc6f117a2c2feb53a471d9a560d9bc373de64998cd9801c5164faae341"
     },
     {
       "path": "experiment/scripts/bind-runtime-publication.py",

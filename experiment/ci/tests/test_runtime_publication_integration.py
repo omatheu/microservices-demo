@@ -114,7 +114,7 @@ class RuntimePublicationIntegrationTests(unittest.TestCase):
                   *currency-reference*) digit=6 ;;
                   *) exit 2 ;;
                 esac
-                printf 'digest: sha256:%064d size: 1234\n' "$digit"
+                printf '%s: digest: sha256:%064d size: 1234\n' "${tag##*:}" "$digit"
                 ;;
               *)
                 exit 2

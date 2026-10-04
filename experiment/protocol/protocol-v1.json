@@ -426,7 +426,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "30983310a61f88be04ac52a816cd6e6b7d8678c96958df22f529fd37c9f633bb"
+      "sha256": "e9a56278b57ce2b428756e34a458acab1af0eadbe76714e4e41d088258ed83c1"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
