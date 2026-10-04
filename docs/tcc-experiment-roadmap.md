@@ -112,8 +112,8 @@ execução autorizada em cloud ou análise dos resultados.
 
 ### Caminho crítico atual — 04/10/2026
 
-1. registrar a aprovação humana da revisão financeira já considerada elegível;
-2. abrir uma candidata desarmada para publicar, sob autorização separada, as
+1. [concluído em 04/10/2026] registrar a aprovação humana da revisão financeira;
+2. publicar, sob autorização separada, as
    três imagens confirmatórias e obter seus digests imutáveis;
 3. vincular os digests à mesma proveniência, validar o runner Oracle no cluster
    e preparar o bundle único de congelamento;
@@ -680,26 +680,26 @@ financeiro atual está em
 [`../experiment/evidence/finance/cost-window-20260919-20261004.json`](../experiment/evidence/finance/cost-window-20260919-20261004.json)
 e
 [`../experiment/evidence/finance/financial-review-eligibility-20261004T030924Z.json`](../experiment/evidence/finance/financial-review-eligibility-20261004T030924Z.json).
-O auditor registra 6/17 requisitos do congelamento, 12/12 controles estruturais
+O auditor registra 7/17 requisitos do congelamento, 12/12 controles estruturais
 da publicação e, depois do lote passivo, 18/21 controles estruturais do Oracle. Não
-existe PR aberto elegível, os três runtimes confirmatórios ainda não foram
-publicados e nenhuma autorização cloud foi concedida.
-A evidência financeira está apta à revisão humana, mas o documento canônico de
-aprovação ainda não foi emitido.
+existe publicação concluída para o PR aberto elegível, os três runtimes
+confirmatórios ainda não foram publicados e nenhuma autorização de execução
+experimental foi concedida. A evidência financeira foi aprovada e vinculada ao
+documento canônico.
 
 `prepare-financial-review.py` valida a saída real do billing contra o auditor
 selado, vincula caminho e SHA-256 e, somente com confirmação humana literal,
 gera a revisão no caminho canônico. Adulteração, projeção acima do orçamento
 bruto, timestamp futuro, caminho inseguro e saída alternativa são recusados. O
-documento resultante não autoriza cloud; a confirmação humana literal é agora
-o único passo restante da revisão financeira.
+documento resultante não autoriza cloud. A confirmação humana literal foi
+registrada em 04/10/2026 UTC e concluiu a revisão financeira pré-freeze.
 
 A aprovação do pesquisador também deixou de depender de edição manual:
 `prepare-researcher-approval.py` exige que 16/17 controles já estejam prontos e
 que a própria aprovação seja o único bloqueio. O modo de assinatura exige
 identidade e confirmação literal, vincula o SHA-256 exato do protocolo e mantém
-`cloud_execution_authorized: false`. O dry-run real atual recusou a assinatura
-em 6/17 e reproduziu os onze bloqueios existentes, como esperado.
+`cloud_execution_authorized: false`. A assinatura continua bloqueada até que
+os outros 16 controles estejam prontos, como esperado.
 
 **Critério de saída:** protocolo versionado antes da coleta e corpus contendo
 controles seguros, mutações funcionais e não funcionais, sem rótulos acessíveis

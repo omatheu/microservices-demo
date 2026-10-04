@@ -74,7 +74,8 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
         self.assertFalse(result["eligible_for_researcher_approval"])
         self.assertFalse(result["approval_generated"])
         self.assertFalse(result["cloud_execution_authorized"])
-        self.assertIn("financial-review", result["blocking_requirements"])
+        self.assertNotIn("financial-review", result["blocking_requirements"])
+        self.assertIn("researcher-approval", result["blocking_requirements"])
 
     def test_read_only_mode_accepts_only_researcher_as_remaining_blocker(self):
         with mock.patch.object(
