@@ -82,19 +82,33 @@ def build_review(repo_root, evidence_path, reviewed_at):
     )
     evidence = load(evidence_file)
     limits = protocol.get("execution_limits", {})
+    observed_gross = evidence.get("gross_cost_brl")
+    incremental_ceiling = limits.get("proposed_incremental_spend_ceiling_brl")
+    projected_gross = (
+        observed_gross + incremental_ceiling
+        if isinstance(observed_gross, (int, float))
+        and not isinstance(observed_gross, bool)
+        and isinstance(incremental_ceiling, (int, float))
+        and not isinstance(incremental_ceiling, bool)
+        else None
+    )
     review = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "protocol_id": protocol.get("protocol_id"),
         "project_id": PROJECT_ID,
         "decision": "approved-for-protocol-freeze",
         "reviewed_at": reviewed_at,
         "billing_data_as_of": evidence.get("billing_data_as_of"),
         "cost_data_available": True,
-        "confirmatory_incremental_spend_brl": evidence.get("gross_cost_brl"),
-        "approved_incremental_spend_ceiling_brl": limits.get(
-            "proposed_incremental_spend_ceiling_brl"
+        "project_gross_cost_observed_brl": observed_gross,
+        "approved_incremental_spend_ceiling_brl": incremental_ceiling,
+        "projected_project_gross_cost_ceiling_brl": projected_gross,
+        "project_gross_cost_budget_brl": limits.get(
+            "project_gross_cost_budget_brl"
         ),
-        "mandatory_review_at_brl": limits.get("mandatory_cost_review_at_brl"),
+        "mandatory_incremental_review_at_brl": limits.get(
+            "mandatory_cost_review_at_brl"
+        ),
         "evidence": {
             "path": relative.as_posix(),
             "sha256": sha256_file(evidence_file),
@@ -119,19 +133,39 @@ def prepare(repo_root, evidence_path, approve=False, acknowledgement=None):
         return review
 
     limits = protocol.get("execution_limits", {})
+    observed_gross = evidence.get("gross_cost_brl")
+    incremental_ceiling = limits.get("proposed_incremental_spend_ceiling_brl")
+    projected_gross = (
+        observed_gross + incremental_ceiling
+        if isinstance(observed_gross, (int, float))
+        and not isinstance(observed_gross, bool)
+        and isinstance(incremental_ceiling, (int, float))
+        and not isinstance(incremental_ceiling, bool)
+        else None
+    )
+    project_budget = limits.get("project_gross_cost_budget_brl")
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "captured_at": reviewed_at,
         "mechanism": "financial-review-preparer",
         "mode": "read-only-eligibility",
         "protocol_id": protocol.get("protocol_id"),
         "project_id": PROJECT_ID,
         "billing_data_as_of": evidence.get("billing_data_as_of"),
-        "observed_gross_cost_brl": evidence.get("gross_cost_brl"),
-        "approved_incremental_spend_ceiling_brl": limits.get(
-            "proposed_incremental_spend_ceiling_brl"
+        "observed_project_gross_cost_brl": observed_gross,
+        "approved_incremental_spend_ceiling_brl": incremental_ceiling,
+        "projected_project_gross_cost_ceiling_brl": projected_gross,
+        "project_gross_cost_budget_brl": project_budget,
+        "remaining_project_gross_budget_after_approved_ceiling_brl": (
+            project_budget - projected_gross
+            if isinstance(project_budget, (int, float))
+            and not isinstance(project_budget, bool)
+            and isinstance(projected_gross, (int, float))
+            else None
         ),
-        "mandatory_review_at_brl": limits.get("mandatory_cost_review_at_brl"),
+        "mandatory_incremental_review_at_brl": limits.get(
+            "mandatory_cost_review_at_brl"
+        ),
         "evidence": review["evidence"],
         "eligible_for_human_approval": eligible,
         "blocking_requirements": []

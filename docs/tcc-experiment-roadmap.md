@@ -110,10 +110,9 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-### Caminho crítico atual — 29/09/2026
+### Caminho crítico atual — 04/10/2026
 
-1. aguardar a primeira tabela do Standard Cloud Billing export, executar a
-   consulta limitada a 100 MB e registrar a revisão financeira;
+1. registrar a aprovação humana da revisão financeira já considerada elegível;
 2. abrir uma candidata desarmada para publicar, sob autorização separada, as
    três imagens confirmatórias e obter seus digests imutáveis;
 3. vincular os digests à mesma proveniência, validar o runner Oracle no cluster
@@ -668,32 +667,32 @@ gerador prepara sua execução como Job isolado, sem token da API e sem rede, no
 namespace `pdt-system`. A publicação do digest e a primeira execução do Job
 continuam pendentes e não foram antecipadas sem autorização financeira.
 
-O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery e
-o dataset protegido `online_boutique_billing` já existem; a consulta versionada
-limita cada leitura a 100 MB. A exportação padrão do Cloud Billing foi ativada
-em 29/09/2026 UTC. A conferência confirmou o dataset em `US`, a identidade
-oficial com escrita e ainda zero tabelas; por isso, nenhuma query faturável foi
-executada. O cluster continua
+O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery,
+o dataset protegido `online_boutique_billing` e a tabela padrão já existem; a
+consulta versionada limita cada leitura a 100 MB. Em 04/10/2026 UTC, a janela
+de 19/09 a 03/10 observou R$519,736015 de custo bruto, R$-519,737769 em
+créditos e R$-0,001754 de custo líquido. O contrato financeiro usa esse valor
+como baseline do projeto, preserva R$200 como teto incremental futuro e projeta
+R$719,736015, abaixo do orçamento bruto de R$1.751,10. O cluster continua
 `RUNNING`, com 12/12 deployments e pods operacionais disponíveis; staging,
 PDT, plano de controle, oráculo e observabilidade permanecem vazios. O registro
 financeiro atual está em
-[`../experiment/evidence/finance/billing-export-activation-20260929T052504Z.json`](../experiment/evidence/finance/billing-export-activation-20260929T052504Z.json)
+[`../experiment/evidence/finance/cost-window-20260919-20261004.json`](../experiment/evidence/finance/cost-window-20260919-20261004.json)
 e
-[`../experiment/evidence/finance/billing-export-dataset-readiness-20260929T054404Z.json`](../experiment/evidence/finance/billing-export-dataset-readiness-20260929T054404Z.json).
+[`../experiment/evidence/finance/financial-review-eligibility-20261004T030924Z.json`](../experiment/evidence/finance/financial-review-eligibility-20261004T030924Z.json).
 O auditor registra 6/17 requisitos do congelamento, 12/12 controles estruturais
 da publicação e, depois do lote passivo, 18/21 controles estruturais do Oracle. Não
 existe PR aberto elegível, os três runtimes confirmatórios ainda não foram
 publicados e nenhuma autorização cloud foi concedida.
-Ainda não existe evidência de custo monetário corrente apta à revisão
-financeira do protocolo.
+A evidência financeira está apta à revisão humana, mas o documento canônico de
+aprovação ainda não foi emitido.
 
-O caminho posterior à chegada dessa evidência já está fechado localmente:
 `prepare-financial-review.py` valida a saída real do billing contra o auditor
 selado, vincula caminho e SHA-256 e, somente com confirmação humana literal,
-gera a revisão no caminho canônico. Adulteração, custo no limiar obrigatório,
-timestamp futuro, caminho inseguro e saída alternativa são recusados. O
-documento resultante não autoriza cloud; a ausência atual da tabela de export
-continua sendo o bloqueio financeiro real.
+gera a revisão no caminho canônico. Adulteração, projeção acima do orçamento
+bruto, timestamp futuro, caminho inseguro e saída alternativa são recusados. O
+documento resultante não autoriza cloud; a confirmação humana literal é agora
+o único passo restante da revisão financeira.
 
 A aprovação do pesquisador também deixou de depender de edição manual:
 `prepare-researcher-approval.py` exige que 16/17 controles já estejam prontos e

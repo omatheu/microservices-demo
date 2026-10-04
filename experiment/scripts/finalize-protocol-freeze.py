@@ -174,7 +174,7 @@ def finalize(
     )
     require(
         isinstance(cost_review, dict)
-        and cost_review.get("schema_version") == "1.0.0"
+        and cost_review.get("schema_version") == "1.1.0"
         and cost_review.get("protocol_id") == protocol.get("protocol_id")
         and cost_review.get("project_id") == "microservices-demo-tcc"
         and cost_review.get("decision") == "approved-for-protocol-freeze"

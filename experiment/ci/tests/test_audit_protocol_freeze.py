@@ -67,16 +67,18 @@ def cost_evidence():
 
 def cost_review(binding):
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "protocol_id": "checkout-pdt-comparison-v1",
         "project_id": "microservices-demo-tcc",
         "decision": "approved-for-protocol-freeze",
         "reviewed_at": "2026-09-22T01:00:00Z",
         "billing_data_as_of": "2026-09-22T00:30:00Z",
         "cost_data_available": True,
-        "confirmatory_incremental_spend_brl": 12.34,
+        "project_gross_cost_observed_brl": 12.34,
         "approved_incremental_spend_ceiling_brl": 200,
-        "mandatory_review_at_brl": 150,
+        "projected_project_gross_cost_ceiling_brl": 212.34,
+        "project_gross_cost_budget_brl": 1751.1,
+        "mandatory_incremental_review_at_brl": 150,
         "evidence": binding,
         "cloud_execution_authorized": False,
     }
@@ -140,7 +142,7 @@ class AuditProtocolFreezeTests(unittest.TestCase):
             )
 
             tampered = cost_review(binding)
-            tampered["confirmatory_incremental_spend_brl"] = 12.35
+            tampered["project_gross_cost_observed_brl"] = 12.35
             self.assertFalse(MODULE.validate_cost_review(root, protocol(), tampered))
 
             wrong_hash = cost_review({**binding, "sha256": "0" * 64})

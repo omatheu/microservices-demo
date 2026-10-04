@@ -54,6 +54,8 @@ class BillingExportControlsTests(unittest.TestCase):
         self.assertIn("MAXIMUM_BYTES_BILLED:-100000000", rendered)
         self.assertIn("maximum_bytes_billed > 100000000", rendered)
         self.assertIn('--maximum_bytes_billed="$maximum_bytes_billed"', rendered)
+        self.assertIn("--use_cache=true", rendered)
+        self.assertNotIn("--use_query_cache", rendered)
         self.assertIn('startswith("gcp_billing_export_v1_")', rendered)
         self.assertIn("cloud_execution_authorized: false", rendered)
 

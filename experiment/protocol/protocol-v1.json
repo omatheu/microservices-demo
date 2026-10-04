@@ -279,6 +279,7 @@
   },
   "execution_limits": {
     "cloud_execution_authorization": "explicit-user-authorization-required-after-freeze",
+    "project_gross_cost_budget_brl": 1751.1,
     "proposed_incremental_spend_ceiling_brl": 200,
     "mandatory_cost_review_at_brl": 150,
     "billing_alert_is_hard_cap": false,
@@ -337,7 +338,7 @@
     },
     "protocol_freeze_auditor": {
       "path": "experiment/scripts/audit-protocol-freeze.py",
-      "sha256": "5c580de7ad2a861ed89cea38ad7e99f1760794bc81a9250c47bcfa311f127fcf"
+      "sha256": "88cc7e893276a3b5df92f77f37727bdf5fb43f29a99c81c09f8244f830accb48"
     },
     "protocol_freeze_candidate_preparer": {
       "path": "experiment/scripts/prepare-protocol-freeze-candidate.py",
@@ -345,7 +346,7 @@
     },
     "protocol_freeze_finalizer": {
       "path": "experiment/scripts/finalize-protocol-freeze.py",
-      "sha256": "a08e355dcaefc3d62f3a61699a2478225269589fc3d40a15101869b3e3cab5f5"
+      "sha256": "a60d034880e9bbf9227b1d98d16b75b8187972c6cc95f705c0092768d7b1f9ac"
     },
     "runtime_publication_readiness_auditor": {
       "path": "experiment/scripts/audit-runtime-publication-readiness.py",
@@ -381,7 +382,7 @@
     },
     "billing_cost_query": {
       "path": "experiment/scripts/query-billing-cost-window.sh",
-      "sha256": "a18611845aa32b49487d2833352e171ab879bdcb9aff57399b7e880b709e6cc8"
+      "sha256": "e10caac9a55e113c13b482bb2e51ce6c07fc5fcb0979307193e0c2e15acbcc6b"
     },
     "validity_threat_register": {
       "path": "docs/tcc-validity-threats.md",
