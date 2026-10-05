@@ -258,14 +258,13 @@ regra sem usar o rótulo pretendido como entrada da classificação.
 arquivos que definem a política, o harness, os avaliadores e o runner. O
 validador `validate-oracle-suite.py` falha se qualquer arquivo mudar. O
 manifesto permanece `pre-registration-candidate` e seus dois digests de imagem
-permanecem nulos até o build, publicação e validação deliberados; ele não pode
-ser marcado como `frozen` nesse estado.
+estão vinculados à publicação protegida da emenda v1.1; ele ainda não pode ser
+marcado como `frozen` antes das novas aprovações e do congelamento coordenado.
 
-O inventário inclui o binder e o próprio validador. Quando existirem imagens
-publicadas, os digests de `oracle-harness` e `currency-reference` só serão
-aceitos com a mesma proveniência de publicação usada pelo controlador PDT;
-referências manuais, outro registry ou execuções sem as travas protegidas são
-recusadas.
+O inventário inclui o binder e o próprio validador. Os digests publicados de
+`oracle-harness` e `currency-reference` são aceitos somente com a mesma
+proveniência de publicação usada pelo controlador PDT; referências manuais,
+outro registry ou execuções sem as travas protegidas são recusadas.
 
 O harness independente em [`harness/`](./harness/) já fornece doubles gRPC,
 proxies opcionais para dependências candidatas, matriz funcional, perfis de
@@ -276,6 +275,15 @@ adjudicador. `prepare-oracle-runtime.py` gera um runtime Kubernetes mínimo,
 privado e vinculado aos mesmos artefatos selados pelo controle, e
 `run-oracle-repetition.sh` encadeia validação do gate humano, deployment,
 medições, composição e cleanup.
+
+Em 05/10/2026 UTC, uma repetição curta de engenharia validou o runtime v1.1 de
+ponta a ponta com um usuário e cinco segundos por perfil. Foram coletados 35
+casos funcionais e os três perfis de desempenho; a execução foi válida, duas
+asserções independentes de negócio reprovaram a candidata de engenharia e os
+três perfis tiveram 100% de sucesso de transporte. Não houve endpoint público
+ou mutação operacional, e o namespace `oracle` terminou sem workloads. O
+registro sanitizado está em
+[`../evidence/oracle/oracle-engineering-runner-validation-v1.1-20261005T220323Z.json`](../evidence/oracle/oracle-engineering-runner-validation-v1.1-20261005T220323Z.json).
 
 Quando há previsão PDT, o runner também chama
 [`../scripts/calculate-pdt-fidelity.py`](../scripts/calculate-pdt-fidelity.py).

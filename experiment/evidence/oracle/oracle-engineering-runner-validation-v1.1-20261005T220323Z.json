@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "oracle-engineering-artifact-binding-v2-deploy-as-is-r1-20261005T220323Z",
+  "mode": "engineering",
+  "confirmatory_observation": false,
+  "authorization": {
+    "literal": "AUTORIZO_VALIDACAO_ORACLE_V1_1_ENGENHARIA_1_REPETICAO",
+    "scope": {
+      "candidate_id": "engineering-artifact-binding-v2",
+      "alternative_id": "deploy-as-is",
+      "repetition": 1,
+      "engineering_users": 1,
+      "engineering_duration_seconds_per_profile": 5,
+      "namespace": "oracle"
+    }
+  },
+  "started_at": "2026-10-05T22:03:23Z",
+  "completed_at": "2026-10-05T22:04:45Z",
+  "outcome": "completed-valid-engineering-observation",
+  "runtime_validation": {
+    "execution_valid": true,
+    "functional_case_count": 35,
+    "success_matrix_case_count": 30,
+    "functional_assertions_passed": 7,
+    "functional_assertions_failed": [
+      "charged-total-equals-independent-total",
+      "currency-rounding-matches-independent-calculation"
+    ],
+    "performance_profiles": [
+      {
+        "id": "baseline",
+        "success_rate": 1.0,
+        "latency_p95_ms": 18.964,
+        "sample_count": 4
+      },
+      {
+        "id": "peak",
+        "success_rate": 1.0,
+        "latency_p95_ms": 23.241,
+        "sample_count": 4
+      },
+      {
+        "id": "dependency-tail",
+        "success_rate": 1.0,
+        "latency_p95_ms": 216.296,
+        "sample_count": 4
+      }
+    ],
+    "health": {
+      "checkoutservice_unavailable": 0,
+      "checkoutservice_restart_increase": 0,
+      "order_side_effect_duplicates": 0
+    }
+  },
+  "images": {
+    "oracle_harness": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/oracle-harness@sha256:1bc6ffcadc41fea82abfda8e639c43e66ce5078cdb0b73579f0692a2bf2d7c68",
+    "currency_reference": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/currency-reference@sha256:42241d0d814d3521c04c969318dc80c325ba1254cdccd382b78257f26a339c99"
+  },
+  "evidence": {
+    "raw_run_directory": "experiment/evidence/oracle/oracle-engineering-artifact-binding-v2-deploy-as-is-r1-20261005T220323Z",
+    "metadata_sha256": "eca46f0ec2a16b7f18f3d667eb97f4897c1919ca1a0430d01188d8e947d77a7e",
+    "runtime_sha256": "b11c08f36edf20cfeb5cc54f6dadaa064aeb5352d3a79ecec70c926282667549",
+    "functional_report_sha256": "e23227c149e422733c001b8eec44e61291f3aec31db564027ac2c04a9fbd9a4b",
+    "performance_profile_sha256": {
+      "baseline": "43bd2b5c9a87cb7989dd2dc54a604efac74bbc86dc98018f2e6c00887cfc8bb8",
+      "peak": "47d66474b7360c156350dfecfa9e3b970d5fe1b7a0af8a68c95f37997e6419f5",
+      "dependency-tail": "58c77e4fc2168e7b8628699ee2bd9d83ff4d25bcecf1fe91f1749be93b1b095e"
+    },
+    "health_sha256": "2be5145dd97291b4b270838c89173b694def13d2e6c085361a5c66f59b7d77ea",
+    "observation_sha256": "90b7991a5f37f27b9da914a54266955c5178d060aa526225952399044f570abc",
+    "cleanup_sha256": "65e64c58d91f639195262036e0708b057acd8bc954329629e4009da658e94ac4"
+  },
+  "cleanup": {
+    "attempted": true,
+    "completed": true,
+    "active_oracle_workloads_after_cleanup": 0,
+    "public_endpoint_created": false,
+    "operational_mutation_performed": false
+  },
+  "financial_observation": {
+    "pre_run_query_sha256": "c4d22d8506267ac7b482ddcb2a1667914fec6d8cd9f83e96c585235710ef87b5",
+    "post_run_query_path": "experiment/evidence/finance/cost-window-20260919-20261005-post-oracle-v1.1-engineering-query.json",
+    "post_run_query_sha256": "bab854840756f771734dc8e0956131ffa5c1ba11bcf2135064fb05724b737a8a",
+    "project_gross_cost_brl": 588.36973,
+    "project_net_cost_brl": -0.001987,
+    "visible_change_during_run_brl": 0.0,
+    "billing_data_as_of": "2026-10-05T20:06:42Z",
+    "attributable_to_this_run": false,
+    "attribution_note": "The Billing export timestamp predates the engineering run, so the unchanged exported amount cannot yet measure this execution."
+  },
+  "protocol_impact": {
+    "runner_remediation_validated_end_to_end": true,
+    "candidate_functional_result": "failed-two-independent-business-assertions",
+    "confirmatory_collection_remains_blocked": true,
+    "protocol_status": "pre-registration-candidate",
+    "required_next_action": "Renew the financial and researcher approvals, freeze protocol v1.1, rotate the blinding key and generate a new opaque corpus before confirmatory collection."
+  }
+}
