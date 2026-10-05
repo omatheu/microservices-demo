@@ -17,6 +17,7 @@ ALLOWED_TARGETS = {
     "paymentservice",
     "recommendationservice",
 }
+GKE_NODE_LOCAL_DNS_CIDR = "169.254.20.10/32"
 
 
 def load(path):
@@ -217,6 +218,7 @@ def same_namespace_network_policy(namespace):
                     },
                     {
                         "to": [
+                            {"ipBlock": {"cidr": GKE_NODE_LOCAL_DNS_CIDR}},
                             {
                                 "namespaceSelector": {
                                     "matchLabels": {"kubernetes.io/metadata.name": "kube-system"}

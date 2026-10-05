@@ -1,0 +1,105 @@
+{
+  "blocking_requirements": [
+    "ci-policy-frozen",
+    "staging-thresholds-frozen",
+    "pdt-model-policy-frozen",
+    "pdt-fidelity-policy-frozen",
+    "oracle-policy-frozen",
+    "pdt-runtime-frozen",
+    "oracle-suite-frozen",
+    "researcher-approval",
+    "financial-review"
+  ],
+  "check_count": 17,
+  "checks": [
+    {
+      "detail": "declared=18, operators=18",
+      "id": "protocol-structure",
+      "passed": true
+    },
+    {
+      "detail": "draft protocol must keep confirmatory collection disabled",
+      "id": "collection-locked-before-freeze",
+      "passed": true
+    },
+    {
+      "detail": "verified 37 protocol input bindings",
+      "id": "frozen-input-hashes",
+      "passed": true
+    },
+    {
+      "detail": "implemented=13/13",
+      "id": "mutation-operators-implemented",
+      "passed": true
+    },
+    {
+      "detail": "status=pre-registration-candidate",
+      "id": "ci-policy-frozen",
+      "passed": false
+    },
+    {
+      "detail": "status=pre-registration-candidate",
+      "id": "staging-thresholds-frozen",
+      "passed": false
+    },
+    {
+      "detail": "status=pre-registration-candidate",
+      "id": "pdt-model-policy-frozen",
+      "passed": false
+    },
+    {
+      "detail": "status=pre-registration-candidate",
+      "id": "pdt-fidelity-policy-frozen",
+      "passed": false
+    },
+    {
+      "detail": "status=pre-registration-candidate",
+      "id": "oracle-policy-frozen",
+      "passed": false
+    },
+    {
+      "detail": "verified 15 PDT runtime files",
+      "id": "pdt-runtime-file-hashes",
+      "passed": true
+    },
+    {
+      "detail": "controller image requires an immutable digest and publication provenance",
+      "id": "pdt-controller-image-bound",
+      "passed": true
+    },
+    {
+      "detail": "status=pre-registration-candidate",
+      "id": "pdt-runtime-frozen",
+      "passed": false
+    },
+    {
+      "detail": "verified 27 oracle files",
+      "id": "oracle-file-hashes",
+      "passed": true
+    },
+    {
+      "detail": "both images require immutable digests and the same publication provenance",
+      "id": "oracle-images-bound",
+      "passed": true
+    },
+    {
+      "detail": "status=pre-registration-candidate",
+      "id": "oracle-suite-frozen",
+      "passed": false
+    },
+    {
+      "detail": "explicit protocol approval is required and does not authorize cloud execution",
+      "id": "researcher-approval",
+      "passed": false
+    },
+    {
+      "detail": "ceiling=R$200, mandatory review=R$150",
+      "id": "financial-review",
+      "passed": false
+    }
+  ],
+  "passed_count": 8,
+  "protocol_id": "checkout-pdt-comparison-v1.1",
+  "protocol_sha256": "327a411f2b197bfdea244cb57eddf480c12dad4f0f3894cdf118887ee178b0ee",
+  "ready_to_freeze": false
+}

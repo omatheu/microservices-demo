@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "oracle-v1.1-precollection",
+  "status": "authorized-preparation",
+  "authorized_at": "2026-10-05T02:39:38Z",
+  "authorization_literal": "AUTORIZO_EMENDA_PRE_COLETA_DO_PROTOCOLO_ORACLE_V1_1",
+  "reason": "The first authorized Oracle engineering validation identified a GKE NodeLocal DNS NetworkPolicy incompatibility and a null-collection error path in the functional evaluator before confirmatory collection began.",
+  "confirmatory_observations_collected": 0,
+  "superseded_freeze": {
+    "git_commit": "0ee94a906424d2744b3ab3a4ecb29762b4b61884",
+    "protocol_id": "checkout-pdt-comparison-v1",
+    "protocol_sha256": "b80f1d2eeaeaed6185708fc3404c641b6ba57b6831b12d38ad307f51707c65d2",
+    "frozen_at": "2026-10-04T04:03:02Z",
+    "corpus_id": "corpus-ahfvcn6g4sjhw",
+    "oracle_manifest_commitment_sha256": "50906b2f601f83bf2678f8bfd4d08e6a501f2cd0411e595c0ae446f684bbdef5",
+    "artifacts": [
+      {
+        "path": "experiment/protocol/approvals/cost-review-v1.json",
+        "sha256": "5b727b6e56ebbdbba4ad7d8f2160f1796923b3cf5e4331dc36f1f365f44ad197"
+      },
+      {
+        "path": "experiment/protocol/approvals/researcher-approval-v1.json",
+        "sha256": "b539346f4029a57a7264b58a2f85ff9042bbb8d1b572a49baada04cd2652e433"
+      },
+      {
+        "path": "experiment/protocol/corpus/public-corpus.json",
+        "sha256": "2d7c8f51383fb1251234e6798a2b9d46ac583139d9ea124e053d1cfd0bf083b0"
+      },
+      {
+        "path": "experiment/pdt/runtime-manifest.json",
+        "sha256": "51bea060dff32ed2c72eff14727e8e3d1c1f0a37d84526186e1375f9837d8f30"
+      },
+      {
+        "path": "experiment/oracle/suite-manifest.json",
+        "sha256": "ff48b52c18ab3da470eb500c8dfd1acfd927b212aeb891b881a742764ad25dc9"
+      }
+    ]
+  },
+  "engineering_validation": {
+    "evidence_path": "experiment/evidence/oracle/oracle-engineering-runner-validation-20261005T013207Z.json",
+    "evidence_sha256": "c06941fec197422c645b2c003be6c8b5cec6304ec4344e0a371af867c693a3ec",
+    "cleanup_completed": true,
+    "confirmatory_observation": false
+  },
+  "authorized_changes": [
+    "Allow the reviewed GKE NodeLocal DNS endpoint in the isolated Oracle NetworkPolicy.",
+    "Normalize null runtime collections in the functional evaluator so transport failures become failed assertions instead of evaluator crashes.",
+    "Rebind all runtime manifests to one new protected publication provenance.",
+    "Repeat financial and researcher approvals, freeze the amended protocol, rotate the blinding key and generate a new opaque corpus."
+  ],
+  "invalidated_candidate_pull_request": {
+    "number": 9,
+    "head_sha": "e876be8a461b6b2ee4d8a6404c812250042f132c",
+    "closed_at": "2026-10-05T02:38:51Z",
+    "cloud_labels": [],
+    "confirmatory_execution_performed": false
+  },
+  "cloud_execution_authorized": false,
+  "runtime_publication_authorized": false
+}

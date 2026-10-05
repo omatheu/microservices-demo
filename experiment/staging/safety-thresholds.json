@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "status": "frozen",
-  "frozen_at": "2026-10-04T03:42:42Z",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
   "method": "predeclared-safe-staging-calibration",
   "decision_values": [
     "PASS",

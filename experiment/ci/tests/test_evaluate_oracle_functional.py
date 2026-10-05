@@ -181,6 +181,31 @@ class EvaluateOracleFunctionalTests(unittest.TestCase):
         self.assertFalse(report["valid"])
         self.assertIn("success-input-matrix-incomplete", report["invalid_reasons"])
 
+    def test_null_runtime_collections_fail_assertions_without_crashing(self):
+        values = suite()
+        candidate = next(item for item in values if item["expected_case"] == "success")
+        candidate.update(
+            {
+                "grpc_code": "DeadlineExceeded",
+                "response": None,
+                "events": None,
+                "charges": None,
+                "conversions": None,
+                "cart_cleared": False,
+                "remaining_cart_items": 1,
+            }
+        )
+
+        report = MODULE.evaluate(policy(), values)
+        assertions = {item["id"]: item["passed"] for item in report["functional_assertions"]}
+
+        self.assertTrue(report["valid"])
+        self.assertFalse(assertions["checkout-success-produces-one-order"])
+        self.assertFalse(assertions["charged-total-equals-independent-total"])
+        self.assertFalse(assertions["exactly-one-charge-per-order"])
+        self.assertFalse(assertions["charge-precedes-shipping-and-confirmation"])
+        self.assertFalse(assertions["currency-rounding-matches-independent-calculation"])
+
     def test_input_is_not_mutated(self):
         values = suite()
         before = copy.deepcopy(values)

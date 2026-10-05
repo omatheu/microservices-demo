@@ -32,7 +32,7 @@ def audit_result():
         for check_id in sorted(MODULE.REQUIRED_AUDIT_CHECKS)
     ]
     return {
-        "protocol_id": "checkout-pdt-comparison-v1",
+        "protocol_id": protocol()["protocol_id"],
         "protocol_sha256": CANDIDATE_SHA256,
         "ready_to_freeze": True,
         "passed_count": len(checks),
@@ -45,7 +45,7 @@ def audit_result():
 def researcher_approval():
     return {
         "schema_version": "1.0.0",
-        "protocol_id": "checkout-pdt-comparison-v1",
+        "protocol_id": protocol()["protocol_id"],
         "candidate_protocol_sha256": CANDIDATE_SHA256,
         "decision": "approve-protocol-freeze",
         "approved_by": "researcher",
@@ -62,7 +62,7 @@ def researcher_approval():
 def cost_review():
     return {
         "schema_version": "1.1.0",
-        "protocol_id": "checkout-pdt-comparison-v1",
+        "protocol_id": protocol()["protocol_id"],
         "project_id": "microservices-demo-tcc",
         "decision": "approved-for-protocol-freeze",
         "reviewed_at": "2026-09-22T05:30:00Z",

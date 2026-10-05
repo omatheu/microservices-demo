@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "observation_mode": "Cloud Billing Standard usage cost export",
+  "project_id": "microservices-demo-tcc",
+  "source": {
+    "dataset_id": "online_boutique_billing",
+    "location": "US",
+    "table_id": "gcp_billing_export_v1_016329_9946EB_FE858E",
+    "maximum_bytes_billed": 100000000,
+    "query_cache_enabled": true
+  },
+  "window": {
+    "start": "2026-09-19T00:00:00Z",
+    "end": "2026-10-05T01:37:12Z"
+  },
+  "currency": "BRL",
+  "gross_cost_brl": 558.947862,
+  "credits_brl": -558.949749,
+  "net_cost_brl": -0.001887,
+  "line_items": 40845,
+  "first_usage_start_time": "2026-09-20T01:00:00Z",
+  "last_usage_end_time": "2026-10-04T19:00:00Z",
+  "billing_data_as_of": "2026-10-04T23:28:44Z",
+  "finalized_invoice_amount": false,
+  "cloud_execution_authorized": false
+}

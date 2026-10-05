@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "protocol_id": "checkout-pdt-comparison-v1",
+  "protocol_id": "checkout-pdt-comparison-v1.1",
   "materializer": {
     "path": "experiment/scripts/materialize-candidate.py",
     "sha256": "f8844d7705f6b9c61978abba582d9473f9a76ad1ba3464c8978415b3e40d5d64"

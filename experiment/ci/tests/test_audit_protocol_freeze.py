@@ -72,7 +72,7 @@ def cost_evidence():
 def cost_review(binding):
     return {
         "schema_version": "1.1.0",
-        "protocol_id": "checkout-pdt-comparison-v1",
+        "protocol_id": protocol()["protocol_id"],
         "project_id": "microservices-demo-tcc",
         "decision": "approved-for-protocol-freeze",
         "reviewed_at": "2026-09-22T01:00:00Z",
@@ -89,20 +89,32 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_frozen_and_collection_ready(self):
+    def test_active_protocol_is_amended_and_collection_locked(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("frozen", value["status"])
-        self.assertTrue(value["confirmatory_collection_allowed"])
-        self.assertEqual("2026-10-04T04:03:02Z", value["frozen_at"])
+        self.assertEqual("checkout-pdt-comparison-v1.1", value["protocol_id"])
+        self.assertEqual("pre-registration-candidate", value["status"])
+        self.assertFalse(value["confirmatory_collection_allowed"])
+        self.assertIsNone(value["frozen_at"])
+        self.assertEqual("oracle-v1.1-precollection", value["amendment"]["amendment_id"])
 
-    def test_current_candidate_reports_only_approval_blockers(self):
+    def test_current_candidate_reports_expected_amendment_blockers(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
         self.assertEqual(
-            ["researcher-approval", "financial-review"],
-            result["blocking_requirements"],
+            {
+                "ci-policy-frozen",
+                "staging-thresholds-frozen",
+                "pdt-model-policy-frozen",
+                "pdt-fidelity-policy-frozen",
+                "oracle-policy-frozen",
+                "pdt-runtime-frozen",
+                "oracle-suite-frozen",
+                "researcher-approval",
+                "financial-review",
+            },
+            set(result["blocking_requirements"]),
         )
 
     def test_current_candidate_passes_implemented_and_hashed_inputs(self):

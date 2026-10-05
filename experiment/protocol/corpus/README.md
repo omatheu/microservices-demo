@@ -1,22 +1,24 @@
 # Corpus confirmatório
 
-Este diretório contém somente o `public-corpus.json` definitivo, gerado depois
-que o protocolo, o runtime PDT e a suíte independente do Oracle foram
-congelados. A prévia
-em `../preview/` é histórica, usa outra chave e nunca será promovida.
+Este diretório está intencionalmente sem um `public-corpus.json` ativo durante
+a preparação da emenda Oracle v1.1. O corpus congelado em 04/10/2026 foi
+invalidado antes de qualquer coleta confirmatória e permanece recuperável no
+commit `0ee94a90`, vinculado pelo registro
+`../amendments/oracle-v1.1-precollection.json`. A prévia em `../preview/` é
+histórica e nunca será promovida.
 
-A geração definitiva criou uma chave aleatória nova de 64 bytes e produziu
-simultaneamente:
+A próxima geração definitiva, somente depois do novo congelamento 17/17,
+criará uma chave aleatória nova e produzirá simultaneamente:
 
 - `public-corpus.json`, versionado e visível aos mecanismos;
 - `oracle-manifest.json`, não versionado;
 - a chave de cegamento, não versionada.
 
-O manifesto e a chave não podem ser copiados para este diretório. Depois da
-validação local, a chave definitiva foi registrada como secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64`. O job Oracle deriva novamente o manifesto com
-código do commit-base confiável e exige igualdade exata com o compromisso do
-corpus público.
+O manifesto e a chave não podem ser copiados para este diretório. O secret
+protegido `TCC_ORACLE_BLINDING_KEY_B64` ainda contém a geração anterior e deve
+ser rotacionado, nunca reutilizado, quando o novo corpus for criado. O job
+Oracle derivará novamente o manifesto com código do commit-base confiável e
+exigirá igualdade exata com o novo compromisso público.
 
 O mesmo ambiente protegido deve conter:
 

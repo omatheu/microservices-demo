@@ -13,6 +13,14 @@ análise. Seu status é `pre-registration-candidate`, e a coleta cloud permanece
 explicitamente desautorizada até que os operadores, o oráculo, os SLOs finais e
 o teto financeiro sejam validados e seus hashes registrados.
 
+Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
+antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
+GKE e um caminho de exceção para coleções nulas no avaliador funcional. A
+emenda pré-coleta v1.1 foi autorizada, o congelamento anterior ficou preservado
+no commit `0ee94a90`, o PR candidato #9 foi fechado sem execução cloud e o
+protocolo retornou ao estado bloqueado. O registro vinculante está em
+[`amendments/oracle-v1.1-precollection.json`](./amendments/oracle-v1.1-precollection.json).
+
 ## Objetivo
 
 Medir, com o menor viés viável, a utilidade incremental do

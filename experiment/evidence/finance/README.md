@@ -4,19 +4,26 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O estado mais recente, de 04/10/2026 UTC, confirma que o Standard usage cost
+O estado mais recente, de 05/10/2026 UTC, confirma que o Standard usage cost
 export está ativo e que a tabela particionada `gcp_billing_export_v1_*` já foi
 entregue no dataset protegido em `US`. A consulta versionada e limitada a
-100 MB observou R$519,736015 de custo bruto, R$-519,737769 em créditos e
-R$-0,001754 de custo líquido entre 19/09 e 03/10. O review preserva R$200 como
-teto incremental futuro e projeta R$719,736015 de custo bruto total, abaixo do
-orçamento de R$1.751,10. A evidência está elegível para aprovação humana, mas a
-aprovação canônica foi gerada após a confirmação literal do pesquisador e
-permanece não autorizadora de cloud. Os registros atuais estão em
-[`cost-window-20260919-20261004.json`](./cost-window-20260919-20261004.json) e
-[`financial-review-eligibility-20261004T030924Z.json`](./financial-review-eligibility-20261004T030924Z.json).
-O vínculo canônico está em
-[`../../protocol/approvals/cost-review-v1.json`](../../protocol/approvals/cost-review-v1.json).
+100 MB, feita imediatamente antes da publicação dos runtimes da emenda v1.1,
+observou R$588,369730 de custo bruto, R$-588,371717 em créditos e R$-0,001987
+de custo líquido desde 19/09. Reservar o teto incremental conservador de R$200
+projeta R$788,369730, abaixo do orçamento de R$1.751,10, com R$962,730270 de
+margem. O registro atual está em
+[`cost-window-20260919-20261005-pre-runtime-publication-v1.1.json`](./cost-window-20260919-20261005-pre-runtime-publication-v1.1.json).
+
+A aprovação financeira canônica do protocolo v1 foi retirada da área ativa
+pela emenda pré-coleta. Uma nova revisão e uma nova aprovação humana ainda são
+obrigatórias antes de congelar a v1.1; a leitura acima documenta a janela de
+publicação, mas não autoriza execução experimental.
+
+Após o binding dos três digests, a auditoria pré-freeze passou 8/17 controles;
+os nove bloqueios restantes são as políticas e manifests ainda candidatos, a
+nova revisão financeira e a nova aprovação do pesquisador. O registro está em
+[`pre-freeze-audit-post-runtime-publication-20261005T214945Z.json`](./pre-freeze-audit-post-runtime-publication-20261005T214945Z.json).
+
 Os recibos históricos de ativação permanecem em
 [`billing-export-activation-20260929T052504Z.json`](./billing-export-activation-20260929T052504Z.json)
 e
