@@ -24,6 +24,12 @@ os nove bloqueios restantes são as políticas e manifests ainda candidatos, a
 nova revisão financeira e a nova aprovação do pesquisador. O registro está em
 [`pre-freeze-audit-post-runtime-publication-20261005T214945Z.json`](./pre-freeze-audit-post-runtime-publication-20261005T214945Z.json).
 
+A validação curta do Oracle v1.1 foi consultada novamente após o cleanup. A
+exportação ainda informava a mesma posição — R$588,369730 bruto e
+R$-0,001987 líquido — com `billing_data_as_of` anterior à execução; portanto,
+o valor não pode ser atribuído ao run. A consulta limitada a 100 MB está em
+[`cost-window-20260919-20261005-post-oracle-v1.1-engineering-query.json`](./cost-window-20260919-20261005-post-oracle-v1.1-engineering-query.json).
+
 Os recibos históricos de ativação permanecem em
 [`billing-export-activation-20260929T052504Z.json`](./billing-export-activation-20260929T052504Z.json)
 e

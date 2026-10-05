@@ -120,11 +120,12 @@ execução autorizada em cloud ou análise dos resultados.
 2. [concluído em 05/10/2026] autorizar a emenda pré-coleta v1.1, fechar o PR #9
    sem execução cloud e retornar políticas, manifests e protocolo ao estado
    `pre-registration-candidate`;
-3. [em andamento no PR #10] incorporar a emenda e os manifests vinculados na
-   `main`, mantendo todos os gates aprovados;
+3. [concluído em 05/10/2026] incorporar a emenda e os manifests vinculados na
+   `main` pelo PR #10, com todos os gates aprovados;
 4. [concluído em 05/10/2026] realizar nova leitura financeira, republicar os
    três runtimes e vinculá-los à mesma proveniência protegida;
-5. repetir com sucesso a validação curta do runner Oracle no cluster;
+5. [concluído em 05/10/2026] repetir com sucesso a validação curta do runner
+   Oracle no cluster, obter uma observação válida e realizar cleanup completo;
 6. renovar as aprovações financeira e do pesquisador, passar a auditoria 17/17,
    congelar a v1.1, rotacionar a chave e gerar um novo corpus opaco;
 7. executar a comparação pareada, o gate humano e o Oracle em blocos
@@ -132,10 +133,10 @@ execução autorizada em cloud ou análise dos resultados.
 8. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
    as evidências, remover a infraestrutura e conferir o custo final.
 
-Os controles passivos do Oracle e seu RBAC não pertencem mais ao caminho
-crítico: foram instalados e auditados sem armar execução. O próximo passo cloud
-é a validação curta do runner Oracle, que permanece bloqueada até uma nova
-autorização explícita e independente da publicação.
+Os controles passivos do Oracle, seu RBAC e a validação curta não pertencem
+mais ao caminho crítico. O próximo passo é preparar as políticas para o novo
+congelamento, renovar a revisão financeira e obter a aprovação do pesquisador;
+essas ações não autorizam por si mesmas uma coleta cloud.
 
 ## Fases restantes
 
@@ -545,8 +546,10 @@ publicação de 04/10 foi preservada como evidência histórica. Em 05/10, o PR
 #10 reconstruiu, escaneou e publicou os três runtimes corrigidos sob uma única
 proveniência protegida, sem credenciais GKE e sem executar staging, PDT ou
 Oracle. Os novos digests estão vinculados aos manifests candidatos. A
-revalidação Kubernetes e a coleta confirmatória continuam pendentes e exigem
-autorizações cloud separadas.
+revalidação Kubernetes posterior executou os 35 casos funcionais e os três
+perfis de desempenho, produziu uma observação válida e confirmou o cleanup. A
+coleta confirmatória continua pendente e exige congelamento e autorizações
+cloud separadas.
 
 A matriz local final, vinculada ao commit `c32a34b2`, executou os 22 gates da
 CI e 17 validações de artefato. As quatro candidatas seguras passaram. Das dez
