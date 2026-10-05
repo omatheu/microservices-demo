@@ -16,7 +16,11 @@ SPEC.loader.exec_module(MODULE)
 
 
 def protocol():
-    return json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+    value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+    value["status"] = "pre-registration-candidate"
+    value["confirmatory_collection_allowed"] = False
+    value["frozen_at"] = None
+    return value
 
 
 def publication_binding():
@@ -67,35 +71,39 @@ def cost_evidence():
 
 def cost_review(binding):
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "protocol_id": "checkout-pdt-comparison-v1",
         "project_id": "microservices-demo-tcc",
         "decision": "approved-for-protocol-freeze",
         "reviewed_at": "2026-09-22T01:00:00Z",
         "billing_data_as_of": "2026-09-22T00:30:00Z",
         "cost_data_available": True,
-        "confirmatory_incremental_spend_brl": 12.34,
+        "project_gross_cost_observed_brl": 12.34,
         "approved_incremental_spend_ceiling_brl": 200,
-        "mandatory_review_at_brl": 150,
+        "projected_project_gross_cost_ceiling_brl": 212.34,
+        "project_gross_cost_budget_brl": 1751.1,
+        "mandatory_incremental_review_at_brl": 150,
         "evidence": binding,
         "cloud_execution_authorized": False,
     }
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_current_candidate_reports_explicit_freeze_blockers(self):
+    def test_active_protocol_is_frozen_and_collection_ready(self):
+        value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+
+        self.assertEqual("frozen", value["status"])
+        self.assertTrue(value["confirmatory_collection_allowed"])
+        self.assertEqual("2026-10-04T04:03:02Z", value["frozen_at"])
+
+    def test_current_candidate_reports_only_approval_blockers(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
-        self.assertIn("ci-policy-frozen", result["blocking_requirements"])
-        self.assertIn("staging-thresholds-frozen", result["blocking_requirements"])
-        self.assertIn("pdt-model-policy-frozen", result["blocking_requirements"])
-        self.assertIn("pdt-fidelity-policy-frozen", result["blocking_requirements"])
-        self.assertIn("pdt-controller-image-bound", result["blocking_requirements"])
-        self.assertIn("pdt-runtime-frozen", result["blocking_requirements"])
-        self.assertIn("oracle-images-bound", result["blocking_requirements"])
-        self.assertIn("researcher-approval", result["blocking_requirements"])
-        self.assertIn("financial-review", result["blocking_requirements"])
+        self.assertEqual(
+            ["researcher-approval", "financial-review"],
+            result["blocking_requirements"],
+        )
 
     def test_current_candidate_passes_implemented_and_hashed_inputs(self):
         result = MODULE.audit(REPO_ROOT, protocol())
@@ -140,7 +148,7 @@ class AuditProtocolFreezeTests(unittest.TestCase):
             )
 
             tampered = cost_review(binding)
-            tampered["confirmatory_incremental_spend_brl"] = 12.35
+            tampered["project_gross_cost_observed_brl"] = 12.35
             self.assertFalse(MODULE.validate_cost_review(root, protocol(), tampered))
 
             wrong_hash = cost_review({**binding, "sha256": "0" * 64})

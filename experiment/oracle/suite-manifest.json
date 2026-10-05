@@ -1,16 +1,16 @@
 {
   "schema_version": "1.0.0",
   "suite_id": "checkout-independent-oracle-v1",
-  "status": "pre-registration-candidate",
-  "frozen_at": null,
+  "status": "frozen",
+  "frozen_at": "2026-10-04T03:42:42Z",
   "files": [
     {
       "path": "experiment/oracle/policy-v1.json",
-      "sha256": "3ff9e3e6ced495b6f00e72a7c52351f47e2ef56cc9af90f26346eeafa22b5326"
+      "sha256": "89bfbc7dd76094581fa90714f44bdc0f03df9a5f260bd5aa02de52e4bf4ee9ee"
     },
     {
       "path": "experiment/pdt/fidelity-policy.json",
-      "sha256": "199a5b6782182e39400305ee79e213a03dffde8202b997ee9de275146dcc28e3"
+      "sha256": "23b7b77a1e1eaffb60e544eab16a5bcaa7639ae932fc888d8881c5c9ce76d460"
     },
     {
       "path": "experiment/oracle/harness/Dockerfile",
@@ -114,9 +114,22 @@
     }
   ],
   "images": {
-    "oracle_harness": null,
-    "currency_reference": null
+    "oracle_harness": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/oracle-harness@sha256:9d47acbd0ba9d7578760bcd1e1950d52bee8d9d4c8a6d263e211bc1769de1adc",
+    "currency_reference": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/currency-reference@sha256:65912115e5a2bd16f7690d7e0018a466bf58be7a70df291b7a1e491bdbbee013"
   },
-  "publication_binding": null,
+  "publication_binding": {
+    "schema_version": "1.0.0",
+    "publication_summary_sha256": "3e85e0105482f9df928fd8d9428a611e0dcc6c6e16a4d60a418cae02821112fd",
+    "repository": "omatheu/microservices-demo",
+    "source_commit": "fd17e6aca401fcabd1fd033909cc0c107da0352c",
+    "source_tree": "8cef2b5b4df118b714f8557d914ba127aadf5b68",
+    "pull_request_number": 8,
+    "workflow_run_id": "37174611693",
+    "published_at": "2026-10-04T03:40:26Z",
+    "build_platform": "linux/amd64",
+    "protected_environment": "tcc-experiment",
+    "explicit_cloud_gate": true,
+    "cost_review_acknowledged": true
+  },
   "freeze_rule": "Every file hash, both immutable image digests and the shared attested publication binding must be verified before the suite status can become frozen."
 }

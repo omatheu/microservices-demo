@@ -42,7 +42,10 @@ def protocol():
 
 
 def policy():
-    return json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+    value = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+    value["status"] = "pre-registration-candidate"
+    value["frozen_at"] = None
+    return value
 
 
 def candidate():

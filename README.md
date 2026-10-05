@@ -18,21 +18,23 @@ This fork implements a paired comparison between a complete conventional
 CI/CD pipeline with staging and the same pipeline augmented by a predictive and
 prescriptive Partial Digital Twin of `checkoutservice`. The operational GKE
 baseline, conventional gates, PDT controller, mutation operators, and
-independent oracle are implemented. Confirmatory collection has not started:
-the protocol is still a pre-registration candidate, runtime image digests and
-the financial review are pending, and cloud execution remains explicitly
-locked. A read-only Oracle readiness audit now verifies GitHub protection,
+independent oracle are implemented. Confirmatory collection has not started,
+but the protocol, policies and runtimes were frozen on 4 October 2026 after a
+17/17 pre-freeze audit. The three runtime images are bound by immutable digest,
+and the definitive public corpus is confirmatory-eligible while its key and
+Oracle manifest remain private. Cloud execution remains explicitly locked. A
+read-only Oracle readiness audit verifies GitHub protection,
 keyless identity, least-privilege Kubernetes RBAC, frozen artifacts and an
 empty Oracle namespace before execution can be enabled. See the
 [experiment roadmap](/docs/tcc-experiment-roadmap.md) for the authoritative
 live status and exit criteria.
 
-As of 29 September 2026, the passive Oracle GitHub controls and its
-namespace-scoped Role/RoleBinding are installed, while the execution switch
-remains `false` and the namespace has no workloads. The latest audit passes
-18/21 structural controls; protocol, runtime and corpus freezing remain the
-three deliberate blockers. No Oracle execution or runtime publication was
-authorized by this preparation.
+The passive Oracle GitHub controls and its namespace-scoped Role/RoleBinding
+are installed, while every execution switch remains `false` and the
+experimental namespaces have no workloads. Runtime publication was performed
+through its isolated Artifact Registry-only path; staging, PDT and Oracle were
+skipped. Every future experimental block still requires a separate financial
+review and explicit cloud authorization.
 
 ## Architecture
 

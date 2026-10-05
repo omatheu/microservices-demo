@@ -12,6 +12,8 @@ import unittest
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
 PUBLISHER = REPO_ROOT / "experiment" / "scripts" / "publish-experiment-runtimes.sh"
 BINDER = REPO_ROOT / "experiment" / "scripts" / "bind-runtime-publication.py"
+PDT_MANIFEST = REPO_ROOT / "experiment" / "pdt" / "runtime-manifest.json"
+ORACLE_MANIFEST = REPO_ROOT / "experiment" / "oracle" / "suite-manifest.json"
 REGISTRY_PREFIX = (
     "us-central1-docker.pkg.dev/"
     "microservices-demo-tcc/online-boutique-experiment"
@@ -31,6 +33,41 @@ def git(*args):
 def write_executable(path, content):
     path.write_text(textwrap.dedent(content).lstrip(), encoding="utf-8")
     path.chmod(0o755)
+
+
+def prepare_candidate_repository(root):
+    pdt = json.loads(PDT_MANIFEST.read_text(encoding="utf-8"))
+    oracle = json.loads(ORACLE_MANIFEST.read_text(encoding="utf-8"))
+    for item in pdt["files"] + oracle["files"]:
+        relative = pathlib.Path(item["path"])
+        target = root / relative
+        if not target.exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.symlink_to(REPO_ROOT / relative)
+
+    pdt.update(
+        {
+            "status": "pre-registration-candidate",
+            "frozen_at": None,
+            "controller_image": None,
+            "publication_binding": None,
+        }
+    )
+    oracle.update(
+        {
+            "status": "pre-registration-candidate",
+            "frozen_at": None,
+            "images": {"oracle_harness": None, "currency_reference": None},
+            "publication_binding": None,
+        }
+    )
+    for relative, value in (
+        (pathlib.Path("experiment/pdt/runtime-manifest.json"), pdt),
+        (pathlib.Path("experiment/oracle/suite-manifest.json"), oracle),
+    ):
+        target = root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
 
 
 class RuntimePublicationIntegrationTests(unittest.TestCase):
@@ -114,7 +151,7 @@ class RuntimePublicationIntegrationTests(unittest.TestCase):
                   *currency-reference*) digit=6 ;;
                   *) exit 2 ;;
                 esac
-                printf 'digest: sha256:%064d size: 1234\n' "$digit"
+                printf '%s: digest: sha256:%064d size: 1234\n' "${tag##*:}" "$digit"
                 ;;
               *)
                 exit 2
@@ -199,12 +236,14 @@ class RuntimePublicationIntegrationTests(unittest.TestCase):
                     )
 
             binding_directory = root / "bindings"
+            candidate_repository = root / "repository"
+            prepare_candidate_repository(candidate_repository)
             binding = subprocess.run(
                 [
                     sys.executable,
                     str(BINDER),
                     "--repo-root",
-                    str(REPO_ROOT),
+                    str(candidate_repository),
                     "--publication-summary",
                     str(summary_path),
                     "--expected-commit",
