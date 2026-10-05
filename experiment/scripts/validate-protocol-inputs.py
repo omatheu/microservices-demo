@@ -44,6 +44,7 @@ REQUIRED_INPUTS = {
     "pdt_runtime_manifest",
     "mutation_registry",
     "blinded_corpus_manager",
+    "protocol_amendment_record",
     "oracle_suite_manifest",
 }
 

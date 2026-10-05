@@ -331,7 +331,10 @@ pré-artefato do rascunho atual. A CI bloqueou todas, e os três verificadores
 independentes produziram quatro observações válidas, todas prejudiciais e
 concordantes com os rótulos reservados. A evidência sanitizada está em
 [`../evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json`](../evidence/oracle/preartifact-engineering-validation-20260926T170744Z.json).
-Ainda falta validar o runner no cluster contra todas as imagens materializadas,
-publicar e congelar os digests do harness e da referência. Até isso acontecer,
-a política permanece `pre-registration-candidate` e nenhuma observação pode
-ser incluída na análise principal.
+Em 05/10/2026, a primeira validação Kubernetes autorizada executou os 35 casos
+funcionais, mas revelou que a NetworkPolicy não permitia o NodeLocal DNS
+`169.254.20.10` usado pelo GKE e que o avaliador não normalizava coleções nulas
+após falha de transporte. O cleanup concluiu com zero workloads ativos; a
+tentativa é evidência de engenharia, não observação confirmatória. A emenda
+v1.1 corrige os dois pontos, mas exige nova publicação, novo congelamento e nova
+validação cloud antes da coleta.

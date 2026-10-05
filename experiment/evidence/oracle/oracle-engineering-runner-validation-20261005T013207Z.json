@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "oracle-engineering-artifact-binding-v2-deploy-as-is-r1-20261005T013207Z",
+  "mode": "engineering",
+  "confirmatory_observation": false,
+  "authorization": {
+    "literal": "AUTORIZO_VALIDACAO_ORACLE_ENGENHARIA_1_REPETICAO",
+    "scope": {
+      "candidate_id": "engineering-artifact-binding-v2",
+      "alternative_id": "deploy-as-is",
+      "repetition": 1,
+      "engineering_users": 1,
+      "engineering_duration_seconds_per_profile": 5,
+      "namespace": "oracle"
+    }
+  },
+  "started_at": "2026-10-05T01:32:07Z",
+  "failed_at": "2026-10-05T01:33:49Z",
+  "outcome": "failed-before-performance-profiles",
+  "failure": {
+    "stage": "functional-evaluation",
+    "reported_error": "object of type 'NoneType' has no len()",
+    "root_causes": [
+      "The frozen NetworkPolicy allowed selected kube-dns pods but not the GKE NodeLocal DNS endpoint 169.254.20.10 used by the cluster.",
+      "The frozen functional evaluator did not normalize null event, charge and conversion collections emitted after transport failures."
+    ]
+  },
+  "observed_runtime": {
+    "functional_case_count": 35,
+    "gke_node_local_dns_enabled": true,
+    "observed_dns_endpoint": "169.254.20.10",
+    "public_endpoint_created": false,
+    "operational_mutation_performed": false,
+    "oracle_ephemeral_mutation_performed": true
+  },
+  "cleanup": {
+    "attempted": true,
+    "completed": true,
+    "active_oracle_workloads_after_cleanup": 0
+  },
+  "financial_observation": {
+    "query_path": "experiment/evidence/finance/cost-window-20260919-20261005-post-oracle-engineering-query.json",
+    "query_sha256": "282a3ac7b124790a4d02a7f92956fd75d34abf377d15b14ec614cae85ef10221",
+    "project_gross_cost_brl": 558.947862,
+    "project_net_cost_brl": -0.001887,
+    "visible_change_since_pre_run_query_brl": 4.791881,
+    "billing_data_as_of": "2026-10-04T23:28:44Z",
+    "attributable_to_this_run": false,
+    "attribution_note": "The Billing export timestamp predates the engineering run, so the visible change cannot be attributed to this execution."
+  },
+  "local_remediation_validation": {
+    "functional_evaluator_regression_tests_passed": true,
+    "network_policy_regression_tests_passed": true,
+    "targeted_test_count": 15,
+    "functional_manifest_binding_verified": true,
+    "server_side_kubernetes_dry_run_resource_count": 11,
+    "cloud_rerun_performed": false
+  },
+  "protocol_impact": {
+    "confirmatory_collection_remains_blocked": true,
+    "current_frozen_protocol_must_not_be_used_for_collection": true,
+    "required_next_action": "Document and approve a pre-collection protocol amendment, rebind the Oracle suite, and freeze the amended protocol before another engineering run or confirmatory collection."
+  }
+}

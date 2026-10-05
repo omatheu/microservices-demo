@@ -42,7 +42,7 @@ class RepeatedComparativeCandidateRunnerTests(unittest.TestCase):
         self.assertIn("starts billable GKE workloads", result.stderr)
         self.assertNotIn("contains active pods", result.stderr)
 
-    def test_frozen_protocol_still_blocks_an_ineligible_candidate(self):
+    def test_amended_protocol_blocks_confirmatory_orchestration_before_cluster_access(self):
         result = subprocess.run(
             [str(SCRIPT_PATH)],
             cwd=REPO_ROOT,
@@ -54,7 +54,7 @@ class RepeatedComparativeCandidateRunnerTests(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(
-            "Candidate is not eligible for confirmatory repetition orchestration.",
+            "Confirmatory repetition orchestration requires the frozen three-repetition protocol.",
             result.stderr,
         )
         self.assertNotIn("contains active pods", result.stderr)

@@ -1,9 +1,23 @@
 {
   "schema_version": "1.0.0",
-  "protocol_id": "checkout-pdt-comparison-v1",
-  "status": "frozen",
-  "confirmatory_collection_allowed": true,
-  "frozen_at": "2026-10-04T04:03:02Z",
+  "protocol_id": "checkout-pdt-comparison-v1.1",
+  "status": "pre-registration-candidate",
+  "confirmatory_collection_allowed": false,
+  "frozen_at": null,
+  "amendment": {
+    "amendment_id": "oracle-v1.1-precollection",
+    "authorized_at": "2026-10-05T02:39:38Z",
+    "previous_protocol_id": "checkout-pdt-comparison-v1",
+    "previous_protocol_sha256": "b80f1d2eeaeaed6185708fc3404c641b6ba57b6831b12d38ad307f51707c65d2",
+    "previous_freeze_commit": "0ee94a906424d2744b3ab3a4ecb29762b4b61884",
+    "confirmatory_observations_before_amendment": 0,
+    "scope": [
+      "GKE NodeLocal DNS egress in the isolated Oracle NetworkPolicy",
+      "null runtime collection handling in the independent functional evaluator",
+      "runtime provenance rebinding, renewed approvals and blinded corpus rotation"
+    ],
+    "record": "experiment/protocol/amendments/oracle-v1.1-precollection.json"
+  },
   "twin_object": "checkoutservice",
   "research_design": {
     "experimental_unit": "opaque release candidate",
@@ -22,7 +36,7 @@
     "sample_size_rationale": "Fixed feasibility corpus sized before evaluation results; estimates use exact intervals and no minimum-effect claim."
   },
   "randomization": {
-    "public_seed_label": "checkout-pdt-v1-fixed-before-corpus",
+    "public_seed_label": "checkout-pdt-v1.1-fixed-before-corpus",
     "algorithm": "HMAC-SHA256 keyed deterministic sampling and Fisher-Yates order",
     "candidate_identifier_prefix": "cand-",
     "blinding_key_minimum_bytes": 32,
@@ -298,7 +312,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "99e93db9f90a40d7c7d6042f2e394bbe479211ada227a6ae04aebd8aff768b78"
+      "sha256": "28812110593b7b9ae98f68bc6126068bcfa3adedca330aa5a20f6afca666fe56"
     },
     "conventional_ci_runner": {
       "path": "experiment/scripts/run-conventional-ci-local.sh",
@@ -366,7 +380,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "925f5a28b8d354c7308ad280e55377d394fe7f767179ec8e52434ca4dbd67f55"
+      "sha256": "45270634ae7c942f4a2b0175d7a7400c2ab004df409cd2fe4f5ed076f1cb81c2"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -386,7 +400,7 @@
     },
     "validity_threat_register": {
       "path": "docs/tcc-validity-threats.md",
-      "sha256": "8c447606a87deae79086df3bf51093f3de1e9925318d7640164be3763fd358e2"
+      "sha256": "0287f95ea26dcedd0b0c166b9e350a539ab8a31e348774d02536313450cb89f5"
     },
     "baseline_evidence_validator": {
       "path": "experiment/scripts/validate-baseline-evidence.py",
@@ -414,11 +428,11 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "ca4aa1ad80d20bd41a3aa4a40ae147f6c7363169cd45a4c7262d7038a7896491"
+      "sha256": "665d693677cad44c2ddeca1028c30e3235ac6bb0c3f1b0678e559734fb77ce41"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "e2670110c46dfa195c99c7bdfef11ae9a43949d09f71e8627398772a5c786bd2"
+      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
     },
     "pdt_repetition_aggregator": {
       "path": "experiment/scripts/aggregate-pdt-repetitions.py",
@@ -426,19 +440,23 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "51bea060dff32ed2c72eff14727e8e3d1c1f0a37d84526186e1375f9837d8f30"
+      "sha256": "e9a56278b57ce2b428756e34a458acab1af0eadbe76714e4e41d088258ed83c1"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
-      "sha256": "0c18ba57d5e35f9986fef1bbc4c59fd49d3bbe2660d8bc6d455ffed516dbf268"
+      "sha256": "9615a5be9214b355c2dd3d5485f3b5f9e7fa64762f4f8296dbb9b758a2822c3a"
     },
     "blinded_corpus_manager": {
       "path": "experiment/scripts/manage-blinded-corpus.py",
       "sha256": "303da77e3cd804f24e89c95fa22cf487c393a7a4800d02e4eb717d09c825ea97"
     },
+    "protocol_amendment_record": {
+      "path": "experiment/protocol/amendments/oracle-v1.1-precollection.json",
+      "sha256": "bfaa21251c4839385c52b5e9f40bcbcef79ba797269d49ca5b121d6575f0240c"
+    },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "ff48b52c18ab3da470eb500c8dfd1acfd927b212aeb891b881a742764ad25dc9"
+      "sha256": "24b3900a282149c76c5d71a6f3598dc9c59df4b8db2130a1611126961d240900"
     }
   },
   "required_before_freeze": [
@@ -453,6 +471,7 @@
   "excluded_evidence": [
     "current engineering pilots",
     "checkout-cpu-restriction-v1",
-    "engineering-artifact-binding-v2"
+    "engineering-artifact-binding-v2",
+    "oracle-engineering-artifact-binding-v2-deploy-as-is-r1-20261005T013207Z"
   ]
 }

@@ -41,7 +41,10 @@ def money_value(value):
 
 
 def event_names(result):
-    return [item.get("name") for item in result.get("events", [])]
+    events = result.get("events")
+    if not isinstance(events, list):
+        return []
+    return [item.get("name") for item in events if isinstance(item, dict)]
 
 
 def first_index(values, name):
@@ -53,7 +56,9 @@ def first_index(values, name):
 
 def expected_charge(result):
     items = result["input"]["items"]
-    conversions = result.get("conversions", [])
+    conversions = result.get("conversions")
+    if not isinstance(conversions, list):
+        raise ValueError("conversion evidence is unavailable")
     if len(conversions) != len(items) + 1:
         raise ValueError("conversion count does not cover every item plus shipping")
     currency = result["input"]["currency"]
@@ -70,13 +75,14 @@ def expected_charge(result):
 
 
 def exact_charge_passed(result):
-    if len(result.get("charges", [])) != 1:
+    charges = result.get("charges")
+    if not isinstance(charges, list) or len(charges) != 1:
         return False
     try:
         currency, expected = expected_charge(result)
     except (KeyError, TypeError, ValueError):
         return False
-    actual = result["charges"][0]
+    actual = charges[0]
     return actual.get("currency_code") == currency and money_value(actual) == expected
 
 

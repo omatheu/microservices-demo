@@ -1,6 +1,7 @@
 # Registro de ameaças à validade do experimento PDT
 
-> **Status:** registro pré-coleta; versão inicial em 21 de setembro de 2026.
+> **Status:** registro pré-coleta; versão inicial em 21 de setembro de 2026 e
+> emenda Oracle v1.1 autorizada em 5 de outubro de 2026.
 >
 > Este documento deve ser revisado antes do congelamento do protocolo e outra
 > vez depois da coleta. A revisão posterior pode registrar impacto observado,
@@ -75,6 +76,7 @@ Uma ameaça materializada não autoriza remover uma candidata porque seu resulta
 | `I-13` | Código adversarial poderia adulterar a esteira, o coletor ou o oráculo. | Candidatas restritas a operadores seguros, CI sem credencial cloud, identidade curta, políticas Kubernetes e imagens por digest. | Seletor de componentes, scans, RBAC e manifests renderizados. | O experimento não pretende representar malware com exfiltração ou escalada real. |
 | `I-14` | Aprovação humana informal não provaria atuação semiautônoma. | Ambiente protegido, revisor registrado pela API, recibo ligado por hash e execução fail-closed. | Histórico do GitHub, recibo, ação e validação do runner. | Um único revisor não mede concordância entre operadores humanos. |
 | `I-15` | Revelar o manifesto privado antes do gate contaminaria a decisão. | Exigir decisão convencional, PDT, gate e, para ação deployável, aprovação protegida antes do unlock. | Recibo de unlock e hashes da cadeia. | A máquina local do pesquisador continua sendo uma fronteira confiável. |
+| `I-16` | Uma suposição incorreta sobre a rede do cluster poderia transformar falha da infraestrutura do oráculo em aparente dano da candidata. | Exigir execução de engenharia anterior à coleta, validar o resolvedor DNS real do GKE, tratar falhas de transporte sem exceção no avaliador e repetir o congelamento quando a suíte mudar. | `oracle-engineering-runner-validation-20261005T013207Z.json`, NetworkPolicy renderizada, testes de regressão e nova auditoria 17/17. | Mudanças futuras do dataplane ou do DNS do GKE ainda exigem nova validação de engenharia. |
 
 ## Validade de conclusão estatística
 
@@ -117,6 +119,16 @@ Estas regras devem permanecer coerentes com o protocolo congelado:
    estatística que exige o par;
 7. qualquer alteração de política, modelo, teste ou limiar depois do unblinding
    cria uma nova versão experimental e um novo corpus.
+
+Em 5 de outubro de 2026, antes de qualquer observação confirmatória, `I-16`
+materializou-se na primeira validação de engenharia. O NodeLocal DNS do GKE
+usava `169.254.20.10`, não permitido pela NetworkPolicy então congelada, e o
+avaliador funcional lançava uma exceção ao receber coleções nulas após a falha
+de transporte. O namespace foi limpo, o resultado foi excluído por desenho e a
+coleta permaneceu bloqueada. A emenda v1.1 não altera desfecho, limiar,
+operadores, tamanho amostral ou regra de decisão; ela corrige somente a
+execução independente do oráculo e exige nova proveniência, novas aprovações e
+novo corpus antes da coleta.
 
 ## Evidência de auditoria
 

@@ -129,6 +129,17 @@ class PrepareOracleRuntimeTests(unittest.TestCase):
         self.assertTrue(all(item["spec"]["type"] == "ClusterIP" for item in services))
         self.assertNotIn("payment-candidate", [item["metadata"]["name"] for item in result["items"]])
 
+    def test_network_policy_allows_the_reviewed_gke_node_local_dns(self):
+        result = prepare()
+
+        policy = resource(result, "NetworkPolicy", "oracle-runtime-internal-only")
+        dns_rule = next(rule for rule in policy["spec"]["egress"] if "ports" in rule)
+
+        self.assertIn(
+            {"ipBlock": {"cidr": "169.254.20.10/32"}},
+            dns_rule["to"],
+        )
+
     def test_currency_candidate_is_proxied_against_reference(self):
         result = prepare("currencyservice")
 
