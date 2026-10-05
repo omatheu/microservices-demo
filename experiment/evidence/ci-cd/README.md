@@ -6,6 +6,22 @@ relatórios dos scanners, SBOM, resultados por gate e uma decisão pré-staging.
 O conteúdo gerado só constitui evidência confirmatória quando o protocolo e a
 política estiverem congelados e a execução usar `MODE=confirmatory`.
 
+## Publicação protegida dos runtimes da emenda v1.1 em 05/10/2026
+
+O PR #10 executou o caminho isolado `runtime-publication` no commit
+`450e17aabc1e1b6783aec4ba022ac471886f2af5`. O job protegido construiu,
+gerou SBOM, escaneou e publicou `checkout-pdt-controller`, `oracle-harness` e
+`currency-reference`; as três análises passaram sem achados HIGH/CRITICAL
+corrigíveis. Staging, PDT, gate humano e Oracle foram ignorados, e o workflow
+não recebeu credenciais GKE.
+
+O resumo auditável, com os digests imutáveis, hashes dos relatórios, árvore
+Git, PR, workflow e ambiente protegido, está em
+[`runtime-publication-pr10-20261005T214319Z.json`](runtime-publication-pr10-20261005T214319Z.json).
+Os manifests PDT e Oracle vinculam exatamente o SHA-256 desse resumo. Após o
+job, a chave financeira exclusiva voltou a `false` e todos os rótulos cloud
+foram removidos do PR.
+
 ## Matriz local das candidatas de runtime em 26/09/2026
 
 As 14 candidatas de runtime do corpus de engenharia `corpus-bfgvbgq63vyd4`

@@ -41,13 +41,13 @@ def publication_binding():
 
 
 class ValidatePdtRuntimeTests(unittest.TestCase):
-    def test_active_amended_runtime_is_valid_but_not_frozen(self):
+    def test_active_amended_runtime_is_published_but_not_frozen(self):
         value = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
 
         result = MODULE.validate(REPO_ROOT, value)
 
-        self.assertFalse(result["image_ready"])
-        self.assertFalse(result["publication_bound"])
+        self.assertTrue(result["image_ready"])
+        self.assertTrue(result["publication_bound"])
         self.assertFalse(result["frozen"])
 
     def test_candidate_runtime_files_are_bound_but_image_is_pending(self):

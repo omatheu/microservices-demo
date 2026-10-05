@@ -440,7 +440,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "e9a56278b57ce2b428756e34a458acab1af0eadbe76714e4e41d088258ed83c1"
+      "sha256": "4c0cf7326651a79ff5cf3874d54ca5aa2c223cc0ce3a02bcaa3008ffbe3c89ac"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
@@ -456,7 +456,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "24b3900a282149c76c5d71a6f3598dc9c59df4b8db2130a1611126961d240900"
+      "sha256": "b8c559df89445ca1efc889a011af880201b0695ae345edb219f476db265101ec"
     }
   },
   "required_before_freeze": [
