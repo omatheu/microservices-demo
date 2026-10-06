@@ -688,21 +688,26 @@ gerador prepara sua execução como Job isolado, sem token da API e sem rede, no
 namespace `pdt-system`. O digest foi publicado e vinculado; a primeira execução
 do Job continua pendente e não foi antecipada sem autorização cloud por bloco.
 
-O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery,
-o dataset protegido `online_boutique_billing` e a tabela padrão já existem; a
-consulta versionada limita cada leitura a 100 MB. Imediatamente antes da
-publicação de 05/10/2026 UTC, a janela desde 19/09 observou R$588,369730 de
-custo bruto, R$-588,371717 em créditos e R$-0,001987 de custo líquido. Somar o
-teto incremental conservador de R$200 projeta R$788,369730, abaixo do orçamento
-bruto de R$1.751,10, com R$962,730270 de margem. O registro está em
-[`../experiment/evidence/finance/cost-window-20260919-20261005-pre-runtime-publication-v1.1.json`](../experiment/evidence/finance/cost-window-20260919-20261005-pre-runtime-publication-v1.1.json).
+O mecanismo de custo por bloco está aplicado até a revisão humana. A API do
+BigQuery, o dataset protegido `online_boutique_billing` e a tabela padrão já
+existem; a consulta versionada limita cada leitura a 100 MB. Em 06/10/2026 UTC,
+depois de o export alcançar a janela da validação Oracle v1.1, o agregado desde
+19/09 observou R$606,696649 de custo bruto, R$-606,698683 em créditos e
+R$-0,002034 de custo líquido. Somar o teto incremental conservador de R$200
+projeta R$806,696649, abaixo do orçamento bruto de R$1.751,10, com
+R$944,403351 de margem. O registro está em
+[`../experiment/evidence/finance/cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json`](../experiment/evidence/finance/cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json).
 
-Após o binding, o auditor pré-freeze passa 8/17 requisitos. Os nove bloqueios
-restantes são deliberados: congelar as cinco políticas e os dois manifests,
-registrar nova revisão financeira e obter nova aprovação do pesquisador. O
-protocolo permanece `pre-registration-candidate`, sem corpus confirmatório
-ativo e sem autorização de execução experimental. O registro está em
-[`../experiment/evidence/finance/pre-freeze-audit-post-runtime-publication-20261005T214945Z.json`](../experiment/evidence/finance/pre-freeze-audit-post-runtime-publication-20261005T214945Z.json).
+O bundle determinístico foi aplicado às cinco políticas e aos dois manifests,
+com os hashes dependentes recalculados e sem liberar a coleta. O auditor
+pré-freeze agora passa 15/17 requisitos; restam somente a revisão financeira
+humana e a aprovação do pesquisador para o protocolo exato de SHA-256
+`e2fc8b960850c59de91fc0d576e4ed664b1b801a4fe40016500b412a6ce3c485`.
+Nenhuma dessas etapas autoriza execução experimental. Os registros estão em
+[`../experiment/evidence/finance/protocol-freeze-candidate-v1.1-20261006T234228Z.json`](../experiment/evidence/finance/protocol-freeze-candidate-v1.1-20261006T234228Z.json),
+[`../experiment/evidence/finance/financial-review-eligibility-v1.1-20261006T234330Z.json`](../experiment/evidence/finance/financial-review-eligibility-v1.1-20261006T234330Z.json)
+e
+[`../experiment/evidence/finance/pre-freeze-audit-v1.1-policies-frozen-20261006T234330Z.json`](../experiment/evidence/finance/pre-freeze-audit-v1.1-policies-frozen-20261006T234330Z.json).
 
 `prepare-financial-review.py` valida a saída real do billing contra o auditor
 selado, vincula caminho e SHA-256 e, somente com confirmação humana literal,

@@ -312,7 +312,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "28812110593b7b9ae98f68bc6126068bcfa3adedca330aa5a20f6afca666fe56"
+      "sha256": "1207871b8c7f0ca30779f048cf40f7dbc96834da0bf82c343d9208776fd3db5f"
     },
     "conventional_ci_runner": {
       "path": "experiment/scripts/run-conventional-ci-local.sh",
@@ -428,11 +428,11 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "665d693677cad44c2ddeca1028c30e3235ac6bb0c3f1b0678e559734fb77ce41"
+      "sha256": "bb12fead671b7667b3c3312682b8cdaecd2c2c3a7b532e26473de7c6f6c0c56f"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+      "sha256": "ace10afdd5f304142087bf8e340b30250f6008e25b5511f578696718e00c012d"
     },
     "pdt_repetition_aggregator": {
       "path": "experiment/scripts/aggregate-pdt-repetitions.py",
@@ -440,7 +440,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "4c0cf7326651a79ff5cf3874d54ca5aa2c223cc0ce3a02bcaa3008ffbe3c89ac"
+      "sha256": "ccb528abf88a70d5f493bab7466e9bf45d29b08889653873f3084e3c1333fec5"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
@@ -456,7 +456,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "b8c559df89445ca1efc889a011af880201b0695ae345edb219f476db265101ec"
+      "sha256": "688bdd512f2a68fd5503309148bfd18406af904c2f4c48ebb4f4c2fa9583b9ef"
     }
   },
   "required_before_freeze": [

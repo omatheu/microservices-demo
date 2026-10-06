@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "runtime_id": "checkout-pdt-controller-v1",
-  "status": "pre-registration-candidate",
-  "frozen_at": null,
+  "status": "frozen",
+  "frozen_at": "2026-10-06T23:42:28Z",
   "files": [
     {
       "path": "experiment/pdt/controller/checkout_pdt_controller.py",
@@ -62,7 +62,7 @@
     },
     {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+      "sha256": "ace10afdd5f304142087bf8e340b30250f6008e25b5511f578696718e00c012d"
     }
   ],
   "controller_image": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/checkout-pdt-controller@sha256:63c30df8bff3854031a502e742ef7d26cb7e5974845f20b4f7461ca10f4dfc49",

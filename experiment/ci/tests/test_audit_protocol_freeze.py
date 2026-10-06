@@ -98,22 +98,12 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         self.assertIsNone(value["frozen_at"])
         self.assertEqual("oracle-v1.1-precollection", value["amendment"]["amendment_id"])
 
-    def test_current_candidate_reports_expected_amendment_blockers(self):
+    def test_current_candidate_reports_only_approval_blockers(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
         self.assertEqual(
-            {
-                "ci-policy-frozen",
-                "staging-thresholds-frozen",
-                "pdt-model-policy-frozen",
-                "pdt-fidelity-policy-frozen",
-                "oracle-policy-frozen",
-                "pdt-runtime-frozen",
-                "oracle-suite-frozen",
-                "researcher-approval",
-                "financial-review",
-            },
+            {"researcher-approval", "financial-review"},
             set(result["blocking_requirements"]),
         )
 

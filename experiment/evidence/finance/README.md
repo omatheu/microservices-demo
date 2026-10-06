@@ -4,25 +4,30 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O estado mais recente, de 05/10/2026 UTC, confirma que o Standard usage cost
-export está ativo e que a tabela particionada `gcp_billing_export_v1_*` já foi
-entregue no dataset protegido em `US`. A consulta versionada e limitada a
-100 MB, feita imediatamente antes da publicação dos runtimes da emenda v1.1,
-observou R$588,369730 de custo bruto, R$-588,371717 em créditos e R$-0,001987
-de custo líquido desde 19/09. Reservar o teto incremental conservador de R$200
-projeta R$788,369730, abaixo do orçamento de R$1.751,10, com R$962,730270 de
-margem. O registro atual está em
-[`cost-window-20260919-20261005-pre-runtime-publication-v1.1.json`](./cost-window-20260919-20261005-pre-runtime-publication-v1.1.json).
+O estado mais recente, de 06/10/2026 UTC, confirma que o Standard usage cost
+export alcançou a janela encerrada após a validação Oracle v1.1. A consulta
+versionada e limitada a 100 MB observou R$606,696649 de custo bruto,
+R$-606,698683 em créditos e R$-0,002034 de custo líquido desde 19/09, com
+`billing_data_as_of=2026-10-06T15:57:38Z`. Reservar o teto incremental
+conservador de R$200 projeta R$806,696649, abaixo do orçamento de R$1.751,10,
+com R$944,403351 de margem. O agregado serve como baseline financeira do
+projeto, mas não isola contabilmente o custo do Oracle. O registro atual está
+em
+[`cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json`](./cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json).
 
 A aprovação financeira canônica do protocolo v1 foi retirada da área ativa
-pela emenda pré-coleta. Uma nova revisão e uma nova aprovação humana ainda são
-obrigatórias antes de congelar a v1.1; a leitura acima documenta a janela de
-publicação, mas não autoriza execução experimental.
+pela emenda pré-coleta. A nova evidência passou na verificação automatizada de
+elegibilidade, sem gerar aprovação e sem autorizar execução cloud. O recibo
+está em
+[`financial-review-eligibility-v1.1-20261006T234330Z.json`](./financial-review-eligibility-v1.1-20261006T234330Z.json).
 
-Após o binding dos três digests, a auditoria pré-freeze passou 8/17 controles;
-os nove bloqueios restantes são as políticas e manifests ainda candidatos, a
-nova revisão financeira e a nova aprovação do pesquisador. O registro está em
-[`pre-freeze-audit-post-runtime-publication-20261005T214945Z.json`](./pre-freeze-audit-post-runtime-publication-20261005T214945Z.json).
+O bundle determinístico da emenda congelou as cinco políticas e os dois
+manifests, preservando o protocolo como `pre-registration-candidate` e a coleta
+desabilitada. A auditoria passou 15/17 controles; restam somente a nova revisão
+financeira e a nova aprovação do pesquisador. Os recibos estão em
+[`protocol-freeze-candidate-v1.1-20261006T234228Z.json`](./protocol-freeze-candidate-v1.1-20261006T234228Z.json)
+e
+[`pre-freeze-audit-v1.1-policies-frozen-20261006T234330Z.json`](./pre-freeze-audit-v1.1-policies-frozen-20261006T234330Z.json).
 
 A validação curta do Oracle v1.1 foi consultada novamente após o cleanup. A
 exportação ainda informava a mesma posição — R$588,369730 bruto e
