@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "security-v1.2-precollection",
+  "status": "authorized-preparation",
+  "authorized_at": "2026-10-12T22:03:26Z",
+  "authorization_literal": "AUTORIZO_EMENDA_PRE_COLETA_DO_PROTOCOLO_V1_2_PARA_CORRECAO_DOS_CVES",
+  "reason": "The pull-request runtime image gate detected four fixable HIGH findings in the oracle-harness image after the v1.1 freeze and before any confirmatory collection.",
+  "confirmatory_observations_collected": 0,
+  "superseded_freeze": {
+    "git_commit": "32da279a7b843462cbbdc0865d1af14859aee7c4",
+    "protocol_id": "checkout-pdt-comparison-v1.1",
+    "protocol_sha256": "38b1270bce29c4aa975f331d7c5b761e2abe89acd2545cdc11030318ceb4dbaf",
+    "frozen_at": "2026-10-12T21:20:14Z",
+    "corpus_id": "corpus-dcimzwggozukw",
+    "oracle_manifest_commitment_sha256": "958073633288781b956c57e753b9c2525894194823ec2bcd2b81acdf890de523",
+    "artifacts": [
+      {
+        "path": "experiment/protocol/approvals/cost-review-v1.json",
+        "sha256": "e85697e89fea36951645f5795d75533244310d6efe3a02b04ebe4a86a1f122f7"
+      },
+      {
+        "path": "experiment/protocol/approvals/researcher-approval-v1.json",
+        "sha256": "5e9c2a9e675321c5a675f69f5ea398a7481f5478ce83a0508401772f9dddf3ae"
+      },
+      {
+        "path": "experiment/protocol/corpus/public-corpus.json",
+        "sha256": "e3a36899362cd9e37cfc8e08683a84969456e91e4c068a218b5b32b118edb975"
+      },
+      {
+        "path": "experiment/pdt/runtime-manifest.json",
+        "sha256": "ccb528abf88a70d5f493bab7466e9bf45d29b08889653873f3084e3c1333fec5"
+      },
+      {
+        "path": "experiment/oracle/suite-manifest.json",
+        "sha256": "688bdd512f2a68fd5503309148bfd18406af904c2f4c48ebb4f4c2fa9583b9ef"
+      }
+    ]
+  },
+  "security_regression": {
+    "evidence_path": "experiment/evidence/ci-cd/runtime-security-regression-pr12-20261012.json",
+    "evidence_sha256": "08d5b18fc20815907385b8e1345cc157b26cb7c94060cdf4ae79ea9b6c74630f",
+    "affected_image": "oracle-harness",
+    "fixable_high_findings": 4,
+    "critical_findings": 0,
+    "security_gate_weakened": false,
+    "confirmatory_observation": false
+  },
+  "local_remediation_validation": {
+    "evidence_path": "experiment/evidence/ci-cd/runtime-security-remediation-v1.2-local-20261012.json",
+    "evidence_sha256": "b3239bd48fb06bf4a7132ff111f8caea426fb939c76b6dcdd8b0a44f2a823519",
+    "experiment_runtime_images_scanned": 3,
+    "candidate_service_images_scanned": 1,
+    "high_or_critical_fixable_findings": 0,
+    "cloud_access": false,
+    "runtime_publication_performed": false,
+    "confirmatory_observation": false
+  },
+  "authorized_changes": [
+    "Update the oracle-harness and checkoutservice Go builder from 1.27.0 to the fixed 1.27.2 image pinned by immutable digest.",
+    "Update golang.org/x/net from v0.58.0 to v0.60.0 and accept only the dependency graph changes required by the Go module resolver.",
+    "Rebuild, inventory and scan the three experiment runtime images without weakening the HIGH/CRITICAL gate.",
+    "Rebind all runtime manifests to one new protected publication provenance.",
+    "Repeat financial and researcher approvals, freeze protocol v1.2, rotate the blinding key and generate a new opaque corpus."
+  ],
+  "affected_pull_request": {
+    "number": 12,
+    "head_sha_at_detection": "32da279a7b843462cbbdc0865d1af14859aee7c4",
+    "cloud_labels": [],
+    "confirmatory_execution_performed": false
+  },
+  "cloud_execution_authorized": false,
+  "runtime_publication_authorized": false
+}

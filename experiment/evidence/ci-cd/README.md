@@ -6,6 +6,27 @@ relatórios dos scanners, SBOM, resultados por gate e uma decisão pré-staging.
 O conteúdo gerado só constitui evidência confirmatória quando o protocolo e a
 política estiverem congelados e a execução usar `MODE=confirmatory`.
 
+## Regressão de segurança pré-coleta e emenda v1.2 em 12/10/2026
+
+O gate de imagens do PR #12 bloqueou corretamente o `oracle-harness` por quatro
+achados HIGH corrigíveis: `CVE-2026-78669` em `golang.org/x/net` e três achados
+na biblioteca padrão Go. A política do scanner não foi alterada. O registro
+sanitizado [`runtime-security-regression-pr12-20261012.json`](runtime-security-regression-pr12-20261012.json)
+vincula o run, o job e os SHA-256 dos artefatos baixados. Não houve publicação,
+execução GCP ou observação confirmatória.
+
+A emenda v1.2 atualiza Go para 1.27.2 e `golang.org/x/net` para v0.60.0, invalida
+os vínculos de runtime, aprovações e corpus v1.1 e exige que o mesmo gate passe
+antes de uma nova publicação protegida.
+
+O preflight local da correção reconstruiu as três imagens, gerou SBOMs e repetiu
+o Trivy fixado com a mesma política. As três passaram com zero achados
+HIGH/CRITICAL corrigíveis; o SBOM do `oracle-harness` confirma Go 1.27.2 e
+`golang.org/x/net` v0.60.0. O `checkoutservice`, que compartilha o módulo e o
+builder corrigidos, também foi reconstruído e passou no mesmo scan. A evidência sanitizada está em
+[`runtime-security-remediation-v1.2-local-20261012.json`](runtime-security-remediation-v1.2-local-20261012.json).
+Ela não é proveniência de publicação nem evidência confirmatória.
+
 ## Publicação protegida dos runtimes da emenda v1.1 em 05/10/2026
 
 O PR #10 executou o caminho isolado `runtime-publication` no commit

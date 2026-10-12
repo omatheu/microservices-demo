@@ -16,12 +16,15 @@ em
 [`cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json`](./cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json).
 
 A aprovação financeira canônica da v1.1 foi registrada em 12/10/2026 UTC após
-confirmação humana literal. Ela vincula a evidência pelo SHA-256, aprova somente
-o uso da baseline no congelamento e mantém `cloud_execution_authorized: false`.
+confirmação humana literal. Ela vinculou a evidência pelo SHA-256, aprovou
+somente o uso da baseline no congelamento e manteve
+`cloud_execution_authorized: false`. A emenda de segurança v1.2 invalidou essa
+aprovação antes da coleta; o arquivo canônico permanece recuperável no commit
+`32da279a` e uma nova revisão será obrigatória.
 O preflight anterior permanece em
 [`financial-review-eligibility-v1.1-20261006T234330Z.json`](./financial-review-eligibility-v1.1-20261006T234330Z.json),
-e a revisão canônica está em
-[`../../protocol/approvals/cost-review-v1.json`](../../protocol/approvals/cost-review-v1.json).
+e o registro da emenda está em
+[`../../protocol/amendments/security-v1.2-precollection.json`](../../protocol/amendments/security-v1.2-precollection.json).
 
 O bundle determinístico da emenda congelou as cinco políticas e os dois
 manifests. Depois da revisão financeira e da aprovação do pesquisador, a
@@ -32,8 +35,9 @@ Os recibos finais estão em
 [`pre-freeze-audit-v1.1-ready-20261012T212014Z.json`](./pre-freeze-audit-v1.1-ready-20261012T212014Z.json)
 e
 [`protocol-freeze-finalization-v1.1-20261012T212014Z.json`](./protocol-freeze-finalization-v1.1-20261012T212014Z.json).
-O congelamento não autorizou execução cloud; a rotação do secret do novo corpus
-e a autorização financeira por bloco continuam pendentes.
+Esse congelamento não autorizou execução cloud e agora é histórico. A v1.2
+exige nova publicação, revisão financeira, aprovação do pesquisador,
+congelamento e corpus antes da autorização financeira por bloco.
 
 A validação curta do Oracle v1.1 foi consultada novamente após o cleanup. A
 exportação ainda informava a mesma posição — R$588,369730 bruto e

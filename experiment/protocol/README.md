@@ -1,7 +1,7 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** protocolo v1.1 congelado; execução cloud permanece bloqueada por
-> autorização independente.
+> **Status:** emenda pré-coleta v1.2 autorizada; coleta e execução cloud
+> permanecem bloqueadas.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -9,11 +9,9 @@
 
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
-análise. Seu status é `frozen`, com SHA-256
-`38b1270bce29c4aa975f331d7c5b761e2abe89acd2545cdc11030318ceb4dbaf`.
-O corpus público v1.1 já foi gerado, mas iniciar workloads cloud continua
-explicitamente desautorizado até a revisão financeira e autorização de cada
-bloco.
+análise. Seu status ativo voltou a `pre-registration-candidate`; as imagens,
+aprovações e o corpus precisam ser regenerados para a v1.2 antes de qualquer
+coleta.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
@@ -25,6 +23,16 @@ protocolo retornou ao estado bloqueado. O registro vinculante está em
 Em 12 de outubro de 2026, a nova evidência financeira e a aprovação do
 pesquisador levaram a auditoria a 17/17; o finalizador congelou a v1.1 e uma
 chave nova gerou o corpus opaco `corpus-dcimzwggozukw` antes de qualquer coleta.
+Esse estado permanece verificável no commit `32da279a`, com protocolo de
+SHA-256 `38b1270bce29c4aa975f331d7c5b761e2abe89acd2545cdc11030318ceb4dbaf`.
+
+Ainda em 12 de outubro de 2026, o gate de imagens do PR #12 detectou quatro
+CVEs HIGH corrigíveis no `oracle-harness`. Como nenhuma observação
+confirmatória havia sido coletada, foi autorizada a emenda v1.2. O registro
+[`amendments/security-v1.2-precollection.json`](./amendments/security-v1.2-precollection.json)
+preserva o congelamento substituído, vincula a evidência do scanner e limita a
+mudança à correção das dependências. A política de bloqueio por vulnerabilidade
+não foi relaxada.
 
 ## Objetivo
 

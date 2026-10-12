@@ -1,20 +1,20 @@
 {
   "schema_version": "1.0.0",
   "suite_id": "checkout-independent-oracle-v1",
-  "status": "frozen",
-  "frozen_at": "2026-10-06T23:42:28Z",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
   "files": [
     {
       "path": "experiment/oracle/policy-v1.json",
-      "sha256": "ba7455d0593e72463f85b2c188f422086f618729c90786c5cb5793785553b98a"
+      "sha256": "3ff9e3e6ced495b6f00e72a7c52351f47e2ef56cc9af90f26346eeafa22b5326"
     },
     {
       "path": "experiment/pdt/fidelity-policy.json",
-      "sha256": "6d6239513f8e37b2abd11a2ff319a1ea2e5f8107bb220be4244f34ea601ff82d"
+      "sha256": "199a5b6782182e39400305ee79e213a03dffde8202b997ee9de275146dcc28e3"
     },
     {
       "path": "experiment/oracle/harness/Dockerfile",
-      "sha256": "cfb4117531f94c375bc232c0494c2802eecac3995dd7d4dbcf11e4ccf1d9fb42"
+      "sha256": "c98d1828f5b05326d1d433866c9233bcc9801c3a54213b9cfdf7fe2c059a45d6"
     },
     {
       "path": "src/checkoutservice/cmd/oracleharness/main.go",
@@ -26,11 +26,11 @@
     },
     {
       "path": "src/checkoutservice/go.mod",
-      "sha256": "2491e02978e9d70a0bea3306e64ddc03a9dba30e7ab65898ff64a74cf1e1911b"
+      "sha256": "561f6c6c032c3380fa0db5e82176f1742920000a75ffe11f0272051b41369878"
     },
     {
       "path": "src/checkoutservice/go.sum",
-      "sha256": "6aca98e3d1d9f23d61e5bc9e23ced3d0032ea6b4c59e18d51c8042077c370baa"
+      "sha256": "25520704650105824c35e7a44f5333ee8c7e1aa9f348bbb1c7654d19aa64cc51"
     },
     {
       "path": "src/checkoutservice/genproto/demo.pb.go",
@@ -114,22 +114,9 @@
     }
   ],
   "images": {
-    "oracle_harness": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/oracle-harness@sha256:1bc6ffcadc41fea82abfda8e639c43e66ce5078cdb0b73579f0692a2bf2d7c68",
-    "currency_reference": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/currency-reference@sha256:42241d0d814d3521c04c969318dc80c325ba1254cdccd382b78257f26a339c99"
+    "oracle_harness": null,
+    "currency_reference": null
   },
-  "publication_binding": {
-    "schema_version": "1.0.0",
-    "publication_summary_sha256": "e2d8895056f7198aeb37c952657c7c4996bc98ab84b61cb02d04efa2c34c1ee1",
-    "repository": "omatheu/microservices-demo",
-    "source_commit": "450e17aabc1e1b6783aec4ba022ac471886f2af5",
-    "source_tree": "7b4566e149cf3dc053697b3103b8d53d0d4c7a77",
-    "pull_request_number": 10,
-    "workflow_run_id": "37377441294",
-    "published_at": "2026-10-05T21:43:19Z",
-    "build_platform": "linux/amd64",
-    "protected_environment": "tcc-experiment",
-    "explicit_cloud_gate": true,
-    "cost_review_acknowledged": true
-  },
+  "publication_binding": null,
   "freeze_rule": "Every file hash, both immutable image digests and the shared attested publication binding must be verified before the suite status can become frozen."
 }

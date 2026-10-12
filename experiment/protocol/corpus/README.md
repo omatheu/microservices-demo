@@ -1,28 +1,28 @@
 # Corpus confirmatório
 
 O corpus confirmatório da v1.1 foi gerado em 12/10/2026 UTC somente depois do
-congelamento 17/17. O arquivo público
-[`public-corpus.json`](./public-corpus.json) contém 18 candidatas opacas, três
-repetições técnicas por candidata e está vinculado ao protocolo congelado de
+congelamento 17/17, mas foi invalidado antes de qualquer coleta pela emenda de
+segurança v1.2. O arquivo público foi retirado da área ativa; a versão anterior
+continua verificável no commit `32da279a`, vinculada ao protocolo congelado de
 SHA-256 `38b1270bce29c4aa975f331d7c5b761e2abe89acd2545cdc11030318ceb4dbaf`.
 O corpus anterior da v1 foi invalidado antes de qualquer coleta confirmatória e
 permanece recuperável no commit `0ee94a90`, vinculado pelo registro
 `../amendments/oracle-v1.1-precollection.json`. A prévia em `../preview/` é
-histórica e nunca será promovida.
+histórica e nunca será promovida. A emenda atual está em
+`../amendments/security-v1.2-precollection.json`.
 
-A geração definitiva criou simultaneamente:
+A próxima geração definitiva v1.2 deverá criar simultaneamente, somente após o
+novo congelamento:
 
 - `public-corpus.json`, versionado e visível aos mecanismos;
 - `oracle-manifest.json`, não versionado;
 - a chave de cegamento, não versionada.
 
-O manifesto e a chave estão em diretório local privado com permissões 0600,
-ignorado pelo Git, e não podem ser copiados para este diretório. O secret
-protegido `TCC_ORACLE_BLINDING_KEY_B64` ainda contém a geração anterior e deve
-ser rotacionado para a nova chave antes de qualquer execução confirmatória. O
-job Oracle derivará novamente o manifesto com código do commit-base confiável
-e exigirá igualdade exata com o compromisso público
-`958073633288781b956c57e753b9c2525894194823ec2bcd2b81acdf890de523`.
+O manifesto e a chave v1.1 permanecem somente como arquivo histórico em
+diretório local privado com permissões 0600, ignorado pelo Git, e não podem ser
+copiados para este diretório nem reutilizados. O secret protegido
+`TCC_ORACLE_BLINDING_KEY_B64` deve receber exclusivamente a futura chave v1.2
+antes de qualquer execução confirmatória.
 
 O mesmo ambiente protegido deve conter:
 
