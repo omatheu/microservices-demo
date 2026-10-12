@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
   "protocol_id": "checkout-pdt-comparison-v1.1",
-  "status": "pre-registration-candidate",
-  "confirmatory_collection_allowed": false,
-  "frozen_at": null,
+  "status": "frozen",
+  "confirmatory_collection_allowed": true,
+  "frozen_at": "2026-10-12T21:20:14Z",
   "amendment": {
     "amendment_id": "oracle-v1.1-precollection",
     "authorized_at": "2026-10-05T02:39:38Z",

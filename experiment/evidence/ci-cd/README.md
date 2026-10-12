@@ -49,8 +49,8 @@ GCP, registry ou publicação de imagens; os worktrees, patches, ordens de
 trabalho e logs privados foram destruídos após a extração dos hashes. Volumes
 Docker não foram removidos nem modificados. Como os rótulos foram revelados e
 versionados depois dessa execução, esse corpus fica aposentado para qualquer
-coleta confirmatória; um novo corpus cego deverá ser gerado somente após o
-congelamento do protocolo.
+coleta confirmatória. Um novo corpus cego v1.1 foi gerado somente após o
+congelamento 17/17 de 12/10/2026.
 
 ## Preflight local das imagens de runtime em 26/09/2026
 

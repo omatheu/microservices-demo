@@ -1,17 +1,19 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** rascunho metodológico; coleta confirmatória bloqueada.
+> **Status:** protocolo v1.1 congelado; execução cloud permanece bloqueada por
+> autorização independente.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
 > resultados do corpus de avaliação.
 
-O desenho executável candidato está em
-[`protocol-v1.json`](./protocol-v1.json). Ele fixa provisoriamente 18
-candidatas, três repetições técnicas, blocos de três e um plano pareado de
-análise. Seu status é `pre-registration-candidate`, e a coleta cloud permanece
-explicitamente desautorizada até que os operadores, o oráculo, os SLOs finais e
-o teto financeiro sejam validados e seus hashes registrados.
+O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
+18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
+análise. Seu status é `frozen`, com SHA-256
+`38b1270bce29c4aa975f331d7c5b761e2abe89acd2545cdc11030318ceb4dbaf`.
+O corpus público v1.1 já foi gerado, mas iniciar workloads cloud continua
+explicitamente desautorizado até a revisão financeira e autorização de cada
+bloco.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
@@ -20,6 +22,9 @@ emenda pré-coleta v1.1 foi autorizada, o congelamento anterior ficou preservado
 no commit `0ee94a90`, o PR candidato #9 foi fechado sem execução cloud e o
 protocolo retornou ao estado bloqueado. O registro vinculante está em
 [`amendments/oracle-v1.1-precollection.json`](./amendments/oracle-v1.1-precollection.json).
+Em 12 de outubro de 2026, a nova evidência financeira e a aprovação do
+pesquisador levaram a auditoria a 17/17; o finalizador congelou a v1.1 e uma
+chave nova gerou o corpus opaco `corpus-dcimzwggozukw` antes de qualquer coleta.
 
 ## Objetivo
 

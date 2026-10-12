@@ -24,13 +24,16 @@ e a revisão canônica está em
 [`../../protocol/approvals/cost-review-v1.json`](../../protocol/approvals/cost-review-v1.json).
 
 O bundle determinístico da emenda congelou as cinco políticas e os dois
-manifests, preservando o protocolo como `pre-registration-candidate` e a coleta
-desabilitada. Depois da revisão financeira, a auditoria passou 16/17 controles;
-resta somente a aprovação do pesquisador. Os recibos estão em
-[`protocol-freeze-candidate-v1.1-20261006T234228Z.json`](./protocol-freeze-candidate-v1.1-20261006T234228Z.json)
-[`pre-freeze-audit-v1.1-financially-approved-20261012T211839Z.json`](./pre-freeze-audit-v1.1-financially-approved-20261012T211839Z.json).
-A elegibilidade da assinatura final está registrada em
-[`researcher-approval-eligibility-v1.1-20261012T211839Z.json`](./researcher-approval-eligibility-v1.1-20261012T211839Z.json).
+manifests. Depois da revisão financeira e da aprovação do pesquisador, a
+auditoria pré-freeze passou 17/17 controles e o finalizador promoveu o protocolo
+v1.1 para `frozen` em 12/10/2026 UTC. O hash final é
+`38b1270bce29c4aa975f331d7c5b761e2abe89acd2545cdc11030318ceb4dbaf`.
+Os recibos finais estão em
+[`pre-freeze-audit-v1.1-ready-20261012T212014Z.json`](./pre-freeze-audit-v1.1-ready-20261012T212014Z.json)
+e
+[`protocol-freeze-finalization-v1.1-20261012T212014Z.json`](./protocol-freeze-finalization-v1.1-20261012T212014Z.json).
+O congelamento não autorizou execução cloud; a rotação do secret do novo corpus
+e a autorização financeira por bloco continuam pendentes.
 
 A validação curta do Oracle v1.1 foi consultada novamente após o cleanup. A
 exportação ainda informava a mesma posição — R$588,369730 bruto e
