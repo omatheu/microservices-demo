@@ -15,19 +15,22 @@ projeto, mas não isola contabilmente o custo do Oracle. O registro atual está
 em
 [`cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json`](./cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json).
 
-A aprovação financeira canônica do protocolo v1 foi retirada da área ativa
-pela emenda pré-coleta. A nova evidência passou na verificação automatizada de
-elegibilidade, sem gerar aprovação e sem autorizar execução cloud. O recibo
-está em
-[`financial-review-eligibility-v1.1-20261006T234330Z.json`](./financial-review-eligibility-v1.1-20261006T234330Z.json).
+A aprovação financeira canônica da v1.1 foi registrada em 12/10/2026 UTC após
+confirmação humana literal. Ela vincula a evidência pelo SHA-256, aprova somente
+o uso da baseline no congelamento e mantém `cloud_execution_authorized: false`.
+O preflight anterior permanece em
+[`financial-review-eligibility-v1.1-20261006T234330Z.json`](./financial-review-eligibility-v1.1-20261006T234330Z.json),
+e a revisão canônica está em
+[`../../protocol/approvals/cost-review-v1.json`](../../protocol/approvals/cost-review-v1.json).
 
 O bundle determinístico da emenda congelou as cinco políticas e os dois
 manifests, preservando o protocolo como `pre-registration-candidate` e a coleta
-desabilitada. A auditoria passou 15/17 controles; restam somente a nova revisão
-financeira e a nova aprovação do pesquisador. Os recibos estão em
+desabilitada. Depois da revisão financeira, a auditoria passou 16/17 controles;
+resta somente a aprovação do pesquisador. Os recibos estão em
 [`protocol-freeze-candidate-v1.1-20261006T234228Z.json`](./protocol-freeze-candidate-v1.1-20261006T234228Z.json)
-e
-[`pre-freeze-audit-v1.1-policies-frozen-20261006T234330Z.json`](./pre-freeze-audit-v1.1-policies-frozen-20261006T234330Z.json).
+[`pre-freeze-audit-v1.1-financially-approved-20261012T211839Z.json`](./pre-freeze-audit-v1.1-financially-approved-20261012T211839Z.json).
+A elegibilidade da assinatura final está registrada em
+[`researcher-approval-eligibility-v1.1-20261012T211839Z.json`](./researcher-approval-eligibility-v1.1-20261012T211839Z.json).
 
 A validação curta do Oracle v1.1 foi consultada novamente após o cleanup. A
 exportação ainda informava a mesma posição — R$588,369730 bruto e

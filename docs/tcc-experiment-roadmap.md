@@ -700,14 +700,17 @@ R$944,403351 de margem. O registro está em
 
 O bundle determinístico foi aplicado às cinco políticas e aos dois manifests,
 com os hashes dependentes recalculados e sem liberar a coleta. O auditor
-pré-freeze agora passa 15/17 requisitos; restam somente a revisão financeira
-humana e a aprovação do pesquisador para o protocolo exato de SHA-256
+pré-freeze agora passa 16/17 requisitos. A revisão financeira humana da v1.1
+foi registrada em 12/10/2026 UTC e resta somente a aprovação do pesquisador
+para o protocolo exato de SHA-256
 `e2fc8b960850c59de91fc0d576e4ed664b1b801a4fe40016500b412a6ce3c485`.
 Nenhuma dessas etapas autoriza execução experimental. Os registros estão em
 [`../experiment/evidence/finance/protocol-freeze-candidate-v1.1-20261006T234228Z.json`](../experiment/evidence/finance/protocol-freeze-candidate-v1.1-20261006T234228Z.json),
 [`../experiment/evidence/finance/financial-review-eligibility-v1.1-20261006T234330Z.json`](../experiment/evidence/finance/financial-review-eligibility-v1.1-20261006T234330Z.json)
 e
-[`../experiment/evidence/finance/pre-freeze-audit-v1.1-policies-frozen-20261006T234330Z.json`](../experiment/evidence/finance/pre-freeze-audit-v1.1-policies-frozen-20261006T234330Z.json).
+[`../experiment/evidence/finance/pre-freeze-audit-v1.1-financially-approved-20261012T211839Z.json`](../experiment/evidence/finance/pre-freeze-audit-v1.1-financially-approved-20261012T211839Z.json).
+A elegibilidade da assinatura final está em
+[`../experiment/evidence/finance/researcher-approval-eligibility-v1.1-20261012T211839Z.json`](../experiment/evidence/finance/researcher-approval-eligibility-v1.1-20261012T211839Z.json).
 
 `prepare-financial-review.py` valida a saída real do billing contra o auditor
 selado, vincula caminho e SHA-256 e, somente com confirmação humana literal,
