@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 5 de outubro de 2026.
+> **Última verificação:** 12 de outubro de 2026.
 
 ## Objetivo do experimento
 
@@ -99,8 +99,8 @@ execução autorizada em cloud ou análise dos resultados.
 - [x] gerar uma prévia opaca inelegível para a coleta confirmatória;
 - [x] implementar o oráculo de validação independente;
 - [x] republicar e vincular por digest os três runtimes para a emenda v1.1;
-- [ ] congelar novamente o protocolo experimental emendado;
-- [ ] gerar e validar um novo corpus opaco após o novo congelamento;
+- [x] congelar novamente o protocolo experimental emendado;
+- [x] gerar e validar um novo corpus opaco após o novo congelamento;
 
 #### Pendentes para conclusão confirmatória
 
@@ -112,7 +112,7 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-### Caminho crítico atual — 05/10/2026
+### Caminho crítico atual — 12/10/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,
@@ -126,17 +126,19 @@ execução autorizada em cloud ou análise dos resultados.
    três runtimes e vinculá-los à mesma proveniência protegida;
 5. [concluído em 05/10/2026] repetir com sucesso a validação curta do runner
    Oracle no cluster, obter uma observação válida e realizar cleanup completo;
-6. renovar as aprovações financeira e do pesquisador, passar a auditoria 17/17,
-   congelar a v1.1, rotacionar a chave e gerar um novo corpus opaco;
+6. [concluído em 12/10/2026] renovar as aprovações financeira e do pesquisador,
+   passar a auditoria 17/17, congelar a v1.1, criar uma chave nova e gerar um
+   novo corpus opaco com 18 candidatas e três repetições;
 7. executar a comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
 8. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
    as evidências, remover a infraestrutura e conferir o custo final.
 
 Os controles passivos do Oracle, seu RBAC e a validação curta não pertencem
-mais ao caminho crítico. O próximo passo é preparar as políticas para o novo
-congelamento, renovar a revisão financeira e obter a aprovação do pesquisador;
-essas ações não autorizam por si mesmas uma coleta cloud.
+mais ao caminho crítico. O próximo passo é incorporar o congelamento na
+`main`, rotacionar o secret protegido para a chave v1.1 e repetir a auditoria
+de prontidão. A execução do primeiro bloco continua exigindo uma autorização
+cloud e financeira separada.
 
 ## Fases restantes
 
@@ -342,8 +344,9 @@ O runner agora também prepara e executa o `checkout-pdt-controller` como Job
 efêmero no namespace `pdt-system`, compara o plano emitido pelo container com o
 preflight e exige uma imagem imutável. A identidade GitHub possui um papel
 dedicado que permite apenas os recursos necessários a esse Job. O item
-“executar o controlador sob demanda” permanece pendente até a publicação por
-digest e um piloto cloud explicitamente autorizado comprovarem esse caminho.
+“executar o controlador sob demanda” permanece pendente; a publicação por
+digest já foi concluída, mas ainda falta um piloto cloud explicitamente
+autorizado comprovar esse caminho.
 
 O contrato de fidelidade pós-decisão também está implementado localmente. Para
 cada alternativa e repetição, ele exige identidade e hashes selados, compara a
@@ -528,11 +531,11 @@ Os operadores candidatos e os controles estão catalogados em
 Git, mas foi substituído antes da coleta pela emenda Oracle v1.1. O protocolo
 executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-voltou a `pre-registration-candidate`; mantém 18 candidatas, três repetições,
+foi novamente congelado em 12/10/2026; mantém 18 candidatas, três repetições,
 seis blocos, a mesma regra de agregação, o mesmo plano pareado e os mesmos
 limites operacionais. As aprovações e o corpus anteriores foram retirados da
 área ativa, o PR #9 foi fechado sem labels cloud e nenhuma observação
-confirmatória foi produzida. A emenda está vinculada em
+confirmatória foi produzida antes do novo congelamento. A emenda está vinculada em
 [`../experiment/protocol/amendments/oracle-v1.1-precollection.json`](../experiment/protocol/amendments/oracle-v1.1-precollection.json).
 
 Os 13 operadores definidos no protocolo continuam com materialização
@@ -699,18 +702,21 @@ R$944,403351 de margem. O registro está em
 [`../experiment/evidence/finance/cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json`](../experiment/evidence/finance/cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json).
 
 O bundle determinístico foi aplicado às cinco políticas e aos dois manifests,
-com os hashes dependentes recalculados e sem liberar a coleta. O auditor
-pré-freeze agora passa 16/17 requisitos. A revisão financeira humana da v1.1
-foi registrada em 12/10/2026 UTC e resta somente a aprovação do pesquisador
-para o protocolo exato de SHA-256
-`e2fc8b960850c59de91fc0d576e4ed664b1b801a4fe40016500b412a6ce3c485`.
-Nenhuma dessas etapas autoriza execução experimental. Os registros estão em
-[`../experiment/evidence/finance/protocol-freeze-candidate-v1.1-20261006T234228Z.json`](../experiment/evidence/finance/protocol-freeze-candidate-v1.1-20261006T234228Z.json),
-[`../experiment/evidence/finance/financial-review-eligibility-v1.1-20261006T234330Z.json`](../experiment/evidence/finance/financial-review-eligibility-v1.1-20261006T234330Z.json)
+com os hashes dependentes recalculados. A revisão financeira e a aprovação do
+pesquisador foram vinculadas à candidata exata; o auditor pré-freeze passou
+17/17 requisitos e o finalizador promoveu o protocolo v1.1 para `frozen` em
+12/10/2026 UTC. O hash do protocolo congelado é
+`38b1270bce29c4aa975f331d7c5b761e2abe89acd2545cdc11030318ceb4dbaf`.
+Os registros finais estão em
+[`../experiment/evidence/finance/pre-freeze-audit-v1.1-ready-20261012T212014Z.json`](../experiment/evidence/finance/pre-freeze-audit-v1.1-ready-20261012T212014Z.json)
 e
-[`../experiment/evidence/finance/pre-freeze-audit-v1.1-financially-approved-20261012T211839Z.json`](../experiment/evidence/finance/pre-freeze-audit-v1.1-financially-approved-20261012T211839Z.json).
-A elegibilidade da assinatura final está em
-[`../experiment/evidence/finance/researcher-approval-eligibility-v1.1-20261012T211839Z.json`](../experiment/evidence/finance/researcher-approval-eligibility-v1.1-20261012T211839Z.json).
+[`../experiment/evidence/finance/protocol-freeze-finalization-v1.1-20261012T212014Z.json`](../experiment/evidence/finance/protocol-freeze-finalization-v1.1-20261012T212014Z.json).
+
+Uma chave nova gerou o corpus confirmatório opaco v1.1 com 18 candidatas e
+três repetições por candidata. O arquivo público está versionado; a chave e o
+manifesto Oracle permanecem privados e ignorados pelo Git. A rotação do secret
+protegido para essa chave ainda está pendente e nenhuma execução cloud foi
+autorizada pelo congelamento.
 
 `prepare-financial-review.py` valida a saída real do billing contra o auditor
 selado, vincula caminho e SHA-256 e, somente com confirmação humana literal,
@@ -728,10 +734,10 @@ identidade e confirmação literal, vincula o SHA-256 exato do protocolo e mant�
 16/17 controles e permitiu concluir a auditoria 17/17; a v1.1 exige repetir
 essa aprovação somente depois dos outros 16 controles voltarem a passar.
 
-**Histórico:** esse critério de saída foi atingido para a v1 em 04/10/2026, mas
-foi reaberto antes da coleta pela emenda. A v1.1 ainda precisa ser congelada e
-receber um novo corpus opaco contendo controles seguros e mutações funcionais e
-não funcionais, sem rótulos acessíveis aos mecanismos.
+**Estado:** esse critério de saída foi atingido para a v1 em 04/10/2026, reaberto
+antes da coleta pela emenda e atingido novamente para a v1.1 em 12/10/2026. O
+novo corpus opaco contém controles seguros e mutações funcionais e não
+funcionais, sem rótulos acessíveis aos mecanismos.
 
 ### Fase 7 — Oráculo, validação e recalibração
 

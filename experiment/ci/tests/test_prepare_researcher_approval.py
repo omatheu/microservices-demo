@@ -68,14 +68,17 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
         self.clock.stop()
         self.repository.close()
 
-    def test_amended_repository_is_eligible_for_researcher_approval(self):
+    def test_frozen_repository_cannot_be_reapproved(self):
         result = MODULE.prepare(REPO_ROOT)
 
-        self.assertTrue(result["eligible_for_researcher_approval"])
+        self.assertFalse(result["eligible_for_researcher_approval"])
         self.assertFalse(result["approval_generated"])
         self.assertFalse(result["cloud_execution_authorized"])
-        self.assertEqual(["researcher-approval"], result["blocking_requirements"])
-        self.assertEqual(16, result["checks_passed"])
+        self.assertEqual(
+            {"collection-locked-before-freeze", "researcher-approval"},
+            set(result["blocking_requirements"]),
+        )
+        self.assertEqual(15, result["checks_passed"])
 
     def test_read_only_mode_accepts_only_researcher_as_remaining_blocker(self):
         with mock.patch.object(

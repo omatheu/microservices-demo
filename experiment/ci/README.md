@@ -50,9 +50,9 @@ e ao ambiente protegido antes de propô-los para os manifests congeláveis. O
 binder não concede autorização cloud nem substitui a revisão financeira.
 
 O ruleset Semgrep está versionado localmente e seu SHA-256 é verificado pelo
-gate. O modo confirmatório permanece bloqueado enquanto `policy.json` estiver
-com status `pre-registration-candidate`; a política completa só será congelada depois
-de protocolo, corpus, limiares e retenção do artefato serem definidos.
+gate. `policy.json` está congelado desde 06/10/2026 UTC e o protocolo v1.1 desde
+12/10/2026 UTC. O modo confirmatório ainda depende do corpus público exato, da
+revisão financeira por bloco e da autorização cloud separada.
 
 ## Gates atuais
 

@@ -89,13 +89,13 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_amended_and_collection_locked(self):
+    def test_active_protocol_is_amended_frozen_and_collection_enabled(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
         self.assertEqual("checkout-pdt-comparison-v1.1", value["protocol_id"])
-        self.assertEqual("pre-registration-candidate", value["status"])
-        self.assertFalse(value["confirmatory_collection_allowed"])
-        self.assertIsNone(value["frozen_at"])
+        self.assertEqual("frozen", value["status"])
+        self.assertTrue(value["confirmatory_collection_allowed"])
+        self.assertEqual("2026-10-12T21:20:14Z", value["frozen_at"])
         self.assertEqual("oracle-v1.1-precollection", value["amendment"]["amendment_id"])
 
     def test_current_candidate_reports_only_approval_blockers(self):
