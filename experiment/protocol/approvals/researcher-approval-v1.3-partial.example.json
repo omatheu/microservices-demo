@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.1.0",
+  "protocol_id": "checkout-pdt-comparison-v1.3",
+  "candidate_protocol_sha256": "REPLACE_WITH_SHA256_FROM_AUDIT",
+  "decision": "approve-protocol-freeze",
+  "approved_by": "REPLACE_WITH_RESEARCHER_NAME",
+  "approved_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "cloud_execution_authorized": false,
+  "prior_collection": {
+    "candidate_flows_started": 1,
+    "complete_decision_pairs": 0,
+    "oracle_adjudications": 0,
+    "oracle_labels_revealed": 0,
+    "evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation"
+  },
+  "acknowledgements": {
+    "protocol_reviewed": true,
+    "partial_collection_before_amendment_reviewed": true,
+    "prior_evidence_preserved_without_reinterpretation": true,
+    "no_oracle_labels_revealed_before_amendment": true,
+    "changes_require_new_protocol_version": true
+  }
+}

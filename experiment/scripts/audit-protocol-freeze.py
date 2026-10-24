@@ -238,6 +238,87 @@ def validate_cost_review(repo_root, protocol, cost_review):
     return True
 
 
+def prior_collection_context(protocol):
+    amendment = protocol.get("amendment")
+    if not isinstance(amendment, dict):
+        return None
+    started = amendment.get("confirmatory_observations_before_amendment")
+    if not isinstance(started, int) or isinstance(started, bool) or started < 0:
+        return None
+    if started == 0:
+        return {}
+
+    complete_pairs = amendment.get("complete_decision_pairs_before_amendment")
+    adjudications = amendment.get("oracle_adjudications_before_amendment")
+    labels_revealed = amendment.get("oracle_labels_revealed_before_amendment")
+    disposition = amendment.get("prior_evidence_disposition")
+    if (
+        not isinstance(complete_pairs, int)
+        or isinstance(complete_pairs, bool)
+        or not 0 <= complete_pairs <= started
+        or not isinstance(adjudications, int)
+        or isinstance(adjudications, bool)
+        or not 0 <= adjudications <= started
+        or labels_revealed != 0
+        or disposition
+        != "preserved-incomplete-without-reexecution-or-reinterpretation"
+    ):
+        return None
+    return {
+        "candidate_flows_started": started,
+        "complete_decision_pairs": complete_pairs,
+        "oracle_adjudications": adjudications,
+        "oracle_labels_revealed": labels_revealed,
+        "evidence_disposition": disposition,
+    }
+
+
+def validate_researcher_approval(protocol, protocol_sha256, approval):
+    context = prior_collection_context(protocol)
+    if context is None:
+        return False
+    common = bool(
+        isinstance(approval, dict)
+        and approval.get("protocol_id") == protocol.get("protocol_id")
+        and approval.get("candidate_protocol_sha256") == protocol_sha256
+        and approval.get("decision") == "approve-protocol-freeze"
+        and approval.get("cloud_execution_authorized") is False
+        and bool(approval.get("approved_by"))
+        and bool(RFC3339_PATTERN.fullmatch(approval.get("approved_at", "")))
+    )
+    if not common:
+        return False
+
+    acknowledgements = approval.get("acknowledgements")
+    if context == {}:
+        return bool(
+            approval.get("schema_version") == "1.0.0"
+            and isinstance(acknowledgements, dict)
+            and all(
+                acknowledgements.get(item) is True
+                for item in (
+                    "protocol_reviewed",
+                    "no_confirmatory_outcomes_observed",
+                    "changes_require_new_protocol_version",
+                )
+            )
+        )
+    return bool(
+        approval.get("schema_version") == "1.1.0"
+        and approval.get("prior_collection") == context
+        and isinstance(acknowledgements, dict)
+        and set(acknowledgements)
+        == {
+            "protocol_reviewed",
+            "partial_collection_before_amendment_reviewed",
+            "prior_evidence_preserved_without_reinterpretation",
+            "no_oracle_labels_revealed_before_amendment",
+            "changes_require_new_protocol_version",
+        }
+        and all(acknowledgements.values())
+    )
+
+
 def audit(repo_root, protocol, researcher_approval=None, cost_review=None):
     repo_root = pathlib.Path(repo_root)
     checks = []
@@ -414,23 +495,8 @@ def audit(repo_root, protocol, researcher_approval=None, cost_review=None):
     )
 
     protocol_sha256 = sha256_file(protocol_path)
-    approval_ok = (
-        isinstance(researcher_approval, dict)
-        and researcher_approval.get("schema_version") == "1.0.0"
-        and researcher_approval.get("protocol_id") == protocol.get("protocol_id")
-        and researcher_approval.get("candidate_protocol_sha256") == protocol_sha256
-        and researcher_approval.get("decision") == "approve-protocol-freeze"
-        and researcher_approval.get("cloud_execution_authorized") is False
-        and bool(researcher_approval.get("approved_by"))
-        and bool(RFC3339_PATTERN.fullmatch(researcher_approval.get("approved_at", "")))
-        and all(
-            researcher_approval.get("acknowledgements", {}).get(item) is True
-            for item in (
-                "protocol_reviewed",
-                "no_confirmatory_outcomes_observed",
-                "changes_require_new_protocol_version",
-            )
-        )
+    approval_ok = validate_researcher_approval(
+        protocol, protocol_sha256, researcher_approval
     )
     add_check(
         checks,

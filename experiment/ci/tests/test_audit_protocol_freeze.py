@@ -23,6 +23,22 @@ def protocol():
     return value
 
 
+def partial_collection_protocol():
+    value = protocol()
+    value["protocol_id"] = "checkout-pdt-comparison-v1.3"
+    value["amendment"] = {
+        "amendment_id": "orchestration-v1.3-partial-collection",
+        "confirmatory_observations_before_amendment": 1,
+        "complete_decision_pairs_before_amendment": 0,
+        "oracle_adjudications_before_amendment": 0,
+        "oracle_labels_revealed_before_amendment": 0,
+        "prior_evidence_disposition": (
+            "preserved-incomplete-without-reexecution-or-reinterpretation"
+        ),
+    }
+    return value
+
+
 def publication_binding():
     return {
         "schema_version": "1.0.0",
@@ -89,27 +105,27 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_amended_and_frozen(self):
+    def test_active_protocol_is_v13_frozen_after_partial_collection(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.2", value["protocol_id"])
+        self.assertEqual("checkout-pdt-comparison-v1.3", value["protocol_id"])
         self.assertEqual("frozen", value["status"])
         self.assertTrue(value["confirmatory_collection_allowed"])
-        self.assertEqual("2026-10-24T16:01:24Z", value["frozen_at"])
-        self.assertEqual("security-v1.2-precollection", value["amendment"]["amendment_id"])
-
-    def test_current_candidate_requires_only_researcher_approval(self):
-        result = MODULE.audit(
-            REPO_ROOT,
-            protocol(),
-            cost_review=MODULE.load(
-                REPO_ROOT / "experiment/protocol/approvals/cost-review-v1.json"
-            ),
+        self.assertEqual("2026-10-24T17:40:44Z", value["frozen_at"])
+        self.assertEqual(
+            "orchestration-v1.3-partial-collection",
+            value["amendment"]["amendment_id"],
         )
+        self.assertEqual(1, value["amendment"]["confirmatory_observations_before_amendment"])
+        self.assertEqual(0, value["amendment"]["oracle_labels_revealed_before_amendment"])
+
+    def test_current_candidate_requires_renewed_approvals(self):
+        result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
         self.assertEqual(
-            {"researcher-approval"}, set(result["blocking_requirements"])
+            {"researcher-approval", "financial-review"},
+            set(result["blocking_requirements"]),
         )
 
     def test_current_candidate_passes_implemented_and_hashed_inputs(self):
@@ -138,6 +154,44 @@ class AuditProtocolFreezeTests(unittest.TestCase):
 
         value["protected_environment"] = "unprotected"
         self.assertIsNone(MODULE.publication_binding_identity(value))
+
+    def test_partial_collection_requires_truthful_researcher_acknowledgements(self):
+        value = partial_collection_protocol()
+        protocol_sha256 = "f" * 64
+        context = MODULE.prior_collection_context(value)
+        approval = {
+            "schema_version": "1.1.0",
+            "protocol_id": value["protocol_id"],
+            "candidate_protocol_sha256": protocol_sha256,
+            "decision": "approve-protocol-freeze",
+            "approved_by": "researcher",
+            "approved_at": "2026-10-24T18:00:00Z",
+            "cloud_execution_authorized": False,
+            "prior_collection": context,
+            "acknowledgements": {
+                "protocol_reviewed": True,
+                "partial_collection_before_amendment_reviewed": True,
+                "prior_evidence_preserved_without_reinterpretation": True,
+                "no_oracle_labels_revealed_before_amendment": True,
+                "changes_require_new_protocol_version": True,
+            },
+        }
+
+        self.assertTrue(
+            MODULE.validate_researcher_approval(value, protocol_sha256, approval)
+        )
+        approval["acknowledgements"][
+            "no_oracle_labels_revealed_before_amendment"
+        ] = False
+        self.assertFalse(
+            MODULE.validate_researcher_approval(value, protocol_sha256, approval)
+        )
+
+    def test_partial_collection_context_rejects_any_revealed_label(self):
+        value = partial_collection_protocol()
+        value["amendment"]["oracle_labels_revealed_before_amendment"] = 1
+
+        self.assertIsNone(MODULE.prior_collection_context(value))
 
     def test_financial_review_requires_hash_bound_cost_export(self):
         with tempfile.TemporaryDirectory() as temporary:

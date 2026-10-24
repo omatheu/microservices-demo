@@ -1,14 +1,23 @@
 {
   "acknowledgements": {
     "changes_require_new_protocol_version": true,
-    "no_confirmatory_outcomes_observed": true,
+    "no_oracle_labels_revealed_before_amendment": true,
+    "partial_collection_before_amendment_reviewed": true,
+    "prior_evidence_preserved_without_reinterpretation": true,
     "protocol_reviewed": true
   },
-  "approved_at": "2026-10-24T16:01:14Z",
+  "approved_at": "2026-10-24T17:40:39Z",
   "approved_by": "omatheu",
-  "candidate_protocol_sha256": "d18dcce084928e9361dc2b98ba4bf52074bffbf39e8b976774fc01711b1a2d81",
+  "candidate_protocol_sha256": "78c6f1b4de66b612507c7e30ab21ed8339302248c7d84a69027a745db3828b94",
   "cloud_execution_authorized": false,
   "decision": "approve-protocol-freeze",
-  "protocol_id": "checkout-pdt-comparison-v1.2",
-  "schema_version": "1.0.0"
+  "prior_collection": {
+    "candidate_flows_started": 1,
+    "complete_decision_pairs": 0,
+    "evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
+    "oracle_adjudications": 0,
+    "oracle_labels_revealed": 0
+  },
+  "protocol_id": "checkout-pdt-comparison-v1.3",
+  "schema_version": "1.1.0"
 }

@@ -1,0 +1,20 @@
+{
+  "approval_generated": false,
+  "audit_protocol_sha256_matches": true,
+  "blocking_requirements": [
+    "researcher-approval"
+  ],
+  "candidate_protocol_sha256": "78c6f1b4de66b612507c7e30ab21ed8339302248c7d84a69027a745db3828b94",
+  "captured_at": "2026-10-24T17:34:18Z",
+  "check_count": 17,
+  "checks_passed": 16,
+  "cloud_execution_authorized": false,
+  "eligible_for_researcher_approval": true,
+  "gcp_mutation_performed": false,
+  "github_mutation_performed": false,
+  "mechanism": "researcher-approval-preparer",
+  "mode": "read-only-eligibility",
+  "protocol_id": "checkout-pdt-comparison-v1.3",
+  "required_acknowledgement": "APPROVE_RESEARCHER_PROTOCOL_FREEZE_AFTER_PARTIAL_COLLECTION",
+  "schema_version": "1.0.0"
+}

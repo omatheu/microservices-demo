@@ -10,6 +10,7 @@ import re
 DIGEST_PATTERN = re.compile(r"^[a-f0-9]{64}$")
 REQUIRED_INPUTS = {
     "ci_policy",
+    "conventional_workflow_outcome_validator",
     "conventional_ci_runner",
     "conventional_repetition_aggregator",
     "comparative_pipeline_runner",
@@ -20,6 +21,7 @@ REQUIRED_INPUTS = {
     "confirmatory_repetition_runner",
     "analysis_dataset_composer",
     "protocol_freeze_auditor",
+    "researcher_approval_preparer",
     "protocol_freeze_candidate_preparer",
     "protocol_freeze_finalizer",
     "runtime_publication_readiness_auditor",
@@ -32,6 +34,7 @@ REQUIRED_INPUTS = {
     "billing_export_infrastructure",
     "billing_cost_query",
     "validity_threat_register",
+    "confirmatory_orchestration_incident",
     "baseline_evidence_validator",
     "operational_baseline_summary",
     "checkout_baseline_summary",

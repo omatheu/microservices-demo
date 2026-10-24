@@ -192,6 +192,7 @@ jobs:
           echo "runner_exit_code=${exit_code}" >> "${GITHUB_OUTPUT}"
 
       - name: Seal an experimental candidate blocked before staging
+        id: sealed_control
         if: steps.candidate.outputs.experimental_cloud_eligible == 'true' && steps.local_ci.outputs.decision_file != ''
         shell: bash
         env:
@@ -201,10 +202,12 @@ jobs:
         run: |
           set -euo pipefail
           if [[ $(jq -er '.local_decision' "${LOCAL_DECISION}") == "block" ]]; then
+            control_decision="${EVIDENCE_DIR}/conventional-decision.json"
             python3 experiment/scripts/compose-conventional-decision.py \
               --candidate-definition "${CANDIDATE_DEFINITION}" \
               --local-ci-decision "${LOCAL_DECISION}" \
-              --output "${EVIDENCE_DIR}/conventional-decision.json"
+              --output "${control_decision}"
+            echo "decision_file=${control_decision}" >> "${GITHUB_OUTPUT}"
           fi
 
       - name: Upload conventional evidence
@@ -222,20 +225,18 @@ jobs:
         env:
           DECISION_FILE: ${{ steps.local_ci.outputs.decision_file }}
           RUNNER_EXIT_CODE: ${{ steps.local_ci.outputs.runner_exit_code }}
+          EXPERIMENTAL_CLOUD_ELIGIBLE: ${{ steps.candidate.outputs.experimental_cloud_eligible }}
+          SEALED_CONTROL_DECISION: ${{ steps.sealed_control.outputs.decision_file }}
         run: |
           set -euo pipefail
           [[ -n "${DECISION_FILE}" && -f "${DECISION_FILE}" ]]
-          [[ "${RUNNER_EXIT_CODE}" == "0" ]]
-          jq -e '
-            .local_decision == "pass"
-            and (
-              (
-                .change_class == "release-relevant"
-                and .eligible_for_staging == true
-              )
-              or (
-                .change_class == "documentation-only"
-                and .eligible_for_staging == false
-              )
-            )
-          ' "${DECISION_FILE}" >/dev/null
+          arguments=(
+            --local-decision "${DECISION_FILE}"
+            --runner-exit-code "${RUNNER_EXIT_CODE}"
+            --experimental-cloud-eligible "${EXPERIMENTAL_CLOUD_ELIGIBLE}"
+          )
+          if [[ -n "${SEALED_CONTROL_DECISION}" ]]; then
+            arguments+=(--conventional-decision "${SEALED_CONTROL_DECISION}")
+          fi
+          python3 experiment/scripts/validate-conventional-workflow-outcome.py \
+            "${arguments[@]}"
