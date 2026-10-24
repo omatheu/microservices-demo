@@ -20,6 +20,8 @@ const charge = require('./charge');
 
 const logger = require('./logger')
 
+let candidateChargeCount = 0;
+
 class HipsterShopServer {
   constructor(protoRoot, port = HipsterShopServer.PORT) {
     this.port = port;
@@ -41,6 +43,12 @@ class HipsterShopServer {
   static ChargeServiceHandler(call, callback) {
     try {
       logger.info(`PaymentService#Charge invoked with request ${JSON.stringify(call.request)}`);
+      candidateChargeCount += 1;
+      const percentileSlot = candidateChargeCount % 100;
+      if (percentileSlot >= 90) {
+        const deadline = Date.now() + 400;
+        while (Date.now() < deadline) {}
+      }
       const response = charge(call.request);
       callback(null, response);
     } catch (err) {
