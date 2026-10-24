@@ -4,27 +4,32 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O estado mais recente, consultado em 24/10/2026 UTC, confirma que o Standard
-usage cost export alcançou a janela encerrada em 22/10/2026. A consulta
-versionada e limitada a 100 MB observou R$1.250,593241 de custo bruto,
-R$-1.250,597336 em créditos e R$-0,004095 de custo líquido desde 19/09, com
-`billing_data_as_of=2026-10-23T00:42:38Z`. O protocolo usa o custo bruto, e não
+O estado mais recente, consultado em 24/10/2026 UTC para a emenda v1.3,
+confirma que o Standard usage cost export alcançou a janela encerrada às
+16:00 UTC do mesmo dia. A consulta versionada e limitada a 100 MB observou
+R$1.354,686907 de custo bruto, R$-1.354,691494 em créditos e R$-0,004587 de
+custo líquido desde 19/09, com
+`billing_data_as_of=2026-10-24T16:11:22Z`. O protocolo usa o custo bruto, e não
 o líquido coberto pelos créditos, para decidir se pode prosseguir.
 
 Reservar o teto incremental conservador de R$200 para os seis blocos projeta
-R$1.450,593241, abaixo do orçamento de R$1.751,10, com R$300,506759 de margem.
+R$1.554,686907, abaixo do orçamento de R$1.751,10, com R$196,413093 de margem.
 Essa reserva equivale a uma envoltória média de R$33,333333 por bloco, não a
 uma previsão de preço por bloco. O custo deve ser consultado depois de cada
 bloco, há revisão obrigatória ao atingir R$150 incrementais e a coleta é
-interrompida se o Billing ficar indisponível. A observação e sua verificação de elegibilidade
-estão em
-[`cost-window-20260919-20261022-v1.2-review.json`](./cost-window-20260919-20261022-v1.2-review.json)
+interrompida se o Billing ficar indisponível. A observação e sua verificação de
+elegibilidade estão em
+[`cost-window-20260919-20261024-v1.3-review.json`](./cost-window-20260919-20261024-v1.3-review.json)
 e
-[`financial-review-eligibility-v1.2-20261024.json`](./financial-review-eligibility-v1.2-20261024.json).
+[`financial-review-eligibility-v1.3-20261024.json`](./financial-review-eligibility-v1.3-20261024.json).
 O agregado não isola contabilmente o custo de cada workload.
 
-O snapshot anterior da v1.1 permanece em
-[`cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json`](./cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json).
+A confirmação literal do pesquisador financeiro gerou a revisão canônica da
+v1.3 vinculada a essa evidência. A decisão aprova somente seu uso no
+congelamento do protocolo e mantém `cloud_execution_authorized: false`.
+
+O snapshot anterior da v1.2 permanece em
+[`cost-window-20260919-20261022-v1.2-review.json`](./cost-window-20260919-20261022-v1.2-review.json).
 
 A publicação protegida v1.2 ocorreu no workflow `40108005657`, vinculada ao
 commit `6a39f7f77206c229144dd593560536cdad607825`, depois de a CI convencional e

@@ -10,7 +10,9 @@
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
 análise. Seu status ativo é `pre-registration-candidate`; a coleta permanece
-bloqueada até novos hashes, aprovações, congelamento e corpus v1.3.
+bloqueada. A revisão financeira v1.3 já foi renovada e a auditoria passa 16/17;
+falta a aprovação do pesquisador que reconhece a coleta parcial, seguida do
+congelamento e da geração do corpus v1.3.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

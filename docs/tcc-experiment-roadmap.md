@@ -144,10 +144,10 @@ execução autorizada em cloud ou análise dos resultados.
    decisão convencional v1.2 como observação parcial; o CI selou `block`, mas
    um defeito terminal de orquestração impediu o Oracle pré-artefato, sem
    staging, PDT, cloud ou abertura do rótulo;
-11. [em preparação, 15/17 controles] incorporar a emenda operacional v1.3,
-   corrigir o workflow e renovar hashes; faltam somente a revisão financeira e
-   a aprovação específica do pesquisador para a coleta parcial antes de
-   congelar novamente e gerar um corpus opaco com chave nova;
+11. [em preparação, 16/17 controles] incorporar a emenda operacional v1.3,
+   corrigir o workflow e renovar hashes e revisão financeira; falta somente a
+   aprovação específica do pesquisador para a coleta parcial antes de congelar
+   novamente e gerar um corpus opaco com chave nova;
 12. executar a comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
 13. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
@@ -160,8 +160,8 @@ foram publicados e vinculados e o corpus v1.2 foi gerado após o congelamento.
 O PR #12 foi incorporado, mas a v1.2 deixou de ser o protocolo ativo após a
 observação parcial do PR #13. A emenda v1.3 foi autorizada e os componentes
 locais voltaram a ficar congelados e vinculados, sem execução cloud; a auditoria
-passa 15/17 controles. O caminho crítico agora é renovar a revisão financeira
-e obter a aprovação do pesquisador que reconhece a coleta parcial, congelar
+passa 16/17 controles depois da renovação financeira. O caminho crítico agora
+é obter a aprovação do pesquisador que reconhece a coleta parcial, congelar
 17/17 e gerar um novo corpus. A nova chave só será instalada no secret
 protegido em ação remota separada; o primeiro bloco confirmatório continua
 exigindo autorizações cloud e financeiras independentes.
@@ -775,9 +775,9 @@ de segurança v1.2 reabriu o critério antes da coleta; em 24/10/2026, publicaç
 vínculos, revisão financeira e aprovação foram renovados, o auditor pré-freeze
 passou 17/17, o protocolo foi congelado e o corpus opaco novo foi validado. A
 observação parcial do PR #13 reabriu o critério na emenda v1.3: os componentes
-e hashes locais estão prontos em 15/17, mas as duas aprovações v1.2 foram
-retiradas dos caminhos canônicos e precisam ser renovadas. Nenhuma execução
-confirmatória ou autorização cloud decorre desse estado.
+e hashes locais estão prontos, a revisão financeira foi renovada e a auditoria
+passa 16/17. Falta a aprovação do pesquisador específica para a coleta parcial.
+Nenhuma execução confirmatória ou autorização cloud decorre desse estado.
 
 ### Fase 7 — Oráculo, validação e recalibração
 
