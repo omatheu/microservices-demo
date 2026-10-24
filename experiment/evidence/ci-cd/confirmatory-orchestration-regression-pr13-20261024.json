@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "confirmatory-orchestration-regression-pr13-20261024",
+  "recorded_at": "2026-10-24T16:22:14Z",
+  "classification": "confirmatory-pipeline-orchestration-defect",
+  "repository": "omatheu/microservices-demo",
+  "protocol": {
+    "protocol_id": "checkout-pdt-comparison-v1.2",
+    "protocol_sha256": "8a34f553287d688b2cf38dfa2db6b29caa078bd191ce7d04a03fb5e707870c51",
+    "pull_request_workflow_sha256": "937f74b4bdbfe584b44dd01d1bc32ea99eeba62d605fede3e63fbb0cacb8e1fb",
+    "corpus_id": "corpus-2ohyzpel2lonq",
+    "public_corpus_sha256": "594380bc0a7049eae98b031f27e62180ea862d81821f7ec88bb2ecf49f9db4e1"
+  },
+  "candidate_flow": {
+    "candidate_id": "cand-pgxm2lzgjfwqgnom",
+    "pull_request_number": 13,
+    "base_commit": "88c851aa0d60314877b30f5e1f1f3b18f654b561",
+    "candidate_commit": "4ed9bbc67d78a251a663958367b0afbbcdbf1a08",
+    "workflow_run_id": 40110941002,
+    "workflow_run_url": "https://github.com/omatheu/microservices-demo/actions/runs/40110941002",
+    "conventional_artifact": {
+      "artifact_id": 12566257648,
+      "name": "conventional-ci-pr-13-4ed9bbc67d78a251a663958367b0afbbcdbf1a08",
+      "created_at": "2026-10-24T16:22:12Z",
+      "retention_expires_at": "2026-11-07T16:22:11Z",
+      "local_ci_decision_sha256": "9eaaa0f3396d2ae9a9b7d79acfe51012b2db68fc5850fcbf200241d6b81c972d",
+      "conventional_decision_sha256": "7abbe3f815f78f488ae7e88afeadc3992232ca57c277051cee310171f1a40efe"
+    },
+    "sealed_control_decision": "block",
+    "staging_executed": false,
+    "pdt_executed": false,
+    "oracle_adjudication_executed": false,
+    "oracle_label_revealed_for_candidate": false,
+    "cloud_execution_performed": false,
+    "complete_decision_pair": false
+  },
+  "defect": {
+    "observed_behavior": "The workflow created and uploaded a valid sealed conventional block, then failed its terminal enforcement because that step accepted only a passing local decision.",
+    "downstream_impact": "The protected paired workflow requires a successful conventional workflow conclusion, so the registered preartifact Oracle path could not start.",
+    "candidate_caused_gate_failure_is_result": true,
+    "terminal_workflow_failure_is_infrastructure_defect": true
+  },
+  "bias_controls": {
+    "candidate_decision_must_not_be_rerun_or_reinterpreted": true,
+    "private_operator_or_label_recorded_here": false,
+    "threshold_or_model_change_permitted": false,
+    "v1_2_evidence_preserved_as_incomplete_flow": true,
+    "complete_v1_2_candidate_pairs_before_detection": 0
+  },
+  "proposed_remediation": {
+    "allow_only_a_recognized_experimental_candidate_with_a_hash_bound_sealed_control_block_to_complete_the_conventional_workflow": true,
+    "keep_non_experimental_pull_request_blocks_fail_closed": true,
+    "change_decision_policy": false,
+    "change_slos_or_thresholds": false,
+    "change_pdt_model": false,
+    "change_oracle_rules": false,
+    "requires_new_protocol_freeze": true,
+    "requires_new_blinded_corpus": true
+  }
+}

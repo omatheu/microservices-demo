@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "orchestration-v1.3-partial-collection",
+  "status": "proposed-awaiting-researcher-authorization",
+  "proposed_at": "2026-10-24T16:22:14Z",
+  "authorization_literal": null,
+  "authorized_at": null,
+  "reason": "The first v1.2 confirmatory candidate produced a valid, hash-bound conventional block, but the terminal pull-request workflow step accepted only passing local CI decisions. This converted a substantive control outcome into a workflow failure and prevented the preregistered preartifact Oracle path from starting.",
+  "confirmatory_observations_collected": {
+    "candidate_flows_started": 1,
+    "sealed_conventional_decisions": 1,
+    "complete_decision_pairs": 0,
+    "oracle_adjudications": 0,
+    "oracle_labels_revealed": 0
+  },
+  "superseded_freeze": {
+    "git_commit": "88c851aa0d60314877b30f5e1f1f3b18f654b561",
+    "protocol_id": "checkout-pdt-comparison-v1.2",
+    "protocol_sha256": "8a34f553287d688b2cf38dfa2db6b29caa078bd191ce7d04a03fb5e707870c51",
+    "frozen_at": "2026-10-24T16:01:24Z",
+    "corpus_id": "corpus-2ohyzpel2lonq",
+    "public_corpus_sha256": "594380bc0a7049eae98b031f27e62180ea862d81821f7ec88bb2ecf49f9db4e1"
+  },
+  "incident_evidence": {
+    "path": "experiment/evidence/ci-cd/confirmatory-orchestration-regression-pr13-20261024.json",
+    "sha256": "2e16ed46a920b5680c439cb30c7e06a742d31ce0acf7762775c2f313f4d5b47c"
+  },
+  "authorized_changes_if_approved": [
+    "Add a fail-closed validator for the terminal conventional workflow outcome.",
+    "Permit only a recognized experimental candidate with a canonical exit status and a complete hash-bound conventional block to continue to the preartifact Oracle path.",
+    "Keep every non-experimental pull request block as a failed workflow.",
+    "Record the v1.2 candidate flow as incomplete without rerunning or reinterpreting its sealed conventional decision.",
+    "Retire v1.2 from active confirmatory collection without opening the candidate Oracle label.",
+    "Repeat input hashing, approvals and protocol freeze as v1.3, then rotate the blinding key and generate a new opaque corpus."
+  ],
+  "explicitly_unchanged": [
+    "research question and primary estimand",
+    "candidate count, block count and repetition rules",
+    "mutation operators and parameter spaces",
+    "CI and staging gate policies",
+    "PDT model, thresholds, alternatives and fidelity policy",
+    "Oracle classification rules",
+    "financial limits and cleanup requirements"
+  ],
+  "cloud_execution_authorized": false,
+  "runtime_publication_authorized": false,
+  "secret_update_authorized": false
+}
