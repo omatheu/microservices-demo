@@ -10,7 +10,7 @@ permanece recuperável no commit `0ee94a90`, vinculado pelo registro
 `../amendments/oracle-v1.1-precollection.json`. A prévia em `../preview/` é
 histórica e nunca será promovida.
 
-A geração definitiva v1.2 ocorreu em 24/10/2026 UTC, somente depois da
+A geração v1.2 ocorreu em 24/10/2026 UTC, somente depois da
 auditoria pré-freeze 17/17 e do congelamento do protocolo. Ela criou
 simultaneamente:
 
@@ -33,16 +33,24 @@ fluxo incompleto e não será repetida ou reinterpretada. A emenda autorizada
 retirou o corpus v1.2 da área ativa e exige protocolo v1.3, nova chave e novo
 corpus antes de retomar a coleta.
 
-Não existe corpus confirmatório ativo enquanto a v1.3 permanecer em
-`pre-registration-candidate`. O próximo `public-corpus.json` só poderá ser
-criado depois de nova auditoria 17/17 e congelamento.
+Depois da revisão financeira e da aprovação do pesquisador específica para a
+coleta parcial, a auditoria v1.3 passou 17/17 e o protocolo foi congelado em
+24/10/2026 UTC. Uma chave nova gerou o corpus confirmatório ativo
+`corpus-hlwmpwybztcm4`, com 18 identificadores opacos, três repetições por
+candidata e seis blocos de três. O arquivo público está vinculado ao protocolo
+congelado de SHA-256
+`3c6612fc93e1ec5e6e4267d533bdfac0d985fe813420351da3b9648c1afb7b32`
+e tem SHA-256
+`89bd95cf40e223e3f82b9f70edcf44f4c5a0dd88b080e84121a2daaeb825c760`.
+Seu compromisso Oracle é
+`f43197555700b8bbdfc0d49395c225107d6806a9d9f53ffa1488510a334c1f49`.
 
 Os manifestos e as chaves v1.1 e v1.2 permanecem somente como arquivos
-históricos em diretório local privado, com permissões 0600, e nunca podem ser
-copiados para este diretório versionado. Nenhuma chave v1.3 existe ainda.
-Depois do novo congelamento, o secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` deverá ser substituído exclusivamente pela chave
-v1.3 em uma ação remota separada e autorizada.
+históricos em diretório local privado. A chave e o manifesto Oracle v1.3 também
+permanecem somente no diretório privado ignorado pelo Git, com permissões 0600,
+e nunca podem ser copiados para este diretório versionado. O secret protegido
+`TCC_ORACLE_BLINDING_KEY_B64` ainda não foi alterado; sua substituição pela
+chave v1.3 exige uma ação remota separada e autorizada.
 
 O mesmo ambiente protegido deve conter:
 

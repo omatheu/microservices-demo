@@ -28,6 +28,16 @@ A confirmação literal do pesquisador financeiro gerou a revisão canônica da
 v1.3 vinculada a essa evidência. A decisão aprova somente seu uso no
 congelamento do protocolo e mantém `cloud_execution_authorized: false`.
 
+Depois da aprovação do pesquisador específica para a coleta parcial, a
+auditoria pré-freeze passou 17/17 e o finalizador promoveu a v1.3 para `frozen`
+em 24/10/2026 UTC. O hash final do protocolo é
+`3c6612fc93e1ec5e6e4267d533bdfac0d985fe813420351da3b9648c1afb7b32`.
+Os recibos estão em
+[`pre-freeze-audit-v1.3-ready-20261024T174044Z.json`](./pre-freeze-audit-v1.3-ready-20261024T174044Z.json)
+e
+[`protocol-freeze-finalization-v1.3-20261024T174044Z.json`](./protocol-freeze-finalization-v1.3-20261024T174044Z.json).
+O congelamento e as aprovações mantêm `cloud_execution_authorized: false`.
+
 O snapshot anterior da v1.2 permanece em
 [`cost-window-20260919-20261022-v1.2-review.json`](./cost-window-20260919-20261022-v1.2-review.json).
 

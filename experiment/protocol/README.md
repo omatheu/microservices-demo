@@ -1,7 +1,7 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** emenda operacional v1.3 autorizada e protocolo novamente em
-> `pre-registration-candidate`; não há corpus ativo nem execução cloud autorizada.
+> **Status:** emenda operacional v1.3 congelada após auditoria 17/17; o corpus
+> opaco v1.3 está ativo, mas não há execução cloud autorizada.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -9,10 +9,10 @@
 
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
-análise. Seu status ativo é `pre-registration-candidate`; a coleta permanece
-bloqueada. A revisão financeira v1.3 já foi renovada e a auditoria passa 16/17;
-falta a aprovação do pesquisador que reconhece a coleta parcial, seguida do
-congelamento e da geração do corpus v1.3.
+análise. Seu status ativo é `frozen`, com SHA-256
+`3c6612fc93e1ec5e6e4267d533bdfac0d985fe813420351da3b9648c1afb7b32`.
+O congelamento metodológico não concede autorização cloud; a execução continua
+dependendo dos gates financeiros e humanos independentes.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
@@ -52,8 +52,10 @@ nenhum staging, PDT ou workload cloud foi executado. A emenda
 [`amendments/orchestration-v1.3-partial-collection.json`](./amendments/orchestration-v1.3-partial-collection.json)
 registra essa observação parcial sem repeti-la ou reinterpretá-la, corrige
 somente a orquestração fail-closed e exige uma aprovação que reconheça
-explicitamente a coleta parcial. O corpus v1.2 foi retirado da área ativa; uma
-nova chave e um novo corpus serão gerados apenas depois do congelamento v1.3.
+explicitamente a coleta parcial. O corpus v1.2 foi retirado da área ativa. Após
+a auditoria 17/17 e o congelamento v1.3, uma nova chave local gerou o corpus
+opaco `corpus-hlwmpwybztcm4`; a chave ainda não foi instalada no secret
+protegido.
 
 ## Objetivo
 
