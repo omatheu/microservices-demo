@@ -32,18 +32,19 @@ O namespace `pdt-system` já existe no cluster, com quota própria e nenhum pod
 permanente. A captura de estado, a execução contrafactual, o modelo e a decisão
 prescritiva são coordenados pela aplicação
 [`controller/checkout_pdt_controller.py`](./controller/checkout_pdt_controller.py).
-O runtime possui Dockerfile versionado e gerador de Job isolado sob demanda;
-a imagem ainda não foi publicada e o Job ainda não foi aplicado no cluster.
-Até essa validação, ele deve ser descrito como controlador batch empacotado,
-não como serviço permanentemente implantado.
+O runtime possui Dockerfile versionado e gerador de Job isolado sob demanda.
+A imagem foi publicada por digest na janela protegida da emenda v1.1 e o
+manifest foi congelado; o Job ainda não foi aplicado no cluster. Ele continua
+sendo um controlador batch sob demanda, não um serviço permanentemente
+implantado.
 
 Após uma publicação autorizada, `bind-runtime-publication.py` só aceita o
 digest do `checkout-pdt-controller` se a mesma evidência provar commit, árvore,
 execução no ambiente protegido, revisão financeira e os hashes dos relatórios
 SBOM/scan da imagem exata enviada. O binder reabre esses relatórios, confere o
 tag, o image ID e a ausência de achados bloqueantes antes de gerar uma proposta
-de manifest ainda `pre-registration-candidate`; vincular a imagem não congela
-o protocolo nem autoriza executar o Job.
+de manifest. A proposta vinculada foi congelada coordenadamente em 06/10/2026;
+nem o binding nem o congelamento autorizam executar o Job.
 
 O vínculo da instância física/digital é declarado em
 [`source-binding.json`](./source-binding.json). O namespace `operational` é a

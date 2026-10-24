@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 5 de outubro de 2026.
+> **Última verificação:** 24 de outubro de 2026.
 
 ## Objetivo do experimento
 
@@ -98,9 +98,9 @@ execução autorizada em cloud ou análise dos resultados.
 - [x] implementar os 13 operadores do corpus candidato e validar todos os seus espaços de parâmetros;
 - [x] gerar uma prévia opaca inelegível para a coleta confirmatória;
 - [x] implementar o oráculo de validação independente;
-- [x] republicar e vincular por digest os três runtimes para a emenda v1.1;
-- [ ] congelar novamente o protocolo experimental emendado;
-- [ ] gerar e validar um novo corpus opaco após o novo congelamento;
+- [x] republicar e vincular por digest os três runtimes para a emenda v1.2;
+- [x] congelar novamente o protocolo experimental emendado;
+- [x] gerar e validar um novo corpus opaco após o novo congelamento;
 
 #### Pendentes para conclusão confirmatória
 
@@ -112,7 +112,7 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-### Caminho crítico atual — 05/10/2026
+### Caminho crítico atual — 24/10/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,
@@ -126,17 +126,32 @@ execução autorizada em cloud ou análise dos resultados.
    três runtimes e vinculá-los à mesma proveniência protegida;
 5. [concluído em 05/10/2026] repetir com sucesso a validação curta do runner
    Oracle no cluster, obter uma observação válida e realizar cleanup completo;
-6. renovar as aprovações financeira e do pesquisador, passar a auditoria 17/17,
-   congelar a v1.1, rotacionar a chave e gerar um novo corpus opaco;
-7. executar a comparação pareada, o gate humano e o Oracle em blocos
+6. [concluído em 12/10/2026] renovar as aprovações financeira e do pesquisador,
+   passar a auditoria 17/17, congelar a v1.1, criar uma chave nova e gerar um
+   novo corpus opaco com 18 candidatas e três repetições;
+7. [concluído em 12/10/2026] preservar a v1.1, registrar os CVEs encontrados
+   pelo gate do PR #12 e autorizar a emenda pré-coleta v1.2 sem relaxar o scan;
+8. [concluído em 24/10/2026] corrigir e validar localmente as dependências,
+   renovar a observação financeira limitada a 100 MB e registrar a autorização
+   separada para publicação; o primeiro novo run falhou fechado ao detectar
+   CVEs recém-publicados, as correções adicionais passaram sem findings
+   HIGH/CRITICAL corrigíveis e os três runtimes foram publicados e vinculados
+   por digest sob uma nova proveniência protegida;
+9. [concluído na candidata do PR #12 em 24/10/2026] registrar a aprovação do
+   pesquisador, finalizar o congelamento v1.2, rotacionar a chave e gerar um
+   corpus opaco novo; o auditor pré-freeze passou 17/17 controles;
+10. executar a comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
-8. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
+11. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
    as evidências, remover a infraestrutura e conferir o custo final.
 
 Os controles passivos do Oracle, seu RBAC e a validação curta não pertencem
-mais ao caminho crítico. O próximo passo é preparar as políticas para o novo
-congelamento, renovar a revisão financeira e obter a aprovação do pesquisador;
-essas ações não autorizam por si mesmas uma coleta cloud.
+mais ao caminho crítico. A nova observação financeira passou, o gate de
+segurança bloqueou novos CVEs antes do primeiro push, os runtimes corrigidos
+foram publicados e vinculados e o corpus v1.2 foi gerado após o congelamento.
+O próximo passo é revisar e incorporar o PR #12 e, em ação remota separada,
+instalar a nova chave no secret protegido. O primeiro bloco confirmatório
+continua exigindo autorizações cloud e financeiras independentes.
 
 ## Fases restantes
 
@@ -205,7 +220,7 @@ um simples namespace de staging.
   protobuf canônico;
 - [x] executar análise de segredos, SAST e dependências no escopo inicial;
 - [x] vendorizar o ruleset SAST e verificar seu hash;
-- [ ] congelar a política completa depois do protocolo e do corpus;
+- [x] congelar a política completa antes da coleta confirmatória;
 - [x] construir cada imagem afetada, gerar SBOM e analisar vulnerabilidades;
 - [x] publicar artefatos aprovados por digest e vinculá-los ao staging;
 - [x] renderizar e validar manifests e IaC sem aplicar recursos;
@@ -342,8 +357,9 @@ O runner agora também prepara e executa o `checkout-pdt-controller` como Job
 efêmero no namespace `pdt-system`, compara o plano emitido pelo container com o
 preflight e exige uma imagem imutável. A identidade GitHub possui um papel
 dedicado que permite apenas os recursos necessários a esse Job. O item
-“executar o controlador sob demanda” permanece pendente até a publicação por
-digest e um piloto cloud explicitamente autorizado comprovarem esse caminho.
+“executar o controlador sob demanda” permanece pendente; a publicação por
+digest já foi concluída, mas ainda falta um piloto cloud explicitamente
+autorizado comprovar esse caminho.
 
 O contrato de fidelidade pós-decisão também está implementado localmente. Para
 cada alternativa e repetição, ele exige identidade e hashes selados, compara a
@@ -524,16 +540,19 @@ durante a decisão.
 Os operadores candidatos e os controles estão catalogados em
 [`tcc-candidate-scenarios.md`](./tcc-candidate-scenarios.md).
 
-**Estado:** o congelamento de 04/10/2026 permanece preservado no histórico do
-Git, mas foi substituído antes da coleta pela emenda Oracle v1.1. O protocolo
-executável em
+**Estado:** os congelamentos v1 e v1.1 permanecem preservados no histórico do
+Git. A v1.1 foi congelada em 12/10/2026, mas o gate de imagens do PR #12
+detectou quatro CVEs HIGH corrigíveis antes de qualquer coleta confirmatória.
+Depois da emenda e de uma nova descoberta fail-closed, os runtimes foram
+corrigidos, escaneados e publicados por digest. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-voltou a `pre-registration-candidate`; mantém 18 candidatas, três repetições,
-seis blocos, a mesma regra de agregação, o mesmo plano pareado e os mesmos
-limites operacionais. As aprovações e o corpus anteriores foram retirados da
-área ativa, o PR #9 foi fechado sem labels cloud e nenhuma observação
-confirmatória foi produzida. A emenda está vinculada em
-[`../experiment/protocol/amendments/oracle-v1.1-precollection.json`](../experiment/protocol/amendments/oracle-v1.1-precollection.json).
+está novamente `frozen` como v1.2; mantém 18 candidatas, três repetições, seis
+blocos, a mesma regra de agregação, o mesmo plano pareado e os mesmos limites
+operacionais. As aprovações e imagens foram renovadas, e o corpus v1.1 foi
+substituído antes da coleta. As duas emendas estão vinculadas em
+[`oracle-v1.1-precollection.json`](../experiment/protocol/amendments/oracle-v1.1-precollection.json)
+e
+[`security-v1.2-precollection.json`](../experiment/protocol/amendments/security-v1.2-precollection.json).
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -545,11 +564,14 @@ imagens materializadas foi concluída para as 14 candidatas de runtime. A
 publicação de 04/10 foi preservada como evidência histórica. Em 05/10, o PR
 #10 reconstruiu, escaneou e publicou os três runtimes corrigidos sob uma única
 proveniência protegida, sem credenciais GKE e sem executar staging, PDT ou
-Oracle. Os novos digests estão vinculados aos manifests candidatos. A
-revalidação Kubernetes posterior executou os 35 casos funcionais e os três
+Oracle. Esses digests agora são históricos; os manifests v1.2 vinculam a nova
+publicação protegida do workflow `40108005657`. A revalidação Kubernetes
+anterior executou os 35 casos funcionais e os três
 perfis de desempenho, produziu uma observação válida e confirmou o cleanup. A
-coleta confirmatória continua pendente e exige congelamento e autorizações
-cloud separadas.
+coleta confirmatória continua pendente. A correção v1.2 passou localmente e no
+gate de PR nos builds, SBOMs e scans das três imagens experimentais e do
+`checkoutservice`, com zero achados HIGH/CRITICAL corrigíveis. A publicação
+protegida foi concluída e sua janela foi desarmada imediatamente depois.
 
 A matriz local final, vinculada ao commit `c32a34b2`, executou os 22 gates da
 CI e 17 validações de artefato. As quatro candidatas seguras passaram. Das dez
@@ -561,9 +583,9 @@ rodada registrada, inclusive o autoteste que reaplicava a mutação sobre o
 próprio arquivo candidato. A evidência sanitizada está em
 [`runtime-candidate-matrix-preflight-20260926T200948Z.json`](../experiment/evidence/ci-cd/runtime-candidate-matrix-preflight-20260926T200948Z.json).
 Como os rótulos reservados desse corpus de engenharia foram revelados e agora
-constam na evidência versionada, ele não pode ser promovido a corpus
-confirmatório. Depois do congelamento será necessário gerar uma nova instância
-cega com chave, IDs, ordem e compromisso próprios.
+constam na evidência versionada, ele não foi promovido. Depois do congelamento,
+uma chave nova gerou `corpus-2ohyzpel2lonq`, com IDs, ordem e compromisso
+próprios; somente sua parte pública foi versionada.
 
 Cada candidata será avaliada de forma pareada por staging e PDT. Os dois usam
 as mesmas invariantes e SLOs. Primeiro é selada a decisão da CI/CD convencional
@@ -584,10 +606,11 @@ foi publicada e os workflows herdados sem proteção foram aposentados. Resta
 validar uma execução cloud de engenharia por um novo PR explicitamente
 autorizado.
 
-A prontidão para o congelamento agora possui auditoria executável em
-`experiment/scripts/audit-protocol-freeze.py`. Ela mantém a coleta bloqueada e
-expõe de forma objetiva as pendências de políticas/SLOs, imagens do oráculo,
-revisão financeira e aprovação explícita do pesquisador.
+A prontidão para o congelamento possui auditoria executável em
+`experiment/scripts/audit-protocol-freeze.py`. Antes da finalização v1.2, ela
+manteve a coleta bloqueada e expôs objetivamente as pendências de
+políticas/SLOs, imagens do oráculo, revisão financeira e aprovação explícita do
+pesquisador; o recibo final registra os 17/17 controles aprovados.
 
 O caminho de publicação até os manifests foi concluído:
 `bind-runtime-publication.py` validou a evidência das três imagens contra o
@@ -685,24 +708,37 @@ separado de autorizar uma execução paga.
 O `checkout-pdt-controller` agora existe como aplicação e imagem reproduzível,
 gera o plano vinculado aos inputs selados e produz a decisão prescritiva. Um
 gerador prepara sua execução como Job isolado, sem token da API e sem rede, no
-namespace `pdt-system`. O digest foi publicado e vinculado; a primeira execução
-do Job continua pendente e não foi antecipada sem autorização cloud por bloco.
+namespace `pdt-system`. O vínculo ativo v1.2 aponta para o digest
+`sha256:691d7b61270f12de60d8c5657903ddb92993c8d653eb7f41de006a83ca6f7796`.
+A primeira execução confirmatória do Job continua pendente e não foi antecipada
+sem autorização cloud por bloco.
 
-O mecanismo de custo por bloco está parcialmente aplicado. A API do BigQuery,
-o dataset protegido `online_boutique_billing` e a tabela padrão já existem; a
-consulta versionada limita cada leitura a 100 MB. Imediatamente antes da
-publicação de 05/10/2026 UTC, a janela desde 19/09 observou R$588,369730 de
-custo bruto, R$-588,371717 em créditos e R$-0,001987 de custo líquido. Somar o
-teto incremental conservador de R$200 projeta R$788,369730, abaixo do orçamento
-bruto de R$1.751,10, com R$962,730270 de margem. O registro está em
-[`../experiment/evidence/finance/cost-window-20260919-20261005-pre-runtime-publication-v1.1.json`](../experiment/evidence/finance/cost-window-20260919-20261005-pre-runtime-publication-v1.1.json).
+O mecanismo de custo por bloco está aplicado até a revisão humana. A API do
+BigQuery, o dataset protegido `online_boutique_billing` e a tabela padrão já
+existem; a consulta versionada limita cada leitura a 100 MB. Em 06/10/2026 UTC,
+depois de o export alcançar a janela da validação Oracle v1.1, o agregado desde
+19/09 observou R$606,696649 de custo bruto, R$-606,698683 em créditos e
+R$-0,002034 de custo líquido. Somar o teto incremental conservador de R$200
+projeta R$806,696649, abaixo do orçamento bruto de R$1.751,10, com
+R$944,403351 de margem. O registro está em
+[`../experiment/evidence/finance/cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json`](../experiment/evidence/finance/cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json).
 
-Após o binding, o auditor pré-freeze passa 8/17 requisitos. Os nove bloqueios
-restantes são deliberados: congelar as cinco políticas e os dois manifests,
-registrar nova revisão financeira e obter nova aprovação do pesquisador. O
-protocolo permanece `pre-registration-candidate`, sem corpus confirmatório
-ativo e sem autorização de execução experimental. O registro está em
-[`../experiment/evidence/finance/pre-freeze-audit-post-runtime-publication-20261005T214945Z.json`](../experiment/evidence/finance/pre-freeze-audit-post-runtime-publication-20261005T214945Z.json).
+O bundle determinístico da v1.1 foi aplicado às cinco políticas e aos dois
+manifests, com os hashes dependentes recalculados. A revisão financeira e a
+aprovação do pesquisador foram vinculadas à candidata exata; o auditor
+pré-freeze passou 17/17 requisitos e o finalizador promoveu o protocolo v1.1
+para `frozen` em 12/10/2026 UTC. O hash histórico do protocolo congelado é
+`38b1270bce29c4aa975f331d7c5b761e2abe89acd2545cdc11030318ceb4dbaf`.
+Os registros finais estão em
+[`../experiment/evidence/finance/pre-freeze-audit-v1.1-ready-20261012T212014Z.json`](../experiment/evidence/finance/pre-freeze-audit-v1.1-ready-20261012T212014Z.json)
+e
+[`../experiment/evidence/finance/protocol-freeze-finalization-v1.1-20261012T212014Z.json`](../experiment/evidence/finance/protocol-freeze-finalization-v1.1-20261012T212014Z.json).
+
+Uma chave nova gerou o corpus confirmatório opaco v1.1 com 18 candidatas e
+três repetições por candidata. A emenda v1.2 retirou o arquivo público da área
+ativa antes da coleta; a chave e o manifesto Oracle v1.1 permanecem somente
+como arquivo histórico privado e ignorado pelo Git. Eles não podem ser
+reutilizados. Nenhuma execução cloud foi autorizada pelo congelamento.
 
 `prepare-financial-review.py` valida a saída real do billing contra o auditor
 selado, vincula caminho e SHA-256 e, somente com confirmação humana literal,
@@ -717,13 +753,15 @@ A aprovação do pesquisador também deixou de depender de edição manual:
 que a própria aprovação seja o único bloqueio. O modo de assinatura exige
 identidade e confirmação literal, vincula o SHA-256 exato do protocolo e mantém
 `cloud_execution_authorized: false`. Na v1, a assinatura foi registrada após
-16/17 controles e permitiu concluir a auditoria 17/17; a v1.1 exige repetir
-essa aprovação somente depois dos outros 16 controles voltarem a passar.
+16/17 controles e permitiu concluir a auditoria 17/17. Na v1.2, a aprovação foi
+repetida somente depois de os outros 16 controles voltarem a passar.
 
-**Histórico:** esse critério de saída foi atingido para a v1 em 04/10/2026, mas
-foi reaberto antes da coleta pela emenda. A v1.1 ainda precisa ser congelada e
-receber um novo corpus opaco contendo controles seguros e mutações funcionais e
-não funcionais, sem rótulos acessíveis aos mecanismos.
+**Estado:** esse critério de saída foi atingido para a v1 em 04/10/2026, reaberto
+antes da coleta pela emenda v1.1 e atingido novamente em 12/10/2026. A emenda
+de segurança v1.2 reabriu o critério antes da coleta; em 24/10/2026, publicação,
+vínculos, revisão financeira e aprovação foram renovados, o auditor pré-freeze
+passou 17/17, o protocolo foi congelado e o corpus opaco novo foi validado.
+Nenhuma execução confirmatória ou autorização cloud decorre desse estado.
 
 ### Fase 7 — Oráculo, validação e recalibração
 
@@ -807,9 +845,10 @@ artefatos. A definição do workflow já encadeia esse caminho e o caminho
 Kubernetes, deriva o manifesto com código da base confiável, cifra toda
 evidência privada e persiste publicamente somente hashes e recibos sem rótulo.
 Os três tipos de verificação pré-artefato foram exercitados localmente nas
-quatro instâncias previstas pelo rascunho atual, sem GCP. Ainda faltam cadastrar
-os dois secrets protegidos, aplicar o RBAC declarativo, gerar o corpus
-confirmatório e executar a validação cloud autorizada do caminho Kubernetes.
+quatro instâncias previstas, sem GCP. O RBAC declarativo já foi aplicado e o
+corpus confirmatório v1.2 foi gerado. Ainda falta substituir o secret protegido
+de cegamento pela chave v1.2 e executar, com autorização independente, o
+caminho Kubernetes na coleta confirmatória.
 
 ### Fase 8 — Análise final
 
@@ -878,7 +917,7 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [ ] congelar protocolo, corpus, sementes e regra de parada antes da coleta;
+- [x] congelar protocolo, corpus, sementes e regra de parada antes da coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;
 - [ ] randomizar a ordem das candidatas;

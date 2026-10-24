@@ -257,9 +257,9 @@ regra sem usar o rótulo pretendido como entrada da classificação.
 [`suite-manifest.json`](./suite-manifest.json) vincula por SHA-256 os 27
 arquivos que definem a política, o harness, os avaliadores e o runner. O
 validador `validate-oracle-suite.py` falha se qualquer arquivo mudar. O
-manifesto permanece `pre-registration-candidate` e seus dois digests de imagem
-estão vinculados à publicação protegida da emenda v1.1; ele ainda não pode ser
-marcado como `frozen` antes das novas aprovações e do congelamento coordenado.
+manifesto está `frozen` e seus dois digests de imagem estão vinculados à mesma
+publicação protegida da emenda v1.1. O congelamento coordenado foi concluído
+depois das novas aprovações e não autoriza, sozinho, execução no cluster.
 
 O inventário inclui o binder e o próprio validador. Os digests publicados de
 `oracle-harness` e `currency-reference` são aceitos somente com a mesma
@@ -344,5 +344,6 @@ funcionais, mas revelou que a NetworkPolicy não permitia o NodeLocal DNS
 `169.254.20.10` usado pelo GKE e que o avaliador não normalizava coleções nulas
 após falha de transporte. O cleanup concluiu com zero workloads ativos; a
 tentativa é evidência de engenharia, não observação confirmatória. A emenda
-v1.1 corrige os dois pontos, mas exige nova publicação, novo congelamento e nova
-validação cloud antes da coleta.
+v1.1 corrigiu os dois pontos, foi republicada, validada em uma repetição curta
+de engenharia e congelada em 12/10/2026. A coleta ainda exige rotação do secret
+da chave v1.1, auditoria de prontidão e autorização cloud por bloco.

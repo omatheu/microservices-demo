@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "mechanism": "protocol-freeze-candidate-bundle",
+  "status": "prepared-requires-application-and-approvals",
+  "frozen_at_for_components": "2026-10-06T23:42:28Z",
+  "publication_binding": {
+    "schema_version": "1.0.0",
+    "publication_summary_sha256": "e2d8895056f7198aeb37c952657c7c4996bc98ab84b61cb02d04efa2c34c1ee1",
+    "repository": "omatheu/microservices-demo",
+    "source_commit": "450e17aabc1e1b6783aec4ba022ac471886f2af5",
+    "source_tree": "7b4566e149cf3dc053697b3103b8d53d0d4c7a77",
+    "pull_request_number": 10,
+    "workflow_run_id": "37377441294",
+    "published_at": "2026-10-05T21:43:19Z",
+    "build_platform": "linux/amd64",
+    "protected_environment": "tcc-experiment",
+    "explicit_cloud_gate": true,
+    "cost_review_acknowledged": true
+  },
+  "candidate_protocol_sha256": "e2fc8b960850c59de91fc0d576e4ed664b1b801a4fe40016500b412a6ce3c485",
+  "proposed_files": [
+    {
+      "path": "experiment/ci/policy.json",
+      "sha256": "1207871b8c7f0ca30779f048cf40f7dbc96834da0bf82c343d9208776fd3db5f"
+    },
+    {
+      "path": "experiment/oracle/policy-v1.json",
+      "sha256": "ba7455d0593e72463f85b2c188f422086f618729c90786c5cb5793785553b98a"
+    },
+    {
+      "path": "experiment/oracle/suite-manifest.json",
+      "sha256": "688bdd512f2a68fd5503309148bfd18406af904c2f4c48ebb4f4c2fa9583b9ef"
+    },
+    {
+      "path": "experiment/pdt/fidelity-policy.json",
+      "sha256": "6d6239513f8e37b2abd11a2ff319a1ea2e5f8107bb220be4244f34ea601ff82d"
+    },
+    {
+      "path": "experiment/pdt/model-policy.json",
+      "sha256": "ace10afdd5f304142087bf8e340b30250f6008e25b5511f578696718e00c012d"
+    },
+    {
+      "path": "experiment/pdt/runtime-manifest.json",
+      "sha256": "ccb528abf88a70d5f493bab7466e9bf45d29b08889653873f3084e3c1333fec5"
+    },
+    {
+      "path": "experiment/protocol/protocol-v1.json",
+      "sha256": "e2fc8b960850c59de91fc0d576e4ed664b1b801a4fe40016500b412a6ce3c485"
+    },
+    {
+      "path": "experiment/staging/safety-thresholds.json",
+      "sha256": "bb12fead671b7667b3c3312682b8cdaecd2c2c3a7b532e26473de7c6f6c0c56f"
+    }
+  ],
+  "protocol_status_after_application": "pre-registration-candidate",
+  "confirmatory_collection_allowed_after_application": false,
+  "cloud_execution_authorized": false,
+  "cloud_mutation_performed": false,
+  "active_repository_files_modified": false
+}

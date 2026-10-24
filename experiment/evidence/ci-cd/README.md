@@ -6,6 +6,48 @@ relatórios dos scanners, SBOM, resultados por gate e uma decisão pré-staging.
 O conteúdo gerado só constitui evidência confirmatória quando o protocolo e a
 política estiverem congelados e a execução usar `MODE=confirmatory`.
 
+## Regressão de segurança pré-coleta e emenda v1.2 em 12/10/2026
+
+O gate de imagens do PR #12 bloqueou corretamente o `oracle-harness` por quatro
+achados HIGH corrigíveis: `CVE-2026-78669` em `golang.org/x/net` e três achados
+na biblioteca padrão Go. A política do scanner não foi alterada. O registro
+sanitizado [`runtime-security-regression-pr12-20261012.json`](runtime-security-regression-pr12-20261012.json)
+vincula o run, o job e os SHA-256 dos artefatos baixados. Não houve publicação,
+execução GCP ou observação confirmatória.
+
+A emenda v1.2 atualiza Go para 1.27.3, `golang.org/x/net` para v0.60.0 e o
+runtime Alpine do `currency-reference` para 3.24.3; ela invalida
+os vínculos de runtime, aprovações e corpus v1.1 e exige que o mesmo gate passe
+antes de uma nova publicação protegida.
+
+O preflight local da correção reconstruiu as três imagens, gerou SBOMs e repetiu
+o Trivy fixado com a mesma política. As três passaram com zero achados
+HIGH/CRITICAL corrigíveis; o SBOM do `oracle-harness` confirma Go 1.27.3 e
+`golang.org/x/net` v0.60.0. O `checkoutservice`, que compartilha o módulo e o
+builder corrigidos, também foi reconstruído e passou no mesmo scan. Uma nova
+regressão em 24/10/2026 foi bloqueada antes da publicação: `CVE-2026-111943`
+no Go 1.27.2 e quatro achados no runtime Alpine/Node do `currency-reference`.
+Os registros sanitizados estão em
+[`runtime-security-regression-pr12-20261024.json`](runtime-security-regression-pr12-20261024.json)
+e
+[`runtime-security-remediation-v1.2-local-20261024.json`](runtime-security-remediation-v1.2-local-20261024.json).
+Ela não é proveniência de publicação nem evidência confirmatória.
+
+## Publicação protegida dos runtimes da emenda v1.2 em 24/10/2026
+
+Depois de bloquear os CVEs recém-publicados, o PR #12 repetiu a CI no commit
+`6a39f7f77206c229144dd593560536cdad607825`. As três imagens passaram pelo
+build, SBOM e Trivy com a política HIGH/CRITICAL inalterada e foram publicadas
+no caminho protegido, sem credenciais GKE. Staging, PDT, gate humano e Oracle
+foram explicitamente ignorados pelo workflow.
+
+O resumo auditável
+[`runtime-publication-pr12-20261024T154243Z.json`](runtime-publication-pr12-20261024T154243Z.json)
+vincula o commit, a árvore Git, o run protegido, os relatórios e os digests
+imutáveis. Os manifests PDT e Oracle compartilham exatamente a mesma
+proveniência. Depois do job, a chave de publicação voltou a `false` e os
+rótulos cloud foram removidos do PR.
+
 ## Publicação protegida dos runtimes da emenda v1.1 em 05/10/2026
 
 O PR #10 executou o caminho isolado `runtime-publication` no commit
@@ -49,8 +91,8 @@ GCP, registry ou publicação de imagens; os worktrees, patches, ordens de
 trabalho e logs privados foram destruídos após a extração dos hashes. Volumes
 Docker não foram removidos nem modificados. Como os rótulos foram revelados e
 versionados depois dessa execução, esse corpus fica aposentado para qualquer
-coleta confirmatória; um novo corpus cego deverá ser gerado somente após o
-congelamento do protocolo.
+coleta confirmatória. Um novo corpus cego v1.1 foi gerado somente após o
+congelamento 17/17 de 12/10/2026.
 
 ## Preflight local das imagens de runtime em 26/09/2026
 

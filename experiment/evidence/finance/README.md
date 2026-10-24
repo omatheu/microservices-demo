@@ -4,25 +4,73 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O estado mais recente, de 05/10/2026 UTC, confirma que o Standard usage cost
-export está ativo e que a tabela particionada `gcp_billing_export_v1_*` já foi
-entregue no dataset protegido em `US`. A consulta versionada e limitada a
-100 MB, feita imediatamente antes da publicação dos runtimes da emenda v1.1,
-observou R$588,369730 de custo bruto, R$-588,371717 em créditos e R$-0,001987
-de custo líquido desde 19/09. Reservar o teto incremental conservador de R$200
-projeta R$788,369730, abaixo do orçamento de R$1.751,10, com R$962,730270 de
-margem. O registro atual está em
-[`cost-window-20260919-20261005-pre-runtime-publication-v1.1.json`](./cost-window-20260919-20261005-pre-runtime-publication-v1.1.json).
+O estado mais recente, consultado em 24/10/2026 UTC, confirma que o Standard
+usage cost export alcançou a janela encerrada em 22/10/2026. A consulta
+versionada e limitada a 100 MB observou R$1.250,593241 de custo bruto,
+R$-1.250,597336 em créditos e R$-0,004095 de custo líquido desde 19/09, com
+`billing_data_as_of=2026-10-23T00:42:38Z`. O protocolo usa o custo bruto, e não
+o líquido coberto pelos créditos, para decidir se pode prosseguir.
 
-A aprovação financeira canônica do protocolo v1 foi retirada da área ativa
-pela emenda pré-coleta. Uma nova revisão e uma nova aprovação humana ainda são
-obrigatórias antes de congelar a v1.1; a leitura acima documenta a janela de
-publicação, mas não autoriza execução experimental.
+Reservar o teto incremental conservador de R$200 para os seis blocos projeta
+R$1.450,593241, abaixo do orçamento de R$1.751,10, com R$300,506759 de margem.
+Essa reserva equivale a uma envoltória média de R$33,333333 por bloco, não a
+uma previsão de preço por bloco. O custo deve ser consultado depois de cada
+bloco, há revisão obrigatória ao atingir R$150 incrementais e a coleta é
+interrompida se o Billing ficar indisponível. A observação e sua verificação de elegibilidade
+estão em
+[`cost-window-20260919-20261022-v1.2-review.json`](./cost-window-20260919-20261022-v1.2-review.json)
+e
+[`financial-review-eligibility-v1.2-20261024.json`](./financial-review-eligibility-v1.2-20261024.json).
+O agregado não isola contabilmente o custo de cada workload.
 
-Após o binding dos três digests, a auditoria pré-freeze passou 8/17 controles;
-os nove bloqueios restantes são as políticas e manifests ainda candidatos, a
-nova revisão financeira e a nova aprovação do pesquisador. O registro está em
-[`pre-freeze-audit-post-runtime-publication-20261005T214945Z.json`](./pre-freeze-audit-post-runtime-publication-20261005T214945Z.json).
+O snapshot anterior da v1.1 permanece em
+[`cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json`](./cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json).
+
+A publicação protegida v1.2 ocorreu no workflow `40108005657`, vinculada ao
+commit `6a39f7f77206c229144dd593560536cdad607825`, depois de a CI convencional e
+o gate das três imagens passarem. A identidade usada tinha somente escrita no
+Artifact Registry; staging, PDT, gate humano e Oracle foram ignorados. A janela
+foi desarmada imediatamente após o job. O resumo versionado está em
+[`runtime-publication-pr12-20261024T154243Z.json`](../ci-cd/runtime-publication-pr12-20261024T154243Z.json),
+e o bundle de congelamento em
+[`protocol-freeze-candidate-v1.2-20261024T154436Z.json`](./protocol-freeze-candidate-v1.2-20261024T154436Z.json).
+A elegibilidade 16/17, sem gerar aprovação, está em
+[`researcher-approval-eligibility-v1.2-20261024T154520Z.json`](./researcher-approval-eligibility-v1.2-20261024T154520Z.json).
+Essa autorização não alcança coleta confirmatória nem workloads no cluster.
+
+Depois da aprovação explícita do pesquisador, a auditoria pré-freeze passou
+17/17 e o finalizador promoveu a v1.2 para `frozen` em 24/10/2026 UTC. O hash
+final do protocolo é
+`8a34f553287d688b2cf38dfa2db6b29caa078bd191ce7d04a03fb5e707870c51`.
+Os recibos estão em
+[`pre-freeze-audit-v1.2-ready-20261024T160124Z.json`](./pre-freeze-audit-v1.2-ready-20261024T160124Z.json)
+e
+[`protocol-freeze-finalization-v1.2-20261024T160124Z.json`](./protocol-freeze-finalization-v1.2-20261024T160124Z.json).
+O congelamento e a aprovação mantêm `cloud_execution_authorized: false`.
+
+A aprovação financeira canônica da v1.1 foi registrada em 12/10/2026 UTC após
+confirmação humana literal. Ela vinculou a evidência pelo SHA-256, aprovou
+somente o uso da baseline no congelamento e manteve
+`cloud_execution_authorized: false`. A emenda de segurança v1.2 invalidou essa
+aprovação antes da coleta; o arquivo anterior permanece recuperável no commit
+`32da279a`, e a revisão v1.2 agora ocupa o caminho canônico.
+O preflight anterior permanece em
+[`financial-review-eligibility-v1.1-20261006T234330Z.json`](./financial-review-eligibility-v1.1-20261006T234330Z.json),
+e o registro da emenda está em
+[`../../protocol/amendments/security-v1.2-precollection.json`](../../protocol/amendments/security-v1.2-precollection.json).
+
+O bundle determinístico da emenda congelou as cinco políticas e os dois
+manifests. Depois da revisão financeira e da aprovação do pesquisador, a
+auditoria pré-freeze passou 17/17 controles e o finalizador promoveu o protocolo
+v1.1 para `frozen` em 12/10/2026 UTC. O hash final é
+`38b1270bce29c4aa975f331d7c5b761e2abe89acd2545cdc11030318ceb4dbaf`.
+Os recibos finais estão em
+[`pre-freeze-audit-v1.1-ready-20261012T212014Z.json`](./pre-freeze-audit-v1.1-ready-20261012T212014Z.json)
+e
+[`protocol-freeze-finalization-v1.1-20261012T212014Z.json`](./protocol-freeze-finalization-v1.1-20261012T212014Z.json).
+Esse congelamento não autorizou execução cloud e agora é histórico. A v1.2
+repetiu publicação, revisão financeira, aprovação, congelamento e geração do
+corpus sem antecipar a autorização financeira por bloco.
 
 A validação curta do Oracle v1.1 foi consultada novamente após o cleanup. A
 exportação ainda informava a mesma posição — R$588,369730 bruto e

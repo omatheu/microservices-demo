@@ -89,32 +89,27 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_amended_and_collection_locked(self):
+    def test_active_protocol_is_amended_and_frozen(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.1", value["protocol_id"])
-        self.assertEqual("pre-registration-candidate", value["status"])
-        self.assertFalse(value["confirmatory_collection_allowed"])
-        self.assertIsNone(value["frozen_at"])
-        self.assertEqual("oracle-v1.1-precollection", value["amendment"]["amendment_id"])
+        self.assertEqual("checkout-pdt-comparison-v1.2", value["protocol_id"])
+        self.assertEqual("frozen", value["status"])
+        self.assertTrue(value["confirmatory_collection_allowed"])
+        self.assertEqual("2026-10-24T16:01:24Z", value["frozen_at"])
+        self.assertEqual("security-v1.2-precollection", value["amendment"]["amendment_id"])
 
-    def test_current_candidate_reports_expected_amendment_blockers(self):
-        result = MODULE.audit(REPO_ROOT, protocol())
+    def test_current_candidate_requires_only_researcher_approval(self):
+        result = MODULE.audit(
+            REPO_ROOT,
+            protocol(),
+            cost_review=MODULE.load(
+                REPO_ROOT / "experiment/protocol/approvals/cost-review-v1.json"
+            ),
+        )
 
         self.assertFalse(result["ready_to_freeze"])
         self.assertEqual(
-            {
-                "ci-policy-frozen",
-                "staging-thresholds-frozen",
-                "pdt-model-policy-frozen",
-                "pdt-fidelity-policy-frozen",
-                "oracle-policy-frozen",
-                "pdt-runtime-frozen",
-                "oracle-suite-frozen",
-                "researcher-approval",
-                "financial-review",
-            },
-            set(result["blocking_requirements"]),
+            {"researcher-approval"}, set(result["blocking_requirements"])
         )
 
     def test_current_candidate_passes_implemented_and_hashed_inputs(self):

@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "runtime-security-regression-pr12-20261012",
+  "evidence_class": "pre-collection-engineering-security-regression",
+  "observed_at": "2026-10-12T21:59:04Z",
+  "repository": "omatheu/microservices-demo",
+  "pull_request": 12,
+  "head_commit": "32da279a7b843462cbbdc0865d1af14859aee7c4",
+  "workflow": {
+    "name": "TCC Conventional CI",
+    "run_id": "38313874351",
+    "run_url": "https://github.com/omatheu/microservices-demo/actions/runs/38313874351",
+    "job_id": "115025769130",
+    "job_url": "https://github.com/omatheu/microservices-demo/actions/runs/38313874351/job/115025769130",
+    "conclusion": "failure",
+    "failed_step": "Build, inventory and scan experiment runtime images"
+  },
+  "scanner_policy": {
+    "scanner": "Trivy",
+    "severities": [
+      "HIGH",
+      "CRITICAL"
+    ],
+    "ignore_unfixed": true,
+    "exit_code_on_match": 1,
+    "policy_changed_by_amendment": false
+  },
+  "affected_image": "oracle-harness",
+  "findings": [
+    {
+      "cve": "CVE-2026-78669",
+      "package": "golang.org/x/net",
+      "installed_version": "v0.58.0",
+      "fixed_version": "0.60.0",
+      "severity": "HIGH"
+    },
+    {
+      "cve": "CVE-2026-78667",
+      "package": "stdlib",
+      "installed_version": "v1.27.0",
+      "fixed_version": "1.27.2",
+      "severity": "HIGH"
+    },
+    {
+      "cve": "CVE-2026-78669",
+      "package": "stdlib",
+      "installed_version": "v1.27.0",
+      "fixed_version": "1.27.2",
+      "severity": "HIGH"
+    },
+    {
+      "cve": "CVE-2026-97031",
+      "package": "stdlib",
+      "installed_version": "v1.27.0",
+      "fixed_version": "1.27.2",
+      "severity": "HIGH"
+    }
+  ],
+  "downloaded_artifact_hashes": [
+    {
+      "path": "checkout-pdt-controller-sbom.cdx.json",
+      "sha256": "3b8bcf2839e4c1e3fac7f741e4d55243f928aada2b583cfa5310958994b0f807"
+    },
+    {
+      "path": "checkout-pdt-controller-trivy.json",
+      "sha256": "e81b5f302788088617908ed02632037c6602f85afa4c5aed5b9ebce2a8e83737"
+    },
+    {
+      "path": "images.ndjson",
+      "sha256": "7e9ffd90f1378384afee0ae7e46afc22e6de152300f36cdf9a417a4d29390718"
+    },
+    {
+      "path": "oracle-harness-sbom.cdx.json",
+      "sha256": "a5cddc1c33fbfba178a48f97775fed0e4d307b1060cf427c08bc095feb7449ba"
+    },
+    {
+      "path": "oracle-harness-trivy.json",
+      "sha256": "05d7ed40c6398100f9079382c7126a2d36e9ba1858d16b47a69b82b2b81298ad"
+    }
+  ],
+  "methodological_disposition": {
+    "confirmatory_observation": false,
+    "confirmatory_observations_collected_before_detection": 0,
+    "cloud_execution_performed": false,
+    "runtime_publication_performed": false,
+    "protocol_action": "pre-collection-amendment-required",
+    "security_gate_weakened": false
+  }
+}

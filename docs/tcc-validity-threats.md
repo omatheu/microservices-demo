@@ -1,7 +1,8 @@
 # Registro de ameaças à validade do experimento PDT
 
-> **Status:** registro pré-coleta; versão inicial em 21 de setembro de 2026 e
-> emenda Oracle v1.1 autorizada em 5 de outubro de 2026.
+> **Status:** registro pré-coleta; versão inicial em 21 de setembro de 2026,
+> emenda Oracle v1.1 autorizada em 5 de outubro de 2026 e emenda de segurança
+> v1.2 autorizada em 12 de outubro de 2026.
 >
 > Este documento deve ser revisado antes do congelamento do protocolo e outra
 > vez depois da coleta. A revisão posterior pode registrar impacto observado,
@@ -77,6 +78,7 @@ Uma ameaça materializada não autoriza remover uma candidata porque seu resulta
 | `I-14` | Aprovação humana informal não provaria atuação semiautônoma. | Ambiente protegido, revisor registrado pela API, recibo ligado por hash e execução fail-closed. | Histórico do GitHub, recibo, ação e validação do runner. | Um único revisor não mede concordância entre operadores humanos. |
 | `I-15` | Revelar o manifesto privado antes do gate contaminaria a decisão. | Exigir decisão convencional, PDT, gate e, para ação deployável, aprovação protegida antes do unlock. | Recibo de unlock e hashes da cadeia. | A máquina local do pesquisador continua sendo uma fronteira confiável. |
 | `I-16` | Uma suposição incorreta sobre a rede do cluster poderia transformar falha da infraestrutura do oráculo em aparente dano da candidata. | Exigir execução de engenharia anterior à coleta, validar o resolvedor DNS real do GKE, tratar falhas de transporte sem exceção no avaliador e repetir o congelamento quando a suíte mudar. | `oracle-engineering-runner-validation-20261005T013207Z.json`, NetworkPolicy renderizada, testes de regressão e nova auditoria 17/17. | Mudanças futuras do dataplane ou do DNS do GKE ainda exigem nova validação de engenharia. |
+| `I-17` | Vulnerabilidades divulgadas depois do congelamento podem tornar um runtime inseguro mesmo sem mudança no código do experimento. | Manter o gate fixo de CVEs HIGH/CRITICAL corrigíveis, interromper a coleta, abrir emenda pré-coleta, atualizar versões por digest e exigir nova publicação, aprovações, congelamento e corpus. | Artefato Trivy do PR #12, registro `runtime-security-regression-pr12-20261012.json`, SBOMs e scans da v1.2. | Novos avisos podem surgir após a republicação; o instante e a base de vulnerabilidades do scan devem ser registrados. |
 
 ## Validade de conclusão estatística
 
@@ -129,6 +131,15 @@ coleta permaneceu bloqueada. A emenda v1.1 não altera desfecho, limiar,
 operadores, tamanho amostral ou regra de decisão; ela corrige somente a
 execução independente do oráculo e exige nova proveniência, novas aprovações e
 novo corpus antes da coleta.
+
+Em 12 de outubro de 2026, também antes de qualquer observação confirmatória, o
+gate imutável de imagens do PR #12 detectou quatro achados HIGH corrigíveis no
+`oracle-harness`: `CVE-2026-78669` em `golang.org/x/net` e três achados na
+biblioteca padrão Go. A v1.1 permanece preservada no commit `32da279a`, mas
+foi retirada da área ativa. A emenda v1.2 não muda desfecho, operadores,
+limiares, tamanho amostral, regra de decisão nem a política do scanner; ela
+somente atualiza dependências vulneráveis e reinicia a cadeia de proveniência,
+aprovação, congelamento e cegamento.
 
 ## Evidência de auditoria
 
