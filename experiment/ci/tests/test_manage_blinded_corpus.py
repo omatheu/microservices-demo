@@ -32,10 +32,10 @@ def active_protocol():
 
 
 class ManageBlindedCorpusTests(unittest.TestCase):
-    def test_active_amended_protocol_cannot_generate_confirmatory_corpus(self):
+    def test_active_amended_protocol_generates_confirmatory_corpus_after_freeze(self):
         public, _ = self.build(value=active_protocol())
 
-        self.assertFalse(public["confirmatory_eligible"])
+        self.assertTrue(public["confirmatory_eligible"])
         self.assertEqual(18, public["candidate_count"])
 
     def build(self, key=b"a" * 32, value=None):

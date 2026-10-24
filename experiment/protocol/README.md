@@ -1,7 +1,7 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** emenda pré-coleta v1.2 autorizada; coleta e execução cloud
-> permanecem bloqueadas.
+> **Status:** protocolo v1.2 congelado e corpus opaco gerado; nenhuma execução
+> cloud foi autorizada.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -9,9 +9,8 @@
 
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
-análise. Seu status ativo voltou a `pre-registration-candidate`; as imagens,
-aprovações e o corpus precisam ser regenerados para a v1.2 antes de qualquer
-coleta.
+análise. Seu status ativo é `frozen`; políticas, runtimes, aprovações e corpus
+foram renovados para a v1.2 antes de qualquer coleta.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
@@ -33,6 +32,15 @@ confirmatória havia sido coletada, foi autorizada a emenda v1.2. O registro
 preserva o congelamento substituído, vincula a evidência do scanner e limita a
 mudança à correção das dependências. A política de bloqueio por vulnerabilidade
 não foi relaxada.
+
+Em 24 de outubro de 2026, os runtimes corrigidos foram publicados por digest,
+a revisão financeira e a aprovação do pesquisador vincularam o candidato exato
+e a auditoria pré-freeze passou 17/17. O finalizador produziu o protocolo
+congelado de SHA-256
+`8a34f553287d688b2cf38dfa2db6b29caa078bd191ce7d04a03fb5e707870c51`, e
+uma chave nova gerou o corpus opaco `corpus-2ohyzpel2lonq`. O congelamento
+habilita metodologicamente a coleta, mas mantém a autorização cloud como gate
+independente e explícito.
 
 ## Objetivo
 
@@ -429,7 +437,7 @@ preparador do candidato, o finalizador, o cleanup restrito dos workloads
 experimentais, os dois
 agregadores de repetição, o orquestrador confirmatório, o gerenciador
 determinístico do corpus cego e o próprio validador agora também fazem parte
-dos 36 inputs selados do protocolo. Assim, as regras
+dos 37 inputs selados do protocolo. Assim, as regras
 que decidem a prontidão e materializam a proposta final não podem ser trocadas
 silenciosamente depois da aprovação do desenho.
 

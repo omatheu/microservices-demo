@@ -38,12 +38,22 @@ A elegibilidade 16/17, sem gerar aprovação, está em
 [`researcher-approval-eligibility-v1.2-20261024T154520Z.json`](./researcher-approval-eligibility-v1.2-20261024T154520Z.json).
 Essa autorização não alcança coleta confirmatória nem workloads no cluster.
 
+Depois da aprovação explícita do pesquisador, a auditoria pré-freeze passou
+17/17 e o finalizador promoveu a v1.2 para `frozen` em 24/10/2026 UTC. O hash
+final do protocolo é
+`8a34f553287d688b2cf38dfa2db6b29caa078bd191ce7d04a03fb5e707870c51`.
+Os recibos estão em
+[`pre-freeze-audit-v1.2-ready-20261024T160124Z.json`](./pre-freeze-audit-v1.2-ready-20261024T160124Z.json)
+e
+[`protocol-freeze-finalization-v1.2-20261024T160124Z.json`](./protocol-freeze-finalization-v1.2-20261024T160124Z.json).
+O congelamento e a aprovação mantêm `cloud_execution_authorized: false`.
+
 A aprovação financeira canônica da v1.1 foi registrada em 12/10/2026 UTC após
 confirmação humana literal. Ela vinculou a evidência pelo SHA-256, aprovou
 somente o uso da baseline no congelamento e manteve
 `cloud_execution_authorized: false`. A emenda de segurança v1.2 invalidou essa
-aprovação antes da coleta; o arquivo canônico permanece recuperável no commit
-`32da279a` e uma nova revisão será obrigatória.
+aprovação antes da coleta; o arquivo anterior permanece recuperável no commit
+`32da279a`, e a revisão v1.2 agora ocupa o caminho canônico.
 O preflight anterior permanece em
 [`financial-review-eligibility-v1.1-20261006T234330Z.json`](./financial-review-eligibility-v1.1-20261006T234330Z.json),
 e o registro da emenda está em
@@ -59,8 +69,8 @@ Os recibos finais estão em
 e
 [`protocol-freeze-finalization-v1.1-20261012T212014Z.json`](./protocol-freeze-finalization-v1.1-20261012T212014Z.json).
 Esse congelamento não autorizou execução cloud e agora é histórico. A v1.2
-exige nova publicação, revisão financeira, aprovação do pesquisador,
-congelamento e corpus antes da autorização financeira por bloco.
+repetiu publicação, revisão financeira, aprovação, congelamento e geração do
+corpus sem antecipar a autorização financeira por bloco.
 
 A validação curta do Oracle v1.1 foi consultada novamente após o cleanup. A
 exportação ainda informava a mesma posição — R$588,369730 bruto e

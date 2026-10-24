@@ -1,0 +1,14 @@
+{
+  "acknowledgements": {
+    "changes_require_new_protocol_version": true,
+    "no_confirmatory_outcomes_observed": true,
+    "protocol_reviewed": true
+  },
+  "approved_at": "2026-10-24T16:01:14Z",
+  "approved_by": "omatheu",
+  "candidate_protocol_sha256": "d18dcce084928e9361dc2b98ba4bf52074bffbf39e8b976774fc01711b1a2d81",
+  "cloud_execution_authorized": false,
+  "decision": "approve-protocol-freeze",
+  "protocol_id": "checkout-pdt-comparison-v1.2",
+  "schema_version": "1.0.0"
+}
