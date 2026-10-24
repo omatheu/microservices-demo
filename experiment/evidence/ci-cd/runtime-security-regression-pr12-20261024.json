@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "runtime-security-regression-pr12-20261024",
+  "evidence_class": "pre-collection-engineering-security-regression",
+  "observed_at": "2026-10-24T15:25:36Z",
+  "repository": "omatheu/microservices-demo",
+  "pull_request": 12,
+  "head_commit": "a055c63736a2a25f10a3b1243075105b455ce5cd",
+  "workflow": {
+    "name": "TCC Conventional CI",
+    "run_id": "40106834182",
+    "run_url": "https://github.com/omatheu/microservices-demo/actions/runs/40106834182",
+    "job_id": "120910162785",
+    "job_url": "https://github.com/omatheu/microservices-demo/actions/runs/40106834182/job/120910162785",
+    "conclusion": "failure",
+    "failed_step": "Build, inventory and scan experiment runtime images"
+  },
+  "scanner_policy": {
+    "scanner": "Trivy 0.74.0",
+    "severities": [
+      "HIGH",
+      "CRITICAL"
+    ],
+    "ignore_unfixed": true,
+    "exit_code_on_match": 1,
+    "policy_changed_by_remediation": false
+  },
+  "affected_images": [
+    "oracle-harness",
+    "currency-reference"
+  ],
+  "findings": [
+    {
+      "detection": "github-actions-runtime-image-gate",
+      "image": "oracle-harness",
+      "cve": "CVE-2026-111943",
+      "package": "stdlib",
+      "installed_version": "v1.27.2",
+      "fixed_version": "1.26.10, 1.27.3",
+      "severity": "HIGH"
+    },
+    {
+      "detection": "local-fail-closed-continuation",
+      "image": "currency-reference",
+      "cve": "CVE-2026-111497",
+      "package": "brotli-libs",
+      "installed_version": "1.2.0-r1",
+      "fixed_version": "1.2.1-r0",
+      "severity": "HIGH"
+    },
+    {
+      "detection": "local-fail-closed-continuation",
+      "image": "currency-reference",
+      "cve": "CVE-2026-105482",
+      "package": "nodejs",
+      "installed_version": "24.18.1-r0",
+      "fixed_version": "24.22.1-r0",
+      "severity": "HIGH"
+    },
+    {
+      "detection": "local-fail-closed-continuation",
+      "image": "currency-reference",
+      "cve": "CVE-2026-105483",
+      "package": "nodejs",
+      "installed_version": "24.18.1-r0",
+      "fixed_version": "24.22.1-r0",
+      "severity": "HIGH"
+    },
+    {
+      "detection": "local-fail-closed-continuation",
+      "image": "currency-reference",
+      "cve": "CVE-2026-106069",
+      "package": "nodejs",
+      "installed_version": "24.18.1-r0",
+      "fixed_version": "24.22.1-r0",
+      "severity": "HIGH"
+    }
+  ],
+  "downloaded_github_artifact_hashes": [
+    {
+      "path": "checkout-pdt-controller-sbom.cdx.json",
+      "sha256": "7c6ece7e6df12adba7d704d8add91ec811a53ef1cf58886b32389d88813d511a"
+    },
+    {
+      "path": "checkout-pdt-controller-trivy.json",
+      "sha256": "b97bd5b458f403e8748f1bf1e83ed5d5d712264beb8759a7cb2b64bb5257609a"
+    },
+    {
+      "path": "images.ndjson",
+      "sha256": "e9515de9dff7df40b214e0b7b80abb4435f9d46771c41bbee91e8433be2d7523"
+    },
+    {
+      "path": "oracle-harness-sbom.cdx.json",
+      "sha256": "1314369cb8d69fa6a70d5ff54ea359c07f575fdbc5dd89026b78f496a06da3fb"
+    },
+    {
+      "path": "oracle-harness-trivy.json",
+      "sha256": "fa969b3b2422fe4d7b239207d6dcbcfdf67b49d64fbc86d1f4b428cec1751119"
+    }
+  ],
+  "methodological_disposition": {
+    "confirmatory_observation": false,
+    "confirmatory_observations_collected_before_detection": 0,
+    "cloud_execution_performed": false,
+    "runtime_publication_performed": false,
+    "protocol_action": "continue-authorized-pre-collection-security-amendment-v1.2",
+    "security_gate_weakened": false
+  }
+}

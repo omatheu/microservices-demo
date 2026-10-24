@@ -12,8 +12,9 @@
     "previous_freeze_commit": "32da279a7b843462cbbdc0865d1af14859aee7c4",
     "confirmatory_observations_before_amendment": 0,
     "scope": [
-      "Go 1.27.2 builder with immutable digest for oracle-harness and checkoutservice",
+      "Go 1.27.3 builder with immutable digest for oracle-harness and checkoutservice",
       "golang.org/x/net v0.60.0 and resolver-required transitive updates",
+      "Alpine 3.24.3 runtime with immutable digest for currency-reference",
       "runtime provenance rebinding, renewed approvals and blinded corpus rotation"
     ],
     "record": "experiment/protocol/amendments/security-v1.2-precollection.json"
@@ -452,11 +453,11 @@
     },
     "protocol_amendment_record": {
       "path": "experiment/protocol/amendments/security-v1.2-precollection.json",
-      "sha256": "73a7d7b27bfe3dba47d32c031c4efc882e8ac5b7090f548a4abaae75beac5db7"
+      "sha256": "909679077953e84ee29ef6e96cf69c1544e058b74299b8f2b9e6d9cd33aef0ee"
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "57ff8ac8f6a75e48ef08e3d39c6189ee39503f65f134397333f4bfe6a87029c3"
+      "sha256": "c1bde799e9b5f1db06c130240ea6268a701f25e45eaecd7795a24ba1f916f8bf"
     }
   },
   "required_before_freeze": [

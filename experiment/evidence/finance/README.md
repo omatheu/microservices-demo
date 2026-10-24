@@ -4,16 +4,33 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O estado mais recente, de 06/10/2026 UTC, confirma que o Standard usage cost
-export alcançou a janela encerrada após a validação Oracle v1.1. A consulta
-versionada e limitada a 100 MB observou R$606,696649 de custo bruto,
-R$-606,698683 em créditos e R$-0,002034 de custo líquido desde 19/09, com
-`billing_data_as_of=2026-10-06T15:57:38Z`. Reservar o teto incremental
-conservador de R$200 projeta R$806,696649, abaixo do orçamento de R$1.751,10,
-com R$944,403351 de margem. O agregado serve como baseline financeira do
-projeto, mas não isola contabilmente o custo do Oracle. O registro atual está
-em
+O estado mais recente, consultado em 24/10/2026 UTC, confirma que o Standard
+usage cost export alcançou a janela encerrada em 22/10/2026. A consulta
+versionada e limitada a 100 MB observou R$1.250,593241 de custo bruto,
+R$-1.250,597336 em créditos e R$-0,004095 de custo líquido desde 19/09, com
+`billing_data_as_of=2026-10-23T00:42:38Z`. O protocolo usa o custo bruto, e não
+o líquido coberto pelos créditos, para decidir se pode prosseguir.
+
+Reservar o teto incremental conservador de R$200 para os seis blocos projeta
+R$1.450,593241, abaixo do orçamento de R$1.751,10, com R$300,506759 de margem.
+Essa reserva equivale a uma envoltória média de R$33,333333 por bloco, não a
+uma previsão de preço por bloco. O custo deve ser consultado depois de cada
+bloco, há revisão obrigatória ao atingir R$150 incrementais e a coleta é
+interrompida se o Billing ficar indisponível. A observação e sua verificação de elegibilidade
+estão em
+[`cost-window-20260919-20261022-v1.2-review.json`](./cost-window-20260919-20261022-v1.2-review.json)
+e
+[`financial-review-eligibility-v1.2-20261024.json`](./financial-review-eligibility-v1.2-20261024.json).
+O agregado não isola contabilmente o custo de cada workload.
+
+O snapshot anterior da v1.1 permanece em
 [`cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json`](./cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json).
+
+O preflight de publicação v1.2 deve ser regenerado para o commit exato que
+passar pelo gate de imagens. O plano anterior, vinculado a um commit
+substituído por correções de segurança, foi descartado e não é elegível como
+proveniência. A autorização humana de publicação não autoriza coleta
+confirmatória, staging, PDT, Oracle ou qualquer outro workload no cluster.
 
 A aprovação financeira canônica da v1.1 foi registrada em 12/10/2026 UTC após
 confirmação humana literal. Ela vinculou a evidência pelo SHA-256, aprovou

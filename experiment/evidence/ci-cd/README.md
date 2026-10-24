@@ -15,16 +15,22 @@ sanitizado [`runtime-security-regression-pr12-20261012.json`](runtime-security-r
 vincula o run, o job e os SHA-256 dos artefatos baixados. Não houve publicação,
 execução GCP ou observação confirmatória.
 
-A emenda v1.2 atualiza Go para 1.27.2 e `golang.org/x/net` para v0.60.0, invalida
+A emenda v1.2 atualiza Go para 1.27.3, `golang.org/x/net` para v0.60.0 e o
+runtime Alpine do `currency-reference` para 3.24.3; ela invalida
 os vínculos de runtime, aprovações e corpus v1.1 e exige que o mesmo gate passe
 antes de uma nova publicação protegida.
 
 O preflight local da correção reconstruiu as três imagens, gerou SBOMs e repetiu
 o Trivy fixado com a mesma política. As três passaram com zero achados
-HIGH/CRITICAL corrigíveis; o SBOM do `oracle-harness` confirma Go 1.27.2 e
+HIGH/CRITICAL corrigíveis; o SBOM do `oracle-harness` confirma Go 1.27.3 e
 `golang.org/x/net` v0.60.0. O `checkoutservice`, que compartilha o módulo e o
-builder corrigidos, também foi reconstruído e passou no mesmo scan. A evidência sanitizada está em
-[`runtime-security-remediation-v1.2-local-20261012.json`](runtime-security-remediation-v1.2-local-20261012.json).
+builder corrigidos, também foi reconstruído e passou no mesmo scan. Uma nova
+regressão em 24/10/2026 foi bloqueada antes da publicação: `CVE-2026-111943`
+no Go 1.27.2 e quatro achados no runtime Alpine/Node do `currency-reference`.
+Os registros sanitizados estão em
+[`runtime-security-regression-pr12-20261024.json`](runtime-security-regression-pr12-20261024.json)
+e
+[`runtime-security-remediation-v1.2-local-20261024.json`](runtime-security-remediation-v1.2-local-20261024.json).
 Ela não é proveniência de publicação nem evidência confirmatória.
 
 ## Publicação protegida dos runtimes da emenda v1.1 em 05/10/2026

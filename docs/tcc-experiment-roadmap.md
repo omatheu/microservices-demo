@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 12 de outubro de 2026.
+> **Última verificação:** 24 de outubro de 2026.
 
 ## Objetivo do experimento
 
@@ -112,7 +112,7 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-### Caminho crítico atual — 12/10/2026
+### Caminho crítico atual — 24/10/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,
@@ -131,9 +131,13 @@ execução autorizada em cloud ou análise dos resultados.
    novo corpus opaco com 18 candidatas e três repetições;
 7. [concluído em 12/10/2026] preservar a v1.1, registrar os CVEs encontrados
    pelo gate do PR #12 e autorizar a emenda pré-coleta v1.2 sem relaxar o scan;
-8. corrigir e validar localmente as dependências, publicar e vincular os três
-   runtimes sob uma nova proveniência protegida;
-9. renovar as aprovações financeira e do pesquisador, congelar a v1.2,
+8. [concluído em 24/10/2026] corrigir e validar localmente as dependências,
+   renovar a observação financeira limitada a 100 MB e registrar a autorização
+   separada para publicação; o primeiro novo run falhou fechado ao detectar
+   CVEs recém-publicados, e as correções adicionais passaram localmente com
+   zero findings HIGH/CRITICAL corrigíveis;
+9. publicar e vincular os três runtimes sob uma nova proveniência protegida,
+   renovar as aprovações financeira e do pesquisador, congelar a v1.2,
    rotacionar a chave e gerar um corpus opaco novo;
 10. executar a comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
@@ -141,9 +145,11 @@ execução autorizada em cloud ou análise dos resultados.
    as evidências, remover a infraestrutura e conferir o custo final.
 
 Os controles passivos do Oracle, seu RBAC e a validação curta não pertencem
-mais ao caminho crítico. O próximo passo é fazer os scans da correção v1.2
-passarem no PR #12. Publicação, alterações no GCP e o primeiro bloco continuam
-exigindo autorizações cloud e financeiras separadas.
+mais ao caminho crítico. A nova observação financeira passou, a publicação foi
+autorizada separadamente e o gate de segurança bloqueou novos CVEs antes de
+qualquer push. O próximo passo é repetir a CI com as bases corrigidas, publicar
+e vincular os três runtimes. O primeiro bloco confirmatório continua exigindo
+autorizações cloud e financeiras independentes.
 
 ## Fases restantes
 

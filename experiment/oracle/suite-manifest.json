@@ -14,7 +14,11 @@
     },
     {
       "path": "experiment/oracle/harness/Dockerfile",
-      "sha256": "c98d1828f5b05326d1d433866c9233bcc9801c3a54213b9cfdf7fe2c059a45d6"
+      "sha256": "5d9b88fe634ed3ae0a2af95aa0c6715707bd35d782f014047a94f1ba4c5b7a70"
+    },
+    {
+      "path": "src/currencyservice/Dockerfile",
+      "sha256": "234c610f01926d87f7f68e7a98e1a3d0780e75ec1373b8d6fc095d4ead1b95fb"
     },
     {
       "path": "src/checkoutservice/cmd/oracleharness/main.go",
@@ -26,7 +30,7 @@
     },
     {
       "path": "src/checkoutservice/go.mod",
-      "sha256": "561f6c6c032c3380fa0db5e82176f1742920000a75ffe11f0272051b41369878"
+      "sha256": "da332d7b8d3d3c008b9d6b0f2b11b7f2ee95d079842e4442ed0cecec11c88f5f"
     },
     {
       "path": "src/checkoutservice/go.sum",
