@@ -59,6 +59,42 @@ def researcher_approval():
     }
 
 
+def partial_collection_protocol():
+    value = protocol()
+    value["protocol_id"] = "checkout-pdt-comparison-v1.3"
+    value["amendment"] = {
+        "amendment_id": "orchestration-v1.3-partial-collection",
+        "confirmatory_observations_before_amendment": 1,
+        "complete_decision_pairs_before_amendment": 0,
+        "oracle_adjudications_before_amendment": 0,
+        "oracle_labels_revealed_before_amendment": 0,
+        "prior_evidence_disposition": (
+            "preserved-incomplete-without-reexecution-or-reinterpretation"
+        ),
+    }
+    return value
+
+
+def partial_collection_approval(value):
+    return {
+        "schema_version": "1.1.0",
+        "protocol_id": value["protocol_id"],
+        "candidate_protocol_sha256": CANDIDATE_SHA256,
+        "decision": "approve-protocol-freeze",
+        "approved_by": "researcher",
+        "approved_at": "2026-09-22T05:00:00Z",
+        "cloud_execution_authorized": False,
+        "prior_collection": MODULE.prior_collection_context(value),
+        "acknowledgements": {
+            "protocol_reviewed": True,
+            "partial_collection_before_amendment_reviewed": True,
+            "prior_evidence_preserved_without_reinterpretation": True,
+            "no_oracle_labels_revealed_before_amendment": True,
+            "changes_require_new_protocol_version": True,
+        },
+    }
+
+
 def cost_review():
     return {
         "schema_version": "1.1.0",
@@ -183,6 +219,19 @@ class FinalizeProtocolFreezeTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "cloud authorization gate"):
             self.finalize(protocol=value)
+
+    def test_partial_collection_approval_cannot_repeat_the_precollection_claim(self):
+        value = partial_collection_protocol()
+        approval = partial_collection_approval(value)
+
+        self.assertTrue(
+            MODULE.researcher_approval_matches(value, CANDIDATE_SHA256, approval)
+        )
+        self.assertFalse(
+            MODULE.researcher_approval_matches(
+                value, CANDIDATE_SHA256, researcher_approval()
+            )
+        )
 
 
 if __name__ == "__main__":

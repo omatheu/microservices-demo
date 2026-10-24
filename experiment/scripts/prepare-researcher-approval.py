@@ -19,6 +19,9 @@ CANONICAL_APPROVAL_PATH = pathlib.PurePosixPath(
     "experiment/protocol/approvals/researcher-approval-v1.json"
 )
 ACKNOWLEDGEMENT = "APPROVE_RESEARCHER_PROTOCOL_FREEZE"
+PARTIAL_COLLECTION_ACKNOWLEDGEMENT = (
+    "APPROVE_RESEARCHER_PROTOCOL_FREEZE_AFTER_PARTIAL_COLLECTION"
+)
 AUDITOR_PATH = pathlib.Path(__file__).with_name("audit-protocol-freeze.py")
 AUDITOR_SPEC = importlib.util.spec_from_file_location(
     "audit_protocol_freeze_for_researcher_approval", AUDITOR_PATH
@@ -99,7 +102,10 @@ def audit_is_ready_for_researcher(audit_result):
 
 
 def build_approval(protocol, protocol_sha256, approved_by, approved_at):
-    return {
+    context = AUDITOR.prior_collection_context(protocol)
+    if context is None:
+        raise ApprovalError("protocol amendment has an invalid prior-collection record")
+    approval = {
         "schema_version": "1.0.0",
         "protocol_id": protocol.get("protocol_id"),
         "candidate_protocol_sha256": protocol_sha256,
@@ -113,6 +119,24 @@ def build_approval(protocol, protocol_sha256, approved_by, approved_at):
             "changes_require_new_protocol_version": True,
         },
     }
+    if context:
+        approval["schema_version"] = "1.1.0"
+        approval["prior_collection"] = context
+        approval["acknowledgements"] = {
+            "protocol_reviewed": True,
+            "partial_collection_before_amendment_reviewed": True,
+            "prior_evidence_preserved_without_reinterpretation": True,
+            "no_oracle_labels_revealed_before_amendment": True,
+            "changes_require_new_protocol_version": True,
+        }
+    return approval
+
+
+def required_acknowledgement(protocol):
+    context = AUDITOR.prior_collection_context(protocol)
+    if context is None:
+        raise ApprovalError("protocol amendment has an invalid prior-collection record")
+    return PARTIAL_COLLECTION_ACKNOWLEDGEMENT if context else ACKNOWLEDGEMENT
 
 
 def prepare(
@@ -121,14 +145,14 @@ def prepare(
     acknowledgement=None,
     approved_by=None,
 ):
-    if approve and acknowledgement != ACKNOWLEDGEMENT:
-        raise ApprovalError(f"--approve requires --acknowledge {ACKNOWLEDGEMENT}")
-    if approve and (not isinstance(approved_by, str) or not approved_by.strip()):
-        raise ApprovalError("--approve requires a non-empty --approved-by")
-
     root = pathlib.Path(repo_root).resolve()
     protocol_path = root / PROTOCOL_PATH
     protocol = load(protocol_path)
+    required = required_acknowledgement(protocol)
+    if approve and acknowledgement != required:
+        raise ApprovalError(f"--approve requires --acknowledge {required}")
+    if approve and (not isinstance(approved_by, str) or not approved_by.strip()):
+        raise ApprovalError("--approve requires a non-empty --approved-by")
     cost_review = load_optional(root / COST_REVIEW_PATH)
     protocol_sha256 = sha256_file(protocol_path)
     audit_result = AUDITOR.audit(root, protocol, None, cost_review)
@@ -160,6 +184,7 @@ def prepare(
         "check_count": audit_result.get("check_count"),
         "blocking_requirements": audit_result.get("blocking_requirements", []),
         "eligible_for_researcher_approval": eligible,
+        "required_acknowledgement": required,
         "approval_generated": False,
         "cloud_execution_authorized": False,
         "gcp_mutation_performed": False,

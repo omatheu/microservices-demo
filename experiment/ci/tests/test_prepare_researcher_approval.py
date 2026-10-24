@@ -104,6 +104,52 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
 
         audit.assert_not_called()
 
+    def test_partial_collection_uses_a_distinct_truthful_acknowledgement(self):
+        protocol = json.loads(self.repository.protocol_path.read_text())
+        protocol["protocol_id"] = "checkout-pdt-comparison-v1.3"
+        protocol["amendment"] = {
+            "amendment_id": "orchestration-v1.3-partial-collection",
+            "confirmatory_observations_before_amendment": 1,
+            "complete_decision_pairs_before_amendment": 0,
+            "oracle_adjudications_before_amendment": 0,
+            "oracle_labels_revealed_before_amendment": 0,
+            "prior_evidence_disposition": (
+                "preserved-incomplete-without-reexecution-or-reinterpretation"
+            ),
+        }
+        self.repository.protocol_path.write_text(json.dumps(protocol))
+        protocol_sha256 = hashlib.sha256(
+            self.repository.protocol_path.read_bytes()
+        ).hexdigest()
+
+        with mock.patch.object(
+            MODULE.AUDITOR,
+            "audit",
+            return_value=ready_audit(protocol_sha256),
+        ):
+            with self.assertRaisesRegex(
+                MODULE.ApprovalError, "AFTER_PARTIAL_COLLECTION"
+            ):
+                MODULE.prepare(
+                    self.repository.root,
+                    approve=True,
+                    acknowledgement=MODULE.ACKNOWLEDGEMENT,
+                    approved_by="omatheu",
+                )
+            approval = MODULE.prepare(
+                self.repository.root,
+                approve=True,
+                acknowledgement=MODULE.PARTIAL_COLLECTION_ACKNOWLEDGEMENT,
+                approved_by="omatheu",
+            )
+
+        self.assertEqual("1.1.0", approval["schema_version"])
+        self.assertEqual(1, approval["prior_collection"]["candidate_flows_started"])
+        self.assertEqual(0, approval["prior_collection"]["oracle_labels_revealed"])
+        self.assertNotIn(
+            "no_confirmatory_outcomes_observed", approval["acknowledgements"]
+        )
+
     def test_approval_requires_nonempty_researcher_identity(self):
         with self.assertRaisesRegex(MODULE.ApprovalError, "approved-by"):
             MODULE.prepare(

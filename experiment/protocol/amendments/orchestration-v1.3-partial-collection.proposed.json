@@ -27,6 +27,7 @@
   },
   "authorized_changes_if_approved": [
     "Add a fail-closed validator for the terminal conventional workflow outcome.",
+    "Require the v1.3 researcher approval to acknowledge the preserved partial collection and the absence of Oracle label disclosure instead of asserting that no confirmatory outcome was observed.",
     "Permit only a recognized experimental candidate with a canonical exit status and a complete hash-bound conventional block to continue to the preartifact Oracle path.",
     "Keep every non-experimental pull request block as a failed workflow.",
     "Record the v1.2 candidate flow as incomplete without rerunning or reinterpreting its sealed conventional decision.",
