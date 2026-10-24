@@ -134,22 +134,24 @@ execução autorizada em cloud ou análise dos resultados.
 8. [concluído em 24/10/2026] corrigir e validar localmente as dependências,
    renovar a observação financeira limitada a 100 MB e registrar a autorização
    separada para publicação; o primeiro novo run falhou fechado ao detectar
-   CVEs recém-publicados, e as correções adicionais passaram localmente com
-   zero findings HIGH/CRITICAL corrigíveis;
-9. publicar e vincular os três runtimes sob uma nova proveniência protegida,
-   renovar as aprovações financeira e do pesquisador, congelar a v1.2,
-   rotacionar a chave e gerar um corpus opaco novo;
+   CVEs recém-publicados, as correções adicionais passaram sem findings
+   HIGH/CRITICAL corrigíveis e os três runtimes foram publicados e vinculados
+   por digest sob uma nova proveniência protegida;
+9. registrar a aprovação do pesquisador, finalizar o congelamento v1.2,
+   rotacionar a chave e gerar um corpus opaco novo; a aprovação financeira já
+   foi renovada e o auditor passa 16/17 controles;
 10. executar a comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
 11. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
    as evidências, remover a infraestrutura e conferir o custo final.
 
 Os controles passivos do Oracle, seu RBAC e a validação curta não pertencem
-mais ao caminho crítico. A nova observação financeira passou, a publicação foi
-autorizada separadamente e o gate de segurança bloqueou novos CVEs antes de
-qualquer push. O próximo passo é repetir a CI com as bases corrigidas, publicar
-e vincular os três runtimes. O primeiro bloco confirmatório continua exigindo
-autorizações cloud e financeiras independentes.
+mais ao caminho crítico. A nova observação financeira passou, o gate de
+segurança bloqueou novos CVEs antes do primeiro push e a repetição publicou e
+vinculou os runtimes corrigidos. O próximo passo é a aprovação explícita do
+pesquisador para finalizar o congelamento e gerar o novo corpus. O primeiro
+bloco confirmatório continua exigindo autorizações cloud e financeiras
+independentes.
 
 ## Fases restantes
 

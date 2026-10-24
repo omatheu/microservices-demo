@@ -33,6 +33,21 @@ e
 [`runtime-security-remediation-v1.2-local-20261024.json`](runtime-security-remediation-v1.2-local-20261024.json).
 Ela não é proveniência de publicação nem evidência confirmatória.
 
+## Publicação protegida dos runtimes da emenda v1.2 em 24/10/2026
+
+Depois de bloquear os CVEs recém-publicados, o PR #12 repetiu a CI no commit
+`6a39f7f77206c229144dd593560536cdad607825`. As três imagens passaram pelo
+build, SBOM e Trivy com a política HIGH/CRITICAL inalterada e foram publicadas
+no caminho protegido, sem credenciais GKE. Staging, PDT, gate humano e Oracle
+foram explicitamente ignorados pelo workflow.
+
+O resumo auditável
+[`runtime-publication-pr12-20261024T154243Z.json`](runtime-publication-pr12-20261024T154243Z.json)
+vincula o commit, a árvore Git, o run protegido, os relatórios e os digests
+imutáveis. Os manifests PDT e Oracle compartilham exatamente a mesma
+proveniência. Depois do job, a chave de publicação voltou a `false` e os
+rótulos cloud foram removidos do PR.
+
 ## Publicação protegida dos runtimes da emenda v1.1 em 05/10/2026
 
 O PR #10 executou o caminho isolado `runtime-publication` no commit

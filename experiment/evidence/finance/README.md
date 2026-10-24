@@ -26,11 +26,17 @@ O agregado não isola contabilmente o custo de cada workload.
 O snapshot anterior da v1.1 permanece em
 [`cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json`](./cost-window-20260919-20261005-post-oracle-v1.1-final-20261006.json).
 
-O preflight de publicação v1.2 deve ser regenerado para o commit exato que
-passar pelo gate de imagens. O plano anterior, vinculado a um commit
-substituído por correções de segurança, foi descartado e não é elegível como
-proveniência. A autorização humana de publicação não autoriza coleta
-confirmatória, staging, PDT, Oracle ou qualquer outro workload no cluster.
+A publicação protegida v1.2 ocorreu no workflow `40108005657`, vinculada ao
+commit `6a39f7f77206c229144dd593560536cdad607825`, depois de a CI convencional e
+o gate das três imagens passarem. A identidade usada tinha somente escrita no
+Artifact Registry; staging, PDT, gate humano e Oracle foram ignorados. A janela
+foi desarmada imediatamente após o job. O resumo versionado está em
+[`runtime-publication-pr12-20261024T154243Z.json`](../ci-cd/runtime-publication-pr12-20261024T154243Z.json),
+e o bundle de congelamento em
+[`protocol-freeze-candidate-v1.2-20261024T154436Z.json`](./protocol-freeze-candidate-v1.2-20261024T154436Z.json).
+A elegibilidade 16/17, sem gerar aprovação, está em
+[`researcher-approval-eligibility-v1.2-20261024T154520Z.json`](./researcher-approval-eligibility-v1.2-20261024T154520Z.json).
+Essa autorização não alcança coleta confirmatória nem workloads no cluster.
 
 A aprovação financeira canônica da v1.1 foi registrada em 12/10/2026 UTC após
 confirmação humana literal. Ela vinculou a evidência pelo SHA-256, aprovou

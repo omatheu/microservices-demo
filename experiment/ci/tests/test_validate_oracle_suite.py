@@ -41,14 +41,14 @@ def publication_binding():
 
 
 class ValidateOracleSuiteTests(unittest.TestCase):
-    def test_active_amended_suite_is_valid_but_not_frozen(self):
+    def test_active_amended_suite_is_bound_and_frozen(self):
         value = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
 
         result = MODULE.validate(REPO_ROOT, value)
 
-        self.assertFalse(result["images_ready"])
-        self.assertFalse(result["publication_bound"])
-        self.assertFalse(result["frozen"])
+        self.assertTrue(result["images_ready"])
+        self.assertTrue(result["publication_bound"])
+        self.assertTrue(result["frozen"])
 
     def test_candidate_suite_files_are_bound_but_images_remain_pending(self):
         result = MODULE.validate(REPO_ROOT, manifest())
