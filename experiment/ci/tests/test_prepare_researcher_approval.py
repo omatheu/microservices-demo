@@ -68,14 +68,14 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
         self.clock.stop()
         self.repository.close()
 
-    def test_frozen_repository_is_not_eligible_for_a_second_approval(self):
+    def test_current_repository_requires_financial_review_before_approval(self):
         result = MODULE.prepare(REPO_ROOT)
 
         self.assertFalse(result["eligible_for_researcher_approval"])
         self.assertFalse(result["approval_generated"])
         self.assertFalse(result["cloud_execution_authorized"])
         self.assertEqual(
-            {"collection-locked-before-freeze", "researcher-approval"},
+            {"financial-review", "researcher-approval"},
             set(result["blocking_requirements"]),
         )
 
@@ -155,7 +155,7 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
             MODULE.prepare(
                 self.repository.root,
                 approve=True,
-                acknowledgement=MODULE.ACKNOWLEDGEMENT,
+                    acknowledgement=MODULE.PARTIAL_COLLECTION_ACKNOWLEDGEMENT,
                 approved_by="  ",
             )
 
@@ -168,7 +168,7 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
             approval = MODULE.prepare(
                 self.repository.root,
                 approve=True,
-                acknowledgement=MODULE.ACKNOWLEDGEMENT,
+                acknowledgement=MODULE.PARTIAL_COLLECTION_ACKNOWLEDGEMENT,
                 approved_by="  omatheu  ",
             )
 
@@ -217,7 +217,7 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
             str(self.repository.root),
             "--approve",
             "--acknowledge",
-            MODULE.ACKNOWLEDGEMENT,
+            MODULE.PARTIAL_COLLECTION_ACKNOWLEDGEMENT,
             "--approved-by",
             "omatheu",
             "--output",
@@ -242,7 +242,7 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
             str(self.repository.root),
             "--approve",
             "--acknowledge",
-            MODULE.ACKNOWLEDGEMENT,
+            MODULE.PARTIAL_COLLECTION_ACKNOWLEDGEMENT,
             "--approved-by",
             "omatheu",
             "--output",

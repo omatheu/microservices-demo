@@ -140,18 +140,31 @@ execução autorizada em cloud ou análise dos resultados.
 9. [concluído na candidata do PR #12 em 24/10/2026] registrar a aprovação do
    pesquisador, finalizar o congelamento v1.2, rotacionar a chave e gerar um
    corpus opaco novo; o auditor pré-freeze passou 17/17 controles;
-10. executar a comparação pareada, o gate humano e o Oracle em blocos
+10. [interrompido de forma fail-closed em 24/10/2026] preservar a primeira
+   decisão convencional v1.2 como observação parcial; o CI selou `block`, mas
+   um defeito terminal de orquestração impediu o Oracle pré-artefato, sem
+   staging, PDT, cloud ou abertura do rótulo;
+11. [em preparação, 15/17 controles] incorporar a emenda operacional v1.3,
+   corrigir o workflow e renovar hashes; faltam somente a revisão financeira e
+   a aprovação específica do pesquisador para a coleta parcial antes de
+   congelar novamente e gerar um corpus opaco com chave nova;
+12. executar a comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
-11. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
+13. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
    as evidências, remover a infraestrutura e conferir o custo final.
 
 Os controles passivos do Oracle, seu RBAC e a validação curta não pertencem
 mais ao caminho crítico. A nova observação financeira passou, o gate de
 segurança bloqueou novos CVEs antes do primeiro push, os runtimes corrigidos
 foram publicados e vinculados e o corpus v1.2 foi gerado após o congelamento.
-O próximo passo é revisar e incorporar o PR #12 e, em ação remota separada,
-instalar a nova chave no secret protegido. O primeiro bloco confirmatório
-continua exigindo autorizações cloud e financeiras independentes.
+O PR #12 foi incorporado, mas a v1.2 deixou de ser o protocolo ativo após a
+observação parcial do PR #13. A emenda v1.3 foi autorizada e os componentes
+locais voltaram a ficar congelados e vinculados, sem execução cloud; a auditoria
+passa 15/17 controles. O caminho crítico agora é renovar a revisão financeira
+e obter a aprovação do pesquisador que reconhece a coleta parcial, congelar
+17/17 e gerar um novo corpus. A nova chave só será instalada no secret
+protegido em ação remota separada; o primeiro bloco confirmatório continua
+exigindo autorizações cloud e financeiras independentes.
 
 ## Fases restantes
 
@@ -760,8 +773,11 @@ repetida somente depois de os outros 16 controles voltarem a passar.
 antes da coleta pela emenda v1.1 e atingido novamente em 12/10/2026. A emenda
 de segurança v1.2 reabriu o critério antes da coleta; em 24/10/2026, publicação,
 vínculos, revisão financeira e aprovação foram renovados, o auditor pré-freeze
-passou 17/17, o protocolo foi congelado e o corpus opaco novo foi validado.
-Nenhuma execução confirmatória ou autorização cloud decorre desse estado.
+passou 17/17, o protocolo foi congelado e o corpus opaco novo foi validado. A
+observação parcial do PR #13 reabriu o critério na emenda v1.3: os componentes
+e hashes locais estão prontos em 15/17, mas as duas aprovações v1.2 foram
+retiradas dos caminhos canônicos e precisam ser renovadas. Nenhuma execução
+confirmatória ou autorização cloud decorre desse estado.
 
 ### Fase 7 — Oráculo, validação e recalibração
 
@@ -845,10 +861,11 @@ artefatos. A definição do workflow já encadeia esse caminho e o caminho
 Kubernetes, deriva o manifesto com código da base confiável, cifra toda
 evidência privada e persiste publicamente somente hashes e recibos sem rótulo.
 Os três tipos de verificação pré-artefato foram exercitados localmente nas
-quatro instâncias previstas, sem GCP. O RBAC declarativo já foi aplicado e o
-corpus confirmatório v1.2 foi gerado. Ainda falta substituir o secret protegido
-de cegamento pela chave v1.2 e executar, com autorização independente, o
-caminho Kubernetes na coleta confirmatória.
+quatro instâncias previstas, sem GCP. O RBAC declarativo já foi aplicado. O
+corpus v1.2 foi retirado da área ativa pela emenda v1.3 depois de uma observação
+convencional parcial sem abertura de rótulo. Ainda falta congelar a v1.3, gerar
+o novo corpus, substituir o secret protegido pela chave v1.3 e executar, com
+autorização independente, a coleta confirmatória.
 
 ### Fase 8 — Análise final
 

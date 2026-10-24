@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
   "amendment_id": "orchestration-v1.3-partial-collection",
-  "status": "proposed-awaiting-researcher-authorization",
+  "status": "authorized-preparation",
   "proposed_at": "2026-10-24T16:22:14Z",
-  "authorization_literal": null,
-  "authorized_at": null,
+  "authorization_literal": "AUTORIZO_EMENDA_OPERACIONAL_V1_3_E_PUBLICACAO_DO_PR_SEM_EXECUCAO_CLOUD",
+  "authorized_at": "2026-10-24T17:22:13Z",
   "reason": "The first v1.2 confirmatory candidate produced a valid, hash-bound conventional block, but the terminal pull-request workflow step accepted only passing local CI decisions. This converted a substantive control outcome into a workflow failure and prevented the preregistered preartifact Oracle path from starting.",
   "confirmatory_observations_collected": {
     "candidate_flows_started": 1,
@@ -25,7 +25,7 @@
     "path": "experiment/evidence/ci-cd/confirmatory-orchestration-regression-pr13-20261024.json",
     "sha256": "2e16ed46a920b5680c439cb30c7e06a742d31ce0acf7762775c2f313f4d5b47c"
   },
-  "authorized_changes_if_approved": [
+  "authorized_changes": [
     "Add a fail-closed validator for the terminal conventional workflow outcome.",
     "Require the v1.3 researcher approval to acknowledge the preserved partial collection and the absence of Oracle label disclosure instead of asserting that no confirmatory outcome was observed.",
     "Permit only a recognized experimental candidate with a canonical exit status and a complete hash-bound conventional block to continue to the preartifact Oracle path.",
@@ -45,5 +45,6 @@
   ],
   "cloud_execution_authorized": false,
   "runtime_publication_authorized": false,
-  "secret_update_authorized": false
+  "secret_update_authorized": false,
+  "pull_request_publication_authorized": true
 }

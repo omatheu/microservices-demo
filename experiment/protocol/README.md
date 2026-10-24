@@ -1,7 +1,7 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** protocolo v1.2 congelado e corpus opaco gerado; nenhuma execução
-> cloud foi autorizada.
+> **Status:** emenda operacional v1.3 autorizada e protocolo novamente em
+> `pre-registration-candidate`; não há corpus ativo nem execução cloud autorizada.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -9,8 +9,8 @@
 
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
-análise. Seu status ativo é `frozen`; políticas, runtimes, aprovações e corpus
-foram renovados para a v1.2 antes de qualquer coleta.
+análise. Seu status ativo é `pre-registration-candidate`; a coleta permanece
+bloqueada até novos hashes, aprovações, congelamento e corpus v1.3.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
@@ -41,6 +41,17 @@ congelado de SHA-256
 uma chave nova gerou o corpus opaco `corpus-2ohyzpel2lonq`. O congelamento
 habilita metodologicamente a coleta, mas mantém a autorização cloud como gate
 independente e explícito.
+
+Ainda em 24 de outubro de 2026, a primeira candidata v1.2 produziu uma decisão
+convencional `block` válida, selada e preservada. O passo terminal do workflow,
+porém, aceitava somente decisões locais `pass`, marcou o workflow como falho e
+impediu o Oracle pré-artefato registrado. Nenhum rótulo Oracle foi aberto e
+nenhum staging, PDT ou workload cloud foi executado. A emenda
+[`amendments/orchestration-v1.3-partial-collection.json`](./amendments/orchestration-v1.3-partial-collection.json)
+registra essa observação parcial sem repeti-la ou reinterpretá-la, corrige
+somente a orquestração fail-closed e exige uma aprovação que reconheça
+explicitamente a coleta parcial. O corpus v1.2 foi retirado da área ativa; uma
+nova chave e um novo corpus serão gerados apenas depois do congelamento v1.3.
 
 ## Objetivo
 
@@ -376,14 +387,15 @@ python3 experiment/scripts/prepare-researcher-approval.py \
   --repo-root . \
   --approve \
   --approved-by <pesquisador> \
-  --acknowledge APPROVE_RESEARCHER_PROTOCOL_FREEZE \
+  --acknowledge APPROVE_RESEARCHER_PROTOCOL_FREEZE_AFTER_PARTIAL_COLLECTION \
   --output experiment/protocol/approvals/researcher-approval-v1.json
 ```
 
-O documento vincula o SHA-256 da candidata, registra os três reconhecimentos
-metodológicos e mantém `cloud_execution_authorized: false`. Qualquer mudança no
-protocolo depois da assinatura invalida o vínculo e exige nova versão e nova
-aprovação.
+Na v1.3, o documento vincula o SHA-256 da candidata, reconhece explicitamente a
+coleta parcial preservada, a ausência de abertura do rótulo Oracle e a proibição
+de reinterpretar ou repetir aquela observação. Ele mantém
+`cloud_execution_authorized: false`. Qualquer mudança no protocolo depois da
+assinatura invalida o vínculo e exige nova versão e nova aprovação.
 
 O preflight local foi repetido em 26/09/2026 para o commit `4504cfab`. As três
 imagens foram construídas, seus SBOMs foram gerados e os scans fixados da

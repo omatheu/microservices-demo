@@ -8,8 +8,7 @@ SHA-256 `38b1270bce29c4aa975f331d7c5b761e2abe89acd2545cdc11030318ceb4dbaf`.
 O corpus anterior da v1 foi invalidado antes de qualquer coleta confirmatória e
 permanece recuperável no commit `0ee94a90`, vinculado pelo registro
 `../amendments/oracle-v1.1-precollection.json`. A prévia em `../preview/` é
-histórica e nunca será promovida. A emenda atual está em
-`../amendments/security-v1.2-precollection.json`.
+histórica e nunca será promovida.
 
 A geração definitiva v1.2 ocorreu em 24/10/2026 UTC, somente depois da
 auditoria pré-freeze 17/17 e do congelamento do protocolo. Ela criou
@@ -19,19 +18,31 @@ simultaneamente:
 - `oracle-manifest.json`, não versionado;
 - a chave de cegamento, não versionada.
 
-O arquivo público ativo é `corpus-2ohyzpel2lonq`, contém 18 identificadores
-opacos e três repetições por candidata e está vinculado ao protocolo congelado
-de SHA-256
+O corpus `corpus-2ohyzpel2lonq` continha 18 identificadores opacos e três
+repetições por candidata e estava vinculado ao protocolo congelado de SHA-256
 `8a34f553287d688b2cf38dfa2db6b29caa078bd191ce7d04a03fb5e707870c51`.
 Seu compromisso Oracle é
 `a49190a3fa83def64b5c0e23321873fe7116c31f4386782a4fe65924b1c60d69`.
 
-O manifesto e a chave v1.1 permanecem somente como arquivo histórico em
-diretório local privado. A chave e o manifesto v1.2 também foram gravados com
-permissões 0600 em diretório local ignorado pelo Git e nunca podem ser copiados
-para este diretório versionado. Antes de qualquer execução confirmatória, o
-secret protegido `TCC_ORACLE_BLINDING_KEY_B64` ainda deve ser substituído
-exclusivamente pela chave v1.2 em uma ação remota separada e autorizada.
+Em 24/10/2026, a primeira candidata v1.2 produziu uma decisão convencional
+`block` válida e selada, mas um defeito terminal de orquestração impediu o
+caminho Oracle pré-artefato. Não houve staging, PDT, execução cloud,
+adjudicação Oracle nem abertura do rótulo. A decisão permanece preservada como
+fluxo incompleto e não será repetida ou reinterpretada. A emenda autorizada
+[`orchestration-v1.3-partial-collection.json`](../amendments/orchestration-v1.3-partial-collection.json)
+retirou o corpus v1.2 da área ativa e exige protocolo v1.3, nova chave e novo
+corpus antes de retomar a coleta.
+
+Não existe corpus confirmatório ativo enquanto a v1.3 permanecer em
+`pre-registration-candidate`. O próximo `public-corpus.json` só poderá ser
+criado depois de nova auditoria 17/17 e congelamento.
+
+Os manifestos e as chaves v1.1 e v1.2 permanecem somente como arquivos
+históricos em diretório local privado, com permissões 0600, e nunca podem ser
+copiados para este diretório versionado. Nenhuma chave v1.3 existe ainda.
+Depois do novo congelamento, o secret protegido
+`TCC_ORACLE_BLINDING_KEY_B64` deverá ser substituído exclusivamente pela chave
+v1.3 em uma ação remota separada e autorizada.
 
 O mesmo ambiente protegido deve conter:
 

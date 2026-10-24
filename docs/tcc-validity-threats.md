@@ -1,8 +1,9 @@
 # Registro de ameaças à validade do experimento PDT
 
 > **Status:** registro pré-coleta; versão inicial em 21 de setembro de 2026,
-> emenda Oracle v1.1 autorizada em 5 de outubro de 2026 e emenda de segurança
-> v1.2 autorizada em 12 de outubro de 2026.
+> emenda Oracle v1.1 autorizada em 5 de outubro de 2026, emenda de segurança
+> v1.2 autorizada em 12 de outubro de 2026 e emenda operacional v1.3
+> autorizada em 24 de outubro de 2026 depois de uma observação parcial.
 >
 > Este documento deve ser revisado antes do congelamento do protocolo e outra
 > vez depois da coleta. A revisão posterior pode registrar impacto observado,
@@ -79,6 +80,7 @@ Uma ameaça materializada não autoriza remover uma candidata porque seu resulta
 | `I-15` | Revelar o manifesto privado antes do gate contaminaria a decisão. | Exigir decisão convencional, PDT, gate e, para ação deployável, aprovação protegida antes do unlock. | Recibo de unlock e hashes da cadeia. | A máquina local do pesquisador continua sendo uma fronteira confiável. |
 | `I-16` | Uma suposição incorreta sobre a rede do cluster poderia transformar falha da infraestrutura do oráculo em aparente dano da candidata. | Exigir execução de engenharia anterior à coleta, validar o resolvedor DNS real do GKE, tratar falhas de transporte sem exceção no avaliador e repetir o congelamento quando a suíte mudar. | `oracle-engineering-runner-validation-20261005T013207Z.json`, NetworkPolicy renderizada, testes de regressão e nova auditoria 17/17. | Mudanças futuras do dataplane ou do DNS do GKE ainda exigem nova validação de engenharia. |
 | `I-17` | Vulnerabilidades divulgadas depois do congelamento podem tornar um runtime inseguro mesmo sem mudança no código do experimento. | Manter o gate fixo de CVEs HIGH/CRITICAL corrigíveis, interromper a coleta, abrir emenda pré-coleta, atualizar versões por digest e exigir nova publicação, aprovações, congelamento e corpus. | Artefato Trivy do PR #12, registro `runtime-security-regression-pr12-20261012.json`, SBOMs e scans da v1.2. | Novos avisos podem surgir após a republicação; o instante e a base de vulnerabilidades do scan devem ser registrados. |
+| `I-18` | Um bloqueio substantivo da CI ser convertido em falha terminal do workflow pode produzir pares incompletos e exclusão enviesada justamente das candidatas detectadas pelo controle. | Aceitar progressão somente para candidata experimental reconhecida com exit canônico, decisão convencional `block` selada e vínculo SHA-256; manter PRs comuns fail-closed; preservar a observação parcial sem repetição ou reinterpretação; reiniciar a coleta sob nova versão e corpus. | Run `40110941002`, artefato `12566257648`, decisões seladas, registro `confirmatory-orchestration-regression-pr13-20261024.json` e emenda v1.3. | A primeira decisão convencional foi observada antes da correção; por isso ela não entra no novo corpus, mas deve permanecer relatada como fluxo v1.2 incompleto. |
 
 ## Validade de conclusão estatística
 
@@ -140,6 +142,15 @@ foi retirada da área ativa. A emenda v1.2 não muda desfecho, operadores,
 limiares, tamanho amostral, regra de decisão nem a política do scanner; ela
 somente atualiza dependências vulneráveis e reinicia a cadeia de proveniência,
 aprovação, congelamento e cegamento.
+
+Em 24 de outubro de 2026, `I-18` materializou-se na primeira candidata v1.2.
+A CI produziu e selou um `block` substantivo, mas o passo terminal exigia
+sempre exit zero e decisão `pass`; por isso o workflow falhou e o Oracle
+pré-artefato não iniciou. Nenhum rótulo foi aberto e não houve staging, PDT ou
+execução cloud. A emenda v1.3 preserva os hashes dessa observação parcial,
+proíbe sua repetição ou reinterpretação, corrige apenas a transição terminal e
+exige nova aprovação, congelamento e corpus. O resultado v1.2 será relatado
+como fluxo incompleto e não será misturado à análise confirmatória v1.3.
 
 ## Evidência de auditoria
 

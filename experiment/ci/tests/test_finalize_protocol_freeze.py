@@ -43,9 +43,31 @@ def audit_result():
 
 
 def researcher_approval():
+    value = protocol()
+    return {
+        "schema_version": "1.1.0",
+        "protocol_id": value["protocol_id"],
+        "candidate_protocol_sha256": CANDIDATE_SHA256,
+        "decision": "approve-protocol-freeze",
+        "approved_by": "researcher",
+        "approved_at": "2026-09-22T05:00:00Z",
+        "cloud_execution_authorized": False,
+        "prior_collection": MODULE.prior_collection_context(value),
+        "acknowledgements": {
+            "protocol_reviewed": True,
+            "partial_collection_before_amendment_reviewed": True,
+            "prior_evidence_preserved_without_reinterpretation": True,
+            "no_oracle_labels_revealed_before_amendment": True,
+            "changes_require_new_protocol_version": True,
+        },
+    }
+
+
+def precollection_researcher_approval():
+    value = protocol()
     return {
         "schema_version": "1.0.0",
-        "protocol_id": protocol()["protocol_id"],
+        "protocol_id": value["protocol_id"],
         "candidate_protocol_sha256": CANDIDATE_SHA256,
         "decision": "approve-protocol-freeze",
         "approved_by": "researcher",
@@ -229,7 +251,7 @@ class FinalizeProtocolFreezeTests(unittest.TestCase):
         )
         self.assertFalse(
             MODULE.researcher_approval_matches(
-                value, CANDIDATE_SHA256, researcher_approval()
+                value, CANDIDATE_SHA256, precollection_researcher_approval()
             )
         )
 
