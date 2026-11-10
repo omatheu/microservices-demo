@@ -54,7 +54,7 @@ class RepeatedComparativeCandidateRunnerTests(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(
-            "Confirmatory repetition orchestration requires the frozen three-repetition protocol.",
+            "Candidate is not eligible for confirmatory repetition orchestration.",
             result.stderr,
         )
         self.assertNotIn("contains active pods", result.stderr)

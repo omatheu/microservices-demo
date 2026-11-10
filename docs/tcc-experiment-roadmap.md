@@ -152,9 +152,10 @@ execução autorizada em cloud ou análise dos resultados.
    17/17 e gerar o corpus opaco `corpus-hlwmpwybztcm4` com chave nova;
 12. [concluído em 02/11/2026] pausar a coleta, preservar as evidências e excluir
    somente o cluster depois que o consumo ocioso ultrapassou os limites v1.3;
-13. [em andamento] aplicar localmente a emenda financeira v1.4, renovar a
+13. [concluído em 10/11/2026] aplicar localmente a emenda financeira v1.4, renovar a
    revisão financeira e a aprovação do pesquisador, passar a auditoria 17/17,
-   congelar o protocolo e rotacionar o corpus sem execução cloud;
+   congelar o protocolo e gerar o corpus `corpus-vrvpwrdnmt4hw` com chave nova,
+   sem execução cloud;
 14. recriar o cluster somente com autorização independente e executar a
    comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
@@ -169,9 +170,10 @@ O PR #12 foi incorporado, mas a v1.2 deixou de ser o protocolo ativo após a
 observação parcial do PR #13. A emenda v1.3 foi autorizada e os componentes
 locais voltaram a ficar congelados e vinculados, sem execução cloud. A aprovação
 do pesquisador reconheceu a coleta parcial, a auditoria passou 17/17 e o novo
-corpus opaco foi gerado. A chave nova só será instalada no secret protegido em
-ação remota separada; o primeiro bloco confirmatório continua exigindo
-autorizações cloud e financeiras independentes.
+corpus opaco foi gerado. A v1.4 também foi congelada após auditoria 17/17 e o
+novo corpus opaco foi gerado localmente. A chave nova só será instalada no
+secret protegido em ação remota separada; o primeiro bloco confirmatório
+continua exigindo autorizações cloud e financeiras independentes.
 
 ## Fases restantes
 
@@ -874,9 +876,9 @@ quatro instâncias previstas, sem GCP. O RBAC declarativo já foi aplicado. O
 corpus v1.2 foi retirado da área ativa pela emenda v1.3 depois de uma observação
 convencional parcial sem abertura de rótulo. A v1.3 foi congelada e seu corpus
 foi gerado, mas a pausa financeira posterior excluiu o cluster e invalidou esse
-corpus para a retomada. Ainda falta congelar a v1.4, gerar o novo corpus,
-substituir o secret protegido pela chave v1.4 e executar, com autorização
-independente, a coleta confirmatória.
+corpus para a retomada. A v1.4 já está congelada e o corpus novo foi validado;
+ainda falta substituir o secret protegido pela chave v1.4, recriar o cluster e
+executar, com autorização independente, a coleta confirmatória.
 
 ### Fase 8 — Análise final
 
@@ -945,7 +947,7 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [ ] renovar o congelamento do protocolo v1.4, corpus, sementes e regra de
+- [x] renovar o congelamento do protocolo v1.4, corpus, sementes e regra de
   parada antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;

@@ -4,7 +4,21 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O estado mais recente, consultado em 24/10/2026 UTC para a emenda v1.3,
+Em 09/11/2026 UTC, depois da pausa financeira e da exclusão do cluster, uma
+consulta nova limitada a 100 MB observou R$1.798,268459 brutos,
+R$-1.798,274554 em créditos e R$-0,006095 líquidos. O Console registrava
+R$711,37 de crédito promocional remanescente. A emenda v1.4 fixa R$200 como
+teto absoluto adicional, R$1.998,268459 como orçamento bruto contábil e R$10
+como reserva promocional mínima. A auditoria passou 17/17 e o protocolo foi
+congelado em 10/11/2026 UTC com SHA-256
+`2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
+Os recibos estão em
+[`pre-freeze-audit-v1.4-ready-20261110T030338Z.json`](./pre-freeze-audit-v1.4-ready-20261110T030338Z.json)
+e
+[`protocol-freeze-finalization-v1.4-20261110T030338Z.json`](./protocol-freeze-finalization-v1.4-20261110T030338Z.json).
+Nenhum desses atos autoriza execução cloud.
+
+O snapshot anterior, consultado em 24/10/2026 UTC para a emenda v1.3,
 confirma que o Standard usage cost export alcançou a janela encerrada às
 16:00 UTC do mesmo dia. A consulta versionada e limitada a 100 MB observou
 R$1.354,686907 de custo bruto, R$-1.354,691494 em créditos e R$-0,004587 de

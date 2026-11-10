@@ -105,13 +105,13 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_v14_locked_after_financial_pause(self):
+    def test_active_protocol_is_v14_frozen_after_financial_pause(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
         self.assertEqual("checkout-pdt-comparison-v1.4", value["protocol_id"])
-        self.assertEqual("pre-registration-candidate", value["status"])
-        self.assertFalse(value["confirmatory_collection_allowed"])
-        self.assertIsNone(value["frozen_at"])
+        self.assertEqual("frozen", value["status"])
+        self.assertTrue(value["confirmatory_collection_allowed"])
+        self.assertEqual("2026-11-10T03:03:38Z", value["frozen_at"])
         self.assertEqual(
             "financial-v1.4-post-pause",
             value["amendment"]["amendment_id"],

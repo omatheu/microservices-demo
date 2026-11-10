@@ -47,16 +47,23 @@ Seu compromisso Oracle é
 
 Em 2 de novembro de 2026, a coleta foi pausada porque o cluster ocioso excedeu
 os limites financeiros v1.3. A emenda financeira v1.4, autorizada em 9 de
-novembro, retirou o corpus v1.3 da área ativa sem abrir rótulos Oracle. O novo
-corpus v1.4 só pode ser gerado com uma chave nova depois do congelamento
-renovado e da auditoria 17/17; até lá este diretório não contém corpus ativo.
+novembro, retirou o corpus v1.3 da área ativa sem abrir rótulos Oracle. Em 10 de
+novembro, a auditoria v1.4 passou 17/17, o protocolo foi congelado e uma chave
+nova gerou o corpus ativo `corpus-vrvpwrdnmt4hw`. Ele contém 18 identificadores
+opacos, três repetições por candidata e seis blocos de três, está vinculado ao
+protocolo de SHA-256
+`2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`
+e tem SHA-256
+`615f5c6dca276d2a4acb93f3fc8110f5bc903c30f1be36b830603946687c2cdd`.
+Seu compromisso Oracle é
+`5ac57c1540e7a477136db010950dca3b59e9aa4dc1e6375536b34ae1bf95b61c`.
 
 Os manifestos e as chaves v1.1 e v1.2 permanecem somente como arquivos
 históricos em diretório local privado. A chave e o manifesto Oracle v1.3 também
 permanecem somente no diretório privado ignorado pelo Git, com permissões 0600,
 e nunca podem ser copiados para este diretório versionado. O secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` não será alterado durante a preparação v1.4; sua
-substituição pela futura chave v1.4 exige uma ação remota separada e autorizada.
+`TCC_ORACLE_BLINDING_KEY_B64` ainda não foi alterado; sua substituição pela
+chave v1.4 exige uma ação remota separada e autorizada.
 
 O mesmo ambiente protegido deve conter:
 

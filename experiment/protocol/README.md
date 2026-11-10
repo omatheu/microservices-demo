@@ -1,7 +1,7 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** emenda financeira v1.4 autorizada e em preparação local; a
-> coleta, o corpus v1.3 e toda execução cloud estão bloqueados.
+> **Status:** emenda financeira v1.4 congelada após auditoria 17/17; o corpus
+> opaco v1.4 está ativo, mas toda execução cloud continua bloqueada.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -9,9 +9,8 @@
 
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
-análise. Seu status ativo é `pre-registration-candidate`; a coleta permanece
-desabilitada até a revisão financeira, a aprovação do pesquisador e a auditoria
-17/17 vincularem o hash exato da v1.4.
+análise. Seu status ativo é `frozen`, com SHA-256
+`2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
 O congelamento metodológico não concede autorização cloud; a execução continua
 dependendo dos gates financeiros e humanos independentes.
 
@@ -69,6 +68,13 @@ fixa um novo teto adicional absoluto de R$ 200, orçamento contábil bruto de
 R$ 1.998,268459, reserva promocional mínima de R$ 10, revisão após cada bloco e
 exclusão do cluster enquanto se espera o Billing. Isso não autoriza recriação
 do cluster nem execução cloud.
+
+Em 10 de novembro de 2026, a aprovação do pesquisador vinculou a candidata
+v1.4 exata, a auditoria passou 17/17 e o finalizador congelou o protocolo. Uma
+chave privada nova gerou o corpus opaco `corpus-vrvpwrdnmt4hw`, com 18
+candidatas em seis blocos de três. A chave e o manifesto Oracle permanecem
+somente no diretório privado local com permissão `0600`; o secret protegido do
+GitHub não foi alterado.
 
 ## Objetivo
 
