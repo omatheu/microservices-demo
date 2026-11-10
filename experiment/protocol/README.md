@@ -1,7 +1,7 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** emenda operacional v1.3 congelada após auditoria 17/17; o corpus
-> opaco v1.3 está ativo, mas não há execução cloud autorizada.
+> **Status:** emenda financeira v1.4 autorizada e em preparação local; a
+> coleta, o corpus v1.3 e toda execução cloud estão bloqueados.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -9,8 +9,9 @@
 
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
-análise. Seu status ativo é `frozen`, com SHA-256
-`3c6612fc93e1ec5e6e4267d533bdfac0d985fe813420351da3b9648c1afb7b32`.
+análise. Seu status ativo é `pre-registration-candidate`; a coleta permanece
+desabilitada até a revisão financeira, a aprovação do pesquisador e a auditoria
+17/17 vincularem o hash exato da v1.4.
 O congelamento metodológico não concede autorização cloud; a execução continua
 dependendo dos gates financeiros e humanos independentes.
 
@@ -56,6 +57,18 @@ explicitamente a coleta parcial. O corpus v1.2 foi retirado da área ativa. Apó
 a auditoria 17/17 e o congelamento v1.3, uma nova chave local gerou o corpus
 opaco `corpus-hlwmpwybztcm4`; a chave ainda não foi instalada no secret
 protegido.
+
+Entre 24 de outubro e 2 de novembro de 2026, o cluster ocioso consumiu o teto
+financeiro v1.3 antes do primeiro bloco completo. A coleta foi pausada, as
+evidências foram preservadas e somente o cluster foi excluído. Em 9 de novembro,
+o Billing registrou R$ 1.798,268459 brutos e nenhum consumo recorrente depois
+da hora final de contabilização da exclusão; o Console mostrava R$ 711,37 de
+crédito promocional remanescente. A emenda
+[`amendments/financial-v1.4-post-pause.json`](./amendments/financial-v1.4-post-pause.json)
+fixa um novo teto adicional absoluto de R$ 200, orçamento contábil bruto de
+R$ 1.998,268459, reserva promocional mínima de R$ 10, revisão após cada bloco e
+exclusão do cluster enquanto se espera o Billing. Isso não autoriza recriação
+do cluster nem execução cloud.
 
 ## Objetivo
 
@@ -395,7 +408,7 @@ python3 experiment/scripts/prepare-researcher-approval.py \
   --output experiment/protocol/approvals/researcher-approval-v1.json
 ```
 
-Na v1.3, o documento vincula o SHA-256 da candidata, reconhece explicitamente a
+Na v1.4, o documento vincula o SHA-256 da candidata, reconhece explicitamente a
 coleta parcial preservada, a ausência de abertura do rótulo Oracle e a proibição
 de reinterpretar ou repetir aquela observação. Ele mantém
 `cloud_execution_authorized: false`. Qualquer mudança no protocolo depois da
@@ -433,11 +446,14 @@ a árvore ativa nem o GCP; o recibo mantém `cloud_execution_authorized: false`,
 portanto a futura execução cloud continua dependendo de autorização explícita
 independente.
 
-O teto proposto para a coleta é R$200 de custo incremental, com parada para
-revisão em R$150 e ao final de cada bloco de três candidatas. Isso ainda não é
+O teto absoluto adicional para a coleta v1.4 é R$200 de custo bruto, com parada
+para revisão em R$150 e ao final de cada bloco de três candidatas. O cluster
+deve ser excluído depois de cada bloco antes da espera pela atualização do
+Billing, e o saldo promocional projetado nunca pode ficar abaixo de R$10.
+Isso ainda não é
 uma autorização de gasto: orçamento do GCP gera alertas, não um bloqueio rígido,
-e a coleta continuará proibida até existir uma forma de conferir o custo
-incremental após cada bloco.
+e cada bloco continuará exigindo conferência financeira e autorização cloud
+independentes.
 
 ## Auditoria de prontidão para congelamento
 
@@ -453,7 +469,7 @@ preparador do candidato, o finalizador, o cleanup restrito dos workloads
 experimentais, os dois
 agregadores de repetição, o orquestrador confirmatório, o gerenciador
 determinístico do corpus cego e o próprio validador agora também fazem parte
-dos 37 inputs selados do protocolo. Assim, as regras
+dos 41 inputs selados do protocolo. Assim, as regras
 que decidem a prontidão e materializam a proposta final não podem ser trocadas
 silenciosamente depois da aprovação do desenho.
 

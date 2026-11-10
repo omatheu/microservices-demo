@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "policy_id": "checkout-oracle-v1",
   "status": "frozen",
-  "frozen_at": "2026-10-24T17:25:18Z",
+  "frozen_at": "2026-11-10T02:47:32Z",
   "twin_object": "checkoutservice",
   "required_repetitions": 3,
   "minimum_valid_repetitions": 2,

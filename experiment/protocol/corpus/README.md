@@ -45,12 +45,18 @@ e tem SHA-256
 Seu compromisso Oracle é
 `f43197555700b8bbdfc0d49395c225107d6806a9d9f53ffa1488510a334c1f49`.
 
+Em 2 de novembro de 2026, a coleta foi pausada porque o cluster ocioso excedeu
+os limites financeiros v1.3. A emenda financeira v1.4, autorizada em 9 de
+novembro, retirou o corpus v1.3 da área ativa sem abrir rótulos Oracle. O novo
+corpus v1.4 só pode ser gerado com uma chave nova depois do congelamento
+renovado e da auditoria 17/17; até lá este diretório não contém corpus ativo.
+
 Os manifestos e as chaves v1.1 e v1.2 permanecem somente como arquivos
 históricos em diretório local privado. A chave e o manifesto Oracle v1.3 também
 permanecem somente no diretório privado ignorado pelo Git, com permissões 0600,
 e nunca podem ser copiados para este diretório versionado. O secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` ainda não foi alterado; sua substituição pela
-chave v1.3 exige uma ação remota separada e autorizada.
+`TCC_ORACLE_BLINDING_KEY_B64` não será alterado durante a preparação v1.4; sua
+substituição pela futura chave v1.4 exige uma ação remota separada e autorizada.
 
 O mesmo ambiente protegido deve conter:
 

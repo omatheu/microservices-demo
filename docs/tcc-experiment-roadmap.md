@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 24 de outubro de 2026.
+> **Última verificação:** 9 de novembro de 2026.
 
 ## Objetivo do experimento
 
@@ -48,12 +48,15 @@ como Partial Digital Twin.
 
 - [x] Projeto Google Cloud `microservices-demo-tcc` configurado.
 - [x] Terraform separado da infraestrutura original da demonstração.
-- [x] Cluster GKE Autopilot `online-boutique-experiment` em `us-central1`.
+- [x] Cluster GKE Autopilot `online-boutique-experiment` validado e depois
+  excluído na pausa financeira de 02/11/2026.
 - [x] Namespaces cloud `operational`, `staging`, `pdt`, `pdt-system`, `oracle` e `observability`.
 - [x] Namespace isolado `oracle` aplicado, sem LoadBalancer e com quota própria.
 - [x] Quotas de CPU, memória, pods e Load Balancers por namespace.
-- [x] Orçamento de custo bruto de R$1.751,10.
-- [x] Margem de R$10 preservada sobre R$1.761,10 de crédito informado.
+- [x] Emenda v1.4 autorizada com baseline bruto de R$1.798,268459, teto
+  adicional absoluto de R$200 e orçamento contábil bruto de R$1.998,268459.
+- [x] Reserva promocional mínima de R$10 sobre R$711,37 observados no Console
+  em 09/11/2026.
 - [x] Período do orçamento alinhado à expiração dos créditos em 19/12/2026.
 - [x] Alertas financeiros em 25%, 50%, 75%, 90%, 95% e 100%.
 - [x] Orçamento operacional adicional de R$200, com alertas em R$50, R$100, R$150, R$180 e R$200.
@@ -112,7 +115,7 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-### Caminho crítico atual — 24/10/2026
+### Caminho crítico atual — 09/11/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,
@@ -147,9 +150,15 @@ execução autorizada em cloud ou análise dos resultados.
 11. [concluído em 24/10/2026] incorporar a emenda operacional v1.3, corrigir o
    workflow, renovar hashes e aprovações, congelar novamente após auditoria
    17/17 e gerar o corpus opaco `corpus-hlwmpwybztcm4` com chave nova;
-12. executar a comparação pareada, o gate humano e o Oracle em blocos
+12. [concluído em 02/11/2026] pausar a coleta, preservar as evidências e excluir
+   somente o cluster depois que o consumo ocioso ultrapassou os limites v1.3;
+13. [em andamento] aplicar localmente a emenda financeira v1.4, renovar a
+   revisão financeira e a aprovação do pesquisador, passar a auditoria 17/17,
+   congelar o protocolo e rotacionar o corpus sem execução cloud;
+14. recriar o cluster somente com autorização independente e executar a
+   comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
-13. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
+15. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
    as evidências, remover a infraestrutura e conferir o custo final.
 
 Os controles passivos do Oracle, seu RBAC e a validação curta não pertencem
@@ -863,9 +872,11 @@ evidência privada e persiste publicamente somente hashes e recibos sem rótulo.
 Os três tipos de verificação pré-artefato foram exercitados localmente nas
 quatro instâncias previstas, sem GCP. O RBAC declarativo já foi aplicado. O
 corpus v1.2 foi retirado da área ativa pela emenda v1.3 depois de uma observação
-convencional parcial sem abertura de rótulo. Ainda falta congelar a v1.3, gerar
-o novo corpus, substituir o secret protegido pela chave v1.3 e executar, com
-autorização independente, a coleta confirmatória.
+convencional parcial sem abertura de rótulo. A v1.3 foi congelada e seu corpus
+foi gerado, mas a pausa financeira posterior excluiu o cluster e invalidou esse
+corpus para a retomada. Ainda falta congelar a v1.4, gerar o novo corpus,
+substituir o secret protegido pela chave v1.4 e executar, com autorização
+independente, a coleta confirmatória.
 
 ### Fase 8 — Análise final
 
@@ -934,7 +945,8 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [x] congelar protocolo, corpus, sementes e regra de parada antes da coleta;
+- [ ] renovar o congelamento do protocolo v1.4, corpus, sementes e regra de
+  parada antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;
 - [ ] randomizar a ordem das candidatas;
@@ -951,7 +963,8 @@ intervalo de confiança quando o número de repetições permitir.
 
 ## Controles financeiros e operacionais
 
-- [x] orçamento bruto acumulado de R$1.751,10;
+- [x] teto v1.4 adicional absoluto de R$200 e orçamento bruto contábil de
+  R$1.998,268459;
 - [x] alertas de 25% a 100%;
 - [x] quotas por namespace;
 - [x] somente um Load Balancer permitido;
@@ -961,6 +974,8 @@ intervalo de confiança quando o número de repetições permitir.
 - [x] habilitar o Standard usage cost export no Console do Cloud Billing;
 - [ ] exportar e conferir custo diariamente durante execuções;
 - [x] definir rotina de desligamento ao final de cada janela;
+- [x] exigir exclusão do cluster depois de cada bloco antes de aguardar o
+  Billing e nova autorização;
 - [x] exigir cleanup final fail-closed dos workloads de `staging`, `pdt` e
   `pdt-system` no workflow;
 - [x] remover workloads ociosos;

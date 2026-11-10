@@ -97,9 +97,9 @@ class PrepareFinancialReviewTests(unittest.TestCase):
         self.assertEqual([], result["blocking_requirements"])
         self.assertEqual(12.34, result["observed_project_gross_cost_brl"])
         self.assertEqual(212.34, result["projected_project_gross_cost_ceiling_brl"])
-        self.assertEqual(1751.1, result["project_gross_cost_budget_brl"])
+        self.assertEqual(1998.268459, result["project_gross_cost_budget_brl"])
         self.assertAlmostEqual(
-            1538.76,
+            1785.928459,
             result["remaining_project_gross_budget_after_approved_ceiling_brl"],
         )
 
@@ -143,8 +143,8 @@ class PrepareFinancialReviewTests(unittest.TestCase):
 
     def test_projected_total_above_project_budget_is_ineligible(self):
         value = cost_evidence()
-        value["gross_cost_brl"] = 1600.0
-        value["credits_brl"] = -1600.0
+        value["gross_cost_brl"] = 1900.0
+        value["credits_brl"] = -1900.0
         self.repository.write_evidence(value)
 
         result = self.prepare()
