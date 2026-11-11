@@ -28,6 +28,21 @@ registro
 é evidência de engenharia local, não proveniência de publicação nem evidência
 confirmatória.
 
+## Publicação protegida dos runtimes da emenda v1.5 em 11/11/2026
+
+Depois da revisão financeira sem custo bruto incremental, o commit
+`bd0811606ef96a194985d43261b5b27ac589e15b` repetiu a CI e entrou no caminho
+isolado `runtime-publication`. O job protegido publicou somente
+`checkout-pdt-controller`, `oracle-harness` e `currency-reference`, todos com
+SBOM e Trivy HIGH/CRITICAL aprovados. Staging, PDT, gate humano e Oracle foram
+ignorados, e o job não recebeu credenciais GKE.
+
+O resumo byte a byte do artefato do GitHub está em
+[`runtime-publication-pr16-20261111T021413Z.json`](runtime-publication-pr16-20261111T021413Z.json).
+Ele vincula commit, árvore, run protegido, hashes dos relatórios e os três
+digests imutáveis. Depois do run, a variável exclusiva voltou a `false` e os
+labels de publicação foram removidos do PR.
+
 ## Regressão de segurança pré-coleta e emenda v1.2 em 12/10/2026
 
 O gate de imagens do PR #12 bloqueou corretamente o `oracle-harness` por quatro

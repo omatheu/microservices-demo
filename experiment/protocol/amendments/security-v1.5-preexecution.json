@@ -78,6 +78,20 @@
     "paid_vulnerability_scanning_enabled": false,
     "ready_for_controlled_publication": true
   },
+  "runtime_publication": {
+    "performed": true,
+    "published_at": "2026-11-11T02:14:13Z",
+    "evidence_path": "experiment/evidence/ci-cd/runtime-publication-pr16-20261111T021413Z.json",
+    "evidence_sha256": "4c1f7e21ba00aa066b4ef023cbae271a78a48c31ae8997794b8af3b8e95632f4",
+    "source_commit": "bd0811606ef96a194985d43261b5b27ac589e15b",
+    "source_tree": "2bc5f56f9dd2ed5d2c8b66c14b4c00b1ad2ed22b",
+    "workflow_run_id": "42944299918",
+    "protected_environment": "tcc-experiment",
+    "images_published": 3,
+    "high_or_critical_fixable_findings": 0,
+    "staging_pdt_or_oracle_executed": false,
+    "authorization_window_closed_after_publication": true
+  },
   "authorized_changes": [
     "Upgrade installed Alpine packages in checkout-pdt-controller before creating its non-root user.",
     "Update golang.org/x/net from v0.60.0 to v0.62.0 and accept only the transitive dependency changes required by the Go module resolver.",

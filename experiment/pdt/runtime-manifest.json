@@ -65,7 +65,20 @@
       "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
     }
   ],
-  "controller_image": null,
-  "publication_binding": null,
+  "controller_image": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/checkout-pdt-controller@sha256:5fcf17b624ed9a54b25afda5970833fbbd7867fc4acef53e3fa64e969124c5f2",
+  "publication_binding": {
+    "schema_version": "1.0.0",
+    "publication_summary_sha256": "4c1f7e21ba00aa066b4ef023cbae271a78a48c31ae8997794b8af3b8e95632f4",
+    "repository": "omatheu/microservices-demo",
+    "source_commit": "bd0811606ef96a194985d43261b5b27ac589e15b",
+    "source_tree": "2bc5f56f9dd2ed5d2c8b66c14b4c00b1ad2ed22b",
+    "pull_request_number": 16,
+    "workflow_run_id": "42944299918",
+    "published_at": "2026-11-11T02:14:13Z",
+    "build_platform": "linux/amd64",
+    "protected_environment": "tcc-experiment",
+    "explicit_cloud_gate": true,
+    "cost_review_acknowledged": true
+  },
   "freeze_rule": "Every runtime file, the immutable controller image digest and its attested publication binding must be verified before this runtime can become frozen."
 }

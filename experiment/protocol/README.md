@@ -89,6 +89,13 @@ posterior de continuidade foi limitada à publicação protegida desses três
 runtimes; congelar o protocolo, fazer merge, recriar o cluster ou executar
 candidatas continuam sem autorização.
 
+Em 11 de novembro de 2026, o run protegido `42944299918` publicou as três
+imagens corrigidas e produziu manifests vinculados ao commit `bd081160` e à
+árvore `2bc5f56f`. Os scans passaram, os outros jobs cloud foram ignorados e a
+janela foi desarmada logo após a publicação. As políticas e os manifests ainda
+permanecem `pre-registration-candidate`; aprovação financeira canônica,
+aprovação do pesquisador, congelamento e novo corpus continuam pendentes.
+
 ## Objetivo
 
 Medir, com o menor viés viável, a utilidade incremental do

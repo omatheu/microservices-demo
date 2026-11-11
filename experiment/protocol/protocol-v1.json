@@ -461,7 +461,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "665fc038a0f1c70e513682c86dd75e55688256e9f0eee9ca00b8880588fcd099"
+      "sha256": "b3905ae1018ca3a21339cf9294042eef5e65c098f2bf624c390dd3760dcc5435"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
@@ -473,7 +473,7 @@
     },
     "protocol_amendment_record": {
       "path": "experiment/protocol/amendments/security-v1.5-preexecution.json",
-      "sha256": "5716d10218d269ee1255ff5e08f4581a1c0f3141f56c63e570cff87a48f0ab58"
+      "sha256": "d4f0a5259249c4e6b3e70389771b70475a9c77a7ea18bc8285e2fd1f5ba6ee70"
     },
     "promotional_credit_observation": {
       "path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",
@@ -481,7 +481,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "6d311dc0246e93f99b0260bd0b4ae35cd45531d6a954146dd2ec9765181671d5"
+      "sha256": "d16ae4b33d9eb6406c685d7bedbd4f0119788fca43bf6915568b4436853a7133"
     }
   },
   "required_before_freeze": [

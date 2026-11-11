@@ -19,6 +19,11 @@ e
 Essa autorização cobre somente publicação; não cobre GKE, coleta, congelamento
 ou merge.
 
+A publicação protegida terminou em 11/11/2026 UTC no run `42944299918`. O
+inventário passou a dez versões e 219.862.888 bytes listados, ainda abaixo da
+projeção conservadora e da franquia de 0,5 GiB. A variável exclusiva e os dois
+labels temporários foram desarmados imediatamente depois do job.
+
 Em 09/11/2026 UTC, depois da pausa financeira e da exclusão do cluster, uma
 consulta nova limitada a 100 MB observou R$1.798,268459 brutos,
 R$-1.798,274554 em créditos e R$-0,006095 líquidos. O Console registrava

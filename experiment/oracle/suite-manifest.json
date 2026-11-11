@@ -118,9 +118,22 @@
     }
   ],
   "images": {
-    "oracle_harness": null,
-    "currency_reference": null
+    "oracle_harness": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/oracle-harness@sha256:e6e29791167c8309f6741caba9d784954eceb4b0025714de97bbe631b633b097",
+    "currency_reference": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/currency-reference@sha256:c52542add8f13f289e18b2ac7f2cb74f2806825da262a5c4f1500a842f41a4f3"
   },
-  "publication_binding": null,
+  "publication_binding": {
+    "schema_version": "1.0.0",
+    "publication_summary_sha256": "4c1f7e21ba00aa066b4ef023cbae271a78a48c31ae8997794b8af3b8e95632f4",
+    "repository": "omatheu/microservices-demo",
+    "source_commit": "bd0811606ef96a194985d43261b5b27ac589e15b",
+    "source_tree": "2bc5f56f9dd2ed5d2c8b66c14b4c00b1ad2ed22b",
+    "pull_request_number": 16,
+    "workflow_run_id": "42944299918",
+    "published_at": "2026-11-11T02:14:13Z",
+    "build_platform": "linux/amd64",
+    "protected_environment": "tcc-experiment",
+    "explicit_cloud_gate": true,
+    "cost_review_acknowledged": true
+  },
   "freeze_rule": "Every file hash, both immutable image digests and the shared attested publication binding must be verified before the suite status can become frozen."
 }
