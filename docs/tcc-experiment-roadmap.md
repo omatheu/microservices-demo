@@ -165,9 +165,9 @@ execução autorizada em cloud ou análise dos resultados.
    corrigir `musl`, `musl-utils`, `zlib` e `golang.org/x/net`, repetir build,
    SBOM, scan e testes sem publicar runtimes nem executar cloud, e retornar o
    protocolo à candidata v1.5 bloqueada;
-15. publicar e vincular por digest os três runtimes v1.5 somente com nova
-   autorização, renovar as aprovações, congelar o protocolo e gerar um novo
-   corpus opaco;
+15. [em andamento] publicar e vincular por digest os três runtimes v1.5 na
+   janela isolada já autorizada e financeiramente revisada; depois renovar as
+   aprovações, congelar o protocolo e gerar um novo corpus opaco;
 16. recriar o cluster somente com autorização independente e executar a
    comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;

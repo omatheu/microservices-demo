@@ -473,7 +473,7 @@
     },
     "protocol_amendment_record": {
       "path": "experiment/protocol/amendments/security-v1.5-preexecution.json",
-      "sha256": "d19d742bbbb0b56edc90dc630cb3a94537cd4daf31bdd9085998c2f4ad3e3502"
+      "sha256": "5716d10218d269ee1255ff5e08f4581a1c0f3141f56c63e570cff87a48f0ab58"
     },
     "promotional_credit_observation": {
       "path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",

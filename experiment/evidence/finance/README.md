@@ -4,6 +4,21 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Antes da publicação isolada dos runtimes v1.5, a consulta real limitada a
+100 MB confirmou em 11/11/2026 UTC que o custo bruto permanece em
+R$1.798,268459, sem consumo incremental desde a baseline v1.4. O inventário
+local do Artifact Registry soma 147.420.233 bytes. Mesmo adicionando os
+227.013.942 bytes descomprimidos das três imagens como limite superior
+conservador, a projeção fica em 0,348719 GiB, abaixo da franquia de 0,5 GiB.
+O scanner pago do Artifact Registry está desativado; a política de retenção
+remove versões antigas e mantém duas por pacote. A observação e a revisão estão
+em
+[`cost-window-20260919-20261111-v1.5-prepublication.json`](./cost-window-20260919-20261111-v1.5-prepublication.json)
+e
+[`runtime-publication-financial-review-v1.5-20261111.json`](./runtime-publication-financial-review-v1.5-20261111.json).
+Essa autorização cobre somente publicação; não cobre GKE, coleta, congelamento
+ou merge.
+
 Em 09/11/2026 UTC, depois da pausa financeira e da exclusão do cluster, uma
 consulta nova limitada a 100 MB observou R$1.798,268459 brutos,
 R$-1.798,274554 em créditos e R$-0,006095 líquidos. O Console registrava

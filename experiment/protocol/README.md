@@ -84,9 +84,10 @@ fail-closed encontrou também `CVE-2026-78661` em `golang.org/x/net` no
 [`amendments/security-v1.5-preexecution.json`](./amendments/security-v1.5-preexecution.json)
 foi autorizada para corrigir os pacotes, atualizar o PR #16 e invalidar os
 digests antigos. As três imagens remediadas passaram localmente pelo mesmo gate
-HIGH/CRITICAL, sem publicação, GCP ou relaxamento da política. Uma autorização
-separada continua obrigatória para publicar runtimes, congelar o protocolo,
-fazer merge ou executar cloud.
+HIGH/CRITICAL, sem publicação, GCP ou relaxamento da política. A autorização
+posterior de continuidade foi limitada à publicação protegida desses três
+runtimes; congelar o protocolo, fazer merge, recriar o cluster ou executar
+candidatas continuam sem autorização.
 
 ## Objetivo
 

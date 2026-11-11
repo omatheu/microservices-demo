@@ -68,13 +68,23 @@
     "runtime_publication_performed": false,
     "confirmatory_observation": false
   },
+  "runtime_publication_financial_review": {
+    "evidence_path": "experiment/evidence/finance/runtime-publication-financial-review-v1.5-20261111.json",
+    "evidence_sha256": "7cf5eed2552264b745a5c860373420796841745aa4190746b39c184e0bf3f946",
+    "billing_gross_cost_brl": 1798.268459,
+    "incremental_gross_cost_since_v1_4_baseline_brl": 0,
+    "projected_registry_gib_upper_bound": 0.348719,
+    "artifact_registry_free_tier_gib": 0.5,
+    "paid_vulnerability_scanning_enabled": false,
+    "ready_for_controlled_publication": true
+  },
   "authorized_changes": [
     "Upgrade installed Alpine packages in checkout-pdt-controller before creating its non-root user.",
     "Update golang.org/x/net from v0.60.0 to v0.62.0 and accept only the transitive dependency changes required by the Go module resolver.",
     "Rebuild, inventory and scan the three experiment runtime images without weakening the HIGH/CRITICAL gate.",
     "Invalidate the v1.4 runtime publication bindings, approvals and active corpus while preserving their hashes in this amendment.",
     "Update pull request 16 with protocol v1.5 in a locked pre-registration state.",
-    "Require a separate authorization before publishing remediated runtimes, accessing cloud resources, renewing approvals, freezing the protocol or executing candidates."
+    "Use the separately granted publication authorization only for the three remediated runtimes; keep GKE, experimental execution, protocol freeze and merge unauthorized."
   ],
   "affected_pull_request": {
     "number": 16,
@@ -84,7 +94,10 @@
   },
   "pull_request_update_authorized": true,
   "cloud_execution_authorized": false,
-  "runtime_publication_authorized": false,
+  "runtime_publication_authorized": true,
+  "runtime_publication_authorized_at": "2026-11-11T02:02:01Z",
+  "runtime_publication_authorization_literal": "pode continuar",
+  "runtime_publication_authorization_context": "Direct reply to the immediately preceding handoff that named protected publication of the three corrected v1.5 runtimes as the next separately authorized action.",
   "protocol_freeze_authorized": false,
   "merge_authorized": false
 }
