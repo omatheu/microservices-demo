@@ -1,7 +1,7 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** emenda de segurança v1.5 autorizada antes da execução; coleta,
-> publicação de runtimes e execução cloud permanecem bloqueadas.
+> **Status:** protocolo v1.5 congelado após auditoria 17/17; o corpus opaco
+> v1.5 está ativo, mas merge e toda execução cloud permanecem bloqueados.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -9,11 +9,11 @@
 
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
-análise. Seu status ativo voltou a `pre-registration-candidate`; as imagens,
-aprovações e o corpus precisam ser regenerados para a v1.5 antes de qualquer
-coleta. O congelamento v1.4 substituído continua verificável no commit
-`9e5be4d4`, com SHA-256
-`2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
+análise. Seu status ativo é `frozen`, com SHA-256
+`331f90ac8b8dde08b96a90e29aaa40f500774f44d3e957b78ba44007cea2fd8a`.
+O congelamento v1.4 substituído continua verificável no commit `9e5be4d4`, com
+SHA-256 `2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
+O congelamento metodológico não concede autorização cloud.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
@@ -86,15 +86,18 @@ foi autorizada para corrigir os pacotes, atualizar o PR #16 e invalidar os
 digests antigos. As três imagens remediadas passaram localmente pelo mesmo gate
 HIGH/CRITICAL, sem publicação, GCP ou relaxamento da política. A autorização
 posterior de continuidade foi limitada à publicação protegida desses três
-runtimes; congelar o protocolo, fazer merge, recriar o cluster ou executar
-candidatas continuam sem autorização.
+runtimes; as aprovações de congelamento vieram depois e não autorizam merge,
+recriação do cluster ou execução de candidatas.
 
 Em 11 de novembro de 2026, o run protegido `42944299918` publicou as três
 imagens corrigidas e produziu manifests vinculados ao commit `bd081160` e à
 árvore `2bc5f56f`. Os scans passaram, os outros jobs cloud foram ignorados e a
-janela foi desarmada logo após a publicação. As políticas e os manifests ainda
-permanecem `pre-registration-candidate`; aprovação financeira canônica,
-aprovação do pesquisador, congelamento e novo corpus continuam pendentes.
+janela foi desarmada logo após a publicação. A revisão financeira canônica e a
+aprovação do pesquisador vincularam a candidata exata, a auditoria passou 17/17
+e o finalizador congelou o protocolo em `2026-11-11T02:26:48Z`. Uma chave nova
+gerou o corpus `corpus-hojv3asxirypc`, com 18 candidatas em seis blocos de três.
+A chave e o manifesto Oracle permanecem somente no diretório privado local com
+permissão `0600`; o secret protegido do GitHub não foi alterado.
 
 ## Objetivo
 

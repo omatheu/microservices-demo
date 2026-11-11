@@ -62,16 +62,25 @@ Antes de qualquer execução v1.4, o gate de segurança do PR #16 encontrou CVEs
 HIGH corrigíveis. A emenda
 [`security-v1.5-preexecution.json`](../amendments/security-v1.5-preexecution.json)
 retirou o corpus v1.4 da área ativa e preservou seu hash no registro histórico.
-Não existe corpus confirmatório ativo enquanto a v1.5 não receber novos
-bindings de runtime, aprovações, congelamento e chave de cegamento.
+Depois da publicação e dos novos bindings, a revisão financeira e a aprovação
+do pesquisador levaram a auditoria v1.5 a 17/17. O protocolo foi congelado e
+uma chave nova gerou o corpus ativo `corpus-hojv3asxirypc`. Ele contém 18
+identificadores opacos, três repetições por candidata e seis blocos de três,
+está vinculado ao protocolo de SHA-256
+`331f90ac8b8dde08b96a90e29aaa40f500774f44d3e957b78ba44007cea2fd8a`
+e tem SHA-256
+`0176797ac596a5df29434dff0faa930c32740271f7ad31f57a1db44fd837116d`.
+Seu compromisso Oracle é
+`c26c3dbea41f863b397a6d2910c91978f5b6f2284de153776dc4e7fbfbe2bab6`.
 
 Os manifestos e as chaves v1.1 e v1.2 permanecem somente como arquivos
-históricos em diretório local privado. A chave e o manifesto Oracle v1.3 também
-permanecem somente no diretório privado ignorado pelo Git, com permissões 0600,
-e nunca podem ser copiados para este diretório versionado. O secret protegido
+históricos em diretório local privado. As chaves e os manifestos Oracle v1.3,
+v1.4 e v1.5 também permanecem nos diretórios privados ignorados pelo Git, com
+permissões 0600, e nunca podem ser copiados para este diretório versionado. O
+secret protegido
 `TCC_ORACLE_BLINDING_KEY_B64` ainda não foi alterado e não deve receber a chave
 v1.4 invalidada. Sua futura substituição pela chave v1.5 exige uma ação remota
-separada e autorizada depois do novo congelamento.
+separada e autorizada.
 
 O mesmo ambiente protegido deve conter:
 

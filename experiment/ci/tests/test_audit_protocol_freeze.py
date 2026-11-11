@@ -105,13 +105,13 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_v15_amended_and_collection_locked(self):
+    def test_active_protocol_is_v15_frozen_after_security_amendment(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
         self.assertEqual("checkout-pdt-comparison-v1.5", value["protocol_id"])
-        self.assertEqual("pre-registration-candidate", value["status"])
-        self.assertFalse(value["confirmatory_collection_allowed"])
-        self.assertIsNone(value["frozen_at"])
+        self.assertEqual("frozen", value["status"])
+        self.assertTrue(value["confirmatory_collection_allowed"])
+        self.assertEqual("2026-11-11T02:26:48Z", value["frozen_at"])
         self.assertEqual(
             "security-v1.5-preexecution",
             value["amendment"]["amendment_id"],
@@ -122,19 +122,12 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
         self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
 
-    def test_current_candidate_requires_renewed_approvals(self):
+    def test_current_candidate_requires_only_renewed_approvals(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
         self.assertEqual(
             {
-                "ci-policy-frozen",
-                "staging-thresholds-frozen",
-                "pdt-model-policy-frozen",
-                "pdt-fidelity-policy-frozen",
-                "oracle-policy-frozen",
-                "pdt-runtime-frozen",
-                "oracle-suite-frozen",
                 "researcher-approval",
                 "financial-review",
             },

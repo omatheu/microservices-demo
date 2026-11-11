@@ -24,6 +24,20 @@ inventário passou a dez versões e 219.862.888 bytes listados, ainda abaixo da
 projeção conservadora e da franquia de 0,5 GiB. A variável exclusiva e os dois
 labels temporários foram desarmados imediatamente depois do job.
 
+Para o congelamento v1.5, uma consulta real adicional limitada a 100 MB usou
+uma janela encerrada às 23:00 UTC, anterior ao instante de consolidação do
+export. O custo bruto permaneceu em R$1.798,268459, os créditos em
+R$-1.798,274554 e o líquido em R$-0,006095. A aprovação financeira canônica e
+a aprovação do pesquisador levaram a auditoria a 17/17; o protocolo foi
+congelado com SHA-256
+`331f90ac8b8dde08b96a90e29aaa40f500774f44d3e957b78ba44007cea2fd8a`.
+A observação e os recibos estão em
+[`cost-window-20260919-20261110-v1.5-freeze.json`](./cost-window-20260919-20261110-v1.5-freeze.json),
+[`pre-freeze-audit-v1.5-ready-20261111T022648Z.json`](./pre-freeze-audit-v1.5-ready-20261111T022648Z.json)
+e
+[`protocol-freeze-finalization-v1.5-20261111T022648Z.json`](./protocol-freeze-finalization-v1.5-20261111T022648Z.json).
+Esses atos não autorizam execução cloud.
+
 Em 09/11/2026 UTC, depois da pausa financeira e da exclusão do cluster, uma
 consulta nova limitada a 100 MB observou R$1.798,268459 brutos,
 R$-1.798,274554 em créditos e R$-0,006095 líquidos. O Console registrava

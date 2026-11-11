@@ -165,10 +165,9 @@ execução autorizada em cloud ou análise dos resultados.
    corrigir `musl`, `musl-utils`, `zlib` e `golang.org/x/net`, repetir build,
    SBOM, scan e testes sem publicar runtimes nem executar cloud, e retornar o
    protocolo à candidata v1.5 bloqueada;
-15. [publicação concluída em 11/11/2026] publicar e vincular por digest os três
-   runtimes v1.5 na janela isolada autorizada e financeiramente revisada; ainda
-   falta renovar as aprovações, congelar o protocolo e gerar um novo corpus
-   opaco;
+15. [concluído em 11/11/2026] publicar e vincular por digest os três runtimes
+   v1.5, renovar as aprovações, passar a auditoria 17/17, congelar o protocolo
+   e gerar o corpus opaco `corpus-hojv3asxirypc`, sem execução cloud;
 16. recriar o cluster somente com autorização independente e executar a
    comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
@@ -185,10 +184,11 @@ locais voltaram a ficar congelados e vinculados, sem execução cloud. A aprova�
 do pesquisador reconheceu a coleta parcial, a auditoria passou 17/17 e o novo
 corpus opaco foi gerado. A v1.4 também foi congelada após auditoria 17/17, mas
 o gate do PR #16 encontrou CVEs antes de qualquer execução v1.4. A emenda v1.5
-preserva esse estado histórico, invalida os digests e o corpus v1.4 e mantém a
-coleta bloqueada. As correções passaram localmente; ainda faltam publicação
-protegida, novos bindings, aprovações, congelamento e corpus. O primeiro bloco
-confirmatório continua exigindo autorizações cloud e financeiras independentes.
+preserva esse estado histórico e invalidou os digests e o corpus v1.4. As
+correções passaram, os runtimes foram publicados e vinculados, a auditoria
+pré-freeze passou 17/17 e o corpus v1.5 foi gerado com chave nova. O secret
+protegido ainda não foi alterado e o primeiro bloco confirmatório continua
+exigindo autorizações cloud e financeiras independentes.
 
 ## Fases restantes
 
@@ -577,19 +577,14 @@ durante a decisão.
 Os operadores candidatos e os controles estão catalogados em
 [`tcc-candidate-scenarios.md`](./tcc-candidate-scenarios.md).
 
-**Estado:** os congelamentos v1 e v1.1 permanecem preservados no histórico do
-Git. A v1.1 foi congelada em 12/10/2026, mas o gate de imagens do PR #12
-detectou quatro CVEs HIGH corrigíveis antes de qualquer coleta confirmatória.
-Depois da emenda e de uma nova descoberta fail-closed, os runtimes foram
-corrigidos, escaneados e publicados por digest. O protocolo executável em
+**Estado:** os congelamentos anteriores permanecem preservados no histórico do
+Git. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-está novamente `frozen` como v1.2; mantém 18 candidatas, três repetições, seis
-blocos, a mesma regra de agregação, o mesmo plano pareado e os mesmos limites
-operacionais. As aprovações e imagens foram renovadas, e o corpus v1.1 foi
-substituído antes da coleta. As duas emendas estão vinculadas em
-[`oracle-v1.1-precollection.json`](../experiment/protocol/amendments/oracle-v1.1-precollection.json)
-e
-[`security-v1.2-precollection.json`](../experiment/protocol/amendments/security-v1.2-precollection.json).
+está `frozen` como v1.5; mantém 18 candidatas, três repetições, seis blocos, a
+mesma regra de agregação, o mesmo plano pareado e os limites financeiros v1.4.
+Os três runtimes corrigidos estão vinculados por digest, a auditoria passou
+17/17 e o corpus opaco ativo é `corpus-hojv3asxirypc`. O congelamento não
+autoriza cloud, e a chave v1.5 ainda não foi instalada no secret protegido.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -892,10 +887,11 @@ corpus v1.2 foi retirado da área ativa pela emenda v1.3 depois de uma observaç
 convencional parcial sem abertura de rótulo. A v1.3 foi congelada e seu corpus
 foi gerado, mas a pausa financeira posterior excluiu o cluster e invalidou esse
 corpus para a retomada. A v1.4 foi congelada e seu corpus foi validado, mas a
-emenda de segurança v1.5 os invalidou antes da execução. Agora faltam publicar
-e vincular os runtimes corrigidos, renovar o congelamento e o corpus, instalar
-somente a futura chave v1.5 no secret protegido e então recriar o cluster para
-executar, com autorização independente, a coleta confirmatória.
+emenda de segurança v1.5 os invalidou antes da execução. Os runtimes v1.5 já
+foram publicados e vinculados, o protocolo foi congelado após auditoria 17/17
+e o corpus novo foi validado. Ainda falta instalar somente a chave v1.5 no
+secret protegido e então recriar o cluster para executar, com autorização
+independente, a coleta confirmatória.
 
 ### Fase 8 — Análise final
 
@@ -964,16 +960,16 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [ ] renovar o congelamento do protocolo v1.5, corpus, sementes e regra de
+- [x] renovar o congelamento do protocolo v1.5, corpus, sementes e regra de
   parada antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;
-- [ ] randomizar a ordem das candidatas;
+- [x] randomizar a ordem das candidatas;
 - [x] registrar versão de imagens, manifests e ferramentas;
 - [ ] evitar execução simultânea que cause interferência não controlada;
 - [x] manter staging sem acesso ao snapshot operacional;
 - [ ] fornecer as mesmas invariantes e SLOs aos dois mecanismos;
-- [ ] ocultar rótulo e operador de mutação durante as decisões;
+- [x] ocultar rótulo e operador de mutação no corpus público;
 - [ ] incluir controles seguros para medir falsos positivos;
 - [ ] impedir que dados da validação vazem para a previsão avaliada;
 - [ ] executar número equivalente de repetições;

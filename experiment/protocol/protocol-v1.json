@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
   "protocol_id": "checkout-pdt-comparison-v1.5",
-  "status": "pre-registration-candidate",
-  "confirmatory_collection_allowed": false,
-  "frozen_at": null,
+  "status": "frozen",
+  "confirmatory_collection_allowed": true,
+  "frozen_at": "2026-11-11T02:26:48Z",
   "amendment": {
     "amendment_id": "security-v1.5-preexecution",
     "authorized_at": "2026-11-10T03:20:00Z",
@@ -321,7 +321,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "28812110593b7b9ae98f68bc6126068bcfa3adedca330aa5a20f6afca666fe56"
+      "sha256": "8c1655adbf2a97613cfdeacae986210b2a36c6cf4c3a747c9a08b4ae0dcce36a"
     },
     "conventional_workflow_outcome_validator": {
       "path": "experiment/scripts/validate-conventional-workflow-outcome.py",
@@ -449,11 +449,11 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "665d693677cad44c2ddeca1028c30e3235ac6bb0c3f1b0678e559734fb77ce41"
+      "sha256": "16e08aca59ee4400e07b6050a225bf2f10adbddde8a4ba58b87a844d802075d8"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+      "sha256": "26fbd931b5a238c378edb428df45dbf08c993e09532b0881cd3ee7d7bfc19d95"
     },
     "pdt_repetition_aggregator": {
       "path": "experiment/scripts/aggregate-pdt-repetitions.py",
@@ -461,7 +461,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "b3905ae1018ca3a21339cf9294042eef5e65c098f2bf624c390dd3760dcc5435"
+      "sha256": "d6030382a5586d70447f67d2b54d41063f3544e39f588e764bf81624ef1f61c1"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
@@ -481,7 +481,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "d16ae4b33d9eb6406c685d7bedbd4f0119788fca43bf6915568b4436853a7133"
+      "sha256": "77a87be177b3ff3c79713fd3f5efdfa050a6259da06a09ae54db94df248babd1"
     }
   },
   "required_before_freeze": [
