@@ -6,6 +6,28 @@ relatórios dos scanners, SBOM, resultados por gate e uma decisão pré-staging.
 O conteúdo gerado só constitui evidência confirmatória quando o protocolo e a
 política estiverem congelados e a execução usar `MODE=confirmatory`.
 
+## Regressão de segurança pré-execução e emenda v1.5 em 10/11/2026
+
+O gate de imagens do PR #16 bloqueou corretamente o
+`checkout-pdt-controller` por três achados HIGH corrigíveis em `musl`,
+`musl-utils` e `zlib`. A continuação local fail-closed encontrou também
+`CVE-2026-78661` em `golang.org/x/net` no `oracle-harness`. O registro
+[`runtime-security-regression-pr16-20261110.json`](runtime-security-regression-pr16-20261110.json)
+separa os achados do GitHub daqueles da continuação local e vincula o run, o
+job e os hashes dos relatórios. Não houve execução GCP, publicação de runtime,
+observação v1.4 ou abertura de rótulo Oracle.
+
+A correção executa o upgrade dos pacotes Alpine no controlador e atualiza
+`golang.org/x/net` para v0.62.0 com apenas as mudanças transitivas exigidas pelo
+resolver Go. Os três runtimes experimentais e a imagem final do
+`checkoutservice` foram reconstruídos em `linux/amd64`, inventariados com Syft
+e escaneados pelo mesmo Trivy fixado. Todos passaram com zero achados
+HIGH/CRITICAL corrigíveis, e os testes Go do `checkoutservice` passaram. O
+registro
+[`runtime-security-remediation-v1.5-local-20261110.json`](runtime-security-remediation-v1.5-local-20261110.json)
+é evidência de engenharia local, não proveniência de publicação nem evidência
+confirmatória.
+
 ## Regressão de segurança pré-coleta e emenda v1.2 em 12/10/2026
 
 O gate de imagens do PR #12 bloqueou corretamente o `oracle-harness` por quatro

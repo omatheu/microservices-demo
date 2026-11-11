@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "runtime-security-regression-pr16-20261110",
+  "evidence_class": "pre-execution-engineering-security-regression",
+  "observed_at": "2026-11-10T03:11:40Z",
+  "repository": "omatheu/microservices-demo",
+  "pull_request": 16,
+  "head_commit": "9e5be4d4f8678d1f4cfdb3d34f3e212882018c5b",
+  "head_tree": "bf747bb103f19a93e319c20c986d254e6cd579f2",
+  "workflow": {
+    "name": "TCC Conventional CI",
+    "run_id": "42747755827",
+    "run_url": "https://github.com/omatheu/microservices-demo/actions/runs/42747755827",
+    "job_id": "129603833144",
+    "job_url": "https://github.com/omatheu/microservices-demo/actions/runs/42747755827/job/129603833144",
+    "conclusion": "failure",
+    "failed_step": "Build, inventory and scan experiment runtime images"
+  },
+  "scanner_policy": {
+    "scanner": "Trivy 0.74.0",
+    "severities": [
+      "HIGH",
+      "CRITICAL"
+    ],
+    "ignore_unfixed": true,
+    "exit_code_on_match": 1,
+    "policy_changed_by_remediation": false
+  },
+  "affected_images": [
+    "checkout-pdt-controller",
+    "oracle-harness"
+  ],
+  "findings": [
+    {
+      "detection": "github-actions-runtime-image-gate",
+      "image": "checkout-pdt-controller",
+      "cve": "CVE-2026-107891",
+      "package": "musl",
+      "installed_version": "1.2.6-r2",
+      "fixed_version": "1.2.6-r3",
+      "severity": "HIGH"
+    },
+    {
+      "detection": "github-actions-runtime-image-gate",
+      "image": "checkout-pdt-controller",
+      "cve": "CVE-2026-107891",
+      "package": "musl-utils",
+      "installed_version": "1.2.6-r2",
+      "fixed_version": "1.2.6-r3",
+      "severity": "HIGH"
+    },
+    {
+      "detection": "github-actions-runtime-image-gate",
+      "image": "checkout-pdt-controller",
+      "cve": "CVE-2026-85091",
+      "package": "zlib",
+      "installed_version": "1.3.2-r0",
+      "fixed_version": "1.3.2-r1",
+      "severity": "HIGH"
+    },
+    {
+      "detection": "local-fail-closed-continuation",
+      "image": "oracle-harness",
+      "cve": "CVE-2026-78661",
+      "package": "golang.org/x/net",
+      "installed_version": "v0.60.0",
+      "fixed_version": "0.62.0",
+      "severity": "HIGH"
+    }
+  ],
+  "downloaded_github_artifact_hashes": [
+    {
+      "path": "checkout-pdt-controller-sbom.cdx.json",
+      "sha256": "ceaf2647da774258625c2ea8c74ac1fa4128b8d841473f7cf87996e9df87871f"
+    },
+    {
+      "path": "checkout-pdt-controller-trivy.json",
+      "sha256": "f08d3f6b420ad96016df234c39ac84c26245f396cb0467eb527a2649e244ec88"
+    },
+    {
+      "path": "images.ndjson",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "local_continuation_hashes": [
+    {
+      "path": "oracle-harness-sbom.cdx.json",
+      "sha256": "034df4708a20700b1e90fdb418b41b67e3eff57d8ffdbe37a78064479cfdefb6"
+    },
+    {
+      "path": "oracle-harness-trivy.json",
+      "sha256": "84ae32b7750a97fb132c2828a979ed634048ec5f360b9fdfc88913af20d1bc44"
+    }
+  ],
+  "methodological_disposition": {
+    "v1_4_confirmatory_observations_collected_before_detection": 0,
+    "preserved_prior_partial_observations": 1,
+    "complete_decision_pairs": 0,
+    "oracle_labels_revealed": 0,
+    "cloud_execution_performed": false,
+    "runtime_publication_performed": false,
+    "confirmatory_observation": false,
+    "protocol_action": "authorized-pre-execution-security-amendment-v1.5",
+    "security_gate_weakened": false
+  }
+}

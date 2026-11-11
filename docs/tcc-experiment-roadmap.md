@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 9 de novembro de 2026.
+> **Última verificação:** 10 de novembro de 2026.
 
 ## Objetivo do experimento
 
@@ -60,6 +60,10 @@ como Partial Digital Twin.
 - [x] Período do orçamento alinhado à expiração dos créditos em 19/12/2026.
 - [x] Alertas financeiros em 25%, 50%, 75%, 90%, 95% e 100%.
 - [x] Orçamento operacional adicional de R$200, com alertas em R$50, R$100, R$150, R$180 e R$200.
+- [x] Emenda de segurança v1.5 autorizada antes da execução, com correção local
+  de quatro achados HIGH, testes Go aprovados, os três runtimes experimentais
+  e a imagem final do `checkoutservice` aprovados pelo mesmo gate HIGH/CRITICAL
+  sem publicação ou GCP.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Controles passivos do Oracle instalados, com kill switch em `false` e
@@ -115,7 +119,7 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-### Caminho crítico atual — 09/11/2026
+### Caminho crítico atual — 10/11/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,
@@ -156,10 +160,18 @@ execução autorizada em cloud ou análise dos resultados.
    revisão financeira e a aprovação do pesquisador, passar a auditoria 17/17,
    congelar o protocolo e gerar o corpus `corpus-vrvpwrdnmt4hw` com chave nova,
    sem execução cloud;
-14. recriar o cluster somente com autorização independente e executar a
+14. [concluído localmente em 10/11/2026] preservar o congelamento v1.4,
+   registrar os quatro achados HIGH do PR #16 e da continuação fail-closed,
+   corrigir `musl`, `musl-utils`, `zlib` e `golang.org/x/net`, repetir build,
+   SBOM, scan e testes sem publicar runtimes nem executar cloud, e retornar o
+   protocolo à candidata v1.5 bloqueada;
+15. publicar e vincular por digest os três runtimes v1.5 somente com nova
+   autorização, renovar as aprovações, congelar o protocolo e gerar um novo
+   corpus opaco;
+16. recriar o cluster somente com autorização independente e executar a
    comparação pareada, o gate humano e o Oracle em blocos
    sequenciais explicitamente autorizados;
-15. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
+17. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
    as evidências, remover a infraestrutura e conferir o custo final.
 
 Os controles passivos do Oracle, seu RBAC e a validação curta não pertencem
@@ -170,10 +182,12 @@ O PR #12 foi incorporado, mas a v1.2 deixou de ser o protocolo ativo após a
 observação parcial do PR #13. A emenda v1.3 foi autorizada e os componentes
 locais voltaram a ficar congelados e vinculados, sem execução cloud. A aprovação
 do pesquisador reconheceu a coleta parcial, a auditoria passou 17/17 e o novo
-corpus opaco foi gerado. A v1.4 também foi congelada após auditoria 17/17 e o
-novo corpus opaco foi gerado localmente. A chave nova só será instalada no
-secret protegido em ação remota separada; o primeiro bloco confirmatório
-continua exigindo autorizações cloud e financeiras independentes.
+corpus opaco foi gerado. A v1.4 também foi congelada após auditoria 17/17, mas
+o gate do PR #16 encontrou CVEs antes de qualquer execução v1.4. A emenda v1.5
+preserva esse estado histórico, invalida os digests e o corpus v1.4 e mantém a
+coleta bloqueada. As correções passaram localmente; ainda faltam publicação
+protegida, novos bindings, aprovações, congelamento e corpus. O primeiro bloco
+confirmatório continua exigindo autorizações cloud e financeiras independentes.
 
 ## Fases restantes
 
@@ -876,8 +890,10 @@ quatro instâncias previstas, sem GCP. O RBAC declarativo já foi aplicado. O
 corpus v1.2 foi retirado da área ativa pela emenda v1.3 depois de uma observação
 convencional parcial sem abertura de rótulo. A v1.3 foi congelada e seu corpus
 foi gerado, mas a pausa financeira posterior excluiu o cluster e invalidou esse
-corpus para a retomada. A v1.4 já está congelada e o corpus novo foi validado;
-ainda falta substituir o secret protegido pela chave v1.4, recriar o cluster e
+corpus para a retomada. A v1.4 foi congelada e seu corpus foi validado, mas a
+emenda de segurança v1.5 os invalidou antes da execução. Agora faltam publicar
+e vincular os runtimes corrigidos, renovar o congelamento e o corpus, instalar
+somente a futura chave v1.5 no secret protegido e então recriar o cluster para
 executar, com autorização independente, a coleta confirmatória.
 
 ### Fase 8 — Análise final
@@ -947,7 +963,7 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [x] renovar o congelamento do protocolo v1.4, corpus, sementes e regra de
+- [ ] renovar o congelamento do protocolo v1.5, corpus, sementes e regra de
   parada antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;
@@ -965,7 +981,7 @@ intervalo de confiança quando o número de repetições permitir.
 
 ## Controles financeiros e operacionais
 
-- [x] teto v1.4 adicional absoluto de R$200 e orçamento bruto contábil de
+- [x] teto adicional absoluto de R$200, herdado pela v1.5, e orçamento bruto contábil de
   R$1.998,268459;
 - [x] alertas de 25% a 100%;
 - [x] quotas por namespace;

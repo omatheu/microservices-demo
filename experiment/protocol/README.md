@@ -1,7 +1,7 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** emenda financeira v1.4 congelada após auditoria 17/17; o corpus
-> opaco v1.4 está ativo, mas toda execução cloud continua bloqueada.
+> **Status:** emenda de segurança v1.5 autorizada antes da execução; coleta,
+> publicação de runtimes e execução cloud permanecem bloqueadas.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -9,10 +9,11 @@
 
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
-análise. Seu status ativo é `frozen`, com SHA-256
+análise. Seu status ativo voltou a `pre-registration-candidate`; as imagens,
+aprovações e o corpus precisam ser regenerados para a v1.5 antes de qualquer
+coleta. O congelamento v1.4 substituído continua verificável no commit
+`9e5be4d4`, com SHA-256
 `2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
-O congelamento metodológico não concede autorização cloud; a execução continua
-dependendo dos gates financeiros e humanos independentes.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
@@ -75,6 +76,17 @@ chave privada nova gerou o corpus opaco `corpus-vrvpwrdnmt4hw`, com 18
 candidatas em seis blocos de três. A chave e o manifesto Oracle permanecem
 somente no diretório privado local com permissão `0600`; o secret protegido do
 GitHub não foi alterado.
+
+Ainda em 10 de novembro de 2026, o gate de imagens do PR #16 bloqueou três
+achados HIGH corrigíveis no `checkout-pdt-controller`. A continuação local
+fail-closed encontrou também `CVE-2026-78661` em `golang.org/x/net` no
+`oracle-harness`. Como nenhuma candidata v1.4 havia sido executada, a emenda
+[`amendments/security-v1.5-preexecution.json`](./amendments/security-v1.5-preexecution.json)
+foi autorizada para corrigir os pacotes, atualizar o PR #16 e invalidar os
+digests antigos. As três imagens remediadas passaram localmente pelo mesmo gate
+HIGH/CRITICAL, sem publicação, GCP ou relaxamento da política. Uma autorização
+separada continua obrigatória para publicar runtimes, congelar o protocolo,
+fazer merge ou executar cloud.
 
 ## Objetivo
 
@@ -414,7 +426,7 @@ python3 experiment/scripts/prepare-researcher-approval.py \
   --output experiment/protocol/approvals/researcher-approval-v1.json
 ```
 
-Na v1.4, o documento vincula o SHA-256 da candidata, reconhece explicitamente a
+Na v1.5, o documento vinculará o SHA-256 da candidata, reconhecerá explicitamente a
 coleta parcial preservada, a ausência de abertura do rótulo Oracle e a proibição
 de reinterpretar ou repetir aquela observação. Ele mantém
 `cloud_execution_authorized: false`. Qualquer mudança no protocolo depois da
@@ -452,7 +464,7 @@ a árvore ativa nem o GCP; o recibo mantém `cloud_execution_authorized: false`,
 portanto a futura execução cloud continua dependendo de autorização explícita
 independente.
 
-O teto absoluto adicional para a coleta v1.4 é R$200 de custo bruto, com parada
+O teto absoluto adicional herdado pela candidata v1.5 é R$200 de custo bruto, com parada
 para revisão em R$150 e ao final de cada bloco de três candidatas. O cluster
 deve ser excluído depois de cada bloco antes da espera pela atualização do
 Billing, e o saldo promocional projetado nunca pode ficar abaixo de R$10.

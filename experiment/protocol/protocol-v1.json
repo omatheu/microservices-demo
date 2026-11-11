@@ -1,28 +1,27 @@
 {
   "schema_version": "1.0.0",
-  "protocol_id": "checkout-pdt-comparison-v1.4",
-  "status": "frozen",
-  "confirmatory_collection_allowed": true,
-  "frozen_at": "2026-11-10T03:03:38Z",
+  "protocol_id": "checkout-pdt-comparison-v1.5",
+  "status": "pre-registration-candidate",
+  "confirmatory_collection_allowed": false,
+  "frozen_at": null,
   "amendment": {
-    "amendment_id": "financial-v1.4-post-pause",
-    "authorized_at": "2026-11-10T02:39:59Z",
-    "previous_protocol_id": "checkout-pdt-comparison-v1.3",
-    "previous_protocol_sha256": "3c6612fc93e1ec5e6e4267d533bdfac0d985fe813420351da3b9648c1afb7b32",
-    "previous_freeze_commit": "ec5571848e89ef78a81870ad91869b75d08e53bb",
+    "amendment_id": "security-v1.5-preexecution",
+    "authorized_at": "2026-11-10T03:20:00Z",
+    "previous_protocol_id": "checkout-pdt-comparison-v1.4",
+    "previous_protocol_sha256": "2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed",
+    "previous_freeze_commit": "9e5be4d4f8678d1f4cfdb3d34f3e212882018c5b",
     "confirmatory_observations_before_amendment": 1,
     "complete_decision_pairs_before_amendment": 0,
     "oracle_adjudications_before_amendment": 0,
     "oracle_labels_revealed_before_amendment": 0,
     "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
     "scope": [
-      "new post-pause financial baseline and R$200 additional gross ceiling",
-      "R$10 minimum promotional-credit reserve and per-block financial review",
-      "cluster deletion after every block before waiting for delayed Billing data",
-      "exclusion of the preserved v1.3 partial candidate from v1.4 analysis",
-      "renewed input hashes, approvals, protocol freeze and blinded corpus rotation"
+      "Alpine package upgrade in checkout-pdt-controller for musl, musl-utils and zlib fixes",
+      "golang.org/x/net v0.62.0 and resolver-required transitive updates",
+      "local rebuild, SBOM and unchanged HIGH/CRITICAL scan for all three experiment runtimes",
+      "runtime provenance rebinding, renewed approvals, protocol freeze and blinded corpus rotation"
     ],
-    "record": "experiment/protocol/amendments/financial-v1.4-post-pause.json"
+    "record": "experiment/protocol/amendments/security-v1.5-preexecution.json"
   },
   "twin_object": "checkoutservice",
   "research_design": {
@@ -42,7 +41,7 @@
     "sample_size_rationale": "Fixed feasibility corpus sized before evaluation results; estimates use exact intervals and no minimum-effect claim."
   },
   "randomization": {
-    "public_seed_label": "checkout-pdt-v1.4-fixed-before-corpus",
+    "public_seed_label": "checkout-pdt-v1.5-fixed-before-corpus",
     "algorithm": "HMAC-SHA256 keyed deterministic sampling and Fisher-Yates order",
     "candidate_identifier_prefix": "cand-",
     "blinding_key_minimum_bytes": 32,
@@ -322,7 +321,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "b1847f2623bf35d4a04f66585e81ec11b4fb97e23c9b8c827c906173d4cfe08b"
+      "sha256": "28812110593b7b9ae98f68bc6126068bcfa3adedca330aa5a20f6afca666fe56"
     },
     "conventional_workflow_outcome_validator": {
       "path": "experiment/scripts/validate-conventional-workflow-outcome.py",
@@ -450,11 +449,11 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "afa7d0620ab92e0ae3153d9849e4099485239a0a7bcb90c661b0b7241e0b018b"
+      "sha256": "665d693677cad44c2ddeca1028c30e3235ac6bb0c3f1b0678e559734fb77ce41"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "d7afd2bfe416e52208b9fd26216f6558b22f1b6d1dba9e20bea2f8f85f36191f"
+      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
     },
     "pdt_repetition_aggregator": {
       "path": "experiment/scripts/aggregate-pdt-repetitions.py",
@@ -462,19 +461,19 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "d47e2606b669939eff486186de57d38e53b937701e0a8c34688e707baa2e97be"
+      "sha256": "665fc038a0f1c70e513682c86dd75e55688256e9f0eee9ca00b8880588fcd099"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
-      "sha256": "3335b3545c008707118967490d635bc32c6fa8b2f3ade365bbd9eb0d6abbca9e"
+      "sha256": "b6ec8e7f43a17ae990a2c5bc9def40ab8f28bdd679dadc5336fd5a9937b84f7a"
     },
     "blinded_corpus_manager": {
       "path": "experiment/scripts/manage-blinded-corpus.py",
       "sha256": "303da77e3cd804f24e89c95fa22cf487c393a7a4800d02e4eb717d09c825ea97"
     },
     "protocol_amendment_record": {
-      "path": "experiment/protocol/amendments/financial-v1.4-post-pause.json",
-      "sha256": "95f97ff424f2d3c19e71c0fdc75293c8260d656cfb421c76700b3918abd29c74"
+      "path": "experiment/protocol/amendments/security-v1.5-preexecution.json",
+      "sha256": "d19d742bbbb0b56edc90dc630cb3a94537cd4daf31bdd9085998c2f4ad3e3502"
     },
     "promotional_credit_observation": {
       "path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",
@@ -482,7 +481,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "040f86ca51721e68352f98b0d44087bcf6eb1fff0d0316816194dc8db1f2432f"
+      "sha256": "6d311dc0246e93f99b0260bd0b4ae35cd45531d6a954146dd2ec9765181671d5"
     }
   },
   "required_before_freeze": [
@@ -499,6 +498,7 @@
     "checkout-cpu-restriction-v1",
     "engineering-artifact-binding-v2",
     "oracle-engineering-artifact-binding-v2-deploy-as-is-r1-20261005T013207Z",
-    "runtime-security-regression-pr12-20261012"
+    "runtime-security-regression-pr12-20261012",
+    "runtime-security-regression-pr16-20261110"
   ]
 }

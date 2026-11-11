@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "security-v1.5-preexecution",
+  "status": "authorized-preparation",
+  "authorized_at": "2026-11-10T03:20:00Z",
+  "authorization_literal": "AUTORIZO_EMENDA_DE_SEGURANCA_V1_5_PRE_EXECUCAO_PARA_CORRIGIR_OS_CVES_HIGH_E_ATUALIZAR_O_PR_16_SEM_PUBLICAR_RUNTIMES_NEM_EXECUTAR_CLOUD",
+  "reason": "The pull-request runtime image gate detected three fixable HIGH package findings after the v1.4 freeze and before any v1.4 experimental execution. A fail-closed local continuation then detected one additional fixable HIGH finding in oracle-harness. The frozen runtime digests no longer represent the remediated source tree.",
+  "v1_4_confirmatory_observations_collected": 0,
+  "preserved_prior_partial_collection": {
+    "confirmatory_observations_before_amendment": 1,
+    "complete_decision_pairs_before_amendment": 0,
+    "oracle_adjudications_before_amendment": 0,
+    "oracle_labels_revealed_before_amendment": 0,
+    "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation"
+  },
+  "superseded_freeze": {
+    "git_commit": "9e5be4d4f8678d1f4cfdb3d34f3e212882018c5b",
+    "git_tree": "bf747bb103f19a93e319c20c986d254e6cd579f2",
+    "protocol_id": "checkout-pdt-comparison-v1.4",
+    "protocol_sha256": "2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed",
+    "frozen_at": "2026-11-10T03:03:38Z",
+    "corpus_id": "corpus-vrvpwrdnmt4hw",
+    "corpus_sha256": "615f5c6dca276d2a4acb93f3fc8110f5bc903c30f1be36b830603946687c2cdd",
+    "oracle_manifest_commitment_sha256": "5ac57c1540e7a477136db010950dca3b59e9aa4dc1e6375536b34ae1bf95b61c",
+    "artifacts": [
+      {
+        "path": "experiment/protocol/approvals/cost-review-v1.json",
+        "sha256": "258571e11166eaf1936e74b175cf223ef94a90d58ac986b9045ffe73c2af7760"
+      },
+      {
+        "path": "experiment/protocol/approvals/researcher-approval-v1.json",
+        "sha256": "b1946312bc4673771628d64ffbf260ee3f45ce161c043b1c798deff04688b6b3"
+      },
+      {
+        "path": "experiment/protocol/corpus/public-corpus.json",
+        "sha256": "615f5c6dca276d2a4acb93f3fc8110f5bc903c30f1be36b830603946687c2cdd"
+      },
+      {
+        "path": "experiment/pdt/runtime-manifest.json",
+        "sha256": "d47e2606b669939eff486186de57d38e53b937701e0a8c34688e707baa2e97be"
+      },
+      {
+        "path": "experiment/oracle/suite-manifest.json",
+        "sha256": "040f86ca51721e68352f98b0d44087bcf6eb1fff0d0316816194dc8db1f2432f"
+      }
+    ]
+  },
+  "security_regression": {
+    "evidence_path": "experiment/evidence/ci-cd/runtime-security-regression-pr16-20261110.json",
+    "evidence_sha256": "196ee84476b62b79a32360216988e3e4daa03f7d518c5bce8eee691731b1c2d6",
+    "affected_images": [
+      "checkout-pdt-controller",
+      "oracle-harness"
+    ],
+    "fixable_high_package_findings": 4,
+    "critical_findings": 0,
+    "security_gate_weakened": false,
+    "confirmatory_observation": false
+  },
+  "local_remediation_validation": {
+    "evidence_path": "experiment/evidence/ci-cd/runtime-security-remediation-v1.5-local-20261110.json",
+    "evidence_sha256": "e09444bb5e27189dd514cd9f93d2ada194f7f70d27f79a0823adf2e8e1a87471",
+    "experiment_runtime_images_scanned": 3,
+    "candidate_service_images_scanned": 1,
+    "high_or_critical_fixable_findings": 0,
+    "checkoutservice_tests": "pass",
+    "cloud_access": false,
+    "runtime_publication_performed": false,
+    "confirmatory_observation": false
+  },
+  "authorized_changes": [
+    "Upgrade installed Alpine packages in checkout-pdt-controller before creating its non-root user.",
+    "Update golang.org/x/net from v0.60.0 to v0.62.0 and accept only the transitive dependency changes required by the Go module resolver.",
+    "Rebuild, inventory and scan the three experiment runtime images without weakening the HIGH/CRITICAL gate.",
+    "Invalidate the v1.4 runtime publication bindings, approvals and active corpus while preserving their hashes in this amendment.",
+    "Update pull request 16 with protocol v1.5 in a locked pre-registration state.",
+    "Require a separate authorization before publishing remediated runtimes, accessing cloud resources, renewing approvals, freezing the protocol or executing candidates."
+  ],
+  "affected_pull_request": {
+    "number": 16,
+    "head_sha_at_detection": "9e5be4d4f8678d1f4cfdb3d34f3e212882018c5b",
+    "cloud_labels": [],
+    "confirmatory_execution_performed": false
+  },
+  "pull_request_update_authorized": true,
+  "cloud_execution_authorized": false,
+  "runtime_publication_authorized": false,
+  "protocol_freeze_authorized": false,
+  "merge_authorized": false
+}

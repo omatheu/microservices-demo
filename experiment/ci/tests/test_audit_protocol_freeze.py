@@ -25,9 +25,9 @@ def protocol():
 
 def partial_collection_protocol():
     value = protocol()
-    value["protocol_id"] = "checkout-pdt-comparison-v1.4"
+    value["protocol_id"] = "checkout-pdt-comparison-v1.5"
     value["amendment"] = {
-        "amendment_id": "financial-v1.4-post-pause",
+        "amendment_id": "security-v1.5-preexecution",
         "confirmatory_observations_before_amendment": 1,
         "complete_decision_pairs_before_amendment": 0,
         "oracle_adjudications_before_amendment": 0,
@@ -105,15 +105,15 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_v14_frozen_after_financial_pause(self):
+    def test_active_protocol_is_v15_amended_and_collection_locked(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.4", value["protocol_id"])
-        self.assertEqual("frozen", value["status"])
-        self.assertTrue(value["confirmatory_collection_allowed"])
-        self.assertEqual("2026-11-10T03:03:38Z", value["frozen_at"])
+        self.assertEqual("checkout-pdt-comparison-v1.5", value["protocol_id"])
+        self.assertEqual("pre-registration-candidate", value["status"])
+        self.assertFalse(value["confirmatory_collection_allowed"])
+        self.assertIsNone(value["frozen_at"])
         self.assertEqual(
-            "financial-v1.4-post-pause",
+            "security-v1.5-preexecution",
             value["amendment"]["amendment_id"],
         )
         self.assertEqual(1, value["amendment"]["confirmatory_observations_before_amendment"])
@@ -127,7 +127,19 @@ class AuditProtocolFreezeTests(unittest.TestCase):
 
         self.assertFalse(result["ready_to_freeze"])
         self.assertEqual(
-            {"researcher-approval", "financial-review"},
+            {
+                "ci-policy-frozen",
+                "staging-thresholds-frozen",
+                "pdt-model-policy-frozen",
+                "pdt-fidelity-policy-frozen",
+                "oracle-policy-frozen",
+                "pdt-controller-image-bound",
+                "pdt-runtime-frozen",
+                "oracle-images-bound",
+                "oracle-suite-frozen",
+                "researcher-approval",
+                "financial-review",
+            },
             set(result["blocking_requirements"]),
         )
 
