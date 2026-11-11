@@ -4,6 +4,18 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Antes do bloco 1 da coleta v1.5, a candidata opaca
+`cand-ipshd3h2j7ngflva` foi publicada no PR #17 sem labels de execução. Uma
+consulta real limitada a 100 MB confirmou custo bruto de R$1.798,268459,
+inalterado em relação à baseline financeira, com R$200 de margem bruta até o
+orçamento do projeto. O inventário do GKE confirmou zero clusters. A revisão
+torna o bloco 1 apenas elegível para uma autorização cloud posterior e
+separada: não autoriza recriar o cluster, executar staging/PDT/Oracle nem
+incorporar a candidata. A observação e a revisão estão em
+[`cost-window-20260919-20261110-v1.5-preblock1.json`](./cost-window-20260919-20261110-v1.5-preblock1.json)
+e
+[`pre-block-1-financial-review-v1.5-20261111.json`](./pre-block-1-financial-review-v1.5-20261111.json).
+
 Antes da publicação isolada dos runtimes v1.5, a consulta real limitada a
 100 MB confirmou em 11/11/2026 UTC que o custo bruto permanece em
 R$1.798,268459, sem consumo incremental desde a baseline v1.4. O inventário
