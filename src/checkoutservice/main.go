@@ -392,3 +392,5 @@ func (cs *checkoutService) shipOrder(ctx context.Context, address *pb.Address, i
 	}
 	return resp.GetTrackingId(), nil
 }
+
+func candidateCompileFailure( {
