@@ -68,16 +68,19 @@ resource "google_billing_budget" "experiment_spend_guard" {
   amount {
     specified_amount {
       currency_code = "BRL"
-      units         = tostring(floor(var.experiment_spend_budget_amount))
-      nanos         = floor(((var.experiment_spend_budget_amount - floor(var.experiment_spend_budget_amount)) * 1000000000) + 0.5)
+      units         = tostring(local.experiment_budget_units)
+      nanos         = local.experiment_budget_nanos
     }
   }
 
   dynamic "threshold_rules" {
-    for_each = toset([0.25, 0.50, 0.75, 0.90, 1.00])
+    for_each = local.experiment_alert_fractions
     content {
-      threshold_percent = threshold_rules.value
-      spend_basis       = "CURRENT_SPEND"
+      threshold_percent = (
+        local.experiment_financial_baseline_amount +
+        (var.experiment_spend_budget_amount * threshold_rules.value)
+      ) / local.experiment_cumulative_budget_amount
+      spend_basis = "CURRENT_SPEND"
     }
   }
 

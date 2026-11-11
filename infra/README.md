@@ -75,9 +75,14 @@ credit. Credits are excluded from spend calculations so that they do not mask
 resource consumption. Alerts are sent at 25%, 50%, 75%, 90%, 95%, and 100% to
 the billing account's default recipients.
 
-A second project-scoped gross-cost guard tracks the R$200 experiment ceiling
-over the same period. Its alerts correspond to R$50, R$100, R$150, R$180, and
-R$200. R$150 remains the mandatory manual review point in the protocol. Both
+A second project-scoped gross-cost guard adds the incremental experiment
+ceiling to the gross baseline already observed in the same billing period. Its
+thresholds therefore correspond to baseline + 25%, 50%, 75%, 90%, and 100% of
+the additional envelope instead of incorrectly treating the envelope as the
+project's cumulative spend. For the v1.5 baseline of R$1.798,268459 and the
+R$200 envelope, the alert amounts are R$1.848,268459, R$1.898,268459,
+R$1.948,268459, R$1.978,268459, and R$1.998,268459. The R$150 incremental
+threshold remains the mandatory manual review point in the protocol. Both
 budgets are alerts rather than hard caps; namespace quotas, serial execution,
 timeouts, cleanup, and the per-block cost review are the effective containment
 controls.
