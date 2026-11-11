@@ -2,15 +2,15 @@
   "schema_version": "1.0.0",
   "suite_id": "checkout-independent-oracle-v1",
   "status": "frozen",
-  "frozen_at": "2026-10-24T17:25:18Z",
+  "frozen_at": "2026-11-11T02:24:41Z",
   "files": [
     {
       "path": "experiment/oracle/policy-v1.json",
-      "sha256": "df7574cb1cad0e872446b35061ba763c1bab9f5d70ddd98940bf62968c14f762"
+      "sha256": "20cb34c3b66b9aafc84908247a51a2c6a8c2e7b46bde0e80afa2a19b7f5646c9"
     },
     {
       "path": "experiment/pdt/fidelity-policy.json",
-      "sha256": "c80e855ac1a9498ab3f1cbc28f370b8bfdae83293166b531bfb87eee36791bf9"
+      "sha256": "4623cb05198e7b6bc46ffcca3105ff058025cbff99571ebbc586f4d1f7b2fe96"
     },
     {
       "path": "experiment/oracle/harness/Dockerfile",
@@ -30,11 +30,11 @@
     },
     {
       "path": "src/checkoutservice/go.mod",
-      "sha256": "da332d7b8d3d3c008b9d6b0f2b11b7f2ee95d079842e4442ed0cecec11c88f5f"
+      "sha256": "be7b1649ceb94fc2011d09e635c39039b9f51531b1cdbdabef248f61fdd827fd"
     },
     {
       "path": "src/checkoutservice/go.sum",
-      "sha256": "25520704650105824c35e7a44f5333ee8c7e1aa9f348bbb1c7654d19aa64cc51"
+      "sha256": "4bb9f58419f6cca384d19535886f352b8ba4fe01752fcebbb388550926be477e"
     },
     {
       "path": "src/checkoutservice/genproto/demo.pb.go",
@@ -118,18 +118,18 @@
     }
   ],
   "images": {
-    "oracle_harness": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/oracle-harness@sha256:ac889e4be5fec2693742cae805d749adb83484eb956b18ea7d6273a38b5ebabc",
-    "currency_reference": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/currency-reference@sha256:bcc29daabda94374683b912b344b543488d7939dcb926b27326a7073eb688d87"
+    "oracle_harness": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/oracle-harness@sha256:e6e29791167c8309f6741caba9d784954eceb4b0025714de97bbe631b633b097",
+    "currency_reference": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/currency-reference@sha256:c52542add8f13f289e18b2ac7f2cb74f2806825da262a5c4f1500a842f41a4f3"
   },
   "publication_binding": {
     "schema_version": "1.0.0",
-    "publication_summary_sha256": "43d677718a4b79d0e91a480af6d6385facb4e0356eb1f00b3e58d02246de6465",
+    "publication_summary_sha256": "4c1f7e21ba00aa066b4ef023cbae271a78a48c31ae8997794b8af3b8e95632f4",
     "repository": "omatheu/microservices-demo",
-    "source_commit": "6a39f7f77206c229144dd593560536cdad607825",
-    "source_tree": "a072e90cbec3714e3f6665b36c2c984b739ba11e",
-    "pull_request_number": 12,
-    "workflow_run_id": "40108005657",
-    "published_at": "2026-10-24T15:42:43Z",
+    "source_commit": "bd0811606ef96a194985d43261b5b27ac589e15b",
+    "source_tree": "2bc5f56f9dd2ed5d2c8b66c14b4c00b1ad2ed22b",
+    "pull_request_number": 16,
+    "workflow_run_id": "42944299918",
+    "published_at": "2026-11-11T02:14:13Z",
     "build_platform": "linux/amd64",
     "protected_environment": "tcc-experiment",
     "explicit_cloud_gate": true,

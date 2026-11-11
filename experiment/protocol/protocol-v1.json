@@ -1,27 +1,27 @@
 {
   "schema_version": "1.0.0",
-  "protocol_id": "checkout-pdt-comparison-v1.3",
+  "protocol_id": "checkout-pdt-comparison-v1.5",
   "status": "frozen",
   "confirmatory_collection_allowed": true,
-  "frozen_at": "2026-10-24T17:40:44Z",
+  "frozen_at": "2026-11-11T02:26:48Z",
   "amendment": {
-    "amendment_id": "orchestration-v1.3-partial-collection",
-    "authorized_at": "2026-10-24T17:22:13Z",
-    "previous_protocol_id": "checkout-pdt-comparison-v1.2",
-    "previous_protocol_sha256": "8a34f553287d688b2cf38dfa2db6b29caa078bd191ce7d04a03fb5e707870c51",
-    "previous_freeze_commit": "88c851aa0d60314877b30f5e1f1f3b18f654b561",
+    "amendment_id": "security-v1.5-preexecution",
+    "authorized_at": "2026-11-10T03:20:00Z",
+    "previous_protocol_id": "checkout-pdt-comparison-v1.4",
+    "previous_protocol_sha256": "2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed",
+    "previous_freeze_commit": "9e5be4d4f8678d1f4cfdb3d34f3e212882018c5b",
     "confirmatory_observations_before_amendment": 1,
     "complete_decision_pairs_before_amendment": 0,
     "oracle_adjudications_before_amendment": 0,
     "oracle_labels_revealed_before_amendment": 0,
     "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
     "scope": [
-      "fail-closed terminal validation of a sealed experimental conventional block",
-      "truthful researcher acknowledgement of the preserved partial collection",
-      "retirement of the v1.2 corpus without opening the candidate Oracle label",
-      "renewed input hashes, approvals, protocol freeze and blinded corpus rotation"
+      "Alpine package upgrade in checkout-pdt-controller for musl, musl-utils and zlib fixes",
+      "golang.org/x/net v0.62.0 and resolver-required transitive updates",
+      "local rebuild, SBOM and unchanged HIGH/CRITICAL scan for all three experiment runtimes",
+      "runtime provenance rebinding, renewed approvals, protocol freeze and blinded corpus rotation"
     ],
-    "record": "experiment/protocol/amendments/orchestration-v1.3-partial-collection.json"
+    "record": "experiment/protocol/amendments/security-v1.5-preexecution.json"
   },
   "twin_object": "checkoutservice",
   "research_design": {
@@ -41,7 +41,7 @@
     "sample_size_rationale": "Fixed feasibility corpus sized before evaluation results; estimates use exact intervals and no minimum-effect claim."
   },
   "randomization": {
-    "public_seed_label": "checkout-pdt-v1.3-fixed-before-corpus",
+    "public_seed_label": "checkout-pdt-v1.5-fixed-before-corpus",
     "algorithm": "HMAC-SHA256 keyed deterministic sampling and Fisher-Yates order",
     "candidate_identifier_prefix": "cand-",
     "blinding_key_minimum_bytes": 32,
@@ -298,12 +298,16 @@
   },
   "execution_limits": {
     "cloud_execution_authorization": "explicit-user-authorization-required-after-freeze",
-    "project_gross_cost_budget_brl": 1751.1,
+    "financial_baseline_gross_cost_brl": 1798.268459,
+    "project_gross_cost_budget_brl": 1998.268459,
     "proposed_incremental_spend_ceiling_brl": 200,
     "mandatory_cost_review_at_brl": 150,
+    "minimum_promotional_credit_reserve_brl": 10,
+    "maximum_promotional_credit_consumption_brl": 200,
     "billing_alert_is_hard_cap": false,
     "candidate_block_size": 3,
     "cost_review_after_every_block": true,
+    "delete_cluster_after_every_block": true,
     "maximum_staging_minutes_per_repetition": 15,
     "maximum_pdt_minutes_per_alternative": 15,
     "maximum_pdt_deployable_alternatives": 2,
@@ -317,7 +321,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "060989cc9d8d506f86171c417314f3ceaa3220911be5e4ada0dff2b96263cb66"
+      "sha256": "8c1655adbf2a97613cfdeacae986210b2a36c6cf4c3a747c9a08b4ae0dcce36a"
     },
     "conventional_workflow_outcome_validator": {
       "path": "experiment/scripts/validate-conventional-workflow-outcome.py",
@@ -361,7 +365,7 @@
     },
     "protocol_freeze_auditor": {
       "path": "experiment/scripts/audit-protocol-freeze.py",
-      "sha256": "1be0deac14fa2bdefeae42394b91be926d94005ca3c297ac5ee966b635fd3cb5"
+      "sha256": "58485927c9db87f033635fd5c6376b81bf3e7e0f2142b469c2800308ff3b7f5b"
     },
     "researcher_approval_preparer": {
       "path": "experiment/scripts/prepare-researcher-approval.py",
@@ -393,7 +397,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "eb5e9e4ec025f6c8aba71bf43b5bc0f42e7eb623a923246c625dbd9ce0ec1991"
+      "sha256": "8961bc8cb1639607a783ec30777e5f4d41af5bc8a8f16412c3ba86dde41d9539"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -445,11 +449,11 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "6b6fc5f5f3ff203de070f7ceb572fd044ee5d8b679d8ac390d64459d80057c83"
+      "sha256": "16e08aca59ee4400e07b6050a225bf2f10adbddde8a4ba58b87a844d802075d8"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "3269dbc6f73431b553bf45d203ff41664d1a2576ab113f27a0ca1f829a285deb"
+      "sha256": "26fbd931b5a238c378edb428df45dbf08c993e09532b0881cd3ee7d7bfc19d95"
     },
     "pdt_repetition_aggregator": {
       "path": "experiment/scripts/aggregate-pdt-repetitions.py",
@@ -457,23 +461,27 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "8c72c52e8736aea4d5ebbab9bf0c68831915b0348f1ea754a5d7c0e88c044c89"
+      "sha256": "d6030382a5586d70447f67d2b54d41063f3544e39f588e764bf81624ef1f61c1"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
-      "sha256": "5bd62771a6ed675340fc637e4817b9a4a545b58ce7134cd2396a2d8687e0f901"
+      "sha256": "b6ec8e7f43a17ae990a2c5bc9def40ab8f28bdd679dadc5336fd5a9937b84f7a"
     },
     "blinded_corpus_manager": {
       "path": "experiment/scripts/manage-blinded-corpus.py",
       "sha256": "303da77e3cd804f24e89c95fa22cf487c393a7a4800d02e4eb717d09c825ea97"
     },
     "protocol_amendment_record": {
-      "path": "experiment/protocol/amendments/orchestration-v1.3-partial-collection.json",
-      "sha256": "7011d0447de11b8cd7b286248eff939d9e16ae79cfae471fe6437b196fe1cceb"
+      "path": "experiment/protocol/amendments/security-v1.5-preexecution.json",
+      "sha256": "d4f0a5259249c4e6b3e70389771b70475a9c77a7ea18bc8285e2fd1f5ba6ee70"
+    },
+    "promotional_credit_observation": {
+      "path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",
+      "sha256": "a5e63e11582b78f126a0dab303b5fb26cb2bb04fd4f61837c61b6623b4f1e154"
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "8a28f3fbdcf64f03490d1a5c0d54903fff7d002d31a091125eba92576cff60e0"
+      "sha256": "77a87be177b3ff3c79713fd3f5efdfa050a6259da06a09ae54db94df248babd1"
     }
   },
   "required_before_freeze": [
@@ -490,6 +498,7 @@
     "checkout-cpu-restriction-v1",
     "engineering-artifact-binding-v2",
     "oracle-engineering-artifact-binding-v2-deploy-as-is-r1-20261005T013207Z",
-    "runtime-security-regression-pr12-20261012"
+    "runtime-security-regression-pr12-20261012",
+    "runtime-security-regression-pr16-20261110"
   ]
 }

@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "runtime_id": "checkout-pdt-controller-v1",
   "status": "frozen",
-  "frozen_at": "2026-10-24T17:25:18Z",
+  "frozen_at": "2026-11-11T02:24:41Z",
   "files": [
     {
       "path": "experiment/pdt/controller/checkout_pdt_controller.py",
@@ -10,7 +10,7 @@
     },
     {
       "path": "experiment/pdt/controller/Dockerfile",
-      "sha256": "896ad7b41399a2a5eb0655b060339006b1bd90147604fb9b2aac09e615d2d113"
+      "sha256": "973bdcbc829bbb853ab5d986bef9fcb04cee9670664c12c0b6418b9c5ff520b7"
     },
     {
       "path": "experiment/scripts/prepare-pdt-controller-job.py",
@@ -62,19 +62,19 @@
     },
     {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "3269dbc6f73431b553bf45d203ff41664d1a2576ab113f27a0ca1f829a285deb"
+      "sha256": "26fbd931b5a238c378edb428df45dbf08c993e09532b0881cd3ee7d7bfc19d95"
     }
   ],
-  "controller_image": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/checkout-pdt-controller@sha256:691d7b61270f12de60d8c5657903ddb92993c8d653eb7f41de006a83ca6f7796",
+  "controller_image": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/checkout-pdt-controller@sha256:5fcf17b624ed9a54b25afda5970833fbbd7867fc4acef53e3fa64e969124c5f2",
   "publication_binding": {
     "schema_version": "1.0.0",
-    "publication_summary_sha256": "43d677718a4b79d0e91a480af6d6385facb4e0356eb1f00b3e58d02246de6465",
+    "publication_summary_sha256": "4c1f7e21ba00aa066b4ef023cbae271a78a48c31ae8997794b8af3b8e95632f4",
     "repository": "omatheu/microservices-demo",
-    "source_commit": "6a39f7f77206c229144dd593560536cdad607825",
-    "source_tree": "a072e90cbec3714e3f6665b36c2c984b739ba11e",
-    "pull_request_number": 12,
-    "workflow_run_id": "40108005657",
-    "published_at": "2026-10-24T15:42:43Z",
+    "source_commit": "bd0811606ef96a194985d43261b5b27ac589e15b",
+    "source_tree": "2bc5f56f9dd2ed5d2c8b66c14b4c00b1ad2ed22b",
+    "pull_request_number": 16,
+    "workflow_run_id": "42944299918",
+    "published_at": "2026-11-11T02:14:13Z",
     "build_platform": "linux/amd64",
     "protected_environment": "tcc-experiment",
     "explicit_cloud_gate": true,

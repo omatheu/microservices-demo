@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "financial-v1.4-post-pause",
+  "status": "authorized-preparation",
+  "proposed_at": "2026-11-10T02:31:12Z",
+  "authorization_literal": "AUTORIZO_EMENDA_FINANCEIRA_V1_4_POS_PAUSA_COM_NOVO_TETO_INCREMENTAL_BRUTO_DE_200_REAIS_ORCAMENTO_BRUTO_DE_1998_268459_REAIS_RESERVA_PROMOCIONAL_MINIMA_DE_10_REAIS_ROTACAO_DO_CORPUS_E_SEM_EXECUCAO_CLOUD",
+  "authorized_at": "2026-11-10T02:39:59Z",
+  "reason": "The v1.3 gross project budget and incremental ceiling were exceeded by idle pre-collection cluster burn before block 1. The cluster was deleted, the Billing export caught up past deletion, no recurring cluster charge remains, and the current promotional-credit balance was verified. Confirmatory collection cannot continue under the frozen v1.3 financial limits.",
+  "confirmatory_observations_collected": {
+    "candidate_flows_started": 1,
+    "sealed_conventional_decisions": 1,
+    "complete_decision_pairs": 0,
+    "oracle_adjudications": 0,
+    "oracle_labels_revealed": 0
+  },
+  "superseded_freeze": {
+    "git_commit": "ec5571848e89ef78a81870ad91869b75d08e53bb",
+    "protocol_id": "checkout-pdt-comparison-v1.3",
+    "protocol_sha256": "3c6612fc93e1ec5e6e4267d533bdfac0d985fe813420351da3b9648c1afb7b32",
+    "frozen_at": "2026-10-24T17:40:44Z",
+    "corpus_id": "corpus-hlwmpwybztcm4",
+    "public_corpus_sha256": "89bd95cf40e223e3f82b9f70edcf44f4c5a0dd88b080e84121a2daaeb825c760",
+    "oracle_manifest_commitment_sha256": "f43197555700b8bbdfc0d49395c225107d6806a9d9f53ffa1488510a334c1f49"
+  },
+  "financial_incident_evidence": {
+    "billing_export_path": "experiment/evidence/finance/cost-window-20260919-20261109-v1.4-review.json",
+    "billing_export_sha256": "14705dd73fe9ee91f39b848a809dcf7dc9148ef4ca18f17c837af848fee240b2",
+    "credit_balance_path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",
+    "observed_project_gross_cost_brl": 1798.268459,
+    "observed_net_cost_brl": -0.006095,
+    "promotion_balance_brl": 711.37,
+    "promotion_end_date": "2026-12-19",
+    "recurring_cluster_burn_after_deletion": false
+  },
+  "authorized_financial_limits": {
+    "baseline_gross_cost_brl": 1798.268459,
+    "additional_gross_spend_ceiling_brl": 200,
+    "project_gross_cost_budget_brl": 1998.268459,
+    "mandatory_incremental_review_at_brl": 150,
+    "review_after_every_block": true,
+    "minimum_promotional_credit_reserve_brl": 10,
+    "maximum_promotional_credit_consumption_brl": 200,
+    "promotion_balance_after_full_new_envelope_if_all_charged_to_promotion_brl": 511.37,
+    "billing_alert_is_hard_cap": false
+  },
+  "authorized_changes": [
+    "Create protocol v1.4 with the post-pause gross observation as the financial baseline and a new R$200 incremental ceiling.",
+    "Raise only the project gross accounting cap to R$1998.268459.",
+    "Preserve the R$150 mandatory review threshold and the review after every block.",
+    "Require at least R$10 of account-level promotional credit to remain after the worst currently authorized additional gross spend.",
+    "Delete the experimental cluster immediately after each block before waiting for delayed Billing export data; recreate it declaratively only after the next block is authorized.",
+    "Preserve the v1.3 partial candidate evidence without rerunning or reinterpreting it and exclude it from v1.4 confirmatory analysis.",
+    "Rotate the blinding key and generate a new v1.4 opaque corpus after the renewed freeze.",
+    "Renew the financial review, researcher approval, 17/17 audit and freeze before any cloud execution."
+  ],
+  "explicitly_unchanged": [
+    "research question and primary estimand",
+    "candidate count, block count and technical repetition rules",
+    "mutation operators and parameter spaces",
+    "CI and staging gate policies",
+    "PDT model, thresholds, alternatives and fidelity policy",
+    "Oracle classification and adjudication rules",
+    "decision ordering, blinding and candidate-level analysis",
+    "prohibition on automatic operational deployment",
+    "R$200 maximum additional gross spend"
+  ],
+  "authorization_boundaries": {
+    "protocol_amendment_authorized": true,
+    "tracked_files_may_be_changed": true,
+    "corpus_rotation_authorized_after_freeze": true,
+    "pull_request_publication_authorized": false,
+    "cloud_execution_authorized": false,
+    "cluster_recreation_authorized": false,
+    "github_switch_change_authorized": false,
+    "candidate_materialization_authorized": false
+  }
+}

@@ -42,7 +42,7 @@ class RepeatedComparativeCandidateRunnerTests(unittest.TestCase):
         self.assertIn("starts billable GKE workloads", result.stderr)
         self.assertNotIn("contains active pods", result.stderr)
 
-    def test_noncorpus_candidate_is_blocked_before_cluster_access(self):
+    def test_candidate_requires_public_corpus_binding_before_cluster_access(self):
         result = subprocess.run(
             [str(SCRIPT_PATH)],
             cwd=REPO_ROOT,

@@ -48,6 +48,7 @@ REQUIRED_INPUTS = {
     "mutation_registry",
     "blinded_corpus_manager",
     "protocol_amendment_record",
+    "promotional_credit_observation",
     "oracle_suite_manifest",
 }
 

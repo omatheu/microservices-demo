@@ -238,6 +238,56 @@ def validate_cost_review(repo_root, protocol, cost_review):
     return True
 
 
+def validate_promotional_credit_reserve(repo_root, protocol):
+    limits = protocol.get("execution_limits", {})
+    baseline = limits.get("financial_baseline_gross_cost_brl")
+    ceiling = limits.get("proposed_incremental_spend_ceiling_brl")
+    project_budget = limits.get("project_gross_cost_budget_brl")
+    reserve = limits.get("minimum_promotional_credit_reserve_brl")
+    maximum_consumption = limits.get("maximum_promotional_credit_consumption_brl")
+    binding = protocol.get("frozen_inputs", {}).get(
+        "promotional_credit_observation"
+    )
+    evidence = load_cost_evidence(repo_root, binding)
+    credit = evidence.get("credit") if isinstance(evidence, dict) else None
+    remaining = credit.get("remaining_brl") if isinstance(credit, dict) else None
+    return bool(
+        finite_number(baseline)
+        and finite_number(ceiling)
+        and finite_number(project_budget)
+        and math.isclose(
+            baseline + ceiling,
+            project_budget,
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        )
+        and finite_number(reserve)
+        and reserve == 10
+        and finite_number(maximum_consumption)
+        and maximum_consumption == ceiling
+        and limits.get("cost_review_after_every_block") is True
+        and limits.get("delete_cluster_after_every_block") is True
+        and limits.get("stop_when_cost_data_unavailable_after_block") is True
+        and limits.get("cleanup_required_before_next_condition") is True
+        and limits.get("concurrent_experimental_namespaces") == 1
+        and isinstance(evidence, dict)
+        and evidence.get("schema_version") == "1.0.0"
+        and evidence.get("observation_type")
+        == "google-cloud-billing-promotional-credit-balance"
+        and evidence.get("project_context") == "microservices-demo-tcc"
+        and evidence.get("mutation_performed") is False
+        and evidence.get("cloud_execution_authorized") is False
+        and isinstance(evidence.get("observed_at"), str)
+        and RFC3339_PATTERN.fullmatch(evidence["observed_at"])
+        and isinstance(credit, dict)
+        and credit.get("name") == "Free Trial"
+        and credit.get("status") == "Disponível"
+        and finite_number(remaining)
+        and remaining - maximum_consumption >= reserve
+        and credit.get("end_date") == "2026-12-19"
+    )
+
+
 def prior_collection_context(protocol):
     amendment = protocol.get("amendment")
     if not isinstance(amendment, dict):
@@ -333,7 +383,10 @@ def audit(repo_root, protocol, researcher_approval=None, cost_review=None):
         design.get("candidate_count") == operator_count
         and design.get("block_count", 0) * design.get("block_size", 0) == operator_count
         and limits.get("candidate_block_size") == design.get("block_size")
-        and design.get("technical_repetitions_per_candidate", 0) >= 2,
+        and design.get("technical_repetitions_per_candidate", 0) >= 2
+        and limits.get("cost_review_after_every_block") is True
+        and limits.get("delete_cluster_after_every_block") is True
+        and limits.get("billing_alert_is_hard_cap") is False,
         f"declared={design.get('candidate_count')}, operators={operator_count}",
     )
     add_check(
@@ -507,12 +560,13 @@ def audit(repo_root, protocol, researcher_approval=None, cost_review=None):
 
     ceiling = limits.get("proposed_incremental_spend_ceiling_brl")
     review_at = limits.get("mandatory_cost_review_at_brl")
-    cost_review_ok = validate_cost_review(repo_root, protocol, cost_review)
+    reserve_ok = validate_promotional_credit_reserve(repo_root, protocol)
+    cost_review_ok = validate_cost_review(repo_root, protocol, cost_review) and reserve_ok
     add_check(
         checks,
         "financial-review",
         cost_review_ok,
-        f"ceiling=R${ceiling}, mandatory review=R${review_at}",
+        f"ceiling=R${ceiling}, mandatory review=R${review_at}, promotional reserve valid={reserve_ok}",
     )
 
     failed = [item["id"] for item in checks if not item["passed"]]

@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "observation_type": "google-cloud-billing-promotional-credit-balance",
+  "observed_at": "2026-11-10T02:29:12Z",
+  "billing_account_id": "016329-9946EB-FE858E",
+  "project_context": "microservices-demo-tcc",
+  "source_url": "https://console.cloud.google.com/billing/016329-9946EB-FE858E/credits/all?project=microservices-demo-tcc",
+  "credit": {
+    "name": "Free Trial",
+    "id": "FreeTrial:Credit-016329-9946EB-FE858E",
+    "status": "Disponível",
+    "remaining_percent": 40,
+    "remaining_brl": 711.37,
+    "original_brl": 1761.1,
+    "start_date": "2026-09-19",
+    "end_date": "2026-12-19",
+    "application_type": "Preço líquido"
+  },
+  "mutation_performed": false,
+  "cloud_execution_authorized": false,
+  "warning": "Point-in-time console observation; the remaining balance can change with later account usage."
+}

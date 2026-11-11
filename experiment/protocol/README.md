@@ -1,7 +1,7 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** emenda operacional v1.3 congelada após auditoria 17/17; o corpus
-> opaco v1.3 está ativo, mas não há execução cloud autorizada.
+> **Status:** protocolo v1.5 congelado após auditoria 17/17; o corpus opaco
+> v1.5 está ativo, mas merge e toda execução cloud permanecem bloqueados.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -10,9 +10,10 @@
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
 análise. Seu status ativo é `frozen`, com SHA-256
-`3c6612fc93e1ec5e6e4267d533bdfac0d985fe813420351da3b9648c1afb7b32`.
-O congelamento metodológico não concede autorização cloud; a execução continua
-dependendo dos gates financeiros e humanos independentes.
+`331f90ac8b8dde08b96a90e29aaa40f500774f44d3e957b78ba44007cea2fd8a`.
+O congelamento v1.4 substituído continua verificável no commit `9e5be4d4`, com
+SHA-256 `2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
+O congelamento metodológico não concede autorização cloud.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
@@ -56,6 +57,47 @@ explicitamente a coleta parcial. O corpus v1.2 foi retirado da área ativa. Apó
 a auditoria 17/17 e o congelamento v1.3, uma nova chave local gerou o corpus
 opaco `corpus-hlwmpwybztcm4`; a chave ainda não foi instalada no secret
 protegido.
+
+Entre 24 de outubro e 2 de novembro de 2026, o cluster ocioso consumiu o teto
+financeiro v1.3 antes do primeiro bloco completo. A coleta foi pausada, as
+evidências foram preservadas e somente o cluster foi excluído. Em 9 de novembro,
+o Billing registrou R$ 1.798,268459 brutos e nenhum consumo recorrente depois
+da hora final de contabilização da exclusão; o Console mostrava R$ 711,37 de
+crédito promocional remanescente. A emenda
+[`amendments/financial-v1.4-post-pause.json`](./amendments/financial-v1.4-post-pause.json)
+fixa um novo teto adicional absoluto de R$ 200, orçamento contábil bruto de
+R$ 1.998,268459, reserva promocional mínima de R$ 10, revisão após cada bloco e
+exclusão do cluster enquanto se espera o Billing. Isso não autoriza recriação
+do cluster nem execução cloud.
+
+Em 10 de novembro de 2026, a aprovação do pesquisador vinculou a candidata
+v1.4 exata, a auditoria passou 17/17 e o finalizador congelou o protocolo. Uma
+chave privada nova gerou o corpus opaco `corpus-vrvpwrdnmt4hw`, com 18
+candidatas em seis blocos de três. A chave e o manifesto Oracle permanecem
+somente no diretório privado local com permissão `0600`; o secret protegido do
+GitHub não foi alterado.
+
+Ainda em 10 de novembro de 2026, o gate de imagens do PR #16 bloqueou três
+achados HIGH corrigíveis no `checkout-pdt-controller`. A continuação local
+fail-closed encontrou também `CVE-2026-78661` em `golang.org/x/net` no
+`oracle-harness`. Como nenhuma candidata v1.4 havia sido executada, a emenda
+[`amendments/security-v1.5-preexecution.json`](./amendments/security-v1.5-preexecution.json)
+foi autorizada para corrigir os pacotes, atualizar o PR #16 e invalidar os
+digests antigos. As três imagens remediadas passaram localmente pelo mesmo gate
+HIGH/CRITICAL, sem publicação, GCP ou relaxamento da política. A autorização
+posterior de continuidade foi limitada à publicação protegida desses três
+runtimes; as aprovações de congelamento vieram depois e não autorizam merge,
+recriação do cluster ou execução de candidatas.
+
+Em 11 de novembro de 2026, o run protegido `42944299918` publicou as três
+imagens corrigidas e produziu manifests vinculados ao commit `bd081160` e à
+árvore `2bc5f56f`. Os scans passaram, os outros jobs cloud foram ignorados e a
+janela foi desarmada logo após a publicação. A revisão financeira canônica e a
+aprovação do pesquisador vincularam a candidata exata, a auditoria passou 17/17
+e o finalizador congelou o protocolo em `2026-11-11T02:26:48Z`. Uma chave nova
+gerou o corpus `corpus-hojv3asxirypc`, com 18 candidatas em seis blocos de três.
+A chave e o manifesto Oracle permanecem somente no diretório privado local com
+permissão `0600`; o secret protegido do GitHub não foi alterado.
 
 ## Objetivo
 
@@ -395,7 +437,7 @@ python3 experiment/scripts/prepare-researcher-approval.py \
   --output experiment/protocol/approvals/researcher-approval-v1.json
 ```
 
-Na v1.3, o documento vincula o SHA-256 da candidata, reconhece explicitamente a
+Na v1.5, o documento vinculará o SHA-256 da candidata, reconhecerá explicitamente a
 coleta parcial preservada, a ausência de abertura do rótulo Oracle e a proibição
 de reinterpretar ou repetir aquela observação. Ele mantém
 `cloud_execution_authorized: false`. Qualquer mudança no protocolo depois da
@@ -433,11 +475,14 @@ a árvore ativa nem o GCP; o recibo mantém `cloud_execution_authorized: false`,
 portanto a futura execução cloud continua dependendo de autorização explícita
 independente.
 
-O teto proposto para a coleta é R$200 de custo incremental, com parada para
-revisão em R$150 e ao final de cada bloco de três candidatas. Isso ainda não é
+O teto absoluto adicional herdado pela candidata v1.5 é R$200 de custo bruto, com parada
+para revisão em R$150 e ao final de cada bloco de três candidatas. O cluster
+deve ser excluído depois de cada bloco antes da espera pela atualização do
+Billing, e o saldo promocional projetado nunca pode ficar abaixo de R$10.
+Isso ainda não é
 uma autorização de gasto: orçamento do GCP gera alertas, não um bloqueio rígido,
-e a coleta continuará proibida até existir uma forma de conferir o custo
-incremental após cada bloco.
+e cada bloco continuará exigindo conferência financeira e autorização cloud
+independentes.
 
 ## Auditoria de prontidão para congelamento
 
@@ -453,7 +498,7 @@ preparador do candidato, o finalizador, o cleanup restrito dos workloads
 experimentais, os dois
 agregadores de repetição, o orquestrador confirmatório, o gerenciador
 determinístico do corpus cego e o próprio validador agora também fazem parte
-dos 37 inputs selados do protocolo. Assim, as regras
+dos 41 inputs selados do protocolo. Assim, as regras
 que decidem a prontidão e materializam a proposta final não podem ser trocadas
 silenciosamente depois da aprovação do desenho.
 

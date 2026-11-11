@@ -41,7 +41,7 @@ def publication_binding():
 
 
 class ValidateOracleSuiteTests(unittest.TestCase):
-    def test_active_amended_suite_is_bound_and_frozen(self):
+    def test_active_amended_suite_is_published_and_frozen(self):
         value = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
 
         result = MODULE.validate(REPO_ROOT, value)

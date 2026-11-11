@@ -25,9 +25,9 @@ def protocol():
 
 def partial_collection_protocol():
     value = protocol()
-    value["protocol_id"] = "checkout-pdt-comparison-v1.3"
+    value["protocol_id"] = "checkout-pdt-comparison-v1.5"
     value["amendment"] = {
-        "amendment_id": "orchestration-v1.3-partial-collection",
+        "amendment_id": "security-v1.5-preexecution",
         "confirmatory_observations_before_amendment": 1,
         "complete_decision_pairs_before_amendment": 0,
         "oracle_adjudications_before_amendment": 0,
@@ -97,7 +97,7 @@ def cost_review(binding):
         "project_gross_cost_observed_brl": 12.34,
         "approved_incremental_spend_ceiling_brl": 200,
         "projected_project_gross_cost_ceiling_brl": 212.34,
-        "project_gross_cost_budget_brl": 1751.1,
+        "project_gross_cost_budget_brl": 1998.268459,
         "mandatory_incremental_review_at_brl": 150,
         "evidence": binding,
         "cloud_execution_authorized": False,
@@ -105,26 +105,32 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_v13_frozen_after_partial_collection(self):
+    def test_active_protocol_is_v15_frozen_after_security_amendment(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.3", value["protocol_id"])
+        self.assertEqual("checkout-pdt-comparison-v1.5", value["protocol_id"])
         self.assertEqual("frozen", value["status"])
         self.assertTrue(value["confirmatory_collection_allowed"])
-        self.assertEqual("2026-10-24T17:40:44Z", value["frozen_at"])
+        self.assertEqual("2026-11-11T02:26:48Z", value["frozen_at"])
         self.assertEqual(
-            "orchestration-v1.3-partial-collection",
+            "security-v1.5-preexecution",
             value["amendment"]["amendment_id"],
         )
         self.assertEqual(1, value["amendment"]["confirmatory_observations_before_amendment"])
         self.assertEqual(0, value["amendment"]["oracle_labels_revealed_before_amendment"])
+        self.assertEqual(1998.268459, value["execution_limits"]["project_gross_cost_budget_brl"])
+        self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
+        self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
 
-    def test_current_candidate_requires_renewed_approvals(self):
+    def test_current_candidate_requires_only_renewed_approvals(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
         self.assertEqual(
-            {"researcher-approval", "financial-review"},
+            {
+                "researcher-approval",
+                "financial-review",
+            },
             set(result["blocking_requirements"]),
         )
 
@@ -214,6 +220,14 @@ class AuditProtocolFreezeTests(unittest.TestCase):
 
             wrong_hash = cost_review({**binding, "sha256": "0" * 64})
             self.assertFalse(MODULE.validate_cost_review(root, protocol(), wrong_hash))
+
+    def test_promotional_credit_reserve_is_hash_bound_and_fail_closed(self):
+        value = protocol()
+
+        self.assertTrue(MODULE.validate_promotional_credit_reserve(REPO_ROOT, value))
+
+        value["execution_limits"]["maximum_promotional_credit_consumption_brl"] = 702
+        self.assertFalse(MODULE.validate_promotional_credit_reserve(REPO_ROOT, value))
 
     def test_readiness_snapshot_cannot_substitute_for_cost_observation(self):
         snapshot = (

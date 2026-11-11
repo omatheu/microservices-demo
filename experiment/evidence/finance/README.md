@@ -4,7 +4,55 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-O estado mais recente, consultado em 24/10/2026 UTC para a emenda v1.3,
+Antes da publicação isolada dos runtimes v1.5, a consulta real limitada a
+100 MB confirmou em 11/11/2026 UTC que o custo bruto permanece em
+R$1.798,268459, sem consumo incremental desde a baseline v1.4. O inventário
+local do Artifact Registry soma 147.420.233 bytes. Mesmo adicionando os
+227.013.942 bytes descomprimidos das três imagens como limite superior
+conservador, a projeção fica em 0,348719 GiB, abaixo da franquia de 0,5 GiB.
+O scanner pago do Artifact Registry está desativado; a política de retenção
+remove versões antigas e mantém duas por pacote. A observação e a revisão estão
+em
+[`cost-window-20260919-20261111-v1.5-prepublication.json`](./cost-window-20260919-20261111-v1.5-prepublication.json)
+e
+[`runtime-publication-financial-review-v1.5-20261111.json`](./runtime-publication-financial-review-v1.5-20261111.json).
+Essa autorização cobre somente publicação; não cobre GKE, coleta, congelamento
+ou merge.
+
+A publicação protegida terminou em 11/11/2026 UTC no run `42944299918`. O
+inventário passou a dez versões e 219.862.888 bytes listados, ainda abaixo da
+projeção conservadora e da franquia de 0,5 GiB. A variável exclusiva e os dois
+labels temporários foram desarmados imediatamente depois do job.
+
+Para o congelamento v1.5, uma consulta real adicional limitada a 100 MB usou
+uma janela encerrada às 23:00 UTC, anterior ao instante de consolidação do
+export. O custo bruto permaneceu em R$1.798,268459, os créditos em
+R$-1.798,274554 e o líquido em R$-0,006095. A aprovação financeira canônica e
+a aprovação do pesquisador levaram a auditoria a 17/17; o protocolo foi
+congelado com SHA-256
+`331f90ac8b8dde08b96a90e29aaa40f500774f44d3e957b78ba44007cea2fd8a`.
+A observação e os recibos estão em
+[`cost-window-20260919-20261110-v1.5-freeze.json`](./cost-window-20260919-20261110-v1.5-freeze.json),
+[`pre-freeze-audit-v1.5-ready-20261111T022648Z.json`](./pre-freeze-audit-v1.5-ready-20261111T022648Z.json)
+e
+[`protocol-freeze-finalization-v1.5-20261111T022648Z.json`](./protocol-freeze-finalization-v1.5-20261111T022648Z.json).
+Esses atos não autorizam execução cloud.
+
+Em 09/11/2026 UTC, depois da pausa financeira e da exclusão do cluster, uma
+consulta nova limitada a 100 MB observou R$1.798,268459 brutos,
+R$-1.798,274554 em créditos e R$-0,006095 líquidos. O Console registrava
+R$711,37 de crédito promocional remanescente. A emenda v1.4 fixa R$200 como
+teto absoluto adicional, R$1.998,268459 como orçamento bruto contábil e R$10
+como reserva promocional mínima. A auditoria passou 17/17 e o protocolo foi
+congelado em 10/11/2026 UTC com SHA-256
+`2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
+Os recibos estão em
+[`pre-freeze-audit-v1.4-ready-20261110T030338Z.json`](./pre-freeze-audit-v1.4-ready-20261110T030338Z.json)
+e
+[`protocol-freeze-finalization-v1.4-20261110T030338Z.json`](./protocol-freeze-finalization-v1.4-20261110T030338Z.json).
+Nenhum desses atos autoriza execução cloud.
+
+O snapshot anterior, consultado em 24/10/2026 UTC para a emenda v1.3,
 confirma que o Standard usage cost export alcançou a janela encerrada às
 16:00 UTC do mesmo dia. A consulta versionada e limitada a 100 MB observou
 R$1.354,686907 de custo bruto, R$-1.354,691494 em créditos e R$-0,004587 de

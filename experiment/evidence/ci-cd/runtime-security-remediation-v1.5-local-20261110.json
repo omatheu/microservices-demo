@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "runtime-security-remediation-v1.5-local-20261110",
+  "evidence_class": "pre-execution-local-engineering-validation",
+  "completed_at": "2026-11-11T01:53:08Z",
+  "repository": "omatheu/microservices-demo",
+  "base_commit": "9e5be4d4f8678d1f4cfdb3d34f3e212882018c5b",
+  "protocol_id": "checkout-pdt-comparison-v1.5",
+  "execution": {
+    "platform": "linux/amd64",
+    "mode": "local",
+    "cloud_access": false,
+    "published_to_registry": false,
+    "confirmatory_observation": false
+  },
+  "remediation": {
+    "controller_runtime_action": "apk upgrade --no-cache before creating the non-root user",
+    "controller_musl_version_observed": "1.2.6-r3",
+    "controller_musl_utils_version_observed": "1.2.6-r3",
+    "controller_zlib_version_observed": "1.4-r0",
+    "golang_org_x_net_version_observed": "v0.62.0",
+    "resolver_required_transitive_updates": [
+      "golang.org/x/crypto v0.58.0",
+      "golang.org/x/sync v0.24.0",
+      "golang.org/x/sys v0.49.0",
+      "golang.org/x/text v0.43.0"
+    ],
+    "security_gate_weakened": false
+  },
+  "scanner_policy": {
+    "syft_image": "ghcr.io/anchore/syft@sha256:500e2d872ac019436926e8322b4fc1f39441d94d21f6f4046c6ff29b30e8cb02",
+    "trivy_image": "aquasec/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969",
+    "severities": [
+      "HIGH",
+      "CRITICAL"
+    ],
+    "ignore_unfixed": true,
+    "exit_code_on_match": 1
+  },
+  "images": [
+    {
+      "name": "checkout-pdt-controller",
+      "local_image_id": "sha256:41687d627c56b7d506cb40d906fe601b9b30e28938a8c9433b5053ea4888f745",
+      "uncompressed_size_bytes": 57135165,
+      "high_or_critical_fixable_findings": 0,
+      "sbom_sha256": "f7efd37eb3252fbf670c95930ad89aa9d0ff27a4f5c07ee5e261bb6eabb88223",
+      "trivy_sha256": "33dff9d70d965d34c16ad87a26069ab5c1f957e0ff789ce3adad98327dba23d9"
+    },
+    {
+      "name": "oracle-harness",
+      "local_image_id": "sha256:96e2b4371c6ff3707987eb75d2221d983c43fbedc923a9636f2237bcb44e91b5",
+      "uncompressed_size_bytes": 15270102,
+      "high_or_critical_fixable_findings": 0,
+      "sbom_sha256": "9185428ea4e83360dc3be9b9ed3dbb244795a6970763a196765462656a565b22",
+      "trivy_sha256": "0e59aedda8db4ee3a57315af4d9dd5d8bf42798d048d51bb8b6017b52ce704b8"
+    },
+    {
+      "name": "currency-reference",
+      "local_image_id": "sha256:da33f534d2890a7715067bb60e1a1533e65e6084d1723bdda0bdda0571879c00",
+      "uncompressed_size_bytes": 154608675,
+      "high_or_critical_fixable_findings": 0,
+      "sbom_sha256": "1db042ea500f95abbc51291c771924514cb05a311f44e23fe55eefa50c2958d4",
+      "trivy_sha256": "6462b469c130e84f095b6c256fa92f8bbc5b9394568d4adc6f31a9c549d9f0fa"
+    },
+    {
+      "name": "checkoutservice",
+      "local_image_id": "sha256:62c9b46b320b1299fbb26a3f329fdf652b366b5a1444894c6a2a4590aed1d975",
+      "uncompressed_size_bytes": 20728909,
+      "high_or_critical_fixable_findings": 0,
+      "sbom_sha256": "b529627566c6d5d12dd2d5ad08e61d352741fcfec4eba14c020ee18fb51a6c88",
+      "trivy_sha256": "61642b82a06a56faa8183a0306a16a17cd410f292c57ef7f9640645df45078f8"
+    }
+  ],
+  "tests": {
+    "command": "go test ./...",
+    "runtime": "golang:1.27.3-alpine@sha256:b8c9b82affbbb82a020bbcf998dad2ba9516944ac7e883524642a481a9505e9c",
+    "module": "src/checkoutservice",
+    "result": "pass"
+  },
+  "result": "pass",
+  "publication_provenance_eligible": false,
+  "confirmatory_evidence_eligible": false
+}
