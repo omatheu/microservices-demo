@@ -2,6 +2,12 @@ locals {
   budget_units = floor(var.gross_cost_budget_amount)
   budget_nanos = floor(((var.gross_cost_budget_amount - local.budget_units) * 1000000000) + 0.5)
 
+  experiment_financial_baseline_amount = var.gross_cost_budget_amount - var.experiment_spend_budget_amount
+  experiment_cumulative_budget_amount  = var.gross_cost_budget_amount
+  experiment_budget_units              = floor(local.experiment_cumulative_budget_amount)
+  experiment_budget_nanos              = floor(((local.experiment_cumulative_budget_amount - local.experiment_budget_units) * 1000000000) + 0.5)
+  experiment_alert_fractions           = toset([0.25, 0.50, 0.75, 0.90, 1.00])
+
   required_services = setunion(
     toset([
       "cloudresourcemanager.googleapis.com",
