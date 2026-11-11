@@ -384,7 +384,9 @@ func (cs *checkoutService) sendOrderConfirmation(ctx context.Context, email stri
 }
 
 func (cs *checkoutService) shipOrder(ctx context.Context, address *pb.Address, items []*pb.CartItem) (string, error) {
-	resp, err := pb.NewShippingServiceClient(cs.shippingSvcConn).ShipOrder(ctx, &pb.ShipOrderRequest{
+	callCtx, cancel := context.WithTimeout(ctx, 50*time.Millisecond)
+	defer cancel()
+	resp, err := pb.NewShippingServiceClient(cs.shippingSvcConn).ShipOrder(callCtx, &pb.ShipOrderRequest{
 		Address: address,
 		Items:   items})
 	if err != nil {
