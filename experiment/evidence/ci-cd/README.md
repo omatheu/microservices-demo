@@ -6,6 +6,22 @@ relatórios dos scanners, SBOM, resultados por gate e uma decisão pré-staging.
 O conteúdo gerado só constitui evidência confirmatória quando o protocolo e a
 política estiverem congelados e a execução usar `MODE=confirmatory`.
 
+## Regressão de orquestração e emenda v1.6 em 17/11/2026
+
+O run pareado `44190151897` do PR #17 parou no segundo secret scan: depois da
+autenticação OIDC, `google-github-actions/auth` havia criado um arquivo
+temporário ignorado `gha-creds-*.json` no workspace. A CI pré-autenticação da
+mesma árvore candidata havia passado. Não houve staging, PDT, Oracle ou mutação
+operacional, e o cleanup confirmou zero pods experimentais. O registro
+[`confirmatory-orchestration-regression-pr17-20261117.json`](confirmatory-orchestration-regression-pr17-20261117.json)
+preserva hashes e proveniência sem revelar operador ou rótulo.
+
+A correção v1.6 materializa `git archive <commit>` em diretório privado e
+executa o mesmo Gitleaks fixado somente sobre a árvore candidata versionada.
+O modo de engenharia continua examinando o working tree. Os 400 testes locais,
+o ShellCheck e um scan real da árvore selada passaram; a política e a imagem do
+scanner não foram relaxadas.
+
 ## Regressão de segurança pré-execução e emenda v1.5 em 10/11/2026
 
 O gate de imagens do PR #16 bloqueou corretamente o

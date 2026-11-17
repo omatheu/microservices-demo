@@ -496,6 +496,14 @@ gate_secret_scanner_self_test() {
 }
 
 gate_secret_scan() {
+  if [[ "${MODE}" == "confirmatory" ]]; then
+    "${SCRIPT_DIR}/scan-sealed-candidate-tree.sh" \
+      "${REPO_ROOT}" \
+      "${GIT_COMMIT}" \
+      "${GITLEAKS_IMAGE}"
+    return
+  fi
+
   docker run --rm \
     -v "${REPO_ROOT}:/repo:ro" \
     "${GITLEAKS_IMAGE}" dir \

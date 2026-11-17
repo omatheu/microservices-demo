@@ -12,6 +12,7 @@ REQUIRED_INPUTS = {
     "ci_policy",
     "conventional_workflow_outcome_validator",
     "conventional_ci_runner",
+    "sealed_candidate_tree_secret_scanner",
     "conventional_repetition_aggregator",
     "comparative_pipeline_runner",
     "experimental_workload_cleanup",

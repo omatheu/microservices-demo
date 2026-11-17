@@ -86,39 +86,43 @@ def cost_evidence():
 
 
 def cost_review(binding):
+    value = protocol()
+    limits = value["execution_limits"]
+    ceiling = limits["proposed_incremental_spend_ceiling_brl"]
     return {
         "schema_version": "1.1.0",
-        "protocol_id": protocol()["protocol_id"],
+        "protocol_id": value["protocol_id"],
         "project_id": "microservices-demo-tcc",
         "decision": "approved-for-protocol-freeze",
         "reviewed_at": "2026-09-22T01:00:00Z",
         "billing_data_as_of": "2026-09-22T00:30:00Z",
         "cost_data_available": True,
         "project_gross_cost_observed_brl": 12.34,
-        "approved_incremental_spend_ceiling_brl": 200,
-        "projected_project_gross_cost_ceiling_brl": 212.34,
-        "project_gross_cost_budget_brl": 1998.268459,
-        "mandatory_incremental_review_at_brl": 150,
+        "approved_incremental_spend_ceiling_brl": ceiling,
+        "projected_project_gross_cost_ceiling_brl": 12.34 + ceiling,
+        "project_gross_cost_budget_brl": limits["project_gross_cost_budget_brl"],
+        "mandatory_incremental_review_at_brl": limits["mandatory_cost_review_at_brl"],
         "evidence": binding,
         "cloud_execution_authorized": False,
     }
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_v15_frozen_after_security_amendment(self):
+    def test_active_protocol_is_v16_frozen_after_orchestration_amendment(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.5", value["protocol_id"])
+        self.assertEqual("checkout-pdt-comparison-v1.6", value["protocol_id"])
         self.assertEqual("frozen", value["status"])
         self.assertTrue(value["confirmatory_collection_allowed"])
-        self.assertEqual("2026-11-11T02:26:48Z", value["frozen_at"])
+        self.assertEqual("2026-11-17T22:52:54Z", value["frozen_at"])
         self.assertEqual(
-            "security-v1.5-preexecution",
+            "orchestration-v1.6-sealed-tree-scan",
             value["amendment"]["amendment_id"],
         )
-        self.assertEqual(1, value["amendment"]["confirmatory_observations_before_amendment"])
+        self.assertEqual(2, value["amendment"]["confirmatory_observations_before_amendment"])
         self.assertEqual(0, value["amendment"]["oracle_labels_revealed_before_amendment"])
         self.assertEqual(1998.268459, value["execution_limits"]["project_gross_cost_budget_brl"])
+        self.assertEqual(199.999987, value["execution_limits"]["proposed_incremental_spend_ceiling_brl"])
         self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
         self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
 

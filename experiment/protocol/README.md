@@ -1,7 +1,8 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** protocolo v1.5 congelado após auditoria 17/17; o corpus opaco
-> v1.5 está ativo, mas merge e toda execução cloud permanecem bloqueados.
+> **Status:** protocolo v1.6 congelado após auditoria 17/17; o corpus opaco
+> v1.6 está ativo, mas publicação no GitHub e nova execução cloud permanecem
+> bloqueadas até a incorporação desta emenda.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -10,7 +11,7 @@
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
 análise. Seu status ativo é `frozen`, com SHA-256
-`331f90ac8b8dde08b96a90e29aaa40f500774f44d3e957b78ba44007cea2fd8a`.
+`b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d`.
 O congelamento v1.4 substituído continua verificável no commit `9e5be4d4`, com
 SHA-256 `2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
 O congelamento metodológico não concede autorização cloud.
@@ -98,6 +99,20 @@ e o finalizador congelou o protocolo em `2026-11-11T02:26:48Z`. Uma chave nova
 gerou o corpus `corpus-hojv3asxirypc`, com 18 candidatas em seis blocos de três.
 A chave e o manifesto Oracle permanecem somente no diretório privado local com
 permissão `0600`; o secret protegido do GitHub não foi alterado.
+
+Em 17 de novembro de 2026, a primeira tentativa v1.5 no PR #17 passou a CI
+pré-autenticação, mas o segundo secret scan incluiu o arquivo temporário
+ignorado `gha-creds-*.json` criado pela autenticação OIDC. A execução parou
+antes de staging, PDT e Oracle; não houve decisão pareada nem abertura de
+rótulo. A emenda
+[`amendments/orchestration-v1.6-sealed-tree-scan.json`](./amendments/orchestration-v1.6-sealed-tree-scan.json)
+restringe o scan confirmatório à árvore Git exata e mantém imagem, configuração
+e comportamento de engenharia inalterados. A consulta Billing limitada a 100
+MB observou R$1.798,268472 brutos; a baseline foi atualizada e o teto
+incremental reduzido para R$199,999987, sem elevar o orçamento absoluto de
+R$1.998,268459. A auditoria passou 17/17, o protocolo foi congelado em
+`2026-11-17T22:52:54Z` e uma chave nova gerou o corpus
+`corpus-ajlvmvtukmkia`.
 
 ## Objetivo
 
@@ -437,9 +452,9 @@ python3 experiment/scripts/prepare-researcher-approval.py \
   --output experiment/protocol/approvals/researcher-approval-v1.json
 ```
 
-Na v1.5, o documento vinculará o SHA-256 da candidata, reconhecerá explicitamente a
-coleta parcial preservada, a ausência de abertura do rótulo Oracle e a proibição
-de reinterpretar ou repetir aquela observação. Ele mantém
+Na v1.6, o documento vincula o SHA-256 da candidata, reconhece explicitamente
+as duas tentativas incompletas preservadas, a ausência de abertura do rótulo
+Oracle e a proibição de reinterpretar ou repetir aquelas observações. Ele mantém
 `cloud_execution_authorized: false`. Qualquer mudança no protocolo depois da
 assinatura invalida o vínculo e exige nova versão e nova aprovação.
 
@@ -475,8 +490,9 @@ a árvore ativa nem o GCP; o recibo mantém `cloud_execution_authorized: false`,
 portanto a futura execução cloud continua dependendo de autorização explícita
 independente.
 
-O teto absoluto adicional herdado pela candidata v1.5 é R$200 de custo bruto, com parada
-para revisão em R$150 e ao final de cada bloco de três candidatas. O cluster
+O teto incremental remanescente da candidata v1.6 é R$199,999987 de custo
+bruto, com parada para revisão em R$150 e ao final de cada bloco de três
+candidatas. O cluster
 deve ser excluído depois de cada bloco antes da espera pela atualização do
 Billing, e o saldo promocional projetado nunca pode ficar abaixo de R$10.
 Isso ainda não é

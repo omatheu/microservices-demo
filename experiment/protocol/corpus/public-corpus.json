@@ -1,17 +1,17 @@
 {
   "schema_version": "1.0.0",
-  "corpus_id": "corpus-hojv3asxirypc",
-  "protocol_id": "checkout-pdt-comparison-v1.5",
-  "protocol_sha256": "331f90ac8b8dde08b96a90e29aaa40f500774f44d3e957b78ba44007cea2fd8a",
-  "generated_at": "2026-11-11T02:27:55.801849Z",
+  "corpus_id": "corpus-ajlvmvtukmkia",
+  "protocol_id": "checkout-pdt-comparison-v1.6",
+  "protocol_sha256": "b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d",
+  "generated_at": "2026-11-17T22:53:36.780884Z",
   "confirmatory_eligible": true,
   "candidate_count": 18,
   "technical_repetitions_per_candidate": 3,
-  "oracle_manifest_commitment_sha256": "c26c3dbea41f863b397a6d2910c91978f5b6f2284de153776dc4e7fbfbe2bab6",
+  "oracle_manifest_commitment_sha256": "df6b4e4cc1be28329d88afe01590224a837ab217caea74ac2d6e49b30f1e615a",
   "execution_order": [
     {
       "sequence": 1,
-      "candidate_id": "cand-ipshd3h2j7ngflva",
+      "candidate_id": "cand-c65kxv3u44lzj4qx",
       "repetitions": [
         1,
         2,
@@ -20,7 +20,7 @@
     },
     {
       "sequence": 2,
-      "candidate_id": "cand-5jazt2tw5w6xqubw",
+      "candidate_id": "cand-2a7hzmrdxmh34kkm",
       "repetitions": [
         1,
         2,
@@ -29,7 +29,7 @@
     },
     {
       "sequence": 3,
-      "candidate_id": "cand-ct7o6kdw4betj44u",
+      "candidate_id": "cand-7mlvastvildcukzg",
       "repetitions": [
         1,
         2,
@@ -38,7 +38,7 @@
     },
     {
       "sequence": 4,
-      "candidate_id": "cand-xxrha7rx2eluxwpz",
+      "candidate_id": "cand-npsda7ovknfii3sm",
       "repetitions": [
         1,
         2,
@@ -47,7 +47,7 @@
     },
     {
       "sequence": 5,
-      "candidate_id": "cand-6ive6yovwa2ng2td",
+      "candidate_id": "cand-dsdh2y4nn4pwroob",
       "repetitions": [
         1,
         2,
@@ -56,7 +56,7 @@
     },
     {
       "sequence": 6,
-      "candidate_id": "cand-drx3f5v76jprawk7",
+      "candidate_id": "cand-5tr5o2dnvy5rqhyu",
       "repetitions": [
         1,
         2,
@@ -65,7 +65,7 @@
     },
     {
       "sequence": 7,
-      "candidate_id": "cand-pjirsidpnza3zwgh",
+      "candidate_id": "cand-ac4yb2nnscfwevts",
       "repetitions": [
         1,
         2,
@@ -74,7 +74,7 @@
     },
     {
       "sequence": 8,
-      "candidate_id": "cand-eukdjw4ocfmkgifd",
+      "candidate_id": "cand-xzjiay6rorwxnzew",
       "repetitions": [
         1,
         2,
@@ -83,7 +83,7 @@
     },
     {
       "sequence": 9,
-      "candidate_id": "cand-5rvrrg7hquxq23rt",
+      "candidate_id": "cand-3nf6dubfakb7zktq",
       "repetitions": [
         1,
         2,
@@ -92,7 +92,7 @@
     },
     {
       "sequence": 10,
-      "candidate_id": "cand-fogdik5wx6qzvhr4",
+      "candidate_id": "cand-x6mmb6yjk5sevymx",
       "repetitions": [
         1,
         2,
@@ -101,7 +101,7 @@
     },
     {
       "sequence": 11,
-      "candidate_id": "cand-oelxc7doecbugf2h",
+      "candidate_id": "cand-ipwbw3cd32hfuenk",
       "repetitions": [
         1,
         2,
@@ -110,7 +110,7 @@
     },
     {
       "sequence": 12,
-      "candidate_id": "cand-gmlqogxpkjy2jzer",
+      "candidate_id": "cand-pidhzaolvwrkz6lw",
       "repetitions": [
         1,
         2,
@@ -119,7 +119,7 @@
     },
     {
       "sequence": 13,
-      "candidate_id": "cand-yafqjn4imuky2wpc",
+      "candidate_id": "cand-zy45we7ykl66l3j7",
       "repetitions": [
         1,
         2,
@@ -128,7 +128,7 @@
     },
     {
       "sequence": 14,
-      "candidate_id": "cand-qksbeymp4urvsesb",
+      "candidate_id": "cand-aw6lbu63m2kxe6df",
       "repetitions": [
         1,
         2,
@@ -137,7 +137,7 @@
     },
     {
       "sequence": 15,
-      "candidate_id": "cand-aquckay53qgarnzx",
+      "candidate_id": "cand-akchj3y6e25cth46",
       "repetitions": [
         1,
         2,
@@ -146,7 +146,7 @@
     },
     {
       "sequence": 16,
-      "candidate_id": "cand-vbjevekgif2bmfkq",
+      "candidate_id": "cand-6lpmsgs3kj3qswfa",
       "repetitions": [
         1,
         2,
@@ -155,7 +155,7 @@
     },
     {
       "sequence": 17,
-      "candidate_id": "cand-iyikzfpeqpjim6js",
+      "candidate_id": "cand-jgytq3l4oly27fxm",
       "repetitions": [
         1,
         2,
@@ -164,7 +164,7 @@
     },
     {
       "sequence": 18,
-      "candidate_id": "cand-2akibvm7nqd5tjlh",
+      "candidate_id": "cand-ae5ycy6k7ochukcd",
       "repetitions": [
         1,
         2,
@@ -176,54 +176,54 @@
     {
       "block": 1,
       "candidate_ids": [
-        "cand-ipshd3h2j7ngflva",
-        "cand-5jazt2tw5w6xqubw",
-        "cand-ct7o6kdw4betj44u"
+        "cand-c65kxv3u44lzj4qx",
+        "cand-2a7hzmrdxmh34kkm",
+        "cand-7mlvastvildcukzg"
       ],
       "cost_review_required_after_block": true
     },
     {
       "block": 2,
       "candidate_ids": [
-        "cand-xxrha7rx2eluxwpz",
-        "cand-6ive6yovwa2ng2td",
-        "cand-drx3f5v76jprawk7"
+        "cand-npsda7ovknfii3sm",
+        "cand-dsdh2y4nn4pwroob",
+        "cand-5tr5o2dnvy5rqhyu"
       ],
       "cost_review_required_after_block": true
     },
     {
       "block": 3,
       "candidate_ids": [
-        "cand-pjirsidpnza3zwgh",
-        "cand-eukdjw4ocfmkgifd",
-        "cand-5rvrrg7hquxq23rt"
+        "cand-ac4yb2nnscfwevts",
+        "cand-xzjiay6rorwxnzew",
+        "cand-3nf6dubfakb7zktq"
       ],
       "cost_review_required_after_block": true
     },
     {
       "block": 4,
       "candidate_ids": [
-        "cand-fogdik5wx6qzvhr4",
-        "cand-oelxc7doecbugf2h",
-        "cand-gmlqogxpkjy2jzer"
+        "cand-x6mmb6yjk5sevymx",
+        "cand-ipwbw3cd32hfuenk",
+        "cand-pidhzaolvwrkz6lw"
       ],
       "cost_review_required_after_block": true
     },
     {
       "block": 5,
       "candidate_ids": [
-        "cand-yafqjn4imuky2wpc",
-        "cand-qksbeymp4urvsesb",
-        "cand-aquckay53qgarnzx"
+        "cand-zy45we7ykl66l3j7",
+        "cand-aw6lbu63m2kxe6df",
+        "cand-akchj3y6e25cth46"
       ],
       "cost_review_required_after_block": true
     },
     {
       "block": 6,
       "candidate_ids": [
-        "cand-vbjevekgif2bmfkq",
-        "cand-iyikzfpeqpjim6js",
-        "cand-2akibvm7nqd5tjlh"
+        "cand-6lpmsgs3kj3qswfa",
+        "cand-jgytq3l4oly27fxm",
+        "cand-ae5ycy6k7ochukcd"
       ],
       "cost_review_required_after_block": true
     }

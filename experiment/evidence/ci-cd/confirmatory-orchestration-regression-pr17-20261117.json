@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "confirmatory-orchestration-regression-pr17-20261117",
+  "captured_at": "2026-11-17T22:44:05Z",
+  "repository": "omatheu/microservices-demo",
+  "pull_request_number": 17,
+  "opaque_candidate_id": "cand-ipshd3h2j7ngflva",
+  "candidate_head_sha": "521abb487042dd0b697b109846dde2c2fe61d77b",
+  "candidate_base_sha": "bff352a012b310c60cfa5a6200cf11d6134c307a",
+  "workflow_run": {
+    "id": "44190151897",
+    "job_id": "134417138172",
+    "artifact_id": "14375599233",
+    "artifact_sha256": "b66011bf152efd5f4ccb5007eb0a0fb8a64654599cf1bec7ec5fd2fe47a6b55f",
+    "started_at": "2026-11-17T22:27:33Z",
+    "finished_at": "2026-11-17T22:31:37Z"
+  },
+  "observation": {
+    "local_ci_gates_passed": 21,
+    "local_ci_gates_total": 22,
+    "failed_gate": "secret-scan",
+    "sealed_local_decision_sha256": "fd27aa9ddbb035a4589ac82e4207088729e2fc54528ba47c84779bff7ff9313a",
+    "root_cause": "The confirmatory runner scanned the whole authenticated GitHub Actions workspace after google-github-actions/auth created an ignored gha-creds-*.json runtime file. The candidate Git tree had already passed the same secret gate before cloud authentication.",
+    "candidate_secret_detected": false,
+    "runtime_credential_contents_persisted": false,
+    "staging_executed": false,
+    "pdt_executed": false,
+    "oracle_executed": false,
+    "candidate_outcome_collected": false,
+    "oracle_label_revealed": false,
+    "operational_namespace_mutated": false
+  },
+  "cleanup": {
+    "before_active_experimental_pods": 0,
+    "after_active_experimental_pods": 0,
+    "workflow_cleanup_complete": true,
+    "cluster_deleted_after_incident": true,
+    "billing_bigquery_artifact_registry_iam_budgets_and_github_preserved": true
+  },
+  "remediation": {
+    "rule": "In confirmatory mode the secret gate must materialize and scan exactly the committed candidate Git tree, excluding ignored and untracked runner state without adding a filename allowlist.",
+    "conventional_runner_sha256": "c1099f59b133203f73deb0e99e3a917eef5ac99855a0bfea5da16198d3288b26",
+    "sealed_tree_scanner_sha256": "68309dae7f65e88daa0403ac7299c5f51bf1abdde40699806ecd66cd69300343",
+    "regression_test_sha256": "551f43df82783c936b37de629c1e9843759ed12b93e7ca31a26f3c5121dc2188",
+    "shellcheck": "pass",
+    "unit_tests": "2/2 pass",
+    "real_sealed_tree_scan": "pass"
+  },
+  "confirmatory_observation": false,
+  "eligible_for_primary_analysis": false,
+  "cloud_execution_authorized": false
+}
