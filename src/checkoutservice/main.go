@@ -14,6 +14,8 @@
 
 package main
 
+// Candidate cand-c65kxv3u44lzj4qx: runtime-neutral refactor marker.
+
 import (
 	"context"
 	"fmt"
