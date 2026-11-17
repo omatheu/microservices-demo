@@ -64,7 +64,7 @@ HIGH corrigíveis. A emenda
 retirou o corpus v1.4 da área ativa e preservou seu hash no registro histórico.
 Depois da publicação e dos novos bindings, a revisão financeira e a aprovação
 do pesquisador levaram a auditoria v1.5 a 17/17. O protocolo foi congelado e
-uma chave nova gerou o corpus ativo `corpus-hojv3asxirypc`. Ele contém 18
+uma chave nova gerou o corpus `corpus-hojv3asxirypc`. Ele continha 18
 identificadores opacos, três repetições por candidata e seis blocos de três,
 está vinculado ao protocolo de SHA-256
 `331f90ac8b8dde08b96a90e29aaa40f500774f44d3e957b78ba44007cea2fd8a`
@@ -73,13 +73,26 @@ e tem SHA-256
 Seu compromisso Oracle é
 `c26c3dbea41f863b397a6d2910c91978f5b6f2284de153776dc4e7fbfbe2bab6`.
 
+Em 17/11/2026, a primeira tentativa v1.5 foi interrompida antes de staging,
+PDT e Oracle porque o secret scan pós-autenticação examinou estado temporário
+do runner. Nenhum rótulo Oracle foi revelado. A emenda v1.6 preservou a
+tentativa como fluxo incompleto, corrigiu o escopo para a árvore Git selada e
+exigiu chave e corpus novos. Após auditoria 17/17, o corpus confirmatório ativo
+passou a ser `corpus-ajlvmvtukmkia`, com 18 identificadores opacos, três
+repetições e seis blocos. Ele está vinculado ao protocolo de SHA-256
+`b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d`,
+tem SHA-256
+`9030a51ababb14b06e08d54e2c5cd0768eacddac45030793d36050a5b5083f72`
+e compromisso Oracle
+`df6b4e4cc1be28329d88afe01590224a837ab217caea74ac2d6e49b30f1e615a`.
+
 Os manifestos e as chaves v1.1 e v1.2 permanecem somente como arquivos
 históricos em diretório local privado. As chaves e os manifestos Oracle v1.3,
-v1.4 e v1.5 também permanecem nos diretórios privados ignorados pelo Git, com
+v1.4, v1.5 e v1.6 também permanecem nos diretórios privados ignorados pelo Git, com
 permissões 0600, e nunca podem ser copiados para este diretório versionado. O
 secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` ainda não foi alterado e não deve receber a chave
-v1.4 invalidada. Sua futura substituição pela chave v1.5 exige uma ação remota
+`TCC_ORACLE_BLINDING_KEY_B64` ainda não foi alterado e não deve receber chaves
+invalidadas. Sua futura substituição pela chave v1.6 exige uma ação remota
 separada e autorizada.
 
 O mesmo ambiente protegido deve conter:

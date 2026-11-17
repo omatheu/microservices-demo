@@ -18,11 +18,13 @@ This fork implements a paired comparison between a complete conventional
 CI/CD pipeline with staging and the same pipeline augmented by a predictive and
 prescriptive Partial Digital Twin of `checkoutservice`. The operational GKE
 baseline, conventional gates, PDT controller, mutation operators, and
-independent oracle are implemented. Confirmatory collection has not started,
-but the protocol, policies and runtimes were frozen on 4 October 2026 after a
-17/17 pre-freeze audit. The three runtime images are bound by immutable digest,
-and the definitive public corpus is confirmatory-eligible while its key and
-Oracle manifest remain private. Cloud execution remains explicitly locked. A
+independent oracle are implemented. Two incomplete, pre-outcome candidate
+flows are preserved, but no paired confirmatory outcome or Oracle label has
+been collected. Protocol v1.6, its policies and runtimes were frozen on 17
+November 2026 after a 17/17 pre-freeze audit. The three runtime images are
+bound by immutable digest, and the new definitive public corpus is
+confirmatory-eligible while its key and Oracle manifest remain private. Cloud
+execution remains explicitly locked. A
 read-only Oracle readiness audit verifies GitHub protection,
 keyless identity, least-privilege Kubernetes RBAC, frozen artifacts and an
 empty Oracle namespace before execution can be enabled. See the

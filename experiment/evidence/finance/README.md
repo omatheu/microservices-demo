@@ -4,6 +4,21 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Para o congelamento v1.6, a consulta real limitada a 100 MB observou custo
+bruto de R$1.798,268472, créditos de R$-1.798,274571 e custo líquido de
+R$-0,006099, com dados exportados até `2026-11-17T18:08:10Z`. A diferença de
+R$0,000013 em relação à baseline v1.5 não foi arredondada: a baseline foi
+movida para o valor observado e o teto incremental caiu para R$199,999987,
+mantendo o orçamento absoluto de R$1.998,268459. As aprovações levaram a
+auditoria a 17/17 e o protocolo foi congelado com SHA-256
+`b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d`.
+A observação e os recibos estão em
+[`cost-window-20260919-20261117-v1.6-freeze.json`](./cost-window-20260919-20261117-v1.6-freeze.json),
+[`pre-freeze-audit-v1.6-ready-20261117T225254Z.json`](./pre-freeze-audit-v1.6-ready-20261117T225254Z.json)
+e
+[`protocol-freeze-finalization-v1.6-20261117T225254Z.json`](./protocol-freeze-finalization-v1.6-20261117T225254Z.json).
+Esses atos não autorizam execução cloud.
+
 Antes do bloco 1 da coleta v1.5, a candidata opaca
 `cand-ipshd3h2j7ngflva` foi publicada no PR #17 sem labels de execução. Uma
 consulta real limitada a 100 MB confirmou custo bruto de R$1.798,268459,

@@ -1,27 +1,27 @@
 {
   "schema_version": "1.0.0",
-  "protocol_id": "checkout-pdt-comparison-v1.5",
+  "protocol_id": "checkout-pdt-comparison-v1.6",
   "status": "frozen",
   "confirmatory_collection_allowed": true,
-  "frozen_at": "2026-11-11T02:26:48Z",
+  "frozen_at": "2026-11-17T22:52:54Z",
   "amendment": {
-    "amendment_id": "security-v1.5-preexecution",
-    "authorized_at": "2026-11-10T03:20:00Z",
-    "previous_protocol_id": "checkout-pdt-comparison-v1.4",
-    "previous_protocol_sha256": "2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed",
-    "previous_freeze_commit": "9e5be4d4f8678d1f4cfdb3d34f3e212882018c5b",
-    "confirmatory_observations_before_amendment": 1,
+    "amendment_id": "orchestration-v1.6-sealed-tree-scan",
+    "authorized_at": "2026-11-17T22:44:05Z",
+    "previous_protocol_id": "checkout-pdt-comparison-v1.5",
+    "previous_protocol_sha256": "331f90ac8b8dde08b96a90e29aaa40f500774f44d3e957b78ba44007cea2fd8a",
+    "previous_freeze_commit": "335d7c1f8cb1ba70e5feed91f0b8cce5d76687d4",
+    "confirmatory_observations_before_amendment": 2,
     "complete_decision_pairs_before_amendment": 0,
     "oracle_adjudications_before_amendment": 0,
     "oracle_labels_revealed_before_amendment": 0,
     "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
     "scope": [
-      "Alpine package upgrade in checkout-pdt-controller for musl, musl-utils and zlib fixes",
-      "golang.org/x/net v0.62.0 and resolver-required transitive updates",
-      "local rebuild, SBOM and unchanged HIGH/CRITICAL scan for all three experiment runtimes",
-      "runtime provenance rebinding, renewed approvals, protocol freeze and blinded corpus rotation"
+      "scan the exact committed candidate Git tree in confirmatory mode",
+      "exclude ignored and untracked runner state without filename allowlists",
+      "preserve the pinned Gitleaks image, policy and engineering-mode behavior",
+      "renew approvals, protocol freeze and blinded corpus rotation without runtime republication"
     ],
-    "record": "experiment/protocol/amendments/security-v1.5-preexecution.json"
+    "record": "experiment/protocol/amendments/orchestration-v1.6-sealed-tree-scan.json"
   },
   "twin_object": "checkoutservice",
   "research_design": {
@@ -41,7 +41,7 @@
     "sample_size_rationale": "Fixed feasibility corpus sized before evaluation results; estimates use exact intervals and no minimum-effect claim."
   },
   "randomization": {
-    "public_seed_label": "checkout-pdt-v1.5-fixed-before-corpus",
+    "public_seed_label": "checkout-pdt-v1.6-fixed-before-corpus",
     "algorithm": "HMAC-SHA256 keyed deterministic sampling and Fisher-Yates order",
     "candidate_identifier_prefix": "cand-",
     "blinding_key_minimum_bytes": 32,
@@ -298,12 +298,12 @@
   },
   "execution_limits": {
     "cloud_execution_authorization": "explicit-user-authorization-required-after-freeze",
-    "financial_baseline_gross_cost_brl": 1798.268459,
+    "financial_baseline_gross_cost_brl": 1798.268472,
     "project_gross_cost_budget_brl": 1998.268459,
-    "proposed_incremental_spend_ceiling_brl": 200,
+    "proposed_incremental_spend_ceiling_brl": 199.999987,
     "mandatory_cost_review_at_brl": 150,
     "minimum_promotional_credit_reserve_brl": 10,
-    "maximum_promotional_credit_consumption_brl": 200,
+    "maximum_promotional_credit_consumption_brl": 199.999987,
     "billing_alert_is_hard_cap": false,
     "candidate_block_size": 3,
     "cost_review_after_every_block": true,
@@ -321,7 +321,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "8c1655adbf2a97613cfdeacae986210b2a36c6cf4c3a747c9a08b4ae0dcce36a"
+      "sha256": "cfb7cf6b07b0a5047a2516bc1776d52d95fd82f9e552a2fd4d7fb45211435293"
     },
     "conventional_workflow_outcome_validator": {
       "path": "experiment/scripts/validate-conventional-workflow-outcome.py",
@@ -329,7 +329,11 @@
     },
     "conventional_ci_runner": {
       "path": "experiment/scripts/run-conventional-ci-local.sh",
-      "sha256": "a5a464374741bad679ff364dc812514f2537d7bf4a8da340382219f49e1fb734"
+      "sha256": "c1099f59b133203f73deb0e99e3a917eef5ac99855a0bfea5da16198d3288b26"
+    },
+    "sealed_candidate_tree_secret_scanner": {
+      "path": "experiment/scripts/scan-sealed-candidate-tree.sh",
+      "sha256": "68309dae7f65e88daa0403ac7299c5f51bf1abdde40699806ecd66cd69300343"
     },
     "conventional_repetition_aggregator": {
       "path": "experiment/scripts/aggregate-conventional-repetitions.py",
@@ -397,7 +401,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "8961bc8cb1639607a783ec30777e5f4d41af5bc8a8f16412c3ba86dde41d9539"
+      "sha256": "14f7bcd279ca29efe893556e510bbe336ee15a3735eec7697e0b592f5a1c92b0"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -420,8 +424,8 @@
       "sha256": "9dfc825fde7fae26d9a72c0896b928d01b513e2485f3786df537da3bb9ae2cd3"
     },
     "confirmatory_orchestration_incident": {
-      "path": "experiment/evidence/ci-cd/confirmatory-orchestration-regression-pr13-20261024.json",
-      "sha256": "2e16ed46a920b5680c439cb30c7e06a742d31ce0acf7762775c2f313f4d5b47c"
+      "path": "experiment/evidence/ci-cd/confirmatory-orchestration-regression-pr17-20261117.json",
+      "sha256": "a600986c917c1e50613a29302055181bdddd5329b6e50e2713e4cc778484d8f0"
     },
     "baseline_evidence_validator": {
       "path": "experiment/scripts/validate-baseline-evidence.py",
@@ -449,11 +453,11 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "16e08aca59ee4400e07b6050a225bf2f10adbddde8a4ba58b87a844d802075d8"
+      "sha256": "98ee12fa2c20ab0b2072afc627de26d5e45f883fe29afd9daf3e29327c642565"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "26fbd931b5a238c378edb428df45dbf08c993e09532b0881cd3ee7d7bfc19d95"
+      "sha256": "ebc07879accde1b0d820b56e762d9a869a9e82d30e25641c056c11b203ae11d9"
     },
     "pdt_repetition_aggregator": {
       "path": "experiment/scripts/aggregate-pdt-repetitions.py",
@@ -461,19 +465,19 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "d6030382a5586d70447f67d2b54d41063f3544e39f588e764bf81624ef1f61c1"
+      "sha256": "3970f9ba9ae29b1017f317b17ed4d8e2c7b6f2cbf2898a623500db8e12706003"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
-      "sha256": "b6ec8e7f43a17ae990a2c5bc9def40ab8f28bdd679dadc5336fd5a9937b84f7a"
+      "sha256": "0d0ca000b5c6f9b1a1ffb7e69a91fd3e549bd4e5e95ed6d69eb7bd5113f24584"
     },
     "blinded_corpus_manager": {
       "path": "experiment/scripts/manage-blinded-corpus.py",
       "sha256": "303da77e3cd804f24e89c95fa22cf487c393a7a4800d02e4eb717d09c825ea97"
     },
     "protocol_amendment_record": {
-      "path": "experiment/protocol/amendments/security-v1.5-preexecution.json",
-      "sha256": "d4f0a5259249c4e6b3e70389771b70475a9c77a7ea18bc8285e2fd1f5ba6ee70"
+      "path": "experiment/protocol/amendments/orchestration-v1.6-sealed-tree-scan.json",
+      "sha256": "3264c365393f38bbbc0cdc114b9a542e7afc7dc66b337691d261e0e286bfa81c"
     },
     "promotional_credit_observation": {
       "path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",
@@ -481,7 +485,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "77a87be177b3ff3c79713fd3f5efdfa050a6259da06a09ae54db94df248babd1"
+      "sha256": "7a16ee024b3821453fe83530a4c52a64e3bd02da4d7e72a6d70e4995df52f6a1"
     }
   },
   "required_before_freeze": [
@@ -499,6 +503,7 @@
     "engineering-artifact-binding-v2",
     "oracle-engineering-artifact-binding-v2-deploy-as-is-r1-20261005T013207Z",
     "runtime-security-regression-pr12-20261012",
-    "runtime-security-regression-pr16-20261110"
+    "runtime-security-regression-pr16-20261110",
+    "confirmatory-orchestration-regression-pr17-20261117"
   ]
 }

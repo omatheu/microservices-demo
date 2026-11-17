@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "orchestration-v1.6-sealed-tree-scan",
+  "status": "authorized-preparation",
+  "authorized_at": "2026-11-17T22:44:05Z",
+  "authorization_literal": "autorizo tudo, termine o experimento",
+  "authorization_context": "The researcher granted broad authorization to complete the experiment and then explicitly instructed the agent to continue. The amendment is limited to the fail-closed remediation required after the first v1.5 candidate flow stopped before staging, PDT or Oracle.",
+  "reason": "The first v1.5 confirmatory candidate flow was blocked by the second local secret scan because the authenticated GitHub Actions workspace contained the ignored ephemeral gha-creds-*.json file created by the OIDC action. The pre-authentication CI of the same candidate Git tree passed. Scanning runner state violates the declared gate scope and makes every authenticated confirmatory execution fail before staging.",
+  "preserved_prior_collection": {
+    "candidate_flows_started_before_amendment": 2,
+    "complete_decision_pairs_before_amendment": 0,
+    "oracle_adjudications_before_amendment": 0,
+    "oracle_labels_revealed_before_amendment": 0,
+    "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation"
+  },
+  "superseded_freeze": {
+    "git_commit": "335d7c1f8cb1ba70e5feed91f0b8cce5d76687d4",
+    "protocol_id": "checkout-pdt-comparison-v1.5",
+    "protocol_sha256": "331f90ac8b8dde08b96a90e29aaa40f500774f44d3e957b78ba44007cea2fd8a",
+    "frozen_at": "2026-11-11T02:26:48Z",
+    "corpus_id": "corpus-hojv3asxirypc",
+    "public_corpus_sha256": "0176797ac596a5df29434dff0faa930c32740271f7ad31f57a1db44fd837116d",
+    "pdt_runtime_manifest_sha256": "d6030382a5586d70447f67d2b54d41063f3544e39f588e764bf81624ef1f61c1",
+    "oracle_suite_manifest_sha256": "77a87be177b3ff3c79713fd3f5efdfa050a6259da06a09ae54db94df248babd1"
+  },
+  "incident_evidence": {
+    "path": "experiment/evidence/ci-cd/confirmatory-orchestration-regression-pr17-20261117.json",
+    "sha256": "a600986c917c1e50613a29302055181bdddd5329b6e50e2713e4cc778484d8f0",
+    "workflow_run_id": "44190151897",
+    "candidate_outcome_collected": false,
+    "oracle_label_revealed": false
+  },
+  "authorized_changes": [
+    "Materialize the exact committed Git tree in a private temporary directory before the confirmatory secret scan.",
+    "Scan that sealed tree with the unchanged pinned Gitleaks image and unchanged policy.",
+    "Keep engineering-mode working-tree scanning unchanged.",
+    "Add a regression test proving ignored and untracked GitHub runner credentials are absent from the sealed scan input.",
+    "Roll the financial baseline forward to the latest real Billing observation and reduce the remaining incremental ceiling by the observed R$0.000013 drift without increasing the absolute project budget.",
+    "Invalidate the v1.5 approvals and public corpus, rotate the blinding key, renew the 17/17 audit and freeze protocol v1.6 before another cloud execution.",
+    "Reuse the unchanged frozen PDT and Oracle runtime digests and their publication provenance; no runtime source or image changes are authorized."
+  ],
+  "financial_guardrail_adjustment": {
+    "evidence": {
+      "path": "experiment/evidence/finance/cost-window-20260919-20261117-v1.6-freeze.json",
+      "sha256": "b257684cc03777cb4f7583390f4c95bcb0e37930b0bc0844cb456a99765f85ef"
+    },
+    "previous_baseline_gross_cost_brl": 1798.268459,
+    "observed_baseline_gross_cost_brl": 1798.268472,
+    "previous_incremental_ceiling_brl": 200,
+    "remaining_incremental_ceiling_brl": 199.999987,
+    "absolute_project_budget_brl": 1998.268459,
+    "absolute_budget_increased": false
+  },
+  "financial_limits_changed": true,
+  "security_policy_weakened": false,
+  "runtime_publication_required": false,
+  "cloud_execution_authorized": false,
+  "protocol_freeze_authorized": true,
+  "merge_authorized": true
+}
