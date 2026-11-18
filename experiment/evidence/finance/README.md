@@ -15,6 +15,15 @@ como checkpoint provisório e não pode liberar nova execução. A baseline e o
 teto v1.7 só serão congelados após o export cobrir integralmente a janela de
 desligamento; o orçamento absoluto não será aumentado.
 
+O bundle de componentes v1.7 foi preparado e aplicado localmente em
+`2026-11-18T23:09:29Z`. A auditoria resultante passou 15/17 controles e mantém
+como bloqueios apenas `financial-review` e `researcher-approval`. Os recibos
+estão em
+[`protocol-freeze-candidate-v1.7-20261118T230929Z.json`](./protocol-freeze-candidate-v1.7-20261118T230929Z.json)
+e
+[`pre-freeze-audit-v1.7-components-20261118T230929Z.json`](./pre-freeze-audit-v1.7-components-20261118T230929Z.json).
+Nenhum dos dois autoriza execução cloud.
+
 Para o congelamento v1.6, a consulta real limitada a 100 MB observou custo
 bruto de R$1.798,268472, créditos de R$-1.798,274571 e custo líquido de
 R$-0,006099, com dados exportados até `2026-11-17T18:08:10Z`. A diferença de
