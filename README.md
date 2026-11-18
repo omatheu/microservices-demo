@@ -22,11 +22,12 @@ independent oracle are implemented. Three incomplete candidate flows are
 preserved, including one v1.6 flow with a sealed conventional staging approval,
 but no paired PDT decision or Oracle label has been collected. A timestamp
 contract defect stopped the PDT before its counterfactuals; the narrowly scoped
-v1.7 correction is validated locally and the protocol is locked as a
-pre-registration candidate pending complete post-deletion Billing data, a new
-17/17 freeze and corpus rotation. The cluster has been deleted, the runtime
-images remain bound by immutable digest, and cloud execution is explicitly
-locked. A
+v1.7 correction is merged. Its component-freeze bundle is applied and the
+audit passes 15/17 controls; the protocol remains a locked pre-registration
+candidate pending complete post-deletion Billing data, renewed financial and
+researcher approvals, finalization, and corpus rotation. The cluster has been
+deleted, the runtime images remain bound by immutable digest, and cloud
+execution is explicitly locked. A
 read-only Oracle readiness audit verifies GitHub protection,
 keyless identity, least-privilege Kubernetes RBAC, frozen artifacts and an
 empty Oracle namespace before execution can be enabled. See the

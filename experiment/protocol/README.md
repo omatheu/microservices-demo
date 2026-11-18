@@ -1,8 +1,9 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** emenda v1.7 autorizada e validada localmente; protocolo travado
-> como `pre-registration-candidate`. A retomada depende de Billing
-> pós-exclusão completo, auditoria 17/17, novo congelamento e rotação do corpus.
+> **Status:** os componentes do congelamento v1.7 foram aplicados e a auditoria
+> passa 15/17 controles. O protocolo permanece travado como
+> `pre-registration-candidate`; faltam Billing pós-exclusão completo, revisão
+> financeira, aprovação do pesquisador e rotação do corpus.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -13,6 +14,11 @@ O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fix
 análise. A v1.6 substituída permanece verificável no commit `ed45e852`, com
 SHA-256 `b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d`.
 O candidato v1.7 mantém a coleta desabilitada e ainda não é um congelamento.
+Em 18 de novembro de 2026, o bundle de componentes vinculou políticas e
+runtimes publicados ao SHA-256 de protocolo
+`d5fa0be22742b379cf10d95e93d9e99998a0bfb21111386011d08eda215e4989`.
+A auditoria passou 15/17; somente as novas aprovações financeira e do
+pesquisador permanecem bloqueantes. Isso não autoriza execução cloud.
 O congelamento v1.4 substituído continua verificável no commit `9e5be4d4`, com
 SHA-256 `2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
 O congelamento metodológico não concede autorização cloud.

@@ -1,16 +1,16 @@
 {
   "schema_version": "1.0.0",
   "suite_id": "checkout-independent-oracle-v1",
-  "status": "pre-registration-candidate",
-  "frozen_at": null,
+  "status": "frozen",
+  "frozen_at": "2026-11-18T23:09:29Z",
   "files": [
     {
       "path": "experiment/oracle/policy-v1.json",
-      "sha256": "3ff9e3e6ced495b6f00e72a7c52351f47e2ef56cc9af90f26346eeafa22b5326"
+      "sha256": "1ddc86f8ae81954d155c07bc66b6d1e9a664a88964ea4935c74c67a1bbc28997"
     },
     {
       "path": "experiment/pdt/fidelity-policy.json",
-      "sha256": "199a5b6782182e39400305ee79e213a03dffde8202b997ee9de275146dcc28e3"
+      "sha256": "c7e7b91da100847a9d758d491b568976df1af6e77d15acba886f89b25d760101"
     },
     {
       "path": "experiment/oracle/harness/Dockerfile",
