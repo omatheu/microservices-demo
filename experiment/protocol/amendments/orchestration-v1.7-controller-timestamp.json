@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "orchestration-v1.7-controller-timestamp",
+  "status": "authorized-preparation",
+  "authorized_at": "2026-11-18T22:14:55Z",
+  "authorization_literal": "autorizo tudo, termine o experimento",
+  "authorization_context": "After the v1.6 flow stopped before any PDT decision or Oracle label, the researcher broadly authorized completion of the experiment and explicitly instructed the agent to continue. This amendment remains subject to the absolute financial guard and the true post-PDT human gate.",
+  "reason": "The first v1.6 candidate completed local CI and three staging repetitions, then the PDT controller job emitted a valid ISO-8601 UTC timestamp with fractional seconds. The host runner accepted only whole seconds and rejected that valid plan before its existing semantic comparison, preventing every PDT counterfactual, candidate-level PDT decision, human gate and Oracle adjudication.",
+  "preserved_prior_collection": {
+    "candidate_flows_started_before_amendment": 3,
+    "sealed_conventional_decisions_before_amendment": 2,
+    "complete_decision_pairs_before_amendment": 0,
+    "oracle_adjudications_before_amendment": 0,
+    "oracle_labels_revealed_before_amendment": 0,
+    "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation"
+  },
+  "superseded_freeze": {
+    "git_commit": "ed45e852619fb0ae44afe73ae37c6e5b642f7486",
+    "protocol_id": "checkout-pdt-comparison-v1.6",
+    "protocol_sha256": "b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d",
+    "frozen_at": "2026-11-17T22:52:54Z",
+    "corpus_id": "corpus-ajlvmvtukmkia",
+    "public_corpus_sha256": "9030a51ababb14b06e08d54e2c5cd0768eacddac45030793d36050a5b5083f72",
+    "pdt_runtime_manifest_sha256": "3970f9ba9ae29b1017f317b17ed4d8e2c7b6f2cbf2898a623500db8e12706003",
+    "oracle_suite_manifest_sha256": "7a16ee024b3821453fe83530a4c52a64e3bd02da4d7e72a6d70e4995df52f6a1"
+  },
+  "incident_evidence": {
+    "path": "experiment/evidence/ci-cd/confirmatory-orchestration-regression-pr21-20261118.json",
+    "sha256": "0eb9a6737b815979ab8159e1c12a196946027cfa9cceab0b77bec148288243af",
+    "workflow_run_id": "44199321140",
+    "sealed_conventional_decision": "approve",
+    "pdt_candidate_decision_produced": false,
+    "oracle_label_revealed": false
+  },
+  "authorized_changes": [
+    "Accept whole-second or fractional-second UTC timestamps from the existing PDT controller while retaining the required trailing Z.",
+    "Keep the exact semantic comparison that removes only generated_at and requires every other controller-plan field to match.",
+    "Add a regression test covering the timestamp precision emitted by the existing controller and rejecting non-Z offsets.",
+    "Preserve the v1.6 sealed conventional approval as an incomplete flow without rerunning, reinterpreting or including it in the primary analysis.",
+    "Invalidate the v1.6 approvals and public corpus, rotate the blinding key, renew the 17/17 audit and freeze protocol v1.7 before another cloud execution.",
+    "Roll the financial baseline forward only after the post-deletion Billing export is complete and reduce the remaining incremental ceiling without increasing the absolute project budget.",
+    "Reuse the unchanged PDT controller and Oracle image digests and publication provenance; no runtime image rebuild or republication is required."
+  ],
+  "explicitly_unchanged": [
+    "research question and primary estimand",
+    "candidate count, block count and repetition rules",
+    "mutation operators and parameter spaces",
+    "CI and staging gate policies",
+    "PDT model, thresholds, alternatives and fidelity policy",
+    "Oracle classification rules",
+    "absolute project gross cost budget",
+    "cleanup and blockwise financial review requirements"
+  ],
+  "provisional_financial_checkpoint": {
+    "evidence": {
+      "path": "experiment/evidence/finance/cost-window-20260919-20261118-v1.7-freeze.json",
+      "sha256": "5eb2dd2090c76e8ffe429412971fab30d3dac6882a0388f719bbff610c165195"
+    },
+    "observed_gross_cost_brl": 1822.596661,
+    "currently_observed_remaining_ceiling_brl": 175.671798,
+    "absolute_project_budget_brl": 1998.268459,
+    "billing_data_as_of": "2026-11-18T19:31:10Z",
+    "post_deletion_export_complete": false,
+    "absolute_budget_increased": false
+  },
+  "financial_limits_changed": true,
+  "security_policy_weakened": false,
+  "runtime_publication_required": false,
+  "cloud_execution_authorized": false,
+  "protocol_freeze_authorized": true,
+  "merge_authorized": true
+}

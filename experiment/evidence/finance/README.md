@@ -4,6 +4,17 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026 e uma
+consulta real limitada a 100 MB observou provisoriamente R$1.822,596661 brutos,
+R$-1.822,602833 em créditos e R$-0,006172 líquidos. A leitura deixa
+R$175,671798 até o orçamento absoluto de R$1.998,268459, mas seu
+`billing_data_as_of=2026-11-18T19:31:10Z` ainda antecede a exclusão. Portanto,
+ela está registrada em
+[`cost-window-20260919-20261118-v1.7-freeze.json`](./cost-window-20260919-20261118-v1.7-freeze.json)
+como checkpoint provisório e não pode liberar nova execução. A baseline e o
+teto v1.7 só serão congelados após o export cobrir integralmente a janela de
+desligamento; o orçamento absoluto não será aumentado.
+
 Para o congelamento v1.6, a consulta real limitada a 100 MB observou custo
 bruto de R$1.798,268472, créditos de R$-1.798,274571 e custo líquido de
 R$-0,006099, com dados exportados até `2026-11-17T18:08:10Z`. A diferença de

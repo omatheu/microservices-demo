@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 17 de novembro de 2026.
+> **Última verificação:** 18 de novembro de 2026.
 
 ## Objetivo do experimento
 
@@ -48,8 +48,8 @@ como Partial Digital Twin.
 
 - [x] Projeto Google Cloud `microservices-demo-tcc` configurado.
 - [x] Terraform separado da infraestrutura original da demonstração.
-- [x] Cluster GKE Autopilot `online-boutique-experiment` validado e depois
-  excluído na pausa financeira de 02/11/2026.
+- [x] Cluster GKE Autopilot `online-boutique-experiment` validado, recriado para
+  a tentativa v1.6 e novamente excluído em 18/11/2026 para interromper custos.
 - [x] Namespaces cloud `operational`, `staging`, `pdt`, `pdt-system`, `oracle` e `observability`.
 - [x] Namespace isolado `oracle` aplicado, sem LoadBalancer e com quota própria.
 - [x] Quotas de CPU, memória, pods e Load Balancers por namespace.
@@ -69,8 +69,17 @@ como Partial Digital Twin.
   scan real da árvore passaram localmente.
 - [x] Protocolo v1.6 congelado após auditoria 17/17 e corpus opaco
   `corpus-ajlvmvtukmkia` gerado com chave nova.
+- [x] Tentativa v1.6 preservada como fluxo incompleto: CI e três repetições de
+  staging aprovaram, mas o PDT parou antes dos contrafactuais por um contrato
+  de precisão do timestamp; gate humano e Oracle não executaram.
+- [x] Emenda v1.7 autorizada e validada localmente: aceita segundos fracionários
+  do controlador, mantém `Z` e a comparação semântica integral, sem alterar
+  modelo, limiares, Oracle ou imagens.
 - [x] Baseline financeira atualizada para R$1.798,268472 e saldo incremental
   reduzido para R$199,999987, sem aumentar o teto absoluto de R$1.998,268459.
+- [x] Checkpoint Billing pós-tentativa observou provisoriamente
+  R$1.822,596661 brutos e R$175,671798 de margem; como o export ainda não cobre
+  toda a exclusão, nenhuma nova execução cloud está liberada.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Controles passivos do Oracle instalados, com kill switch em `false` e
@@ -126,7 +135,7 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-### Caminho crítico atual — 17/11/2026
+### Caminho crítico atual — 18/11/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,
@@ -183,12 +192,22 @@ execução autorizada em cloud ou análise dos resultados.
    secret scan à árvore Git selada, renovar a consulta financeira e as duas
    aprovações, passar a auditoria 17/17, congelar o protocolo e gerar o corpus
    `corpus-ajlvmvtukmkia` com chave nova, sem execução cloud;
-18. incorporar a v1.6, instalar sua chave protegida, recriar o cluster somente
-   com autorização independente e executar a
-   comparação pareada, o gate humano e o Oracle em blocos
-   sequenciais explicitamente autorizados;
-19. consolidar o dataset, calcular métricas, revisar ameaças à validade, exportar
-   as evidências, remover a infraestrutura e conferir o custo final.
+18. [interrompido de forma fail-closed em 17/11/2026] incorporar a v1.6,
+   instalar sua chave e executar a primeira candidata: a decisão convencional
+   `approve` foi selada após três repetições, mas a validação de timestamp do
+   runner impediu contrafactuais, decisão PDT, gate humano e Oracle;
+19. [concluído localmente em 18/11/2026] preservar os artefatos, desarmar a PR
+   #21, excluir o cluster, registrar a emenda v1.7 e validar a correção e o
+   replay sem publicar imagens nem executar cloud;
+20. aguardar o Billing cobrir integralmente a exclusão, reduzir o teto
+   incremental sem elevar R$1.998,268459, renovar as duas aprovações, passar a
+   auditoria 17/17, congelar a v1.7 e gerar corpus e chave novos;
+21. materializar candidatas v1.7 novas e executar os seis blocos pareados, com
+   revisão financeira e exclusão do cluster após cada bloco; quando o PDT
+   produzir uma decisão, obter a confirmação humana real antes do Oracle;
+22. consolidar o dataset, calcular métricas, revisar ameaças à validade,
+   exportar o pacote reproduzível, remover a infraestrutura e conferir o custo
+   final.
 
 Os controles passivos do Oracle, seu RBAC e a validação curta não pertencem
 mais ao caminho crítico. A nova observação financeira passou, o gate de
@@ -205,9 +224,11 @@ correções passaram, os runtimes foram publicados e vinculados, a auditoria
 pré-freeze passou 17/17 e o corpus v1.5 foi gerado com chave nova. A primeira
 tentativa v1.5 parou antes de qualquer resultado por um scan do estado
 temporário do runner. A emenda v1.6 corrige esse escopo sem relaxar a política,
-preserva as duas tentativas incompletas, renova o congelamento 17/17 e cria um
-corpus novo. O secret protegido ainda não foi alterado e o primeiro bloco v1.6
-continua exigindo autorizações cloud e financeiras independentes.
+preserva as duas tentativas anteriores, renova o congelamento 17/17 e cria um
+corpus novo. A primeira candidata v1.6 preservou uma aprovação convencional,
+mas parou antes da decisão PDT por um contrato de timestamp. A emenda v1.7
+corrige somente esse contrato; o cluster está excluído e a retomada aguarda o
+Billing pós-exclusão, novo congelamento e corpus novo.
 
 ## Fases restantes
 
@@ -599,12 +620,12 @@ Os operadores candidatos e os controles estão catalogados em
 **Estado:** os congelamentos anteriores permanecem preservados no histórico do
 Git. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-está `frozen` como v1.6; mantém 18 candidatas, três repetições, seis blocos, a
-mesma regra de agregação e o mesmo plano pareado. A baseline financeira é
-R$1.798,268472, com R$199,999987 de teto incremental remanescente.
-Os três runtimes corrigidos estão vinculados por digest, a auditoria passou
-17/17 e o corpus opaco ativo é `corpus-ajlvmvtukmkia`. O congelamento não
-autoriza cloud, e a chave v1.6 ainda não foi instalada no secret protegido.
+está travado como candidato v1.7; mantém 18 candidatas, três repetições, seis
+blocos, a mesma regra de agregação e o mesmo plano pareado. O checkpoint
+financeiro provisório é R$1.822,596661, com R$175,671798 observados até o teto
+absoluto, mas ainda não cobre toda a janela de exclusão. Os três runtimes
+continuam vinculados por digest. O corpus v1.6 foi invalidado, e o corpus v1.7
+só será gerado depois do Billing completo e da nova auditoria 17/17.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -910,9 +931,12 @@ corpus para a retomada. A v1.4 foi congelada e seu corpus foi validado, mas a
 emenda de segurança v1.5 os invalidou antes da execução. Os runtimes v1.5 já
 foram publicados e continuam vinculados. A tentativa v1.5 do PR #17 parou
 antes de staging por uma regressão de escopo do secret scan. A emenda v1.6 foi
-congelada após auditoria 17/17 e o corpus novo foi validado. Ainda falta
-incorporar a v1.6, instalar sua chave no secret protegido e então recriar o
-cluster para executar, com autorização independente, a coleta confirmatória.
+congelada após auditoria 17/17 e seu corpus foi validado. A candidata v1.6 do
+PR #21 concluiu três repetições de staging e selou `approve`, mas um timestamp
+fracionário válido interrompeu o runner antes dos contrafactuais PDT. A emenda
+v1.7 está validada localmente, o PR foi fechado, o cluster foi excluído e não
+houve Oracle. Ainda faltam o Billing pós-exclusão completo, novo congelamento,
+nova chave e novo corpus antes da coleta confirmatória.
 
 ### Fase 8 — Análise final
 
@@ -981,7 +1005,7 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [x] renovar o congelamento do protocolo v1.6, corpus, sementes e regra de
+- [ ] renovar o congelamento do protocolo v1.7, corpus, sementes e regra de
   parada antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;
@@ -999,8 +1023,9 @@ intervalo de confiança quando o número de repetições permitir.
 
 ## Controles financeiros e operacionais
 
-- [x] teto incremental remanescente de R$199,999987 na v1.6 e orçamento bruto
-  contábil absoluto de R$1.998,268459;
+- [x] orçamento bruto contábil absoluto preservado em R$1.998,268459;
+- [ ] congelar o teto incremental v1.7 após o Billing cobrir a exclusão; o
+  checkpoint provisório indica no máximo R$175,671798 remanescentes;
 - [x] alertas de 25% a 100%;
 - [x] quotas por namespace;
 - [x] somente um Load Balancer permitido;
@@ -1015,6 +1040,7 @@ intervalo de confiança quando o número de repetições permitir.
 - [x] exigir cleanup final fail-closed dos workloads de `staging`, `pdt` e
   `pdt-system` no workflow;
 - [x] remover workloads ociosos;
+- [x] excluir o cluster depois da tentativa incompleta v1.6;
 - [ ] excluir o cluster ao concluir a coleta;
 - [ ] verificar faturamento final após o atraso de contabilização.
 

@@ -18,25 +18,26 @@ This fork implements a paired comparison between a complete conventional
 CI/CD pipeline with staging and the same pipeline augmented by a predictive and
 prescriptive Partial Digital Twin of `checkoutservice`. The operational GKE
 baseline, conventional gates, PDT controller, mutation operators, and
-independent oracle are implemented. Two incomplete, pre-outcome candidate
-flows are preserved, but no paired confirmatory outcome or Oracle label has
-been collected. Protocol v1.6, its policies and runtimes were frozen on 17
-November 2026 after a 17/17 pre-freeze audit. The three runtime images are
-bound by immutable digest, and the new definitive public corpus is
-confirmatory-eligible while its key and Oracle manifest remain private. Cloud
-execution remains explicitly locked. A
+independent oracle are implemented. Three incomplete candidate flows are
+preserved, including one v1.6 flow with a sealed conventional staging approval,
+but no paired PDT decision or Oracle label has been collected. A timestamp
+contract defect stopped the PDT before its counterfactuals; the narrowly scoped
+v1.7 correction is validated locally and the protocol is locked as a
+pre-registration candidate pending complete post-deletion Billing data, a new
+17/17 freeze and corpus rotation. The cluster has been deleted, the runtime
+images remain bound by immutable digest, and cloud execution is explicitly
+locked. A
 read-only Oracle readiness audit verifies GitHub protection,
 keyless identity, least-privilege Kubernetes RBAC, frozen artifacts and an
 empty Oracle namespace before execution can be enabled. See the
 [experiment roadmap](/docs/tcc-experiment-roadmap.md) for the authoritative
 live status and exit criteria.
 
-The passive Oracle GitHub controls and its namespace-scoped Role/RoleBinding
-are installed, while every execution switch remains `false` and the
-experimental namespaces have no workloads. Runtime publication was performed
-through its isolated Artifact Registry-only path; staging, PDT and Oracle were
-skipped. Every future experimental block still requires a separate financial
-review and explicit cloud authorization.
+The passive Oracle GitHub controls remain installed, while every execution
+switch is `false` and no GKE cluster exists. Runtime publication was performed
+through its isolated Artifact Registry-only path and does not need to be
+repeated for v1.7. Every future experimental block still requires a separate
+financial review and explicit cloud authorization.
 
 ## Architecture
 

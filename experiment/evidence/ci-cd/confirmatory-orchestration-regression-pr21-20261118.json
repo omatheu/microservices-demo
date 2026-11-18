@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "confirmatory-orchestration-regression-pr21-20261118",
+  "recorded_at": "2026-11-18T22:14:55Z",
+  "classification": "confirmatory-pipeline-orchestration-defect-after-sealed-conventional-decision",
+  "repository": "omatheu/microservices-demo",
+  "protocol": {
+    "protocol_id": "checkout-pdt-comparison-v1.6",
+    "protocol_sha256": "b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d",
+    "freeze_commit": "ed45e852619fb0ae44afe73ae37c6e5b642f7486",
+    "freeze_tree": "7f6195041dd8d10628625a7803518b4d196545b1",
+    "corpus_id": "corpus-ajlvmvtukmkia",
+    "public_corpus_sha256": "9030a51ababb14b06e08d54e2c5cd0768eacddac45030793d36050a5b5083f72"
+  },
+  "candidate_flow": {
+    "candidate_id": "cand-c65kxv3u44lzj4qx",
+    "pull_request_number": 21,
+    "base_commit": "ed45e852619fb0ae44afe73ae37c6e5b642f7486",
+    "candidate_commit": "0ffdba5b04554c95da91f2f415192557ba4e7173",
+    "candidate_tree": "8b1de68189fc565458798169fac659d7f2d78460",
+    "paired_workflow_run_id": 44199321140,
+    "paired_workflow_job_id": 134449085989,
+    "workflow_url": "https://github.com/omatheu/microservices-demo/actions/runs/44199321140",
+    "started_at": "2026-11-17T23:26:03Z",
+    "finished_at": "2026-11-17T23:43:30Z",
+    "artifact": {
+      "id": 14382740003,
+      "name": "paired-experiment-pr-21-0ffdba5b04554c95da91f2f415192557ba4e7173",
+      "digest": "sha256:c2b35d7b27f868af22a159af3c368ae72638ddad67ff49e5ecde9b289a56304f",
+      "size_bytes": 683498,
+      "created_at": "2026-11-17T23:43:26Z",
+      "retention_expires_at": "2026-12-01T23:43:25Z"
+    }
+  },
+  "preserved_partial_collection": {
+    "local_ci_passed": true,
+    "staging_repetitions_completed": 3,
+    "staging_repetition_decisions": [
+      {
+        "repetition": 1,
+        "decision": "PASS",
+        "sha256": "39486f798c3408fd851e1ab876587172ec7551a7b493dee12b58f1e33d0569a0"
+      },
+      {
+        "repetition": 2,
+        "decision": "PASS",
+        "sha256": "351e8ab68f119534c9c0573d71c6d6fa964c34cd97d437b23006cee51b8f1102"
+      },
+      {
+        "repetition": 3,
+        "decision": "PASS",
+        "sha256": "f060e27c0949a59b91543a4bb009b8e5b7ff18afe839d7998836528498a23c0f"
+      }
+    ],
+    "sealed_conventional_decision": "approve",
+    "sealed_conventional_decision_sha256": "7d44480215cd2ec8fe06eb25b78318226c64b3c6c5a45ac4f7f912218f90e243",
+    "pdt_controller_job_completed": true,
+    "pdt_counterfactual_repetitions_completed": 0,
+    "pdt_candidate_decision_produced": false,
+    "human_pdt_gate_reached": false,
+    "oracle_adjudication_executed": false,
+    "oracle_label_revealed": false,
+    "complete_decision_pair": false,
+    "eligible_for_primary_analysis": false,
+    "disposition": "preserved-incomplete-without-reexecution-or-reinterpretation"
+  },
+  "defect": {
+    "failure_point": "runtime PDT controller plan timestamp validation before normalized plan comparison",
+    "valid_runtime_generated_at": "2026-11-17T23:43:08.230028Z",
+    "rejected_pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+    "root_cause": "The controller emits Python ISO-8601 UTC timestamps with fractional seconds. The host runner accepted only whole-second timestamps and rejected a valid controller result before the existing generated_at-independent semantic comparison could run.",
+    "expected_plan_sha256": "522bab82aa2a84f407b55bcadcb00694348cc3fa23a1d0a9d6e5193c9815d86e",
+    "runtime_plan_sha256": "78805c6fcba39bc7a4bd08a014d6d700cd9e83165106ae292636e09dce0b4884",
+    "only_raw_plan_difference": "generated_at",
+    "normalized_expected_plan_sha256": "66dd9509589fd65648931ef05760c99631577298b31bb6761e4ac1fd4c877646",
+    "normalized_runtime_plan_sha256": "66dd9509589fd65648931ef05760c99631577298b31bb6761e4ac1fd4c877646",
+    "normalized_plans_equivalent": true,
+    "candidate_caused_failure": false
+  },
+  "remediation": {
+    "rule": "Accept the controller's existing UTC contract with either whole or fractional seconds, retain the trailing Z requirement and preserve the generated_at-independent exact plan comparison.",
+    "runner_sha256": "9efde358ac104ee7645ea7fb6809043743d81d3efcd5cae403669749399b9aa5",
+    "regression_test_sha256": "ed58c433ace2143ca0f5be90133b50d235879200c890422d87fc7895d95899b9",
+    "artifact_replay_timestamp_validation": "pass",
+    "artifact_replay_normalized_comparison": "pass",
+    "pdt_model_changed": false,
+    "thresholds_changed": false,
+    "oracle_rules_changed": false,
+    "runtime_image_republication_required": false,
+    "requires_new_protocol_freeze": true,
+    "requires_new_blinded_corpus": true
+  },
+  "cleanup": {
+    "workflow_cleanup_evidence_sha256": "d5d5e0619e11b41e9666c28a32be1bcec4936ece49043fdb52e1f44378d7bd5c",
+    "before_active_experimental_pods": 0,
+    "after_active_experimental_pods": 0,
+    "operational_namespace_mutated": false,
+    "oracle_namespace_mutated": false,
+    "cluster_deleted_after_incident": true,
+    "cluster_absence_verified_at": "2026-11-18T22:12:00Z",
+    "billing_bigquery_artifact_registry_iam_budgets_and_github_preserved": true
+  },
+  "financial_checkpoint": {
+    "evidence_path": "experiment/evidence/finance/cost-window-20260919-20261118-v1.7-freeze.json",
+    "evidence_sha256": "5eb2dd2090c76e8ffe429412971fab30d3dac6882a0388f719bbff610c165195",
+    "observed_gross_cost_brl": 1822.596661,
+    "absolute_project_budget_brl": 1998.268459,
+    "currently_observed_remaining_budget_brl": 175.671798,
+    "billing_data_as_of": "2026-11-18T19:31:10Z",
+    "deletion_cost_fully_exported": false,
+    "new_cloud_execution_before_final_post_deletion_review": false
+  }
+}
