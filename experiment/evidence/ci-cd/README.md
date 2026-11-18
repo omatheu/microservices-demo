@@ -6,6 +6,26 @@ relatórios dos scanners, SBOM, resultados por gate e uma decisão pré-staging.
 O conteúdo gerado só constitui evidência confirmatória quando o protocolo e a
 política estiverem congelados e a execução usar `MODE=confirmatory`.
 
+## Regressão de orquestração e emenda v1.7 em 18/11/2026
+
+O run pareado `44199321140` do PR #21 concluiu a CI local, três repetições de
+staging e uma decisão convencional selada `approve`. O Job imutável do
+controlador PDT também concluiu, mas o runner rejeitou seu `generated_at`
+`2026-11-17T23:43:08.230028Z`: o contrato aceitava somente segundos inteiros,
+embora o próprio controlador gere ISO-8601 com precisão fracionária. Nenhum
+contrafactual PDT foi executado, não houve decisão PDT, gate humano, Oracle ou
+abertura de rótulo. O registro
+[`confirmatory-orchestration-regression-pr21-20261118.json`](confirmatory-orchestration-regression-pr21-20261118.json)
+preserva a decisão convencional e classifica a tentativa como fluxo incompleto
+inelegível para a análise primária.
+
+A correção v1.7 aceita segundos inteiros ou fracionários, mantém `Z` obrigatório
+e preserva a comparação exata de todo o plano depois de remover somente o campo
+volátil `generated_at`. O replay dos artefatos produz hashes normalizados
+idênticos, o teste de regressão passou e modelo, limiares, Oracle e imagens não
+foram alterados. O cluster foi excluído; uma nova execução permanece bloqueada
+até Billing pós-exclusão, auditoria 17/17, congelamento e rotação do corpus.
+
 ## Regressão de orquestração e emenda v1.6 em 17/11/2026
 
 O run pareado `44190151897` do PR #17 parou no segundo secret scan: depois da

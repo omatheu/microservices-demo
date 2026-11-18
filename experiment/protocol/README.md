@@ -1,8 +1,8 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** protocolo v1.6 congelado após auditoria 17/17; o corpus opaco
-> v1.6 está ativo, mas publicação no GitHub e nova execução cloud permanecem
-> bloqueadas até a incorporação desta emenda.
+> **Status:** emenda v1.7 autorizada e validada localmente; protocolo travado
+> como `pre-registration-candidate`. A retomada depende de Billing
+> pós-exclusão completo, auditoria 17/17, novo congelamento e rotação do corpus.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -10,8 +10,9 @@
 
 O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fixa
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
-análise. Seu status ativo é `frozen`, com SHA-256
-`b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d`.
+análise. A v1.6 substituída permanece verificável no commit `ed45e852`, com
+SHA-256 `b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d`.
+O candidato v1.7 mantém a coleta desabilitada e ainda não é um congelamento.
 O congelamento v1.4 substituído continua verificável no commit `9e5be4d4`, com
 SHA-256 `2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
 O congelamento metodológico não concede autorização cloud.
@@ -113,6 +114,18 @@ incremental reduzido para R$199,999987, sem elevar o orçamento absoluto de
 R$1.998,268459. A auditoria passou 17/17, o protocolo foi congelado em
 `2026-11-17T22:52:54Z` e uma chave nova gerou o corpus
 `corpus-ajlvmvtukmkia`.
+
+Ainda em 17 de novembro, a primeira candidata v1.6 no PR #21 concluiu a CI e
+três repetições de staging, produzindo uma aprovação convencional selada. O Job
+do controlador PDT concluiu, porém o runner rejeitou o timestamp UTC válido com
+microssegundos antes da comparação semântica já existente. Nenhum
+contrafactual, decisão PDT, gate humano ou Oracle foi executado e nenhum rótulo
+foi revelado. A emenda
+[`amendments/orchestration-v1.7-controller-timestamp.json`](./amendments/orchestration-v1.7-controller-timestamp.json)
+aceita a precisão já emitida pelo controlador sem alterar modelo, limiares,
+Oracle ou imagens. A decisão convencional v1.6 fica preservada como fluxo
+incompleto, o cluster foi excluído e o corpus v1.6 foi invalidado. A v1.7 só
+poderá ser congelada depois que o Billing cobrir toda a janela de exclusão.
 
 ## Objetivo
 

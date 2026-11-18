@@ -86,14 +86,23 @@ tem SHA-256
 e compromisso Oracle
 `df6b4e4cc1be28329d88afe01590224a837ab217caea74ac2d6e49b30f1e615a`.
 
+Na primeira candidata v1.6, a esteira preservou uma aprovação convencional
+selada depois de três repetições de staging, mas um contrato de precisão de
+timestamp interrompeu o PDT antes dos contrafactuais. Não houve decisão PDT,
+gate humano, Oracle ou abertura de rótulo. A emenda
+[`orchestration-v1.7-controller-timestamp.json`](../amendments/orchestration-v1.7-controller-timestamp.json)
+retira o corpus v1.6 da área confirmatória ativa sem reutilizar sua candidata.
+O próximo corpus só poderá ser gerado com chave nova depois do congelamento
+17/17 da v1.7 e da revisão financeira pós-exclusão.
+
 Os manifestos e as chaves v1.1 e v1.2 permanecem somente como arquivos
 históricos em diretório local privado. As chaves e os manifestos Oracle v1.3,
 v1.4, v1.5 e v1.6 também permanecem nos diretórios privados ignorados pelo Git, com
 permissões 0600, e nunca podem ser copiados para este diretório versionado. O
 secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` ainda não foi alterado e não deve receber chaves
-invalidadas. Sua futura substituição pela chave v1.6 exige uma ação remota
-separada e autorizada.
+`TCC_ORACLE_BLINDING_KEY_B64` contém a chave v1.6 agora invalidada e permanece
+desarmado. Ele só deve ser substituído pela chave v1.7 depois da nova geração
+do corpus, sem expor seu valor.
 
 O mesmo ambiente protegido deve conter:
 

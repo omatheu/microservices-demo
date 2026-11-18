@@ -31,6 +31,8 @@ require_command() {
   command -v "$1" >/dev/null 2>&1 || { echo "Required command not found: $1" >&2; exit 1; }
 }
 for command_name in awk base64 cmp curl gcloud git jq kubectl python3 sha256sum sort; do require_command "$command_name"; done
+
+controller_generated_at_pattern='^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z$'
 [[ -n "$snapshot_file" && -f "$snapshot_file" ]] || { echo "No PDT input snapshot found." >&2; exit 1; }
 [[ "$mode" == "engineering" || "$mode" == "confirmatory" ]] || { echo "MODE must be engineering or confirmatory." >&2; exit 1; }
 [[ -n "$conventional_decision_file" && -f "$conventional_decision_file" ]] || { echo "CONVENTIONAL_DECISION must point to the sealed control decision." >&2; exit 1; }
@@ -146,12 +148,12 @@ kubectl wait --namespace pdt-system --for=condition=complete \
   --timeout=5m "job/${controller_job}" > "${cycle_dir}/controller-runtime-wait.log"
 kubectl logs --namespace pdt-system "job/${controller_job}" --container controller \
   > "${cycle_dir}/controller-runtime-plan.json"
-jq -e '
+jq --arg generated_at_pattern "$controller_generated_at_pattern" -e '
   .controller_id == "checkout-pdt-controller-v1"
   and .source_binding.target_namespace == "pdt"
   and .execution.operational_mutation_allowed == false
   and .decision_contract.human_confirmation_required == true
-  and (.generated_at | test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"))
+  and (.generated_at | test($generated_at_pattern))
 ' "${cycle_dir}/controller-runtime-plan.json" >/dev/null
 jq -S 'del(.generated_at)' "${cycle_dir}/controller-plan.json" > "${cycle_dir}/controller-plan.normalized.json"
 jq -S 'del(.generated_at)' "${cycle_dir}/controller-runtime-plan.json" > "${cycle_dir}/controller-runtime-plan.normalized.json"

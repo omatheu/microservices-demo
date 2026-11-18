@@ -1,5 +1,7 @@
 import json
 import pathlib
+import re
+import subprocess
 import unittest
 
 
@@ -26,6 +28,56 @@ class RunPdtControllerRuntimeTests(unittest.TestCase):
         self.assertIn("controller-runtime-plan.normalized.json", rendered)
         self.assertIn("plans_equivalent", rendered)
         self.assertIn('cmp "${cycle_dir}/controller-plan.normalized.json"', rendered)
+
+    def test_runtime_plan_accepts_controller_utc_timestamp_precision(self):
+        rendered = RUNNER.read_text(encoding="utf-8")
+        match = re.search(
+            r"^controller_generated_at_pattern='([^']+)'$", rendered, re.MULTILINE
+        )
+        self.assertIsNotNone(match)
+        pattern = match.group(1)
+
+        for timestamp in (
+            "2026-11-17T23:43:08Z",
+            "2026-11-17T23:43:08.230028Z",
+        ):
+            completed = subprocess.run(
+                [
+                    "jq",
+                    "-n",
+                    "-e",
+                    "--arg",
+                    "pattern",
+                    pattern,
+                    "--arg",
+                    "timestamp",
+                    timestamp,
+                    "$timestamp | test($pattern)",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(0, completed.returncode, completed.stderr)
+
+        invalid = subprocess.run(
+            [
+                "jq",
+                "-n",
+                "-e",
+                "--arg",
+                "pattern",
+                pattern,
+                "--arg",
+                "timestamp",
+                "2026-11-17T23:43:08+00:00",
+                "$timestamp | test($pattern)",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertNotEqual(0, invalid.returncode)
 
     def test_controller_cleanup_is_part_of_success_and_failure_paths(self):
         rendered = RUNNER.read_text(encoding="utf-8")
