@@ -68,14 +68,26 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
         self.clock.stop()
         self.repository.close()
 
-    def test_frozen_repository_is_no_longer_eligible_for_approval(self):
+    def test_amended_repository_is_not_yet_eligible_for_approval(self):
         result = MODULE.prepare(REPO_ROOT)
 
         self.assertFalse(result["eligible_for_researcher_approval"])
         self.assertFalse(result["approval_generated"])
         self.assertFalse(result["cloud_execution_authorized"])
         self.assertEqual(
-            ["collection-locked-before-freeze", "researcher-approval"],
+            [
+                "ci-policy-frozen",
+                "staging-thresholds-frozen",
+                "pdt-model-policy-frozen",
+                "pdt-fidelity-policy-frozen",
+                "oracle-policy-frozen",
+                "pdt-controller-image-bound",
+                "pdt-runtime-frozen",
+                "oracle-images-bound",
+                "oracle-suite-frozen",
+                "researcher-approval",
+                "financial-review",
+            ],
             result["blocking_requirements"],
         )
 

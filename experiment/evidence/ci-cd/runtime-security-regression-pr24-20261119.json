@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "observed_at": "2026-11-19T17:24:53Z",
+  "repository": "omatheu/microservices-demo",
+  "pull_request_number": 24,
+  "head_commit": "c8cb7a3f3afd0dff812173549ca8d7222eb6db7b",
+  "workflow": "TCC Conventional CI",
+  "workflow_run_id": "44576708310",
+  "job_id": "135746020725",
+  "job_name": "Validate experiment runtime images",
+  "result": "blocked-before-publication",
+  "scanner": {
+    "image": "aquasec/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969",
+    "policy": "HIGH,CRITICAL --ignore-unfixed --exit-code 1",
+    "raw_report_sha256": "23d11d7b5b8a2f37724bb6b5918a23b8d3267d414e15da681fdd47ab82c61371"
+  },
+  "finding": {
+    "vulnerability_id": "CVE-2026-97054",
+    "severity": "HIGH",
+    "package": "stdlib",
+    "installed_version": "v1.27.3",
+    "fixed_versions": "1.26.11, 1.27.4",
+    "affected_image": "oracle-harness",
+    "primary_url": "https://avd.aquasec.com/nvd/cve-2026-97054"
+  },
+  "gate_outcome": {
+    "runtime_publication_performed": false,
+    "staging_executed": false,
+    "pdt_executed": false,
+    "oracle_executed": false,
+    "gcp_accessed": false,
+    "confirmatory_observation": false,
+    "security_gate_weakened": false
+  }
+}

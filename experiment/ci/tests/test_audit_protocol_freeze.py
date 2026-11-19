@@ -108,15 +108,15 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_v17_frozen_after_final_approval(self):
+    def test_active_protocol_is_v18_locked_after_security_amendment(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.7", value["protocol_id"])
-        self.assertEqual("frozen", value["status"])
-        self.assertTrue(value["confirmatory_collection_allowed"])
-        self.assertEqual("2026-11-19T17:18:02Z", value["frozen_at"])
+        self.assertEqual("checkout-pdt-comparison-v1.8", value["protocol_id"])
+        self.assertEqual("pre-registration-candidate", value["status"])
+        self.assertFalse(value["confirmatory_collection_allowed"])
+        self.assertIsNone(value["frozen_at"])
         self.assertEqual(
-            "orchestration-v1.7-controller-timestamp",
+            "security-v1.8-preexecution",
             value["amendment"]["amendment_id"],
         )
         self.assertEqual(3, value["amendment"]["confirmatory_observations_before_amendment"])
@@ -127,12 +127,24 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
         self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
 
-    def test_current_candidate_requires_only_renewed_approvals(self):
+    def test_current_candidate_requires_publication_freeze_and_approvals(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
         self.assertEqual(
-            {"researcher-approval", "financial-review"},
+            {
+                "ci-policy-frozen",
+                "staging-thresholds-frozen",
+                "pdt-model-policy-frozen",
+                "pdt-fidelity-policy-frozen",
+                "oracle-policy-frozen",
+                "pdt-controller-image-bound",
+                "pdt-runtime-frozen",
+                "oracle-images-bound",
+                "oracle-suite-frozen",
+                "researcher-approval",
+                "financial-review",
+            },
             set(result["blocking_requirements"]),
         )
 

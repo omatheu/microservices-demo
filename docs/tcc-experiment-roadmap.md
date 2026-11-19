@@ -85,6 +85,15 @@ como Partial Digital Twin.
   `9ae5ed8fb37d4421ad5327a47f3b65631b43a577d6c3b42a96fb031e620c77c4`.
 - [x] Corpus opaco v1.7 `corpus-dk3zrooqiepv4` gerado com chave nova, 18
   candidatas, três repetições e compromisso Oracle validado.
+- [x] Gate protegido do PR #24 bloqueou `CVE-2026-97054` no Oracle harness
+  antes de publicação ou execução v1.7; congelamento, bindings, aprovações e
+  corpus v1.7 foram preservados historicamente e invalidados para a coleta.
+- [x] Emenda de segurança v1.8 autorizada e validada localmente: Go 1.27.4 por
+  digest imutável, quatro builds sem cache, SBOMs e scans sem achados
+  HIGH/CRITICAL corrigíveis, além dos testes Go aprovados, sem GCP.
+- [x] Protocolo v1.8 retornou de forma fail-closed a candidato com 6/17
+  controles, runtimes não publicados, aprovações removidas e nenhum corpus
+  confirmatório ativo.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Controles passivos do Oracle instalados, com kill switch em `false` e
@@ -210,10 +219,16 @@ execução autorizada em cloud ou análise dos resultados.
 21. [concluído em 19/11/2026] renovar as aprovações financeira e do
    pesquisador, passar a auditoria 17/17, congelar a v1.7 e gerar corpus e
    chave novos;
-22. materializar candidatas v1.7 novas e executar os seis blocos pareados, com
+22. [concluído localmente em 19/11/2026] preservar o congelamento v1.7 após o
+   gate do PR #24 detectar `CVE-2026-97054`, aplicar a emenda v1.8, atualizar
+   os builds Go para 1.27.4 e validar quatro imagens e testes sem GCP;
+23. publicar e vincular os runtimes v1.8 corrigidos, renovar as aprovações
+   financeira e do pesquisador, passar a auditoria 17/17, congelar a v1.8 e
+   rotacionar a chave e o corpus;
+24. materializar candidatas v1.8 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
-23. consolidar o dataset, calcular métricas, revisar ameaças à validade,
+25. consolidar o dataset, calcular métricas, revisar ameaças à validade,
    exportar o pacote reproduzível, remover a infraestrutura e conferir o custo
    final.
 
@@ -235,9 +250,12 @@ temporário do runner. A emenda v1.6 corrige esse escopo sem relaxar a política
 preserva as duas tentativas anteriores, renova o congelamento 17/17 e cria um
 corpus novo. A primeira candidata v1.6 preservou uma aprovação convencional,
 mas parou antes da decisão PDT por um contrato de timestamp. A emenda v1.7
-corrige somente esse contrato; o cluster está excluído e a retomada aguarda o
-novo congelamento e corpus novo. O Billing pós-exclusão já foi consolidado e
-passou na elegibilidade financeira.
+corrigiu somente esse contrato e chegou a novo congelamento e corpus. Antes da
+execução, porém, o gate do PR #24 encontrou `CVE-2026-97054`. A emenda v1.8
+preserva esse histórico, corrige Go 1.27.4 localmente e volta a bloquear a
+coleta em 6/17 controles até publicação, novos bindings, aprovações,
+congelamento e corpus. O cluster segue excluído e o Billing pós-exclusão
+permanece consolidado.
 
 ## Fases restantes
 
@@ -629,13 +647,13 @@ Os operadores candidatos e os controles estão catalogados em
 **Estado:** os congelamentos anteriores permanecem preservados no histórico do
 Git. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-está congelado como v1.7; mantém 18 candidatas, três repetições, seis
-blocos, a mesma regra de agregação e o mesmo plano pareado. A observação
-financeira final é R$1.833,952532, com R$164,315927 restantes até o teto
-absoluto, e cobre toda a janela de exclusão. Os três runtimes continuam
-vinculados por digest. O corpus v1.6 foi invalidado, e o corpus v1.7
-`corpus-dk3zrooqiepv4` foi gerado com chave nova após as duas aprovações e a
-auditoria 17/17.
+está como candidato v1.8; mantém 18 candidatas, três repetições, seis blocos, a
+mesma regra de agregação e o mesmo plano pareado. A observação financeira final
+é R$1.833,952532, com R$164,315927 restantes até o teto absoluto, e cobre toda
+a janela de exclusão. Os bindings v1.7 foram invalidados pelo achado de
+segurança, os runtimes v1.8 corrigidos ainda não foram publicados e não existe
+corpus ativo. O corpus histórico v1.7 `corpus-dk3zrooqiepv4` foi invalidado
+antes de qualquer execução; a auditoria atual passa 6/17 controles.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -946,9 +964,12 @@ PR #21 concluiu três repetições de staging e selou `approve`, mas um timestam
 fracionário válido interrompeu o runner antes dos contrafactuais PDT. A emenda
 v1.7 está validada localmente, o PR foi fechado, o cluster foi excluído e não
 houve Oracle. O Billing pós-exclusão está completo, as duas aprovações foram
-registradas, o protocolo foi congelado e o corpus novo foi gerado. A coleta
-confirmatória ainda depende da publicação desse estado, da instalação protegida
-da chave e da autorização financeira/cloud por bloco.
+registradas, o protocolo foi congelado e o corpus novo foi gerado. Antes da
+coleta, o gate do PR #24 encontrou `CVE-2026-97054`; a emenda v1.8 preservou e
+invalidou esse estado confirmatório, e a remediação Go 1.27.4 passou localmente.
+A coleta agora depende de publicar e vincular os runtimes v1.8, renovar as
+aprovações, congelar em 17/17, gerar uma chave e um corpus novos e obter a
+autorização financeira/cloud de cada bloco.
 
 ### Fase 8 — Análise final
 
@@ -1017,7 +1038,7 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [ ] renovar o congelamento do protocolo v1.7, corpus, sementes e regra de
+- [ ] renovar o congelamento do protocolo v1.8, corpus, sementes e regra de
   parada antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;

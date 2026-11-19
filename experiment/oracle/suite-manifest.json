@@ -1,20 +1,20 @@
 {
   "schema_version": "1.0.0",
   "suite_id": "checkout-independent-oracle-v1",
-  "status": "frozen",
-  "frozen_at": "2026-11-18T23:09:29Z",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
   "files": [
     {
       "path": "experiment/oracle/policy-v1.json",
-      "sha256": "1ddc86f8ae81954d155c07bc66b6d1e9a664a88964ea4935c74c67a1bbc28997"
+      "sha256": "3ff9e3e6ced495b6f00e72a7c52351f47e2ef56cc9af90f26346eeafa22b5326"
     },
     {
       "path": "experiment/pdt/fidelity-policy.json",
-      "sha256": "c7e7b91da100847a9d758d491b568976df1af6e77d15acba886f89b25d760101"
+      "sha256": "199a5b6782182e39400305ee79e213a03dffde8202b997ee9de275146dcc28e3"
     },
     {
       "path": "experiment/oracle/harness/Dockerfile",
-      "sha256": "5d9b88fe634ed3ae0a2af95aa0c6715707bd35d782f014047a94f1ba4c5b7a70"
+      "sha256": "adb44e8a1be774b11f959b08f805f653abfe48f2421f25164c5d1d5fccca1f7e"
     },
     {
       "path": "src/currencyservice/Dockerfile",
@@ -30,7 +30,7 @@
     },
     {
       "path": "src/checkoutservice/go.mod",
-      "sha256": "be7b1649ceb94fc2011d09e635c39039b9f51531b1cdbdabef248f61fdd827fd"
+      "sha256": "2a201a7a90f0bbb318263f591ebd73f5e295d40e2c1baadf891083336949c40e"
     },
     {
       "path": "src/checkoutservice/go.sum",
@@ -118,22 +118,9 @@
     }
   ],
   "images": {
-    "oracle_harness": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/oracle-harness@sha256:e6e29791167c8309f6741caba9d784954eceb4b0025714de97bbe631b633b097",
-    "currency_reference": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/currency-reference@sha256:c52542add8f13f289e18b2ac7f2cb74f2806825da262a5c4f1500a842f41a4f3"
+    "oracle_harness": null,
+    "currency_reference": null
   },
-  "publication_binding": {
-    "schema_version": "1.0.0",
-    "publication_summary_sha256": "4c1f7e21ba00aa066b4ef023cbae271a78a48c31ae8997794b8af3b8e95632f4",
-    "repository": "omatheu/microservices-demo",
-    "source_commit": "bd0811606ef96a194985d43261b5b27ac589e15b",
-    "source_tree": "2bc5f56f9dd2ed5d2c8b66c14b4c00b1ad2ed22b",
-    "pull_request_number": 16,
-    "workflow_run_id": "42944299918",
-    "published_at": "2026-11-11T02:14:13Z",
-    "build_platform": "linux/amd64",
-    "protected_environment": "tcc-experiment",
-    "explicit_cloud_gate": true,
-    "cost_review_acknowledged": true
-  },
+  "publication_binding": null,
   "freeze_rule": "Every file hash, both immutable image digests and the shared attested publication binding must be verified before the suite status can become frozen."
 }

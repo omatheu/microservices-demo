@@ -6,6 +6,26 @@ relatórios dos scanners, SBOM, resultados por gate e uma decisão pré-staging.
 O conteúdo gerado só constitui evidência confirmatória quando o protocolo e a
 política estiverem congelados e a execução usar `MODE=confirmatory`.
 
+## Regressão de segurança pré-execução e emenda v1.8 em 19/11/2026
+
+O gate protegido de imagens do PR #24, run `44576708310`, job `135746020725`,
+bloqueou a publicação antes de qualquer execução cloud ao detectar
+`CVE-2026-97054` HIGH na biblioteca padrão Go 1.27.3 do `oracle-harness`. O
+registro
+[`runtime-security-regression-pr24-20261119.json`](runtime-security-regression-pr24-20261119.json)
+vincula o run, o job, o relatório Trivy e o congelamento v1.7 substituído.
+
+A emenda v1.8 atualiza o Oracle harness e o `checkoutservice` para Go 1.27.4,
+usando `golang:1.27.4-alpine` pelo digest multiarch imutável. Em reconstruções
+locais limpas, sem cache, as quatro imagens do gate foram submetidas às versões
+fixadas de Syft e Trivy: controlador PDT, Oracle harness, currencyservice e
+checkoutservice terminaram sem achados HIGH/CRITICAL corrigíveis. Os testes Go
+do checkoutservice também passaram. A evidência
+[`runtime-security-remediation-v1.8-local-20261119.json`](runtime-security-remediation-v1.8-local-20261119.json)
+registra IDs, tamanhos, ferramentas e resultados. Ela comprova somente a
+remediação de engenharia local; não substitui a publicação protegida nem cria
+proveniência confirmatória.
+
 ## Regressão de orquestração e emenda v1.7 em 18/11/2026
 
 O run pareado `44199321140` do PR #21 concluiu a CI local, três repetições de

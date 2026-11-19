@@ -1,8 +1,10 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** o protocolo v1.7 está congelado após auditoria 17/17 e o corpus
-> opaco novo foi gerado. O Billing pós-exclusão está completo, mas nenhuma
-> execução cloud foi autorizada e nenhum cluster existe.
+> **Status:** a emenda de segurança v1.8 está em estado
+> `pre-registration-candidate`, com 6/17 controles de congelamento. Os runtimes
+> corrigidos ainda não foram publicados ou vinculados, as aprovações precisam
+> ser renovadas e não há corpus confirmatório ativo. Nenhuma execução cloud foi
+> autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -28,6 +30,18 @@ as duas aprovações vincularam exatamente esse estado antes da finalização.
 O congelamento v1.4 substituído continua verificável no commit `9e5be4d4`, com
 SHA-256 `2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
 O congelamento metodológico não concede autorização cloud.
+
+Antes de qualquer execução v1.7, o gate protegido de imagens do PR #24, run
+`44576708310`, job `135746020725`, detectou `CVE-2026-97054` HIGH na biblioteca
+padrão Go 1.27.3 do `oracle-harness`; a correção disponível é Go 1.27.4. A
+emenda pré-execução
+[`amendments/security-v1.8-preexecution.json`](./amendments/security-v1.8-preexecution.json)
+preserva o congelamento e o corpus v1.7 como evidência histórica, invalida seus
+bindings para uso confirmatório e limita a mudança à correção de segurança. Os
+quatro builds locais limpos, SBOMs e scans com as ferramentas fixadas da CI
+passaram sem achados HIGH/CRITICAL corrigíveis, e os testes Go passaram. Isso é
+evidência de engenharia, não publicação protegida: políticas, manifests,
+aprovações e corpus retornaram ao estado fail-closed v1.8, sem GCP.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
@@ -137,8 +151,9 @@ foi revelado. A emenda
 aceita a precisão já emitida pelo controlador sem alterar modelo, limiares,
 Oracle ou imagens. A decisão convencional v1.6 fica preservada como fluxo
 incompleto, o cluster foi excluído e o corpus v1.6 foi invalidado. O Billing
-agora cobre toda a janela de exclusão; a v1.7 ainda depende das duas aprovações
-humanas e da auditoria 17/17 para ser congelada.
+passou a cobrir toda a janela de exclusão; a v1.7 foi posteriormente aprovada,
+congelada e recebeu um corpus novo, mas a emenda de segurança v1.8 descrita
+acima invalidou esse estado para execução antes de qualquer coleta v1.7.
 
 ## Objetivo
 

@@ -29,6 +29,14 @@ e
 [`protocol-freeze-finalization-v1.7-20261119T171802Z.json`](./protocol-freeze-finalization-v1.7-20261119T171802Z.json).
 Nenhuma execução cloud foi autorizada.
 
+Antes de qualquer execução v1.7, o gate de segurança do PR #24 encontrou
+`CVE-2026-97054` e a emenda pré-execução v1.8 invalidou o congelamento, as
+aprovações e o corpus v1.7 para uso confirmatório. A observação Billing e seus
+recibos permanecem como baseline histórica verificável, mas uma revisão
+financeira e uma aprovação do pesquisador renovadas só poderão vincular o
+estado v1.8 depois da publicação e do binding dos runtimes corrigidos. A
+remediação local não tocou GCP nem autorizou execução cloud.
+
 O bundle de componentes v1.7 foi preparado e aplicado localmente em
 `2026-11-18T23:09:29Z`. A auditoria resultante passou 15/17 controles e mantém
 como bloqueios apenas `financial-review` e `researcher-approval`. Os recibos
