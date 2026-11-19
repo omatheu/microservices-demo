@@ -1,10 +1,10 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
 > **Status:** os componentes do congelamento v1.7 foram aplicados e a auditoria
-> passa 15/17 controles. O protocolo permanece travado como
+> passa 16/17 controles. O protocolo permanece travado como
 > `pre-registration-candidate`. O Billing pós-exclusão está completo e a
-> revisão financeira passou na elegibilidade; faltam as aprovações humanas
-> financeira e do pesquisador, a finalização e a rotação do corpus.
+> revisão financeira foi aprovada; faltam a aprovação final do pesquisador,
+> a finalização e a rotação do corpus.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -18,8 +18,8 @@ O candidato v1.7 mantém a coleta desabilitada e ainda não é um congelamento.
 Em 18 de novembro de 2026, o bundle de componentes vinculou políticas e
 runtimes publicados ao SHA-256 de protocolo
 `d5fa0be22742b379cf10d95e93d9e99998a0bfb21111386011d08eda215e4989`.
-A auditoria passou 15/17; somente as novas aprovações financeira e do
-pesquisador permanecem bloqueantes. Isso não autoriza execução cloud.
+A auditoria passou 16/17; somente a nova aprovação do pesquisador permanece
+bloqueante. Isso não autoriza execução cloud.
 Em 19 de novembro de 2026, a consulta final limitada a 100 MB observou
 R$1.833,952532 brutos e deixou R$164,315927 até o teto absoluto. O protocolo
 financeiro atualizado tem SHA-256

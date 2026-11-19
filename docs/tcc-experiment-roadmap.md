@@ -78,11 +78,12 @@ como Partial Digital Twin.
 - [x] Billing pós-exclusão completo: R$1.833,952532 brutos e
   R$164,315927 de margem até o teto absoluto de R$1.998,268459, sem aumentar
   o orçamento e sem liberar execução cloud.
-- [x] Elegibilidade da revisão financeira v1.7 validada contra a evidência
-  final; a aprovação humana canônica ainda está pendente.
+- [x] Revisão financeira v1.7 aprovada contra a evidência final, mantendo a
+  execução cloud desautorizada; auditoria em 16/17, pendente apenas da
+  aprovação final do pesquisador.
 - [x] Bundle de componentes v1.7 aplicado: políticas e runtimes congelados,
-  42/42 inputs vinculados e auditoria em 15/17; faltam somente revisão
-  financeira pós-exclusão e aprovação renovada do pesquisador.
+  42/42 inputs vinculados e auditoria em 16/17; falta somente a aprovação
+  renovada do pesquisador.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Controles passivos do Oracle instalados, com kill switch em `false` e
