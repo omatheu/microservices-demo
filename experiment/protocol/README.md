@@ -1,10 +1,8 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** os componentes do congelamento v1.7 foram aplicados e a auditoria
-> passa 16/17 controles. O protocolo permanece travado como
-> `pre-registration-candidate`. O Billing pós-exclusão está completo e a
-> revisão financeira foi aprovada; faltam a aprovação final do pesquisador,
-> a finalização e a rotação do corpus.
+> **Status:** o protocolo v1.7 está congelado após auditoria 17/17 e o corpus
+> opaco novo foi gerado. O Billing pós-exclusão está completo, mas nenhuma
+> execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -14,17 +12,19 @@ O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fix
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
 análise. A v1.6 substituída permanece verificável no commit `ed45e852`, com
 SHA-256 `b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d`.
-O candidato v1.7 mantém a coleta desabilitada e ainda não é um congelamento.
+O protocolo v1.7 congelado mantém a autorização cloud como gate independente.
 Em 18 de novembro de 2026, o bundle de componentes vinculou políticas e
 runtimes publicados ao SHA-256 de protocolo
 `d5fa0be22742b379cf10d95e93d9e99998a0bfb21111386011d08eda215e4989`.
-A auditoria passou 16/17; somente a nova aprovação do pesquisador permanece
-bloqueante. Isso não autoriza execução cloud.
+A auditoria passou 17/17 e o protocolo foi congelado em
+`2026-11-19T17:18:02Z`, com SHA-256
+`9ae5ed8fb37d4421ad5327a47f3b65631b43a577d6c3b42a96fb031e620c77c4`.
+Isso não autoriza execução cloud.
 Em 19 de novembro de 2026, a consulta final limitada a 100 MB observou
 R$1.833,952532 brutos e deixou R$164,315927 até o teto absoluto. O protocolo
-financeiro atualizado tem SHA-256
+financeiro candidato tinha SHA-256
 `808a2fba805f085b343bfa1b9f6fa1efc2367c4fc318bd34683ed54889ffac0b`;
-as novas aprovações deverão vincular exatamente esse estado.
+as duas aprovações vincularam exatamente esse estado antes da finalização.
 O congelamento v1.4 substituído continua verificável no commit `9e5be4d4`, com
 SHA-256 `2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
 O congelamento metodológico não concede autorização cloud.

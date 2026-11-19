@@ -18,10 +18,16 @@ e sua verificação em
 [`pre-freeze-financial-review-eligibility-v1.7-20261119T044808Z.json`](./pre-freeze-financial-review-eligibility-v1.7-20261119T044808Z.json).
 A revisão financeira foi aprovada pelo pesquisador em 19/11/2026 e vinculada
 ao protocolo v1.7 exato, mantendo `cloud_execution_authorized: false`. A
-auditoria avançou para 16/17, e a elegibilidade da aprovação final está em
+elegibilidade da aprovação final foi registrada em
 [`researcher-approval-eligibility-v1.7-20261119T164932Z.json`](./researcher-approval-eligibility-v1.7-20261119T164932Z.json).
-Ainda falta a confirmação humana específica para o congelamento depois da
-coleta parcial; nenhuma execução cloud foi autorizada.
+Depois da confirmação humana específica para a coleta parcial, a auditoria
+passou 17/17 e o finalizador congelou o protocolo com SHA-256
+`9ae5ed8fb37d4421ad5327a47f3b65631b43a577d6c3b42a96fb031e620c77c4`.
+Os recibos estão em
+[`pre-freeze-audit-v1.7-ready-20261119T171802Z.json`](./pre-freeze-audit-v1.7-ready-20261119T171802Z.json)
+e
+[`protocol-freeze-finalization-v1.7-20261119T171802Z.json`](./protocol-freeze-finalization-v1.7-20261119T171802Z.json).
+Nenhuma execução cloud foi autorizada.
 
 O bundle de componentes v1.7 foi preparado e aplicado localmente em
 `2026-11-18T23:09:29Z`. A auditoria resultante passou 15/17 controles e mantém

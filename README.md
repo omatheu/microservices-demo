@@ -22,12 +22,10 @@ independent oracle are implemented. Three incomplete candidate flows are
 preserved, including one v1.6 flow with a sealed conventional staging approval,
 but no paired PDT decision or Oracle label has been collected. A timestamp
 contract defect stopped the PDT before its counterfactuals; the narrowly scoped
-v1.7 correction is merged. Its component-freeze bundle is applied and the
-audit passes 16/17 controls; the protocol remains a locked pre-registration
-candidate. Complete post-deletion Billing data records R$1,833.952532 gross
-cost and R$164.315927 remaining under the absolute cap. Financial approval is
-recorded, but renewed researcher approval, finalization, and corpus rotation
-are still pending. The cluster has been
+v1.7 correction is merged. Its component-freeze bundle passed all 17 controls,
+the protocol is frozen, and a new 18-candidate blinded corpus is bound to the
+frozen protocol. Complete post-deletion Billing data records R$1,833.952532
+gross cost and R$164.315927 remaining under the absolute cap. The cluster has been
 deleted, the runtime images remain bound by immutable digest, and cloud
 execution is explicitly locked. A
 read-only Oracle readiness audit verifies GitHub protection,

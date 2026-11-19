@@ -6,18 +6,18 @@
     "prior_evidence_preserved_without_reinterpretation": true,
     "protocol_reviewed": true
   },
-  "approved_at": "2026-11-17T22:52:40Z",
+  "approved_at": "2026-11-19T17:16:44Z",
   "approved_by": "omatheu",
-  "candidate_protocol_sha256": "b61e680afce4ad1a1163cca7176b3aedd8f7669667a6c51554dbc82700ab2881",
+  "candidate_protocol_sha256": "808a2fba805f085b343bfa1b9f6fa1efc2367c4fc318bd34683ed54889ffac0b",
   "cloud_execution_authorized": false,
   "decision": "approve-protocol-freeze",
   "prior_collection": {
-    "candidate_flows_started": 2,
+    "candidate_flows_started": 3,
     "complete_decision_pairs": 0,
     "evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
     "oracle_adjudications": 0,
     "oracle_labels_revealed": 0
   },
-  "protocol_id": "checkout-pdt-comparison-v1.6",
+  "protocol_id": "checkout-pdt-comparison-v1.7",
   "schema_version": "1.1.0"
 }

@@ -78,12 +78,13 @@ como Partial Digital Twin.
 - [x] Billing pós-exclusão completo: R$1.833,952532 brutos e
   R$164,315927 de margem até o teto absoluto de R$1.998,268459, sem aumentar
   o orçamento e sem liberar execução cloud.
-- [x] Revisão financeira v1.7 aprovada contra a evidência final, mantendo a
-  execução cloud desautorizada; auditoria em 16/17, pendente apenas da
-  aprovação final do pesquisador.
+- [x] Revisão financeira e aprovação final v1.7 registradas contra a candidata
+  exata, mantendo a execução cloud desautorizada.
 - [x] Bundle de componentes v1.7 aplicado: políticas e runtimes congelados,
-  42/42 inputs vinculados e auditoria em 16/17; falta somente a aprovação
-  renovada do pesquisador.
+  42/42 inputs vinculados, auditoria 17/17 e protocolo congelado com SHA-256
+  `9ae5ed8fb37d4421ad5327a47f3b65631b43a577d6c3b42a96fb031e620c77c4`.
+- [x] Corpus opaco v1.7 `corpus-dk3zrooqiepv4` gerado com chave nova, 18
+  candidatas, três repetições e compromisso Oracle validado.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Controles passivos do Oracle instalados, com kill switch em `false` e
@@ -206,8 +207,9 @@ execução autorizada em cloud ou análise dos resultados.
 20. [concluído em 19/11/2026] aguardar o Billing cobrir integralmente a
    exclusão e reduzir o teto incremental para R$164,315927 sem elevar
    R$1.998,268459; a evidência final passou na elegibilidade financeira;
-21. renovar as aprovações financeira e do pesquisador, passar a auditoria
-   17/17, congelar a v1.7 e gerar corpus e chave novos;
+21. [concluído em 19/11/2026] renovar as aprovações financeira e do
+   pesquisador, passar a auditoria 17/17, congelar a v1.7 e gerar corpus e
+   chave novos;
 22. materializar candidatas v1.7 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
@@ -627,12 +629,13 @@ Os operadores candidatos e os controles estão catalogados em
 **Estado:** os congelamentos anteriores permanecem preservados no histórico do
 Git. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-está travado como candidato v1.7; mantém 18 candidatas, três repetições, seis
+está congelado como v1.7; mantém 18 candidatas, três repetições, seis
 blocos, a mesma regra de agregação e o mesmo plano pareado. A observação
 financeira final é R$1.833,952532, com R$164,315927 restantes até o teto
 absoluto, e cobre toda a janela de exclusão. Os três runtimes continuam
-vinculados por digest. O corpus v1.6 foi invalidado, e o corpus v1.7 só será
-gerado depois das duas aprovações e da nova auditoria 17/17.
+vinculados por digest. O corpus v1.6 foi invalidado, e o corpus v1.7
+`corpus-dk3zrooqiepv4` foi gerado com chave nova após as duas aprovações e a
+auditoria 17/17.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -942,9 +945,10 @@ congelada após auditoria 17/17 e seu corpus foi validado. A candidata v1.6 do
 PR #21 concluiu três repetições de staging e selou `approve`, mas um timestamp
 fracionário válido interrompeu o runner antes dos contrafactuais PDT. A emenda
 v1.7 está validada localmente, o PR foi fechado, o cluster foi excluído e não
-houve Oracle. O Billing pós-exclusão está completo; ainda faltam as duas
-aprovações, o novo congelamento, nova chave e novo corpus antes da coleta
-confirmatória.
+houve Oracle. O Billing pós-exclusão está completo, as duas aprovações foram
+registradas, o protocolo foi congelado e o corpus novo foi gerado. A coleta
+confirmatória ainda depende da publicação desse estado, da instalação protegida
+da chave e da autorização financeira/cloud por bloco.
 
 ### Fase 8 — Análise final
 
