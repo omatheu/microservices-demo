@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 18 de novembro de 2026.
+> **Última verificação:** 19 de novembro de 2026.
 
 ## Objetivo do experimento
 
@@ -75,11 +75,11 @@ como Partial Digital Twin.
 - [x] Emenda v1.7 autorizada e validada localmente: aceita segundos fracionários
   do controlador, mantém `Z` e a comparação semântica integral, sem alterar
   modelo, limiares, Oracle ou imagens.
-- [x] Baseline financeira atualizada para R$1.798,268472 e saldo incremental
-  reduzido para R$199,999987, sem aumentar o teto absoluto de R$1.998,268459.
-- [x] Checkpoint Billing pós-tentativa observou provisoriamente
-  R$1.822,596661 brutos e R$175,671798 de margem; como o export ainda não cobre
-  toda a exclusão, nenhuma nova execução cloud está liberada.
+- [x] Billing pós-exclusão completo: R$1.833,952532 brutos e
+  R$164,315927 de margem até o teto absoluto de R$1.998,268459, sem aumentar
+  o orçamento e sem liberar execução cloud.
+- [x] Elegibilidade da revisão financeira v1.7 validada contra a evidência
+  final; a aprovação humana canônica ainda está pendente.
 - [x] Bundle de componentes v1.7 aplicado: políticas e runtimes congelados,
   42/42 inputs vinculados e auditoria em 15/17; faltam somente revisão
   financeira pós-exclusão e aprovação renovada do pesquisador.
@@ -138,7 +138,7 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-### Caminho crítico atual — 18/11/2026
+### Caminho crítico atual — 19/11/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,
@@ -202,13 +202,15 @@ execução autorizada em cloud ou análise dos resultados.
 19. [concluído localmente em 18/11/2026] preservar os artefatos, desarmar a PR
    #21, excluir o cluster, registrar a emenda v1.7 e validar a correção e o
    replay sem publicar imagens nem executar cloud;
-20. aguardar o Billing cobrir integralmente a exclusão, reduzir o teto
-   incremental sem elevar R$1.998,268459, renovar as duas aprovações, passar a
-   auditoria 17/17, congelar a v1.7 e gerar corpus e chave novos;
-21. materializar candidatas v1.7 novas e executar os seis blocos pareados, com
+20. [concluído em 19/11/2026] aguardar o Billing cobrir integralmente a
+   exclusão e reduzir o teto incremental para R$164,315927 sem elevar
+   R$1.998,268459; a evidência final passou na elegibilidade financeira;
+21. renovar as aprovações financeira e do pesquisador, passar a auditoria
+   17/17, congelar a v1.7 e gerar corpus e chave novos;
+22. materializar candidatas v1.7 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
-22. consolidar o dataset, calcular métricas, revisar ameaças à validade,
+23. consolidar o dataset, calcular métricas, revisar ameaças à validade,
    exportar o pacote reproduzível, remover a infraestrutura e conferir o custo
    final.
 
@@ -231,7 +233,8 @@ preserva as duas tentativas anteriores, renova o congelamento 17/17 e cria um
 corpus novo. A primeira candidata v1.6 preservou uma aprovação convencional,
 mas parou antes da decisão PDT por um contrato de timestamp. A emenda v1.7
 corrige somente esse contrato; o cluster está excluído e a retomada aguarda o
-Billing pós-exclusão, novo congelamento e corpus novo.
+novo congelamento e corpus novo. O Billing pós-exclusão já foi consolidado e
+passou na elegibilidade financeira.
 
 ## Fases restantes
 
@@ -624,11 +627,11 @@ Os operadores candidatos e os controles estão catalogados em
 Git. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
 está travado como candidato v1.7; mantém 18 candidatas, três repetições, seis
-blocos, a mesma regra de agregação e o mesmo plano pareado. O checkpoint
-financeiro provisório é R$1.822,596661, com R$175,671798 observados até o teto
-absoluto, mas ainda não cobre toda a janela de exclusão. Os três runtimes
-continuam vinculados por digest. O corpus v1.6 foi invalidado, e o corpus v1.7
-só será gerado depois do Billing completo e da nova auditoria 17/17.
+blocos, a mesma regra de agregação e o mesmo plano pareado. A observação
+financeira final é R$1.833,952532, com R$164,315927 restantes até o teto
+absoluto, e cobre toda a janela de exclusão. Os três runtimes continuam
+vinculados por digest. O corpus v1.6 foi invalidado, e o corpus v1.7 só será
+gerado depois das duas aprovações e da nova auditoria 17/17.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -938,8 +941,9 @@ congelada após auditoria 17/17 e seu corpus foi validado. A candidata v1.6 do
 PR #21 concluiu três repetições de staging e selou `approve`, mas um timestamp
 fracionário válido interrompeu o runner antes dos contrafactuais PDT. A emenda
 v1.7 está validada localmente, o PR foi fechado, o cluster foi excluído e não
-houve Oracle. Ainda faltam o Billing pós-exclusão completo, novo congelamento,
-nova chave e novo corpus antes da coleta confirmatória.
+houve Oracle. O Billing pós-exclusão está completo; ainda faltam as duas
+aprovações, o novo congelamento, nova chave e novo corpus antes da coleta
+confirmatória.
 
 ### Fase 8 — Análise final
 
@@ -1027,8 +1031,8 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles financeiros e operacionais
 
 - [x] orçamento bruto contábil absoluto preservado em R$1.998,268459;
-- [ ] congelar o teto incremental v1.7 após o Billing cobrir a exclusão; o
-  checkpoint provisório indica no máximo R$175,671798 remanescentes;
+- [x] congelar o teto incremental v1.7 em R$164,315927 após o Billing cobrir a
+  exclusão, sem elevar o teto absoluto;
 - [x] alertas de 25% a 100%;
 - [x] quotas por namespace;
 - [x] somente um Load Balancer permitido;

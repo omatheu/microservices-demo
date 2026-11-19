@@ -4,16 +4,20 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026 e uma
-consulta real limitada a 100 MB observou provisoriamente R$1.822,596661 brutos,
-R$-1.822,602833 em créditos e R$-0,006172 líquidos. A leitura deixa
-R$175,671798 até o orçamento absoluto de R$1.998,268459, mas seu
-`billing_data_as_of=2026-11-18T19:31:10Z` ainda antecede a exclusão. Portanto,
-ela está registrada em
-[`cost-window-20260919-20261118-v1.7-freeze.json`](./cost-window-20260919-20261118-v1.7-freeze.json)
-como checkpoint provisório e não pode liberar nova execução. A baseline e o
-teto v1.7 só serão congelados após o export cobrir integralmente a janela de
-desligamento; o orçamento absoluto não será aumentado.
+Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026. A
+consulta final limitada a 100 MB agora cobre com segurança essa exclusão:
+`last_usage_end_time=2026-11-19T00:00:00Z` e
+`billing_data_as_of=2026-11-19T03:47:09Z`. Ela observou R$1.833,952532
+brutos, R$-1.833,958731 em créditos e R$-0,006199 líquidos. Restam
+R$164,315927 até o orçamento absoluto de R$1.998,268459; o teto não foi
+aumentado.
+
+A observação está em
+[`cost-window-20260919-20261119-v1.7-freeze.json`](./cost-window-20260919-20261119-v1.7-freeze.json)
+e sua verificação em
+[`pre-freeze-financial-review-eligibility-v1.7-20261119T044808Z.json`](./pre-freeze-financial-review-eligibility-v1.7-20261119T044808Z.json).
+A revisão está elegível para aprovação humana, mas nenhuma aprovação foi
+gerada e nenhuma execução cloud foi autorizada.
 
 O bundle de componentes v1.7 foi preparado e aplicado localmente em
 `2026-11-18T23:09:29Z`. A auditoria resultante passou 15/17 controles e mantém
