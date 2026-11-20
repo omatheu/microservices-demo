@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "runtime_id": "checkout-pdt-controller-v1",
   "status": "frozen",
-  "frozen_at": "2026-11-18T23:09:29Z",
+  "frozen_at": "2026-11-20T04:57:03Z",
   "files": [
     {
       "path": "experiment/pdt/controller/checkout_pdt_controller.py",
@@ -62,19 +62,19 @@
     },
     {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "20ecc4eaefaac3f05b6277ad81e875fe9fab4f51b19a0eaf858b8299a4522603"
+      "sha256": "be25f68bbaa619c02b15934c3d54406f64b44d5882fb93e04c17f62c0dec0ae0"
     }
   ],
-  "controller_image": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/checkout-pdt-controller@sha256:5fcf17b624ed9a54b25afda5970833fbbd7867fc4acef53e3fa64e969124c5f2",
+  "controller_image": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/checkout-pdt-controller@sha256:dd0391cc006469c1f81269704672dbc9732058e86019677fd9a12cf9997aeb68",
   "publication_binding": {
     "schema_version": "1.0.0",
-    "publication_summary_sha256": "4c1f7e21ba00aa066b4ef023cbae271a78a48c31ae8997794b8af3b8e95632f4",
+    "publication_summary_sha256": "cbe56108b25cdf7627f3835b8958de6d49ff7006bc86712cf897f2c3937ed4a2",
     "repository": "omatheu/microservices-demo",
-    "source_commit": "bd0811606ef96a194985d43261b5b27ac589e15b",
-    "source_tree": "2bc5f56f9dd2ed5d2c8b66c14b4c00b1ad2ed22b",
-    "pull_request_number": 16,
-    "workflow_run_id": "42944299918",
-    "published_at": "2026-11-11T02:14:13Z",
+    "source_commit": "c79dedef2549ac4cd77d210d1e779f3f672f6b39",
+    "source_tree": "55452b90bea215c008f07964e6cde1d23ed2d5b9",
+    "pull_request_number": 24,
+    "workflow_run_id": "44667362567",
+    "published_at": "2026-11-20T03:26:02Z",
     "build_platform": "linux/amd64",
     "protected_environment": "tcc-experiment",
     "explicit_cloud_gate": true,

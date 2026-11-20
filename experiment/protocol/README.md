@@ -1,9 +1,8 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** os componentes do congelamento v1.7 foram aplicados e a auditoria
-> passa 15/17 controles. O protocolo permanece travado como
-> `pre-registration-candidate`; faltam Billing pós-exclusão completo, revisão
-> financeira, aprovação do pesquisador e rotação do corpus.
+> **Status:** o protocolo v1.8 está congelado após auditoria 17/17 e o corpus
+> opaco novo foi gerado. O Billing pós-publicação está completo, mas nenhuma
+> execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -13,15 +12,73 @@ O desenho executável está em [`protocol-v1.json`](./protocol-v1.json). Ele fix
 18 candidatas, três repetições técnicas, blocos de três e um plano pareado de
 análise. A v1.6 substituída permanece verificável no commit `ed45e852`, com
 SHA-256 `b407d318c6ff793a0c41f01035022af4f749ecdf189862b7ebd8aea7fc509e1d`.
-O candidato v1.7 mantém a coleta desabilitada e ainda não é um congelamento.
+O protocolo v1.7 congelado mantém a autorização cloud como gate independente.
 Em 18 de novembro de 2026, o bundle de componentes vinculou políticas e
 runtimes publicados ao SHA-256 de protocolo
 `d5fa0be22742b379cf10d95e93d9e99998a0bfb21111386011d08eda215e4989`.
-A auditoria passou 15/17; somente as novas aprovações financeira e do
-pesquisador permanecem bloqueantes. Isso não autoriza execução cloud.
+A auditoria passou 17/17 e o protocolo foi congelado em
+`2026-11-19T17:18:02Z`, com SHA-256
+`9ae5ed8fb37d4421ad5327a47f3b65631b43a577d6c3b42a96fb031e620c77c4`.
+Isso não autoriza execução cloud.
+Em 19 de novembro de 2026, a consulta final limitada a 100 MB observou
+R$1.833,952532 brutos e deixou R$164,315927 até o teto absoluto. O protocolo
+financeiro candidato tinha SHA-256
+`808a2fba805f085b343bfa1b9f6fa1efc2367c4fc318bd34683ed54889ffac0b`;
+as duas aprovações vincularam exatamente esse estado antes da finalização.
 O congelamento v1.4 substituído continua verificável no commit `9e5be4d4`, com
 SHA-256 `2e6949ca79db0f3be49ab127256a7bcfa1ff7d94e94ed34f6e00ec55a1ea91ed`.
 O congelamento metodológico não concede autorização cloud.
+
+Antes de qualquer execução v1.7, o gate protegido de imagens do PR #24, run
+`44576708310`, job `135746020725`, detectou `CVE-2026-97054` HIGH na biblioteca
+padrão Go 1.27.3 do `oracle-harness`; a correção disponível é Go 1.27.4. A
+emenda pré-execução
+[`amendments/security-v1.8-preexecution.json`](./amendments/security-v1.8-preexecution.json)
+preserva o congelamento e o corpus v1.7 como evidência histórica, invalida seus
+bindings para uso confirmatório e limita a mudança à correção de segurança. Os
+quatro builds locais limpos, SBOMs e scans com as ferramentas fixadas da CI
+passaram sem achados HIGH/CRITICAL corrigíveis, e os testes Go passaram. Isso é
+evidência de engenharia, não publicação protegida: políticas, manifests,
+aprovações e corpus retornaram ao estado fail-closed v1.8, sem GCP.
+
+A revisão financeira pré-publicação v1.8 consultou o Billing em modo somente
+leitura com limite de 100 MB. O custo bruto observado passou a
+R$1.834,970435; por isso, o teto incremental candidato foi reduzido
+mecanicamente para R$163,298024, preservando o orçamento absoluto de
+R$1.998,268459 e a reserva promocional mínima. A revisão não gerou aprovação,
+não publicou runtimes e não autorizou execução cloud.
+
+Após autorização separada, o run protegido `44667362567` publicou somente
+`checkout-pdt-controller`, `oracle-harness` e `currency-reference` no Artifact
+Registry e vinculou os digests ao commit `c79dedef` e à árvore `55452b90`. Os
+scans HIGH/CRITICAL passaram, a identidade não possuía papel no projeto nem
+credenciais GKE, e staging, PDT e Oracle foram ignorados. Os labels e o kill
+switch temporários foram removidos ao final. Essa publicação elevou a auditoria
+para 8/17; ela não congelou componentes, gerou aprovações ou autorizou coleta.
+
+Em `2026-11-20T04:57:03Z`, o bundle determinístico congelou as cinco políticas,
+o runtime PDT e a suíte Oracle e renovou seus hashes encadeados. A auditoria
+passou a 15/17, vinculada ao protocolo candidato de SHA-256
+`a403824878fc40ed94c3c977c062e465f7ac0d10c2eef79ec56376b6170b94d5`;
+somente as duas aprovações permanecem bloqueantes. Isso não autoriza cloud.
+
+A leitura pós-publicação limitada a 100 MB passou a cobrir uso até
+`2026-11-20T06:00:00Z`, posterior à publicação das `03:26:02Z`. O custo bruto
+observado foi R$1.834,970443, aumento de R$0,000008; a baseline candidata e o
+teto incremental foram ajustados mecanicamente para R$1.834,970443 e
+R$163,298016, preservando o teto absoluto. Nenhuma aprovação ou execução cloud
+foi gerada por essa atualização.
+
+Após a confirmação literal do pesquisador para a revisão financeira, a
+aprovação canônica vinculou a observação pós-publicação e o protocolo candidato
+de SHA-256 `01cdeeb72a301ce599715371e1a4ccecf4fe5f59ab5ddfba19e1ff32b73e4492`.
+A auditoria passou a 16/17 e deixou somente `researcher-approval` como bloqueio.
+Depois da confirmação específica do pesquisador para a coleta parcial, a
+auditoria passou 17/17 e o finalizador congelou o protocolo em
+`2026-11-20T14:25:07Z`, com SHA-256
+`c55d9a8d85c2ed3e0d1709e5bb15244723e8b60d1714e29e7d73c79a7438ab86`.
+Uma chave nova gerou o corpus opaco `corpus-zkf5mounepuhq`. As duas aprovações
+mantêm `cloud_execution_authorized=false`.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
@@ -130,8 +187,10 @@ foi revelado. A emenda
 [`amendments/orchestration-v1.7-controller-timestamp.json`](./amendments/orchestration-v1.7-controller-timestamp.json)
 aceita a precisão já emitida pelo controlador sem alterar modelo, limiares,
 Oracle ou imagens. A decisão convencional v1.6 fica preservada como fluxo
-incompleto, o cluster foi excluído e o corpus v1.6 foi invalidado. A v1.7 só
-poderá ser congelada depois que o Billing cobrir toda a janela de exclusão.
+incompleto, o cluster foi excluído e o corpus v1.6 foi invalidado. O Billing
+passou a cobrir toda a janela de exclusão; a v1.7 foi posteriormente aprovada,
+congelada e recebeu um corpus novo, mas a emenda de segurança v1.8 descrita
+acima invalidou esse estado para execução antes de qualquer coleta v1.7.
 
 ## Objetivo
 

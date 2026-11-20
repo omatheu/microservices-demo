@@ -108,25 +108,26 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_v17_locked_after_orchestration_amendment(self):
+    def test_active_protocol_is_v18_frozen_after_final_approval(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.7", value["protocol_id"])
-        self.assertEqual("pre-registration-candidate", value["status"])
-        self.assertFalse(value["confirmatory_collection_allowed"])
-        self.assertIsNone(value["frozen_at"])
+        self.assertEqual("checkout-pdt-comparison-v1.8", value["protocol_id"])
+        self.assertEqual("frozen", value["status"])
+        self.assertTrue(value["confirmatory_collection_allowed"])
+        self.assertEqual("2026-11-20T14:25:07Z", value["frozen_at"])
         self.assertEqual(
-            "orchestration-v1.7-controller-timestamp",
+            "security-v1.8-preexecution",
             value["amendment"]["amendment_id"],
         )
         self.assertEqual(3, value["amendment"]["confirmatory_observations_before_amendment"])
         self.assertEqual(0, value["amendment"]["oracle_labels_revealed_before_amendment"])
         self.assertEqual(1998.268459, value["execution_limits"]["project_gross_cost_budget_brl"])
-        self.assertEqual(175.671798, value["execution_limits"]["proposed_incremental_spend_ceiling_brl"])
+        self.assertEqual(1834.970443, value["execution_limits"]["financial_baseline_gross_cost_brl"])
+        self.assertEqual(163.298016, value["execution_limits"]["proposed_incremental_spend_ceiling_brl"])
         self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
         self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
 
-    def test_current_candidate_requires_only_renewed_approvals(self):
+    def test_candidate_without_supplied_approvals_requires_both(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
@@ -144,7 +145,9 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         self.assertTrue(checks["frozen-input-hashes"])
         self.assertTrue(checks["mutation-operators-implemented"])
         self.assertTrue(checks["pdt-runtime-file-hashes"])
+        self.assertTrue(checks["pdt-controller-image-bound"])
         self.assertTrue(checks["oracle-file-hashes"])
+        self.assertTrue(checks["oracle-images-bound"])
 
     def test_protocol_hash_drift_is_reported(self):
         value = protocol()

@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 18 de novembro de 2026.
+> **Última verificação:** 20 de novembro de 2026.
 
 ## Objetivo do experimento
 
@@ -75,14 +75,44 @@ como Partial Digital Twin.
 - [x] Emenda v1.7 autorizada e validada localmente: aceita segundos fracionários
   do controlador, mantém `Z` e a comparação semântica integral, sem alterar
   modelo, limiares, Oracle ou imagens.
-- [x] Baseline financeira atualizada para R$1.798,268472 e saldo incremental
-  reduzido para R$199,999987, sem aumentar o teto absoluto de R$1.998,268459.
-- [x] Checkpoint Billing pós-tentativa observou provisoriamente
-  R$1.822,596661 brutos e R$175,671798 de margem; como o export ainda não cobre
-  toda a exclusão, nenhuma nova execução cloud está liberada.
+- [x] Billing pós-exclusão completo: R$1.833,952532 brutos e
+  R$164,315927 de margem até o teto absoluto de R$1.998,268459, sem aumentar
+  o orçamento e sem liberar execução cloud.
+- [x] Revisão financeira e aprovação final v1.7 registradas contra a candidata
+  exata, mantendo a execução cloud desautorizada.
 - [x] Bundle de componentes v1.7 aplicado: políticas e runtimes congelados,
-  42/42 inputs vinculados e auditoria em 15/17; faltam somente revisão
-  financeira pós-exclusão e aprovação renovada do pesquisador.
+  42/42 inputs vinculados, auditoria 17/17 e protocolo congelado com SHA-256
+  `9ae5ed8fb37d4421ad5327a47f3b65631b43a577d6c3b42a96fb031e620c77c4`.
+- [x] Corpus opaco v1.7 `corpus-dk3zrooqiepv4` gerado com chave nova, 18
+  candidatas, três repetições e compromisso Oracle validado.
+- [x] Gate protegido do PR #24 bloqueou `CVE-2026-97054` no Oracle harness
+  antes de publicação ou execução v1.7; congelamento, bindings, aprovações e
+  corpus v1.7 foram preservados historicamente e invalidados para a coleta.
+- [x] Emenda de segurança v1.8 autorizada e validada localmente: Go 1.27.4 por
+  digest imutável, quatro builds sem cache, SBOMs e scans sem achados
+  HIGH/CRITICAL corrigíveis, além dos testes Go aprovados, sem GCP.
+- [x] Protocolo v1.8 retornou de forma fail-closed a candidato, aprovações
+  removidas e nenhum corpus
+  confirmatório ativo.
+- [x] Revisão financeira pré-publicação v1.8 limitada a 100 MB: custo bruto de
+  R$1.834,970435, aumento de R$1,017903 desde a v1.7 e margem reduzida para
+  R$163,298024, sem elevar o teto absoluto nem autorizar cloud.
+- [x] Três runtimes v1.8 publicados e vinculados por digest no run protegido
+  `44667362567`; janela desarmada, cluster ausente e
+  staging, PDT e Oracle não executados.
+- [x] Bundle de componentes v1.8 aplicado: cinco políticas, runtime PDT e suíte
+  Oracle congelados, 42/42 inputs vinculados e auditoria em 15/17; faltam
+  somente as aprovações financeira pós-publicação e do pesquisador.
+- [x] Billing pós-publicação v1.8 completo até uso encerrado às `06:00:00Z`:
+  custo bruto de R$1.834,970443 e teto incremental ajustado mecanicamente para
+  R$163,298016, sem elevar o teto absoluto nem autorizar cloud.
+- [x] Aprovação financeira v1.8 renovada e vinculada ao protocolo exato, com
+  `cloud_execution_authorized=false`.
+- [x] Aprovação renovada do pesquisador registrada após reconhecer a coleta
+  parcial anterior; auditoria 17/17 e protocolo v1.8 congelado com SHA-256
+  `c55d9a8d85c2ed3e0d1709e5bb15244723e8b60d1714e29e7d73c79a7438ab86`.
+- [x] Corpus opaco v1.8 `corpus-zkf5mounepuhq` gerado com chave nova: 18
+  candidatas, três repetições, seis blocos e compromisso Oracle validado.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Controles passivos do Oracle instalados, com kill switch em `false` e
@@ -138,7 +168,7 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-### Caminho crítico atual — 18/11/2026
+### Caminho crítico atual — 19/11/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,
@@ -202,13 +232,24 @@ execução autorizada em cloud ou análise dos resultados.
 19. [concluído localmente em 18/11/2026] preservar os artefatos, desarmar a PR
    #21, excluir o cluster, registrar a emenda v1.7 e validar a correção e o
    replay sem publicar imagens nem executar cloud;
-20. aguardar o Billing cobrir integralmente a exclusão, reduzir o teto
-   incremental sem elevar R$1.998,268459, renovar as duas aprovações, passar a
-   auditoria 17/17, congelar a v1.7 e gerar corpus e chave novos;
-21. materializar candidatas v1.7 novas e executar os seis blocos pareados, com
+20. [concluído em 19/11/2026] aguardar o Billing cobrir integralmente a
+   exclusão e reduzir o teto incremental para R$164,315927 sem elevar
+   R$1.998,268459; a evidência final passou na elegibilidade financeira;
+21. [concluído em 19/11/2026] renovar as aprovações financeira e do
+   pesquisador, passar a auditoria 17/17, congelar a v1.7 e gerar corpus e
+   chave novos;
+22. [concluído localmente em 19/11/2026] preservar o congelamento v1.7 após o
+   gate do PR #24 detectar `CVE-2026-97054`, aplicar a emenda v1.8, atualizar
+   os builds Go para 1.27.4 e validar quatro imagens e testes sem GCP;
+23. [concluído em 20/11/2026] publicar e vincular por digest os três runtimes
+   v1.8 corrigidos, usando somente a identidade Artifact Registry e sem GKE;
+24. [concluído localmente em 20/11/2026] congelar políticas e manifests,
+   renovar as aprovações financeira e do pesquisador, passar a auditoria
+   17/17, congelar a v1.8 e rotacionar a chave e o corpus;
+25. materializar candidatas v1.8 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
-22. consolidar o dataset, calcular métricas, revisar ameaças à validade,
+26. consolidar o dataset, calcular métricas, revisar ameaças à validade,
    exportar o pacote reproduzível, remover a infraestrutura e conferir o custo
    final.
 
@@ -230,8 +271,14 @@ temporário do runner. A emenda v1.6 corrige esse escopo sem relaxar a política
 preserva as duas tentativas anteriores, renova o congelamento 17/17 e cria um
 corpus novo. A primeira candidata v1.6 preservou uma aprovação convencional,
 mas parou antes da decisão PDT por um contrato de timestamp. A emenda v1.7
-corrige somente esse contrato; o cluster está excluído e a retomada aguarda o
-Billing pós-exclusão, novo congelamento e corpus novo.
+corrigiu somente esse contrato e chegou a novo congelamento e corpus. Antes da
+execução, porém, o gate do PR #24 encontrou `CVE-2026-97054`. A emenda v1.8
+preserva esse histórico e corrige Go 1.27.4. Os runtimes já foram publicados e
+vinculados e os componentes congelados. A aprovação financeira elevou a
+auditoria a 16/17; a aprovação do pesquisador completou 17/17, o finalizador
+congelou a v1.8 e a nova chave gerou o corpus opaco. O cluster segue excluído,
+o Billing pós-publicação está consolidado e a execução cloud continua
+desautorizada.
 
 ## Fases restantes
 
@@ -623,12 +670,15 @@ Os operadores candidatos e os controles estão catalogados em
 **Estado:** os congelamentos anteriores permanecem preservados no histórico do
 Git. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-está travado como candidato v1.7; mantém 18 candidatas, três repetições, seis
-blocos, a mesma regra de agregação e o mesmo plano pareado. O checkpoint
-financeiro provisório é R$1.822,596661, com R$175,671798 observados até o teto
-absoluto, mas ainda não cobre toda a janela de exclusão. Os três runtimes
-continuam vinculados por digest. O corpus v1.6 foi invalidado, e o corpus v1.7
-só será gerado depois do Billing completo e da nova auditoria 17/17.
+está congelado como v1.8; mantém 18 candidatas, três repetições, seis blocos, a
+mesma regra de agregação e o mesmo plano pareado. A observação financeira final
+é R$1.834,970443, com R$163,298016 restantes até o teto absoluto, e cobre toda
+a janela de exclusão. Os bindings v1.7 foram invalidados pelo achado de
+segurança; os runtimes v1.8 corrigidos foram publicados, vinculados a uma nova
+proveniência e congelados com as políticas. O corpus ativo v1.8 é
+`corpus-zkf5mounepuhq`, vinculado ao protocolo congelado; o corpus histórico
+v1.7 `corpus-dk3zrooqiepv4` foi invalidado antes de qualquer execução. A
+auditoria atual passa 17/17 controles.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -938,8 +988,15 @@ congelada após auditoria 17/17 e seu corpus foi validado. A candidata v1.6 do
 PR #21 concluiu três repetições de staging e selou `approve`, mas um timestamp
 fracionário válido interrompeu o runner antes dos contrafactuais PDT. A emenda
 v1.7 está validada localmente, o PR foi fechado, o cluster foi excluído e não
-houve Oracle. Ainda faltam o Billing pós-exclusão completo, novo congelamento,
-nova chave e novo corpus antes da coleta confirmatória.
+houve Oracle. O Billing pós-exclusão está completo, as duas aprovações foram
+registradas, o protocolo foi congelado e o corpus novo foi gerado. Antes da
+coleta, o gate do PR #24 encontrou `CVE-2026-97054`; a emenda v1.8 preservou e
+invalidou esse estado confirmatório, e a remediação Go 1.27.4 passou localmente.
+Os runtimes v1.8 já foram publicados e vinculados, e seus componentes foram
+congelados. As aprovações foram renovadas, a auditoria passou 17/17 e a chave e
+o corpus foram rotacionados. A coleta agora depende da publicação desse estado,
+da instalação protegida da chave e da autorização financeira/cloud de cada
+bloco.
 
 ### Fase 8 — Análise final
 
@@ -1008,7 +1065,7 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [ ] renovar o congelamento do protocolo v1.7, corpus, sementes e regra de
+- [x] renovar o congelamento do protocolo v1.8, corpus, sementes e regra de
   parada antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;
@@ -1027,8 +1084,8 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles financeiros e operacionais
 
 - [x] orçamento bruto contábil absoluto preservado em R$1.998,268459;
-- [ ] congelar o teto incremental v1.7 após o Billing cobrir a exclusão; o
-  checkpoint provisório indica no máximo R$175,671798 remanescentes;
+- [x] reduzir o teto incremental v1.8 para R$163,298016 na revisão
+  pré-publicação, sem elevar o teto absoluto;
 - [x] alertas de 25% a 100%;
 - [x] quotas por namespace;
 - [x] somente um Load Balancer permitido;

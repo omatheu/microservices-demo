@@ -4,16 +4,98 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026 e uma
-consulta real limitada a 100 MB observou provisoriamente R$1.822,596661 brutos,
-R$-1.822,602833 em créditos e R$-0,006172 líquidos. A leitura deixa
-R$175,671798 até o orçamento absoluto de R$1.998,268459, mas seu
-`billing_data_as_of=2026-11-18T19:31:10Z` ainda antecede a exclusão. Portanto,
-ela está registrada em
-[`cost-window-20260919-20261118-v1.7-freeze.json`](./cost-window-20260919-20261118-v1.7-freeze.json)
-como checkpoint provisório e não pode liberar nova execução. A baseline e o
-teto v1.7 só serão congelados após o export cobrir integralmente a janela de
-desligamento; o orçamento absoluto não será aumentado.
+Na revisão pré-publicação v1.8 de 19/11/2026, a consulta somente leitura
+limitada a 100 MB observou R$1.834,970435 brutos, R$-1.834,976634 em créditos e
+R$-0,006199 líquidos, com dados exportados até `2026-11-19T22:58:54Z`. O
+aumento bruto desde a revisão v1.7 foi R$1,017903. A baseline candidata passou
+ao valor observado e o teto incremental foi reduzido para R$163,298024, sem
+elevar o orçamento absoluto de R$1.998,268459. A consulta está em
+[`cost-window-20260919-20261120-v1.8-prepublication.json`](./cost-window-20260919-20261120-v1.8-prepublication.json).
+A elegibilidade foi confirmada sem gerar aprovação em
+[`pre-publication-financial-review-eligibility-v1.8-20261120.json`](./pre-publication-financial-review-eligibility-v1.8-20261120.json).
+A revisão é somente de elegibilidade: não aprova o congelamento, não publica
+runtimes e não autoriza cloud.
+
+A publicação isolada posterior passou na auditoria de prontidão 13/13 e usou a
+identidade sem chave que tem Writer somente no repositório Artifact Registry.
+O tamanho observado antes era 132,228 MB; o limite superior conservador depois
+das três imagens era 367,624 MB, e o tamanho observado após a publicação ficou
+em 184,406 MB. O run `44667362567` não obteve credenciais GKE, não recriou
+cluster e ignorou staging, PDT e Oracle. A autorização, os controles e o
+desarmamento estão em
+[`runtime-publication-financial-review-v1.8-20261120.json`](./runtime-publication-financial-review-v1.8-20261120.json),
+e a auditoria somente leitura em
+[`runtime-publication-readiness-v1.8-20261120.json`](./runtime-publication-readiness-v1.8-20261120.json).
+
+O bundle de componentes v1.8 foi aplicado em `2026-11-20T04:57:03Z`. As cinco
+políticas, o runtime PDT e a suíte Oracle foram congelados e a auditoria passou
+15/17 controles, deixando somente `financial-review` e
+`researcher-approval`. O protocolo candidato resultante tem SHA-256
+`a403824878fc40ed94c3c977c062e465f7ac0d10c2eef79ec56376b6170b94d5`.
+Os recibos estão em
+[`protocol-freeze-candidate-v1.8-20261120T045703Z.json`](./protocol-freeze-candidate-v1.8-20261120T045703Z.json)
+e
+[`pre-freeze-audit-v1.8-components-20261120T045703Z.json`](./pre-freeze-audit-v1.8-components-20261120T045703Z.json).
+Nenhum deles autoriza execução cloud.
+
+A consulta pós-publicação v1.8 limitada a 100 MB passou a cobrir uso encerrado
+às `2026-11-20T06:00:00Z`, posterior à publicação das imagens às `03:26:02Z`,
+com `billing_data_as_of=2026-11-20T09:55:43Z`. Ela observou
+R$1.834,970443 brutos, R$-1.834,976644 em créditos e R$-0,006201 líquidos. O
+aumento de R$0,000008 reduziu mecanicamente o teto incremental para
+R$163,298016, mantendo o orçamento absoluto de R$1.998,268459 e a regra de
+reserva promocional. A observação está em
+[`cost-window-20260919-20261120-v1.8-freeze.json`](./cost-window-20260919-20261120-v1.8-freeze.json).
+A elegibilidade para aprovação humana, sem gerar aprovação, está em
+[`pre-freeze-financial-review-eligibility-v1.8-20261120.json`](./pre-freeze-financial-review-eligibility-v1.8-20261120.json).
+A candidata de protocolo vinculável pela futura aprovação financeira tem
+SHA-256 `01cdeeb72a301ce599715371e1a4ccecf4fe5f59ab5ddfba19e1ff32b73e4492`.
+Após a confirmação literal, a aprovação financeira canônica foi gerada em
+[`../../protocol/approvals/cost-review-v1.json`](../../protocol/approvals/cost-review-v1.json),
+mantendo `cloud_execution_authorized=false`. A auditoria passou a 16/17; a
+elegibilidade da aprovação final do pesquisador está em
+[`researcher-approval-eligibility-v1.8-20261120.json`](./researcher-approval-eligibility-v1.8-20261120.json).
+Depois da confirmação específica do pesquisador sobre a coleta parcial, a
+auditoria passou 17/17 e o finalizador congelou o protocolo v1.8 com SHA-256
+`c55d9a8d85c2ed3e0d1709e5bb15244723e8b60d1714e29e7d73c79a7438ab86`.
+Os recibos estão em
+[`pre-freeze-audit-v1.8-ready-20261120T142507Z.json`](./pre-freeze-audit-v1.8-ready-20261120T142507Z.json)
+e
+[`protocol-freeze-finalization-v1.8-20261120T142507Z.json`](./protocol-freeze-finalization-v1.8-20261120T142507Z.json).
+O corpus foi rotacionado, mas nenhuma execução cloud foi autorizada.
+
+Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026. A
+consulta final limitada a 100 MB agora cobre com segurança essa exclusão:
+`last_usage_end_time=2026-11-19T00:00:00Z` e
+`billing_data_as_of=2026-11-19T03:47:09Z`. Ela observou R$1.833,952532
+brutos, R$-1.833,958731 em créditos e R$-0,006199 líquidos. Restam
+R$164,315927 até o orçamento absoluto de R$1.998,268459; o teto não foi
+aumentado.
+
+A observação está em
+[`cost-window-20260919-20261119-v1.7-freeze.json`](./cost-window-20260919-20261119-v1.7-freeze.json)
+e sua verificação em
+[`pre-freeze-financial-review-eligibility-v1.7-20261119T044808Z.json`](./pre-freeze-financial-review-eligibility-v1.7-20261119T044808Z.json).
+A revisão financeira foi aprovada pelo pesquisador em 19/11/2026 e vinculada
+ao protocolo v1.7 exato, mantendo `cloud_execution_authorized: false`. A
+elegibilidade da aprovação final foi registrada em
+[`researcher-approval-eligibility-v1.7-20261119T164932Z.json`](./researcher-approval-eligibility-v1.7-20261119T164932Z.json).
+Depois da confirmação humana específica para a coleta parcial, a auditoria
+passou 17/17 e o finalizador congelou o protocolo com SHA-256
+`9ae5ed8fb37d4421ad5327a47f3b65631b43a577d6c3b42a96fb031e620c77c4`.
+Os recibos estão em
+[`pre-freeze-audit-v1.7-ready-20261119T171802Z.json`](./pre-freeze-audit-v1.7-ready-20261119T171802Z.json)
+e
+[`protocol-freeze-finalization-v1.7-20261119T171802Z.json`](./protocol-freeze-finalization-v1.7-20261119T171802Z.json).
+Nenhuma execução cloud foi autorizada.
+
+Antes de qualquer execução v1.7, o gate de segurança do PR #24 encontrou
+`CVE-2026-97054` e a emenda pré-execução v1.8 invalidou o congelamento, as
+aprovações e o corpus v1.7 para uso confirmatório. A observação Billing e seus
+recibos permanecem como baseline histórica verificável, mas uma revisão
+financeira e uma aprovação do pesquisador renovadas só poderão vincular o
+estado v1.8 depois da publicação e do binding dos runtimes corrigidos. A
+remediação local não tocou GCP nem autorizou execução cloud.
 
 O bundle de componentes v1.7 foi preparado e aplicado localmente em
 `2026-11-18T23:09:29Z`. A auditoria resultante passou 15/17 controles e mantém

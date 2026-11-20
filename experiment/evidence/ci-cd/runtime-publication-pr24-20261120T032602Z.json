@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.1.0",
+  "source": {
+    "repository": "omatheu/microservices-demo",
+    "commit": "c79dedef2549ac4cd77d210d1e779f3f672f6b39",
+    "tree": "55452b90bea215c008f07964e6cde1d23ed2d5b9",
+    "pull_request_number": 24,
+    "workflow_run_id": "44667362567"
+  },
+  "authorization": {
+    "protected_environment": "tcc-experiment",
+    "explicit_cloud_gate": true,
+    "cost_review_acknowledged": true
+  },
+  "build_platform": "linux/amd64",
+  "published_at": "2026-11-20T03:26:02Z",
+  "published_to_registry": true,
+  "images": [
+    {
+      "name": "checkout-pdt-controller",
+      "source_tag": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/checkout-pdt-controller:git-c79dedef2549ac4cd77d210d1e779f3f672f6b39",
+      "local_image_id": "sha256:2a92eab77967873617b42da438bdf0149371bb4f7cefa60ed07ced337e16e28f",
+      "immutable_reference": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/checkout-pdt-controller@sha256:dd0391cc006469c1f81269704672dbc9732058e86019677fd9a12cf9997aeb68",
+      "registry_digest": "sha256:dd0391cc006469c1f81269704672dbc9732058e86019677fd9a12cf9997aeb68",
+      "uncompressed_size_bytes": 58914944,
+      "sbom": {
+        "status": "pass",
+        "path": "checkout-pdt-controller-sbom.cdx.json",
+        "format": "cyclonedx-json",
+        "sha256": "0cc6ed800fd73acf6a2d7a95575032fd83775af6a99b37186fbbb64ad055a40b"
+      },
+      "vulnerability_scan": {
+        "status": "pass",
+        "path": "checkout-pdt-controller-trivy.json",
+        "scanner": "trivy",
+        "severity": [
+          "HIGH",
+          "CRITICAL"
+        ],
+        "ignore_unfixed": true,
+        "sha256": "5aa214c55c5a09bf09603f98c5525c75e9eb38afb196a8040b5d1053258156f6"
+      },
+      "published": true
+    },
+    {
+      "name": "oracle-harness",
+      "source_tag": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/oracle-harness:git-c79dedef2549ac4cd77d210d1e779f3f672f6b39",
+      "local_image_id": "sha256:7977c56da97cbe2ff7d4eabeb1ac502ac7a542c52a791a0125085a62dfa431f1",
+      "immutable_reference": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/oracle-harness@sha256:dbdbca6dededabb1e5cfcfab3663ae9f0bc39668cbd361988412f99f37c2822c",
+      "registry_digest": "sha256:dbdbca6dededabb1e5cfcfab3663ae9f0bc39668cbd361988412f99f37c2822c",
+      "uncompressed_size_bytes": 15266271,
+      "sbom": {
+        "status": "pass",
+        "path": "oracle-harness-sbom.cdx.json",
+        "format": "cyclonedx-json",
+        "sha256": "38b279b595bff6d47755ab018dc0842b7804b0e26372cb08588a65c8d3a34793"
+      },
+      "vulnerability_scan": {
+        "status": "pass",
+        "path": "oracle-harness-trivy.json",
+        "scanner": "trivy",
+        "severity": [
+          "HIGH",
+          "CRITICAL"
+        ],
+        "ignore_unfixed": true,
+        "sha256": "c05b2ca9b75c227363e9f944a5ca62123e5ee4aa7b7b1e885859fcf8d799e537"
+      },
+      "published": true
+    },
+    {
+      "name": "currency-reference",
+      "source_tag": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/currency-reference:git-c79dedef2549ac4cd77d210d1e779f3f672f6b39",
+      "local_image_id": "sha256:c4b245d6557ada13072d3afda4d6b84103b769a7230b94a805226ed3135c6f29",
+      "immutable_reference": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/currency-reference@sha256:232f69d8b9d3c6c0eee1fa4bc0416b7f5f4f6423a46da255e0b13f9aa41d8b08",
+      "registry_digest": "sha256:232f69d8b9d3c6c0eee1fa4bc0416b7f5f4f6423a46da255e0b13f9aa41d8b08",
+      "uncompressed_size_bytes": 161187339,
+      "sbom": {
+        "status": "pass",
+        "path": "currency-reference-sbom.cdx.json",
+        "format": "cyclonedx-json",
+        "sha256": "3d9df8d4c4cc7357f612e5c5afdfb22791a24c8450b2ffef45e8ebcfa033c0a0"
+      },
+      "vulnerability_scan": {
+        "status": "pass",
+        "path": "currency-reference-trivy.json",
+        "scanner": "trivy",
+        "severity": [
+          "HIGH",
+          "CRITICAL"
+        ],
+        "ignore_unfixed": true,
+        "sha256": "21e641278d1fdae7b6940668738905ad31f10c5a1c0e339725effb928893d0c6"
+      },
+      "published": true
+    }
+  ]
+}

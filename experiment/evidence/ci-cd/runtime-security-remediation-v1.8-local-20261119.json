@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0.0",
+  "validated_at": "2026-11-19T17:58:01Z",
+  "protocol_target": "checkout-pdt-comparison-v1.8",
+  "mode": "local-no-cloud",
+  "remediation": {
+    "vulnerability_id": "CVE-2026-97054",
+    "previous_go_version": "1.27.3",
+    "fixed_go_version": "1.27.4",
+    "builder_image": "golang:1.27.4-alpine@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280",
+    "linux_amd64_manifest_sha256": "ea30e25680a5470bac02b08bb0e0a735fb75bd0ab7d431b9b95ee0abef362586",
+    "changed_files": [
+      "experiment/oracle/harness/Dockerfile",
+      "src/checkoutservice/Dockerfile",
+      "src/checkoutservice/go.mod"
+    ]
+  },
+  "tools": {
+    "syft_image": "ghcr.io/anchore/syft@sha256:500e2d872ac019436926e8322b4fc1f39441d94d21f6f4046c6ff29b30e8cb02",
+    "trivy_image": "aquasec/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969",
+    "scan_policy": "HIGH,CRITICAL --ignore-unfixed --exit-code 1",
+    "docker_build": "--no-cache --pull --platform linux/amd64"
+  },
+  "images": [
+    {
+      "name": "checkout-pdt-controller",
+      "image_id": "sha256:360c335f0a4148c09be1546eec600f46f0e44d7f3dd9d2a8417fce6c55335007",
+      "size_bytes": 58933196,
+      "sbom_sha256": "841c15e8d3609dfe9d0baa24c1be7ca0ec7e0a88558c219f7271c2ba247f182b",
+      "scan_sha256": "338869eace4d7f58f1f6a74306d72cbb31f033b10392f4756caacd75eef2424f",
+      "fixable_high_or_critical_findings": 0
+    },
+    {
+      "name": "oracle-harness",
+      "image_id": "sha256:987372378d9507483d1932bddc6a131e8835f1102a4d86994657d807a9d40282",
+      "size_bytes": 15270102,
+      "go_stdlib_version": "go1.27.4",
+      "sbom_sha256": "0d2fc3ab17f50dd04b84f6649dd23e8b940639e5a433db732ab123696fba4839",
+      "scan_sha256": "2286665e61a02738b1c485ab1d05abeb7128fc0a8ae5303ffb5c07b00ad073d5",
+      "fixable_high_or_critical_findings": 0
+    },
+    {
+      "name": "currency-reference",
+      "image_id": "sha256:c0b7189228d9d0498b7fb7c62c0fc3787473aa5054c72cc6c7b4039ef0bdb309",
+      "size_bytes": 161192235,
+      "sbom_sha256": "6ba92f885918d45f0ff1808c1d0e6dcd9d69914e6e864a779df621b14b880232",
+      "scan_sha256": "e4197e0d7495e50c23f3996e435387f7ac9a9ddfe6b7f0c9fc110c86b0654fac",
+      "fixable_high_or_critical_findings": 0
+    },
+    {
+      "name": "checkoutservice",
+      "image_id": "sha256:73d9116ed624f0d419aa4e010662e332aab29030e8eb3947f8d5b4f3631617ee",
+      "size_bytes": 20728909,
+      "go_stdlib_version": "go1.27.4",
+      "sbom_sha256": "48124162a442e3732cfba564e4609ffe07b36c6843e4e175e0fc2696fd951722",
+      "scan_sha256": "e3f312c8ff07e1e612f57325f417d0172b5e379c73fa6ac045bfbb186a071f5d",
+      "fixable_high_or_critical_findings": 0
+    }
+  ],
+  "tests": {
+    "checkoutservice_go_test_all": "pass",
+    "test_runtime": "golang:1.27.4-alpine by immutable digest",
+    "packages_with_tests_passed": 4,
+    "packages_without_tests": 1
+  },
+  "outcome": {
+    "experiment_runtime_images_scanned": 3,
+    "candidate_service_images_scanned": 1,
+    "high_or_critical_fixable_findings": 0,
+    "runtime_publication_performed": false,
+    "gcp_accessed": false,
+    "confirmatory_observation": false,
+    "security_gate_weakened": false
+  }
+}

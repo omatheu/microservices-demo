@@ -96,10 +96,10 @@ class PrepareFinancialReviewTests(unittest.TestCase):
         self.assertFalse(result["gcp_mutation_performed"])
         self.assertEqual([], result["blocking_requirements"])
         self.assertEqual(12.34, result["observed_project_gross_cost_brl"])
-        self.assertEqual(188.011798, result["projected_project_gross_cost_ceiling_brl"])
+        self.assertEqual(175.638016, result["projected_project_gross_cost_ceiling_brl"])
         self.assertEqual(1998.268459, result["project_gross_cost_budget_brl"])
         self.assertAlmostEqual(
-            1810.256661,
+            1822.630443,
             result["remaining_project_gross_budget_after_approved_ceiling_brl"],
         )
 

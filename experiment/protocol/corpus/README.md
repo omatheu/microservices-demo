@@ -1,5 +1,32 @@
 # Corpus confirmatório
 
+O corpus confirmatório ativo v1.8 foi gerado em 20/11/2026 UTC somente depois
+da auditoria pré-freeze 17/17 e do congelamento do protocolo. O corpus
+`corpus-zkf5mounepuhq` contém 18 identificadores opacos, três repetições por
+candidata e seis blocos de três. Ele está vinculado ao protocolo congelado de
+SHA-256 `c55d9a8d85c2ed3e0d1709e5bb15244723e8b60d1714e29e7d73c79a7438ab86`,
+tem SHA-256
+`53ab1e6fa4e47d462d5b56556a04c29a4693d00367275208bd214cb5cf909d6f` e
+compromisso Oracle
+`1a4ab57b897327bd929675a391a04b441b47477883ad0ee219a95213f2de207f`.
+A chave e o manifesto Oracle v1.8 permanecem privados com permissão `0600`; o
+congelamento não autoriza execução cloud.
+
+O corpus confirmatório v1.7 foi gerado em 19/11/2026 UTC somente depois da
+auditoria pré-freeze 17/17 e do congelamento do protocolo. O corpus
+`corpus-dk3zrooqiepv4` contém 18 identificadores opacos, três repetições por
+candidata e seis blocos de três. Ele está vinculado ao protocolo congelado de
+SHA-256 `9ae5ed8fb37d4421ad5327a47f3b65631b43a577d6c3b42a96fb031e620c77c4`,
+tem SHA-256
+`4aa233af1a7a914f532c7dc60dc231b599ed93905ec4631528620ffe4b0c8605` e
+compromisso Oracle
+`cf770742a0c5458ddc609845580851f1b6dfcb67c06ac625571be57c4747f102`.
+A chave e o manifesto Oracle permanecem privados com permissão `0600`. Antes
+de qualquer execução v1.7, a emenda de segurança v1.8 invalidou esse corpus
+para uso confirmatório sem abrir rótulos. O corpus v1.8 acima o substitui sem
+reutilizar candidatas nem revelar rótulos. Nenhum desses passos autoriza
+execução cloud por si só.
+
 O corpus confirmatório da v1.1 foi gerado em 12/10/2026 UTC somente depois do
 congelamento 17/17, mas foi invalidado antes de qualquer coleta pela emenda de
 segurança v1.2. O arquivo público foi retirado da área ativa; a versão anterior
@@ -92,17 +119,19 @@ timestamp interrompeu o PDT antes dos contrafactuais. Não houve decisão PDT,
 gate humano, Oracle ou abertura de rótulo. A emenda
 [`orchestration-v1.7-controller-timestamp.json`](../amendments/orchestration-v1.7-controller-timestamp.json)
 retira o corpus v1.6 da área confirmatória ativa sem reutilizar sua candidata.
-O próximo corpus só poderá ser gerado com chave nova depois do congelamento
-17/17 da v1.7 e da revisão financeira pós-exclusão.
+O corpus v1.7 descrito no início deste documento foi gerado com chave nova
+depois do congelamento 17/17 e da revisão financeira pós-exclusão, e depois
+invalidado antes de qualquer execução pela emenda
+[`security-v1.8-preexecution.json`](../amendments/security-v1.8-preexecution.json).
 
 Os manifestos e as chaves v1.1 e v1.2 permanecem somente como arquivos
 históricos em diretório local privado. As chaves e os manifestos Oracle v1.3,
 v1.4, v1.5 e v1.6 também permanecem nos diretórios privados ignorados pelo Git, com
 permissões 0600, e nunca podem ser copiados para este diretório versionado. O
 secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` contém a chave v1.6 agora invalidada e permanece
-desarmado. Ele só deve ser substituído pela chave v1.7 depois da nova geração
-do corpus, sem expor seu valor.
+`TCC_ORACLE_BLINDING_KEY_B64` contém uma chave histórica invalidada e permanece
+desarmado. Ele só deve ser substituído pela chave v1.8 nova em uma operação
+protegida e explicitamente autorizada, sem expor seu valor.
 
 O mesmo ambiente protegido deve conter:
 

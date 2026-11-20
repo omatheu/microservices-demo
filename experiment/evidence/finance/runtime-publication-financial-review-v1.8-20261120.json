@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0.0",
+  "review_id": "runtime-publication-financial-review-v1.8-20261120",
+  "reviewed_at": "2026-11-20T03:18:40Z",
+  "project_id": "microservices-demo-tcc",
+  "protocol_id": "checkout-pdt-comparison-v1.8",
+  "pull_request": 24,
+  "decision": "authorized-isolated-runtime-publication-completed",
+  "billing": {
+    "evidence_path": "experiment/evidence/finance/cost-window-20260919-20261120-v1.8-prepublication.json",
+    "evidence_sha256": "7615dceab06e6a7125a725c59cc37acdef8bb759b5d90f35c034ee1fa7ff96eb",
+    "eligibility_path": "experiment/evidence/finance/pre-publication-financial-review-eligibility-v1.8-20261120.json",
+    "eligibility_sha256": "ea2f2af4f92e77ee82d751954a23d01f68accc6ce9889a573aee4cb17947bc55",
+    "gross_cost_brl": 1834.970435,
+    "net_cost_brl": -0.006199,
+    "incremental_ceiling_brl": 163.298024,
+    "project_gross_cost_budget_brl": 1998.268459,
+    "billing_data_as_of": "2026-11-19T22:58:54Z"
+  },
+  "artifact_registry": {
+    "repository": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment",
+    "repository_size_before_bytes": 132228000,
+    "new_runtime_uncompressed_bytes_upper_bound": 235395533,
+    "projected_repository_bytes_upper_bound": 367623533,
+    "free_tier_bytes": 500000000,
+    "projected_below_unshared_free_tier": true,
+    "repository_size_after_human_readable": "184.406MB",
+    "billing_account_other_registry_storage_known": false,
+    "paid_vulnerability_scanning_enabled": false,
+    "cleanup_policy": {
+      "delete_versions_older_than_seconds": 259200,
+      "keep_most_recent_versions_per_package": 2
+    }
+  },
+  "authorization": {
+    "literal": "AUTORIZO_PUBLICACAO_DOS_RUNTIMES_DA_EMENDA_V1_8_SEM_RECRIAR_CLUSTER_NEM_EXECUTAR_STAGING_PDT_ORACLE",
+    "scope": "publish-only-checkout-pdt-controller-oracle-harness-currency-reference",
+    "runtime_publication_authorized": true,
+    "experimental_cloud_execution_authorized": false,
+    "cluster_recreation_authorized": false,
+    "staging_authorized": false,
+    "pdt_authorized": false,
+    "oracle_authorized": false,
+    "protocol_freeze_authorized": false,
+    "merge_authorized": false
+  },
+  "controls": {
+    "readiness_evidence_path": "experiment/evidence/finance/runtime-publication-readiness-v1.8-20261120.json",
+    "readiness_evidence_sha256": "11f2c11df7a7e9d62fce10aa8572377983c84f34e5024466c5deaff15ea6e0b7",
+    "readiness_audit_passed": 13,
+    "readiness_audit_total": 13,
+    "runtime_publisher_has_project_role": false,
+    "runtime_publisher_has_user_managed_keys": false,
+    "gke_credentials_available_to_job": false,
+    "cluster_count_after_publication": 0,
+    "staging_or_pdt_or_oracle_execution_allowed": false,
+    "authorization_labels_removed_after_publication": true,
+    "publication_kill_switch_disabled_after_publication": true
+  },
+  "outcome": {
+    "workflow_run_id": "44667362567",
+    "publication_job_id": "136059881091",
+    "publication_summary_path": "experiment/evidence/ci-cd/runtime-publication-pr24-20261120T032602Z.json",
+    "publication_summary_sha256": "cbe56108b25cdf7627f3835b8958de6d49ff7006bc86712cf897f2c3937ed4a2",
+    "published_at": "2026-11-20T03:26:02Z",
+    "published_images": 3,
+    "staging_executed": false,
+    "pdt_executed": false,
+    "oracle_executed": false,
+    "cluster_recreated": false
+  }
+}

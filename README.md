@@ -22,12 +22,21 @@ independent oracle are implemented. Three incomplete candidate flows are
 preserved, including one v1.6 flow with a sealed conventional staging approval,
 but no paired PDT decision or Oracle label has been collected. A timestamp
 contract defect stopped the PDT before its counterfactuals; the narrowly scoped
-v1.7 correction is merged. Its component-freeze bundle is applied and the
-audit passes 15/17 controls; the protocol remains a locked pre-registration
-candidate pending complete post-deletion Billing data, renewed financial and
-researcher approvals, finalization, and corpus rotation. The cluster has been
-deleted, the runtime images remain bound by immutable digest, and cloud
-execution is explicitly locked. A
+v1.7 correction was frozen after all 17 controls passed, and its 18-candidate
+blinded corpus remains preserved as historical evidence. Before any v1.7
+execution, the protected image gate on PR #24 detected `CVE-2026-97054` in the
+Go 1.27.3 standard library of the Oracle harness. Security amendment v1.8
+updates the affected Go builds to 1.27.4 by immutable base-image digest. Clean
+local rebuilds, SBOMs, HIGH/CRITICAL scans and Go tests pass for all four
+affected or control images. The corrected three experiment runtimes were then
+published through the Artifact Registry-only identity and bound by immutable
+digest to one protected provenance. The v1.8 component-freeze bundle is now
+applied, both human approvals are bound to the exact candidate, and all 17
+freeze controls pass. The protocol is frozen and a new 18-candidate blinded
+corpus is bound to its final SHA-256.
+The complete v1.8 post-publication Billing review records R$1,834.970443 gross
+cost and R$163.298016 remaining under the unchanged absolute cap. The cluster has been deleted
+and cloud execution is explicitly locked. A
 read-only Oracle readiness audit verifies GitHub protection,
 keyless identity, least-privilege Kubernetes RBAC, frozen artifacts and an
 empty Oracle namespace before execution can be enabled. See the
@@ -36,9 +45,10 @@ live status and exit criteria.
 
 The passive Oracle GitHub controls remain installed, while every execution
 switch is `false` and no GKE cluster exists. Runtime publication was performed
-through its isolated Artifact Registry-only path and does not need to be
-repeated for v1.7. Every future experimental block still requires a separate
-financial review and explicit cloud authorization.
+through its isolated Artifact Registry-only path for earlier protocol versions.
+The v1.8 images, components, protocol and corpus are bound and frozen, while
+cloud execution remains unauthorized. Every future experimental block still
+requires a separate financial review and explicit cloud authorization.
 
 ## Architecture
 

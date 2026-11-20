@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "security-v1.8-preexecution",
+  "status": "authorized-preparation",
+  "authorized_at": "2026-11-19T17:52:08Z",
+  "authorization_literal": "AUTORIZO_EMENDA_DE_SEGURANCA_V1_8_PRE_EXECUCAO_PARA_CORRIGIR_CVE_2026_97054_SEM_EXECUCAO_CLOUD",
+  "reason": "The PR 24 runtime image gate detected CVE-2026-97054 as a fixable HIGH Go stdlib finding in oracle-harness after the v1.7 freeze and before any v1.7 execution. The frozen runtime digests no longer represent acceptable source for confirmatory execution.",
+  "v1_7_confirmatory_observations_collected": 0,
+  "preserved_prior_partial_collection": {
+    "confirmatory_observations_before_amendment": 3,
+    "complete_decision_pairs_before_amendment": 0,
+    "oracle_adjudications_before_amendment": 0,
+    "oracle_labels_revealed_before_amendment": 0,
+    "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation"
+  },
+  "superseded_freeze": {
+    "git_commit": "c8cb7a3f3afd0dff812173549ca8d7222eb6db7b",
+    "git_tree": "0a750fbf9ec7aec0d63ab71cfa446000bf41e552",
+    "protocol_id": "checkout-pdt-comparison-v1.7",
+    "protocol_sha256": "9ae5ed8fb37d4421ad5327a47f3b65631b43a577d6c3b42a96fb031e620c77c4",
+    "frozen_at": "2026-11-19T17:18:02Z",
+    "corpus_id": "corpus-dk3zrooqiepv4",
+    "corpus_sha256": "4aa233af1a7a914f532c7dc60dc231b599ed93905ec4631528620ffe4b0c8605",
+    "oracle_manifest_commitment_sha256": "cf770742a0c5458ddc609845580851f1b6dfcb67c06ac625571be57c4747f102",
+    "artifacts": [
+      {
+        "path": "experiment/protocol/approvals/cost-review-v1.json",
+        "sha256": "4a8b60f081e24598cc956a9ddeaf31f73599d79611d0a1a77a2c0d1657be273f"
+      },
+      {
+        "path": "experiment/protocol/approvals/researcher-approval-v1.json",
+        "sha256": "b7d49204a774fccf4b8b731edd386b90a6dfa1d30d40d0a1fe29a292de61fcd9"
+      },
+      {
+        "path": "experiment/protocol/corpus/public-corpus.json",
+        "sha256": "4aa233af1a7a914f532c7dc60dc231b599ed93905ec4631528620ffe4b0c8605"
+      },
+      {
+        "path": "experiment/pdt/runtime-manifest.json",
+        "sha256": "3378ca27fc15d40e88c253e6d936f44e9b30b789614486a861419b7ac4845278"
+      },
+      {
+        "path": "experiment/oracle/suite-manifest.json",
+        "sha256": "63f6e2a83818ecf55474ee1e7fce5ca46bcd94ed0acdb4741fbc76d61bbb32a5"
+      }
+    ]
+  },
+  "security_regression": {
+    "evidence_path": "experiment/evidence/ci-cd/runtime-security-regression-pr24-20261119.json",
+    "evidence_sha256": "51738044ba2a533c6935dc2b0a1c73fdce1ff078299696039d5749768d66b8a2",
+    "affected_images": [
+      "oracle-harness",
+      "checkoutservice"
+    ],
+    "vulnerability_id": "CVE-2026-97054",
+    "fixable_high_findings": 1,
+    "critical_findings": 0,
+    "security_gate_weakened": false,
+    "confirmatory_observation": false
+  },
+  "local_remediation_validation": {
+    "evidence_path": "experiment/evidence/ci-cd/runtime-security-remediation-v1.8-local-20261119.json",
+    "evidence_sha256": "a772d73e6c7aae5f8367c2b43ae3713b53fe4233dcf37f805764bc679be894cf",
+    "experiment_runtime_images_scanned": 3,
+    "candidate_service_images_scanned": 1,
+    "high_or_critical_fixable_findings": 0,
+    "checkoutservice_tests": "pass",
+    "cloud_access": false,
+    "runtime_publication_performed": false,
+    "confirmatory_observation": false
+  },
+  "authorized_changes": [
+    "Upgrade the oracle-harness and checkoutservice Go builder from 1.27.3 to 1.27.4 by immutable digest.",
+    "Update the checkoutservice toolchain directive to Go 1.27.4 without changing application dependencies or experiment thresholds.",
+    "Rebuild, inventory and scan the three experiment runtime images and checkoutservice without weakening the HIGH/CRITICAL gate.",
+    "Invalidate the v1.7 runtime publication bindings, approvals and active corpus while preserving their hashes in this amendment.",
+    "Prepare protocol v1.8 in a locked pre-registration state without publishing images or executing cloud workloads."
+  ],
+  "affected_pull_request": {
+    "number": 24,
+    "head_sha_at_detection": "c8cb7a3f3afd0dff812173549ca8d7222eb6db7b",
+    "workflow_run_id": "44576708310",
+    "cloud_labels": [],
+    "confirmatory_execution_performed": false
+  },
+  "pull_request_update_authorized": false,
+  "cloud_execution_authorized": false,
+  "runtime_publication_authorized": false,
+  "protocol_freeze_authorized": false,
+  "merge_authorized": false
+}
