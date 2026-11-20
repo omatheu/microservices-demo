@@ -38,6 +38,19 @@ e
 [`pre-freeze-audit-v1.8-components-20261120T045703Z.json`](./pre-freeze-audit-v1.8-components-20261120T045703Z.json).
 Nenhum deles autoriza execução cloud.
 
+A consulta pós-publicação v1.8 limitada a 100 MB passou a cobrir uso encerrado
+às `2026-11-20T06:00:00Z`, posterior à publicação das imagens às `03:26:02Z`,
+com `billing_data_as_of=2026-11-20T09:55:43Z`. Ela observou
+R$1.834,970443 brutos, R$-1.834,976644 em créditos e R$-0,006201 líquidos. O
+aumento de R$0,000008 reduziu mecanicamente o teto incremental para
+R$163,298016, mantendo o orçamento absoluto de R$1.998,268459 e a regra de
+reserva promocional. A observação está em
+[`cost-window-20260919-20261120-v1.8-freeze.json`](./cost-window-20260919-20261120-v1.8-freeze.json).
+A elegibilidade para aprovação humana, sem gerar aprovação, está em
+[`pre-freeze-financial-review-eligibility-v1.8-20261120.json`](./pre-freeze-financial-review-eligibility-v1.8-20261120.json).
+A candidata de protocolo vinculável pela futura aprovação financeira tem
+SHA-256 `01cdeeb72a301ce599715371e1a4ccecf4fe5f59ab5ddfba19e1ff32b73e4492`.
+
 Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026. A
 consulta final limitada a 100 MB agora cobre com segurança essa exclusão:
 `last_usage_end_time=2026-11-19T00:00:00Z` e

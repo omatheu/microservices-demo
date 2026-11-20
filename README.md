@@ -34,8 +34,8 @@ digest to one protected provenance. The v1.8 component-freeze bundle is now
 applied: 15/17 controls pass and only the renewed financial and researcher
 approvals remain. The protocol is still a fail-closed pre-registration
 candidate and no confirmatory corpus is active.
-The v1.8 pre-publication Billing review records R$1,834.970435 gross cost and
-R$163.298024 remaining under the unchanged absolute cap. The cluster has been deleted
+The complete v1.8 post-publication Billing review records R$1,834.970443 gross
+cost and R$163.298016 remaining under the unchanged absolute cap. The cluster has been deleted
 and cloud execution is explicitly locked. A
 read-only Oracle readiness audit verifies GitHub protection,
 keyless identity, least-privilege Kubernetes RBAC, frozen artifacts and an

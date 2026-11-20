@@ -64,6 +64,13 @@ passou a 15/17, vinculada ao protocolo candidato de SHA-256
 `a403824878fc40ed94c3c977c062e465f7ac0d10c2eef79ec56376b6170b94d5`;
 somente as duas aprovações permanecem bloqueantes. Isso não autoriza cloud.
 
+A leitura pós-publicação limitada a 100 MB passou a cobrir uso até
+`2026-11-20T06:00:00Z`, posterior à publicação das `03:26:02Z`. O custo bruto
+observado foi R$1.834,970443, aumento de R$0,000008; a baseline candidata e o
+teto incremental foram ajustados mecanicamente para R$1.834,970443 e
+R$163,298016, preservando o teto absoluto. Nenhuma aprovação ou execução cloud
+foi gerada por essa atualização.
+
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
 GKE e um caminho de exceção para coleções nulas no avaliador funcional. A
