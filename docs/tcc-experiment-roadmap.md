@@ -106,6 +106,9 @@ como Partial Digital Twin.
 - [x] Billing pós-publicação v1.8 completo até uso encerrado às `06:00:00Z`:
   custo bruto de R$1.834,970443 e teto incremental ajustado mecanicamente para
   R$163,298016, sem elevar o teto absoluto nem autorizar cloud.
+- [x] Aprovação financeira v1.8 renovada e vinculada ao protocolo exato, com
+  `cloud_execution_authorized=false`; auditoria em 16/17 e somente a aprovação
+  do pesquisador permanece.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Controles passivos do Oracle instalados, com kill switch em `false` e
@@ -267,8 +270,9 @@ mas parou antes da decisão PDT por um contrato de timestamp. A emenda v1.7
 corrigiu somente esse contrato e chegou a novo congelamento e corpus. Antes da
 execução, porém, o gate do PR #24 encontrou `CVE-2026-97054`. A emenda v1.8
 preserva esse histórico e corrige Go 1.27.4. Os runtimes já foram publicados e
-vinculados e os componentes congelados, elevando a auditoria a 15/17; a coleta
-continua bloqueada até as aprovações, o congelamento final e o corpus. O cluster
+vinculados e os componentes congelados. A aprovação financeira elevou a
+auditoria a 16/17; a coleta continua bloqueada até a aprovação do pesquisador,
+o congelamento final e o corpus. O cluster
 segue excluído e o Billing pós-exclusão permanece consolidado.
 
 ## Fases restantes
@@ -668,7 +672,7 @@ a janela de exclusão. Os bindings v1.7 foram invalidados pelo achado de
 segurança; os runtimes v1.8 corrigidos foram publicados, vinculados a uma nova
 proveniência e congelados com as políticas. Não existe corpus ativo. O corpus
 histórico v1.7 `corpus-dk3zrooqiepv4` foi invalidado antes de qualquer execução;
-a auditoria atual passa 15/17 controles.
+a auditoria atual passa 16/17 controles.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle

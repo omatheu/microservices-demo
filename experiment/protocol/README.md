@@ -1,9 +1,9 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
 > **Status:** os componentes da emenda de segurança v1.8 foram congelados e a
-> auditoria passa 15/17 controles. O protocolo permanece como
-> `pre-registration-candidate`; faltam a revisão financeira pós-publicação e a
-> aprovação renovada do pesquisador, e não há corpus confirmatório ativo.
+> revisão financeira pós-publicação foi aprovada; a auditoria passa 16/17
+> controles. O protocolo permanece como `pre-registration-candidate`; falta a
+> aprovação renovada do pesquisador e não há corpus confirmatório ativo.
 > Nenhuma execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
@@ -70,6 +70,12 @@ observado foi R$1.834,970443, aumento de R$0,000008; a baseline candidata e o
 teto incremental foram ajustados mecanicamente para R$1.834,970443 e
 R$163,298016, preservando o teto absoluto. Nenhuma aprovação ou execução cloud
 foi gerada por essa atualização.
+
+Após a confirmação literal do pesquisador para a revisão financeira, a
+aprovação canônica vinculou a observação pós-publicação e o protocolo candidato
+de SHA-256 `01cdeeb72a301ce599715371e1a4ccecf4fe5f59ab5ddfba19e1ff32b73e4492`.
+A auditoria passou a 16/17 e deixou somente `researcher-approval` como bloqueio.
+Essa aprovação também mantém `cloud_execution_authorized=false`.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

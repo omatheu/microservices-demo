@@ -50,6 +50,11 @@ A elegibilidade para aprovação humana, sem gerar aprovação, está em
 [`pre-freeze-financial-review-eligibility-v1.8-20261120.json`](./pre-freeze-financial-review-eligibility-v1.8-20261120.json).
 A candidata de protocolo vinculável pela futura aprovação financeira tem
 SHA-256 `01cdeeb72a301ce599715371e1a4ccecf4fe5f59ab5ddfba19e1ff32b73e4492`.
+Após a confirmação literal, a aprovação financeira canônica foi gerada em
+[`../../protocol/approvals/cost-review-v1.json`](../../protocol/approvals/cost-review-v1.json),
+mantendo `cloud_execution_authorized=false`. A auditoria passou a 16/17; a
+elegibilidade da aprovação final do pesquisador está em
+[`researcher-approval-eligibility-v1.8-20261120.json`](./researcher-approval-eligibility-v1.8-20261120.json).
 
 Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026. A
 consulta final limitada a 100 MB agora cobre com segurança essa exclusão:

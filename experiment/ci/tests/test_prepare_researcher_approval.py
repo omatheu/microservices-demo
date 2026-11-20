@@ -68,14 +68,14 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
         self.clock.stop()
         self.repository.close()
 
-    def test_amended_repository_is_not_yet_eligible_for_approval(self):
+    def test_current_repository_is_eligible_for_approval(self):
         result = MODULE.prepare(REPO_ROOT)
 
-        self.assertFalse(result["eligible_for_researcher_approval"])
+        self.assertTrue(result["eligible_for_researcher_approval"])
         self.assertFalse(result["approval_generated"])
         self.assertFalse(result["cloud_execution_authorized"])
         self.assertEqual(
-            ["researcher-approval", "financial-review"],
+            ["researcher-approval"],
             result["blocking_requirements"],
         )
 

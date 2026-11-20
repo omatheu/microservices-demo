@@ -31,8 +31,8 @@ local rebuilds, SBOMs, HIGH/CRITICAL scans and Go tests pass for all four
 affected or control images. The corrected three experiment runtimes were then
 published through the Artifact Registry-only identity and bound by immutable
 digest to one protected provenance. The v1.8 component-freeze bundle is now
-applied: 15/17 controls pass and only the renewed financial and researcher
-approvals remain. The protocol is still a fail-closed pre-registration
+applied and the post-publication financial review was explicitly approved:
+16/17 controls pass and only the renewed researcher approval remains. The protocol is still a fail-closed pre-registration
 candidate and no confirmatory corpus is active.
 The complete v1.8 post-publication Billing review records R$1,834.970443 gross
 cost and R$163.298016 remaining under the unchanged absolute cap. The cluster has been deleted

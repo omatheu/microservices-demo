@@ -127,7 +127,7 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
         self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
 
-    def test_current_candidate_requires_only_renewed_approvals(self):
+    def test_candidate_without_supplied_approvals_requires_both(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
