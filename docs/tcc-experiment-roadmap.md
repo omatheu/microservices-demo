@@ -98,8 +98,11 @@ como Partial Digital Twin.
   R$1.834,970435, aumento de R$1,017903 desde a v1.7 e margem reduzida para
   R$163,298024, sem elevar o teto absoluto nem autorizar cloud.
 - [x] Três runtimes v1.8 publicados e vinculados por digest no run protegido
-  `44667362567`; auditoria atual em 8/17, janela desarmada, cluster ausente e
+  `44667362567`; janela desarmada, cluster ausente e
   staging, PDT e Oracle não executados.
+- [x] Bundle de componentes v1.8 aplicado: cinco políticas, runtime PDT e suíte
+  Oracle congelados, 42/42 inputs vinculados e auditoria em 15/17; faltam
+  somente as aprovações financeira pós-publicação e do pesquisador.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Controles passivos do Oracle instalados, com kill switch em `false` e
@@ -261,8 +264,8 @@ mas parou antes da decisão PDT por um contrato de timestamp. A emenda v1.7
 corrigiu somente esse contrato e chegou a novo congelamento e corpus. Antes da
 execução, porém, o gate do PR #24 encontrou `CVE-2026-97054`. A emenda v1.8
 preserva esse histórico e corrige Go 1.27.4. Os runtimes já foram publicados e
-vinculados, elevando a auditoria a 8/17; a coleta continua bloqueada até o
-congelamento de componentes, aprovações, congelamento final e corpus. O cluster
+vinculados e os componentes congelados, elevando a auditoria a 15/17; a coleta
+continua bloqueada até as aprovações, o congelamento final e o corpus. O cluster
 segue excluído e o Billing pós-exclusão permanece consolidado.
 
 ## Fases restantes
@@ -659,10 +662,10 @@ está como candidato v1.8; mantém 18 candidatas, três repetições, seis bloco
 mesma regra de agregação e o mesmo plano pareado. A observação financeira final
 é R$1.834,970435, com R$163,298024 restantes até o teto absoluto, e cobre toda
 a janela de exclusão. Os bindings v1.7 foram invalidados pelo achado de
-segurança; os runtimes v1.8 corrigidos foram publicados e vinculados a uma nova
-proveniência, mas ainda não congelados. Não existe corpus ativo. O corpus
+segurança; os runtimes v1.8 corrigidos foram publicados, vinculados a uma nova
+proveniência e congelados com as políticas. Não existe corpus ativo. O corpus
 histórico v1.7 `corpus-dk3zrooqiepv4` foi invalidado antes de qualquer execução;
-a auditoria atual passa 8/17 controles.
+a auditoria atual passa 15/17 controles.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -976,8 +979,8 @@ houve Oracle. O Billing pós-exclusão está completo, as duas aprovações fora
 registradas, o protocolo foi congelado e o corpus novo foi gerado. Antes da
 coleta, o gate do PR #24 encontrou `CVE-2026-97054`; a emenda v1.8 preservou e
 invalidou esse estado confirmatório, e a remediação Go 1.27.4 passou localmente.
-Os runtimes v1.8 já foram publicados e vinculados. A coleta agora depende de
-congelar os componentes, renovar as aprovações, congelar em 17/17, gerar uma
+Os runtimes v1.8 já foram publicados e vinculados, e seus componentes foram
+congelados. A coleta agora depende de renovar as aprovações, congelar em 17/17, gerar uma
 chave e um corpus novos e obter a autorização financeira/cloud de cada bloco.
 
 ### Fase 8 — Análise final

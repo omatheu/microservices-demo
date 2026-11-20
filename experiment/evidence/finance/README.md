@@ -27,6 +27,17 @@ desarmamento estão em
 e a auditoria somente leitura em
 [`runtime-publication-readiness-v1.8-20261120.json`](./runtime-publication-readiness-v1.8-20261120.json).
 
+O bundle de componentes v1.8 foi aplicado em `2026-11-20T04:57:03Z`. As cinco
+políticas, o runtime PDT e a suíte Oracle foram congelados e a auditoria passou
+15/17 controles, deixando somente `financial-review` e
+`researcher-approval`. O protocolo candidato resultante tem SHA-256
+`a403824878fc40ed94c3c977c062e465f7ac0d10c2eef79ec56376b6170b94d5`.
+Os recibos estão em
+[`protocol-freeze-candidate-v1.8-20261120T045703Z.json`](./protocol-freeze-candidate-v1.8-20261120T045703Z.json)
+e
+[`pre-freeze-audit-v1.8-components-20261120T045703Z.json`](./pre-freeze-audit-v1.8-components-20261120T045703Z.json).
+Nenhum deles autoriza execução cloud.
+
 Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026. A
 consulta final limitada a 100 MB agora cobre com segurança essa exclusão:
 `last_usage_end_time=2026-11-19T00:00:00Z` e

@@ -1,11 +1,10 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** a emenda de segurança v1.8 está em estado
-> `pre-registration-candidate`, com 8/17 controles de congelamento. Os três
-> runtimes corrigidos foram publicados e vinculados por digest, mas políticas e
-> manifests ainda não foram congelados, as aprovações precisam ser renovadas e
-> não há corpus confirmatório ativo. Nenhuma execução cloud foi autorizada e
-> nenhum cluster existe.
+> **Status:** os componentes da emenda de segurança v1.8 foram congelados e a
+> auditoria passa 15/17 controles. O protocolo permanece como
+> `pre-registration-candidate`; faltam a revisão financeira pós-publicação e a
+> aprovação renovada do pesquisador, e não há corpus confirmatório ativo.
+> Nenhuma execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -58,6 +57,12 @@ scans HIGH/CRITICAL passaram, a identidade não possuía papel no projeto nem
 credenciais GKE, e staging, PDT e Oracle foram ignorados. Os labels e o kill
 switch temporários foram removidos ao final. Essa publicação elevou a auditoria
 para 8/17; ela não congelou componentes, gerou aprovações ou autorizou coleta.
+
+Em `2026-11-20T04:57:03Z`, o bundle determinístico congelou as cinco políticas,
+o runtime PDT e a suíte Oracle e renovou seus hashes encadeados. A auditoria
+passou a 15/17, vinculada ao protocolo candidato de SHA-256
+`a403824878fc40ed94c3c977c062e465f7ac0d10c2eef79ec56376b6170b94d5`;
+somente as duas aprovações permanecem bloqueantes. Isso não autoriza cloud.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

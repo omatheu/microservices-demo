@@ -75,17 +75,7 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
         self.assertFalse(result["approval_generated"])
         self.assertFalse(result["cloud_execution_authorized"])
         self.assertEqual(
-            [
-                "ci-policy-frozen",
-                "staging-thresholds-frozen",
-                "pdt-model-policy-frozen",
-                "pdt-fidelity-policy-frozen",
-                "oracle-policy-frozen",
-                "pdt-runtime-frozen",
-                "oracle-suite-frozen",
-                "researcher-approval",
-                "financial-review",
-            ],
+            ["researcher-approval", "financial-review"],
             result["blocking_requirements"],
         )
 
