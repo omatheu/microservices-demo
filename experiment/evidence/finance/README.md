@@ -4,6 +4,21 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Antes do bloco 1 da coleta v1.8, a candidata opaca
+`cand-2aeweofqphemins4` foi publicada no PR #25 sem labels de execução. A CI
+convencional pré-staging passou, mas staging, PDT e Oracle não executaram. Uma
+consulta real limitada a 100 MB confirmou custo bruto de R$1.834,970443,
+inalterado em relação à baseline do congelamento, com R$163,298016 de margem
+bruta até o teto absoluto. O inventário do GKE confirmou zero clusters. A
+revisão torna o bloco 1 apenas elegível para uma autorização cloud posterior e
+separada, sujeita a uma atualização Billing imediatamente antes de recriar o
+cluster por causa do atraso do export. Ela não autoriza merge da candidata,
+recriação do cluster ou execução de staging, PDT ou Oracle. A observação e a
+revisão estão em
+[`cost-window-20260919-20261120-v1.8-preblock1.json`](./cost-window-20260919-20261120-v1.8-preblock1.json)
+e
+[`pre-block-1-financial-review-v1.8-20261120.json`](./pre-block-1-financial-review-v1.8-20261120.json).
+
 Na revisão pré-publicação v1.8 de 19/11/2026, a consulta somente leitura
 limitada a 100 MB observou R$1.834,970435 brutos, R$-1.834,976634 em créditos e
 R$-0,006199 líquidos, com dados exportados até `2026-11-19T22:58:54Z`. O
