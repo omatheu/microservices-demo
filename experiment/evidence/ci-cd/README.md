@@ -26,6 +26,16 @@ registra IDs, tamanhos, ferramentas e resultados. Ela comprova somente a
 remediação de engenharia local; não substitui a publicação protegida nem cria
 proveniência confirmatória.
 
+Depois da revisão financeira e da autorização específica de publicação, o run
+protegido `44667362567` publicou somente os três runtimes experimentais do
+commit `c79dedef2549ac4cd77d210d1e779f3f672f6b39`. O job
+`136059881091` repetiu build, SBOM e scan HIGH/CRITICAL antes do push, verificou
+os digests no Artifact Registry e produziu manifests vinculados à mesma árvore
+e proveniência. A evidência canônica está em
+[`runtime-publication-pr24-20261120T032602Z.json`](runtime-publication-pr24-20261120T032602Z.json).
+Staging, PDT e Oracle foram ignorados, nenhum cluster existia e a janela foi
+desarmada imediatamente depois. A publicação não congelou o protocolo.
+
 ## Regressão de orquestração e emenda v1.7 em 18/11/2026
 
 O run pareado `44199321140` do PR #21 concluiu a CI local, três repetições de

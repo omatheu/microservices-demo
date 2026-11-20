@@ -127,7 +127,7 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
         self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
 
-    def test_current_candidate_requires_publication_freeze_and_approvals(self):
+    def test_current_candidate_requires_component_freeze_and_approvals(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
@@ -138,9 +138,7 @@ class AuditProtocolFreezeTests(unittest.TestCase):
                 "pdt-model-policy-frozen",
                 "pdt-fidelity-policy-frozen",
                 "oracle-policy-frozen",
-                "pdt-controller-image-bound",
                 "pdt-runtime-frozen",
-                "oracle-images-bound",
                 "oracle-suite-frozen",
                 "researcher-approval",
                 "financial-review",
@@ -157,7 +155,9 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         self.assertTrue(checks["frozen-input-hashes"])
         self.assertTrue(checks["mutation-operators-implemented"])
         self.assertTrue(checks["pdt-runtime-file-hashes"])
+        self.assertTrue(checks["pdt-controller-image-bound"])
         self.assertTrue(checks["oracle-file-hashes"])
+        self.assertTrue(checks["oracle-images-bound"])
 
     def test_protocol_hash_drift_is_reported(self):
         value = protocol()

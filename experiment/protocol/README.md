@@ -1,10 +1,11 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
 > **Status:** a emenda de segurança v1.8 está em estado
-> `pre-registration-candidate`, com 6/17 controles de congelamento. Os runtimes
-> corrigidos ainda não foram publicados ou vinculados, as aprovações precisam
-> ser renovadas e não há corpus confirmatório ativo. Nenhuma execução cloud foi
-> autorizada e nenhum cluster existe.
+> `pre-registration-candidate`, com 8/17 controles de congelamento. Os três
+> runtimes corrigidos foram publicados e vinculados por digest, mas políticas e
+> manifests ainda não foram congelados, as aprovações precisam ser renovadas e
+> não há corpus confirmatório ativo. Nenhuma execução cloud foi autorizada e
+> nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -49,6 +50,14 @@ R$1.834,970435; por isso, o teto incremental candidato foi reduzido
 mecanicamente para R$163,298024, preservando o orçamento absoluto de
 R$1.998,268459 e a reserva promocional mínima. A revisão não gerou aprovação,
 não publicou runtimes e não autorizou execução cloud.
+
+Após autorização separada, o run protegido `44667362567` publicou somente
+`checkout-pdt-controller`, `oracle-harness` e `currency-reference` no Artifact
+Registry e vinculou os digests ao commit `c79dedef` e à árvore `55452b90`. Os
+scans HIGH/CRITICAL passaram, a identidade não possuía papel no projeto nem
+credenciais GKE, e staging, PDT e Oracle foram ignorados. Os labels e o kill
+switch temporários foram removidos ao final. Essa publicação elevou a auditoria
+para 8/17; ela não congelou componentes, gerou aprovações ou autorizou coleta.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

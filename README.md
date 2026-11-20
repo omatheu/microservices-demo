@@ -28,9 +28,12 @@ execution, the protected image gate on PR #24 detected `CVE-2026-97054` in the
 Go 1.27.3 standard library of the Oracle harness. Security amendment v1.8
 updates the affected Go builds to 1.27.4 by immutable base-image digest. Clean
 local rebuilds, SBOMs, HIGH/CRITICAL scans and Go tests pass for all four
-affected or control images. The active protocol is therefore a fail-closed
-v1.8 pre-registration candidate: 6/17 freeze controls pass, the corrected
-runtimes are not published or bound, and no confirmatory corpus is active.
+affected or control images. The corrected three experiment runtimes were then
+published through the Artifact Registry-only identity and bound by immutable
+digest to one protected provenance. The active protocol remains a fail-closed
+v1.8 pre-registration candidate: 8/17 freeze controls pass, policies and
+manifests are not frozen, approvals are absent, and no confirmatory corpus is
+active.
 The v1.8 pre-publication Billing review records R$1,834.970435 gross cost and
 R$163.298024 remaining under the unchanged absolute cap. The cluster has been deleted
 and cloud execution is explicitly locked. A
@@ -43,8 +46,8 @@ live status and exit criteria.
 The passive Oracle GitHub controls remain installed, while every execution
 switch is `false` and no GKE cluster exists. Runtime publication was performed
 through its isolated Artifact Registry-only path for earlier protocol versions.
-The v1.8 images must be republished and rebound before a new freeze; that has
-not been authorized or performed. Every future experimental block still
+The v1.8 images are published and rebound, but this does not freeze the
+protocol or authorize execution. Every future experimental block still
 requires a separate financial review and explicit cloud authorization.
 
 ## Architecture

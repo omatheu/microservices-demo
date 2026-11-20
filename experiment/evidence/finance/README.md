@@ -16,6 +16,17 @@ A elegibilidade foi confirmada sem gerar aprovação em
 A revisão é somente de elegibilidade: não aprova o congelamento, não publica
 runtimes e não autoriza cloud.
 
+A publicação isolada posterior passou na auditoria de prontidão 13/13 e usou a
+identidade sem chave que tem Writer somente no repositório Artifact Registry.
+O tamanho observado antes era 132,228 MB; o limite superior conservador depois
+das três imagens era 367,624 MB, e o tamanho observado após a publicação ficou
+em 184,406 MB. O run `44667362567` não obteve credenciais GKE, não recriou
+cluster e ignorou staging, PDT e Oracle. A autorização, os controles e o
+desarmamento estão em
+[`runtime-publication-financial-review-v1.8-20261120.json`](./runtime-publication-financial-review-v1.8-20261120.json),
+e a auditoria somente leitura em
+[`runtime-publication-readiness-v1.8-20261120.json`](./runtime-publication-readiness-v1.8-20261120.json).
+
 Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026. A
 consulta final limitada a 100 MB agora cobre com segurança essa exclusão:
 `last_usage_end_time=2026-11-19T00:00:00Z` e

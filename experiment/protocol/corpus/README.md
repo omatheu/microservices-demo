@@ -12,8 +12,8 @@ compromisso Oracle
 A chave e o manifesto Oracle permanecem privados com permissão `0600`. Antes
 de qualquer execução v1.7, a emenda de segurança v1.8 invalidou esse corpus
 para uso confirmatório sem abrir rótulos. Não existe corpus confirmatório ativo:
-a v1.8 exige novo congelamento 17/17, nova chave e novo corpus depois da
-publicação e do binding dos runtimes corrigidos. Nenhum desses passos autoriza
+a publicação e o binding v1.8 foram concluídos, mas ainda são necessários novo
+congelamento 17/17, nova chave e novo corpus. Nenhum desses passos autoriza
 execução cloud por si só.
 
 O corpus confirmatório da v1.1 foi gerado em 12/10/2026 UTC somente depois do
