@@ -94,6 +94,9 @@ como Partial Digital Twin.
 - [x] Protocolo v1.8 retornou de forma fail-closed a candidato com 6/17
   controles, runtimes não publicados, aprovações removidas e nenhum corpus
   confirmatório ativo.
+- [x] Revisão financeira pré-publicação v1.8 limitada a 100 MB: custo bruto de
+  R$1.834,970435, aumento de R$1,017903 desde a v1.7 e margem reduzida para
+  R$163,298024, sem elevar o teto absoluto nem autorizar cloud.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Controles passivos do Oracle instalados, com kill switch em `false` e
@@ -649,7 +652,7 @@ Git. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
 está como candidato v1.8; mantém 18 candidatas, três repetições, seis blocos, a
 mesma regra de agregação e o mesmo plano pareado. A observação financeira final
-é R$1.833,952532, com R$164,315927 restantes até o teto absoluto, e cobre toda
+é R$1.834,970435, com R$163,298024 restantes até o teto absoluto, e cobre toda
 a janela de exclusão. Os bindings v1.7 foram invalidados pelo achado de
 segurança, os runtimes v1.8 corrigidos ainda não foram publicados e não existe
 corpus ativo. O corpus histórico v1.7 `corpus-dk3zrooqiepv4` foi invalidado
@@ -1057,8 +1060,8 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles financeiros e operacionais
 
 - [x] orçamento bruto contábil absoluto preservado em R$1.998,268459;
-- [x] congelar o teto incremental v1.7 em R$164,315927 após o Billing cobrir a
-  exclusão, sem elevar o teto absoluto;
+- [x] reduzir o teto incremental v1.8 para R$163,298024 na revisão
+  pré-publicação, sem elevar o teto absoluto;
 - [x] alertas de 25% a 100%;
 - [x] quotas por namespace;
 - [x] somente um Load Balancer permitido;

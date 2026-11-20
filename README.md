@@ -31,8 +31,8 @@ local rebuilds, SBOMs, HIGH/CRITICAL scans and Go tests pass for all four
 affected or control images. The active protocol is therefore a fail-closed
 v1.8 pre-registration candidate: 6/17 freeze controls pass, the corrected
 runtimes are not published or bound, and no confirmatory corpus is active.
-Complete post-deletion Billing data records R$1,833.952532 gross cost and
-R$164.315927 remaining under the absolute cap. The cluster has been deleted
+The v1.8 pre-publication Billing review records R$1,834.970435 gross cost and
+R$163.298024 remaining under the unchanged absolute cap. The cluster has been deleted
 and cloud execution is explicitly locked. A
 read-only Oracle readiness audit verifies GitHub protection,
 keyless identity, least-privilege Kubernetes RBAC, frozen artifacts and an

@@ -4,6 +4,18 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Na revisão pré-publicação v1.8 de 19/11/2026, a consulta somente leitura
+limitada a 100 MB observou R$1.834,970435 brutos, R$-1.834,976634 em créditos e
+R$-0,006199 líquidos, com dados exportados até `2026-11-19T22:58:54Z`. O
+aumento bruto desde a revisão v1.7 foi R$1,017903. A baseline candidata passou
+ao valor observado e o teto incremental foi reduzido para R$163,298024, sem
+elevar o orçamento absoluto de R$1.998,268459. A consulta está em
+[`cost-window-20260919-20261120-v1.8-prepublication.json`](./cost-window-20260919-20261120-v1.8-prepublication.json).
+A elegibilidade foi confirmada sem gerar aprovação em
+[`pre-publication-financial-review-eligibility-v1.8-20261120.json`](./pre-publication-financial-review-eligibility-v1.8-20261120.json).
+A revisão é somente de elegibilidade: não aprova o congelamento, não publica
+runtimes e não autoriza cloud.
+
 Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026. A
 consulta final limitada a 100 MB agora cobre com segurança essa exclusão:
 `last_usage_end_time=2026-11-19T00:00:00Z` e

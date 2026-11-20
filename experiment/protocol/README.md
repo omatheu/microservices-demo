@@ -43,6 +43,13 @@ passaram sem achados HIGH/CRITICAL corrigíveis, e os testes Go passaram. Isso �
 evidência de engenharia, não publicação protegida: políticas, manifests,
 aprovações e corpus retornaram ao estado fail-closed v1.8, sem GCP.
 
+A revisão financeira pré-publicação v1.8 consultou o Billing em modo somente
+leitura com limite de 100 MB. O custo bruto observado passou a
+R$1.834,970435; por isso, o teto incremental candidato foi reduzido
+mecanicamente para R$163,298024, preservando o orçamento absoluto de
+R$1.998,268459 e a reserva promocional mínima. A revisão não gerou aprovação,
+não publicou runtimes e não autorizou execução cloud.
+
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
 GKE e um caminho de exceção para coleções nulas no avaliador funcional. A
