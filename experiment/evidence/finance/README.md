@@ -55,6 +55,14 @@ Após a confirmação literal, a aprovação financeira canônica foi gerada em
 mantendo `cloud_execution_authorized=false`. A auditoria passou a 16/17; a
 elegibilidade da aprovação final do pesquisador está em
 [`researcher-approval-eligibility-v1.8-20261120.json`](./researcher-approval-eligibility-v1.8-20261120.json).
+Depois da confirmação específica do pesquisador sobre a coleta parcial, a
+auditoria passou 17/17 e o finalizador congelou o protocolo v1.8 com SHA-256
+`c55d9a8d85c2ed3e0d1709e5bb15244723e8b60d1714e29e7d73c79a7438ab86`.
+Os recibos estão em
+[`pre-freeze-audit-v1.8-ready-20261120T142507Z.json`](./pre-freeze-audit-v1.8-ready-20261120T142507Z.json)
+e
+[`protocol-freeze-finalization-v1.8-20261120T142507Z.json`](./protocol-freeze-finalization-v1.8-20261120T142507Z.json).
+O corpus foi rotacionado, mas nenhuma execução cloud foi autorizada.
 
 Após a tentativa incompleta v1.6, o cluster foi excluído em 18/11/2026. A
 consulta final limitada a 100 MB agora cobre com segurança essa exclusão:

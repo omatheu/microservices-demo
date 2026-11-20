@@ -1,5 +1,17 @@
 # Corpus confirmatório
 
+O corpus confirmatório ativo v1.8 foi gerado em 20/11/2026 UTC somente depois
+da auditoria pré-freeze 17/17 e do congelamento do protocolo. O corpus
+`corpus-zkf5mounepuhq` contém 18 identificadores opacos, três repetições por
+candidata e seis blocos de três. Ele está vinculado ao protocolo congelado de
+SHA-256 `c55d9a8d85c2ed3e0d1709e5bb15244723e8b60d1714e29e7d73c79a7438ab86`,
+tem SHA-256
+`53ab1e6fa4e47d462d5b56556a04c29a4693d00367275208bd214cb5cf909d6f` e
+compromisso Oracle
+`1a4ab57b897327bd929675a391a04b441b47477883ad0ee219a95213f2de207f`.
+A chave e o manifesto Oracle v1.8 permanecem privados com permissão `0600`; o
+congelamento não autoriza execução cloud.
+
 O corpus confirmatório v1.7 foi gerado em 19/11/2026 UTC somente depois da
 auditoria pré-freeze 17/17 e do congelamento do protocolo. O corpus
 `corpus-dk3zrooqiepv4` contém 18 identificadores opacos, três repetições por
@@ -11,10 +23,8 @@ compromisso Oracle
 `cf770742a0c5458ddc609845580851f1b6dfcb67c06ac625571be57c4747f102`.
 A chave e o manifesto Oracle permanecem privados com permissão `0600`. Antes
 de qualquer execução v1.7, a emenda de segurança v1.8 invalidou esse corpus
-para uso confirmatório sem abrir rótulos. Não existe corpus confirmatório ativo:
-a publicação, o binding, o congelamento dos componentes e a aprovação financeira
-v1.8 foram concluídos, mas ainda são necessários a aprovação do pesquisador, o congelamento 17/17, uma nova
-chave e um novo corpus. Nenhum desses passos autoriza
+para uso confirmatório sem abrir rótulos. O corpus v1.8 acima o substitui sem
+reutilizar candidatas nem revelar rótulos. Nenhum desses passos autoriza
 execução cloud por si só.
 
 O corpus confirmatório da v1.1 foi gerado em 12/10/2026 UTC somente depois do
@@ -119,10 +129,9 @@ históricos em diretório local privado. As chaves e os manifestos Oracle v1.3,
 v1.4, v1.5 e v1.6 também permanecem nos diretórios privados ignorados pelo Git, com
 permissões 0600, e nunca podem ser copiados para este diretório versionado. O
 secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` contém a chave v1.6 agora invalidada e permanece
-desarmado. Ele não deve receber a chave v1.7 invalidada; só deve ser substituído
-por uma chave v1.8 nova depois do novo congelamento e da geração do corpus, sem
-expor seu valor.
+`TCC_ORACLE_BLINDING_KEY_B64` contém uma chave histórica invalidada e permanece
+desarmado. Ele só deve ser substituído pela chave v1.8 nova em uma operação
+protegida e explicitamente autorizada, sem expor seu valor.
 
 O mesmo ambiente protegido deve conter:
 

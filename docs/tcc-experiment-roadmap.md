@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 19 de novembro de 2026.
+> **Última verificação:** 20 de novembro de 2026.
 
 ## Objetivo do experimento
 
@@ -107,8 +107,12 @@ como Partial Digital Twin.
   custo bruto de R$1.834,970443 e teto incremental ajustado mecanicamente para
   R$163,298016, sem elevar o teto absoluto nem autorizar cloud.
 - [x] Aprovação financeira v1.8 renovada e vinculada ao protocolo exato, com
-  `cloud_execution_authorized=false`; auditoria em 16/17 e somente a aprovação
-  do pesquisador permanece.
+  `cloud_execution_authorized=false`.
+- [x] Aprovação renovada do pesquisador registrada após reconhecer a coleta
+  parcial anterior; auditoria 17/17 e protocolo v1.8 congelado com SHA-256
+  `c55d9a8d85c2ed3e0d1709e5bb15244723e8b60d1714e29e7d73c79a7438ab86`.
+- [x] Corpus opaco v1.8 `corpus-zkf5mounepuhq` gerado com chave nova: 18
+  candidatas, três repetições, seis blocos e compromisso Oracle validado.
 - [x] Identidade federada GitHub/GCP sem chave e com privilégio mínimo.
 - [x] Ambiente GitHub `tcc-experiment`, secrets, trava financeira e rótulos configurados sem disparar execução cloud.
 - [x] Controles passivos do Oracle instalados, com kill switch em `false` e
@@ -239,9 +243,9 @@ execução autorizada em cloud ou análise dos resultados.
    os builds Go para 1.27.4 e validar quatro imagens e testes sem GCP;
 23. [concluído em 20/11/2026] publicar e vincular por digest os três runtimes
    v1.8 corrigidos, usando somente a identidade Artifact Registry e sem GKE;
-24. congelar políticas e manifests, renovar as aprovações financeira e do
-   pesquisador, passar a auditoria 17/17, congelar a v1.8 e rotacionar a chave
-   e o corpus;
+24. [concluído localmente em 20/11/2026] congelar políticas e manifests,
+   renovar as aprovações financeira e do pesquisador, passar a auditoria
+   17/17, congelar a v1.8 e rotacionar a chave e o corpus;
 25. materializar candidatas v1.8 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
@@ -271,9 +275,10 @@ corrigiu somente esse contrato e chegou a novo congelamento e corpus. Antes da
 execução, porém, o gate do PR #24 encontrou `CVE-2026-97054`. A emenda v1.8
 preserva esse histórico e corrige Go 1.27.4. Os runtimes já foram publicados e
 vinculados e os componentes congelados. A aprovação financeira elevou a
-auditoria a 16/17; a coleta continua bloqueada até a aprovação do pesquisador,
-o congelamento final e o corpus. O cluster
-segue excluído e o Billing pós-exclusão permanece consolidado.
+auditoria a 16/17; a aprovação do pesquisador completou 17/17, o finalizador
+congelou a v1.8 e a nova chave gerou o corpus opaco. O cluster segue excluído,
+o Billing pós-publicação está consolidado e a execução cloud continua
+desautorizada.
 
 ## Fases restantes
 
@@ -665,14 +670,15 @@ Os operadores candidatos e os controles estão catalogados em
 **Estado:** os congelamentos anteriores permanecem preservados no histórico do
 Git. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-está como candidato v1.8; mantém 18 candidatas, três repetições, seis blocos, a
+está congelado como v1.8; mantém 18 candidatas, três repetições, seis blocos, a
 mesma regra de agregação e o mesmo plano pareado. A observação financeira final
 é R$1.834,970443, com R$163,298016 restantes até o teto absoluto, e cobre toda
 a janela de exclusão. Os bindings v1.7 foram invalidados pelo achado de
 segurança; os runtimes v1.8 corrigidos foram publicados, vinculados a uma nova
-proveniência e congelados com as políticas. Não existe corpus ativo. O corpus
-histórico v1.7 `corpus-dk3zrooqiepv4` foi invalidado antes de qualquer execução;
-a auditoria atual passa 16/17 controles.
+proveniência e congelados com as políticas. O corpus ativo v1.8 é
+`corpus-zkf5mounepuhq`, vinculado ao protocolo congelado; o corpus histórico
+v1.7 `corpus-dk3zrooqiepv4` foi invalidado antes de qualquer execução. A
+auditoria atual passa 17/17 controles.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -987,8 +993,10 @@ registradas, o protocolo foi congelado e o corpus novo foi gerado. Antes da
 coleta, o gate do PR #24 encontrou `CVE-2026-97054`; a emenda v1.8 preservou e
 invalidou esse estado confirmatório, e a remediação Go 1.27.4 passou localmente.
 Os runtimes v1.8 já foram publicados e vinculados, e seus componentes foram
-congelados. A coleta agora depende de renovar as aprovações, congelar em 17/17, gerar uma
-chave e um corpus novos e obter a autorização financeira/cloud de cada bloco.
+congelados. As aprovações foram renovadas, a auditoria passou 17/17 e a chave e
+o corpus foram rotacionados. A coleta agora depende da publicação desse estado,
+da instalação protegida da chave e da autorização financeira/cloud de cada
+bloco.
 
 ### Fase 8 — Análise final
 
@@ -1057,7 +1065,7 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [ ] renovar o congelamento do protocolo v1.8, corpus, sementes e regra de
+- [x] renovar o congelamento do protocolo v1.8, corpus, sementes e regra de
   parada antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;

@@ -31,9 +31,9 @@ local rebuilds, SBOMs, HIGH/CRITICAL scans and Go tests pass for all four
 affected or control images. The corrected three experiment runtimes were then
 published through the Artifact Registry-only identity and bound by immutable
 digest to one protected provenance. The v1.8 component-freeze bundle is now
-applied and the post-publication financial review was explicitly approved:
-16/17 controls pass and only the renewed researcher approval remains. The protocol is still a fail-closed pre-registration
-candidate and no confirmatory corpus is active.
+applied, both human approvals are bound to the exact candidate, and all 17
+freeze controls pass. The protocol is frozen and a new 18-candidate blinded
+corpus is bound to its final SHA-256.
 The complete v1.8 post-publication Billing review records R$1,834.970443 gross
 cost and R$163.298016 remaining under the unchanged absolute cap. The cluster has been deleted
 and cloud execution is explicitly locked. A
@@ -46,8 +46,8 @@ live status and exit criteria.
 The passive Oracle GitHub controls remain installed, while every execution
 switch is `false` and no GKE cluster exists. Runtime publication was performed
 through its isolated Artifact Registry-only path for earlier protocol versions.
-The v1.8 images and components are bound and frozen, but the protocol itself
-is not finalized and execution remains unauthorized. Every future experimental block still
+The v1.8 images, components, protocol and corpus are bound and frozen, while
+cloud execution remains unauthorized. Every future experimental block still
 requires a separate financial review and explicit cloud authorization.
 
 ## Architecture
