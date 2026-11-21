@@ -555,3 +555,21 @@ há mudança; com a trava ligada aparecem somente a API do BigQuery e o dataset
 `US`, sem alterações em GKE, Kubernetes, Artifact Registry, IAM ou orçamento.
 A evidência está em
 [`billing-export-plan-readiness-20260920T224203Z.json`](./billing-export-plan-readiness-20260920T224203Z.json).
+
+## Fechamento pós-tentativa pareada v1.8
+
+O export posterior ao run `44864048460` passou a cobrir a exclusão do cluster
+concluída em `2026-11-21T09:48:53.293223964Z`. A observação limitada a 100 MB
+registra R$1.840,812983 de custo bruto, R$4,529938 acima da baseline
+pré-reexecução e R$157,455476 de margem até o teto absoluto de
+R$1.998,268459. O snapshot está em
+[`cost-window-20260919-20261121-v1.8-run44864048460-postdelete-final.json`](./cost-window-20260919-20261121-v1.8-run44864048460-postdelete-final.json).
+
+A revisão
+[`post-paired-rerun-financial-review-v1.8-20261121.json`](./post-paired-rerun-financial-review-v1.8-20261121.json)
+não cria aprovação nem autorização cloud. Ela somente confirma elegibilidade
+financeira para solicitar uma nova decisão humana com envelope máximo reduzido
+para R$157,455476. Como a autorização consumida excluía explicitamente o
+deployment operacional, a próxima autorização precisa incluir a instalação do
+baseline congelado e o preflight de `deployment/loadgenerator` antes de armar o
+workflow. Nenhuma mudança de protocolo ou republicação de runtime é necessária.

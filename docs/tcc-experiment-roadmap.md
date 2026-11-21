@@ -121,6 +121,11 @@ como Partial Digital Twin.
   faturável adicional.
 - [x] Auditoria Oracle pós-freeze em 22/22 controles, pronta para habilitação
   controlada e ainda sem autorização de execução.
+- [x] Fechamento financeiro pós-tentativa inválida `44864048460` cobre a
+  exclusão do cluster: custo bruto de R$1.840,812983, acréscimo de R$4,529938
+  desde a revisão pré-execução e margem reduzida para R$157,455476. A tentativa
+  continua inelegível como resultado confirmatório, mas a revisão permite
+  solicitar uma nova autorização humana sem elevar o teto absoluto.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
