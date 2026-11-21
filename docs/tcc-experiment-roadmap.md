@@ -1013,6 +1013,13 @@ R$161,985414 e autorizou recriar temporariamente o cluster para executar somente
 o Oracle da candidata 1, com exclusão obrigatória em falha, pausa ou conclusão.
 Essa autorização não inclui nova execução de staging ou PDT. A confirmação do
 ambiente protegido do GitHub e a execução Oracle permanecem pendentes.
+O run `44763951607` confirmou que o rótulo Oracle não estava armado na captura
+inicial e foi preservado como tentativa incompleta sem Oracle. Para reutilizar
+somente a orquestração congelada, o pesquisador autorizou uma reexecução
+controlada de staging e PDT da mesma candidata exclusivamente para rearmar o
+gate Oracle. A exceção não altera o protocolo, o teto bruto de R$1.998,268459
+ou o envelope restante de R$161,985414 e mantém a exclusão obrigatória do
+cluster em falha, pausa ou conclusão.
 
 ### Fase 8 — Análise final
 

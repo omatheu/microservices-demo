@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0.0",
+  "authorization_id": "paired-rerun-cloud-authorization-v1.8-20261121",
+  "authorized_at": "2026-11-21T03:55:58Z",
+  "project_id": "microservices-demo-tcc",
+  "protocol_id": "checkout-pdt-comparison-v1.8",
+  "candidate_id": "cand-2aeweofqphemins4",
+  "candidate_sequence": 1,
+  "authorization_literal": "AUTORIZO_REEXECUCAO_CONTROLADA_DE_STAGING_E_PDT_DA_CANDIDATA_1_V1_8_EXCLUSIVAMENTE_PARA_REARMAR_O_GATE_ORACLE_NO_WORKFLOW_CONGELADO_PRESERVANDO_O_RUN_44763951607_COMO_TENTATIVA_INCOMPLETA_SEM_ORACLE_MANTENDO_O_TETO_BRUTO_ABSOLUTO_DE_1998_268459_REAIS_O_ENVELOPE_RESTANTE_MAXIMO_DE_161_985414_REAIS_E_EXCLUSAO_DO_CLUSTER_EM_FALHA_PAUSA_OU_CONCLUSAO",
+  "supersedes_scope_restriction_in": {
+    "path": "experiment/evidence/finance/oracle-block-1-cloud-authorization-v1.8-20261121.json",
+    "sha256": "f17afc409e6a3c12239633e59ccdbffb8caa161817b6b450e2a6b7432abd9f59",
+    "changed_fields_only": [
+      "explicitly_not_authorized.staging_rerun",
+      "explicitly_not_authorized.pdt_rerun"
+    ]
+  },
+  "preserved_attempt": {
+    "workflow_run_id": 44763951607,
+    "classification": "incomplete-without-oracle",
+    "paired_decisions_preserved": true,
+    "oracle_executed": false,
+    "oracle_label_revealed": false,
+    "human_gate_receipt_sha256": "0b7990fa8f52862b5d141951540370fadda93343aaf69981997308ff0cd407ad",
+    "github_environment_approvals_sha256": "8b45c13e8dc91c532670f3889d8c8ccc877c95e2f7b80a32c64caa5c97767ba0"
+  },
+  "authorized_actions": {
+    "preexecution_billing_refresh_maximum_bytes": 100000000,
+    "temporary_cluster_recreation": true,
+    "candidate_1_staging_rerun": true,
+    "candidate_1_pdt_rerun": true,
+    "candidate_1_oracle_execution_after_protected_gates": true,
+    "github_gate_arming_for_candidate_1": true,
+    "oracle_namespace_cleanup": true,
+    "cluster_deletion_on_failure_pause_or_completion": true
+  },
+  "purpose_limit": "rearm-oracle-gate-in-frozen-workflow",
+  "explicitly_not_authorized": {
+    "operational_deployment": true,
+    "candidate_merge": true,
+    "protocol_change": true,
+    "runtime_publication": true,
+    "absolute_cap_increase": true,
+    "additional_candidates": true
+  },
+  "execution_controls": {
+    "project_gross_cost_budget_brl": 1998.268459,
+    "maximum_remaining_gross_envelope_brl": 161.985414,
+    "abort_on_financial_gate_failure": true,
+    "require_protected_human_gate": true,
+    "require_no_oracle_label_reveal_before_sealed_decisions": true,
+    "require_cluster_deletion_receipt": true,
+    "preserve_original_attempt_evidence": true
+  },
+  "cloud_execution_started": false,
+  "gcp_mutation_performed": false,
+  "github_mutation_performed_at_record_time": false
+}

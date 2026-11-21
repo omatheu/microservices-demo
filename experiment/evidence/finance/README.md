@@ -34,6 +34,13 @@ estão em
 [`cost-window-20260919-20261121-v1.8-preoracle1.json`](./cost-window-20260919-20261121-v1.8-preoracle1.json)
 e
 [`pre-oracle-1-financial-review-v1.8-20261121.json`](./pre-oracle-1-financial-review-v1.8-20261121.json).
+Como o run `44763951607` foi armado sem o rótulo Oracle, ele permanece
+preservado como tentativa incompleta sem Oracle. O pesquisador autorizou uma
+reexecução controlada de staging e PDT da mesma candidata exclusivamente para
+rearmar o gate Oracle no workflow congelado. O teto absoluto e o envelope
+restante não mudaram, e a exclusão do cluster continua obrigatória em falha,
+pausa ou conclusão. A exceção operacional está vinculada em
+[`paired-rerun-cloud-authorization-v1.8-20261121.json`](./paired-rerun-cloud-authorization-v1.8-20261121.json).
 
 Antes do bloco 1 da coleta v1.8, a candidata opaca
 `cand-2aeweofqphemins4` foi publicada no PR #25 sem labels de execução. A CI
