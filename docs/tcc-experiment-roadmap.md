@@ -1020,6 +1020,15 @@ controlada de staging e PDT da mesma candidata exclusivamente para rearmar o
 gate Oracle. A exceção não altera o protocolo, o teto bruto de R$1.998,268459
 ou o envelope restante de R$161,985414 e mantém a exclusão obrigatória do
 cluster em falha, pausa ou conclusão.
+O run rearmado `44864048460` confirmou CI e staging `PASS` em 3/3 repetições,
+mas foi invalidado antes do PDT: o baseline `operational`, exigido pela
+documentação de infraestrutura, não havia sido instalado após a recriação do
+cluster. O namespace estava vazio e a captura falhou ao procurar o deployment
+`loadgenerator`. Nenhum ciclo PDT ou Oracle executou e o rótulo Oracle não foi
+revelado. Os gates foram desarmados e o cluster foi excluído às
+`2026-11-21T09:48:53.293223964Z`. O retry exige que o Billing cubra essa
+exclusão, uma nova revisão/autorização financeira e o preflight explícito do
+baseline operacional antes de liberar o workflow protegido.
 
 ### Fase 8 — Análise final
 

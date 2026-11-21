@@ -41,6 +41,20 @@ rearmar o gate Oracle no workflow congelado. O teto absoluto e o envelope
 restante não mudaram, e a exclusão do cluster continua obrigatória em falha,
 pausa ou conclusão. A exceção operacional está vinculada em
 [`paired-rerun-cloud-authorization-v1.8-20261121.json`](./paired-rerun-cloud-authorization-v1.8-20261121.json).
+O run rearmado `44864048460` concluiu CI e três repetições válidas de staging,
+mas falhou antes do PDT porque o baseline `operational` não havia sido aplicado
+após a recriação temporária do cluster. A tentativa foi classificada como
+`infrastructure-invalid-before-pdt`, não revelou o rótulo Oracle e não integra
+o corpus confirmatório. O workflow limpou os workloads, os gates do GitHub
+foram desarmados e o cluster foi excluído às
+`2026-11-21T09:48:53.293223964Z`, preservando Billing, budgets, Artifact
+Registry, IAM e GitHub. A evidência está em
+[`paired-rerun-pr25-run44864048460-infrastructure-invalid.json`](../ci-cd/paired-rerun-pr25-run44864048460-infrastructure-invalid.json).
+A leitura Billing pós-exclusão ainda cobre uso somente até `05:00Z`, registra
+R$1.836,749562 brutos e R$161,518897 de margem observada; portanto, o fechamento
+financeiro e qualquer retry permanecem bloqueados até o export cobrir a
+exclusão. A observação pendente está em
+[`cost-window-20260919-20261121-v1.8-run44864048460-postdelete-pending.json`](./cost-window-20260919-20261121-v1.8-run44864048460-postdelete-pending.json).
 
 Antes do bloco 1 da coleta v1.8, a candidata opaca
 `cand-2aeweofqphemins4` foi publicada no PR #25 sem labels de execução. A CI
