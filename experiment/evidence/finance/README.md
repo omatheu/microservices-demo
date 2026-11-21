@@ -4,6 +4,37 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Depois do bloco 1 da coleta v1.8, o cluster foi excluído aproximadamente às
+`2026-11-20T16:21:00Z`. A consulta Billing limitada a 100 MB passou a cobrir
+uso encerrado às `2026-11-20T20:00:00Z`, com
+`billing_data_as_of=2026-11-20T23:44:58Z`. O custo bruto observado é
+R$1.836,283045, aumento de R$1,312602 sobre a baseline pré-bloco, e restam
+R$161,985414 até o teto absoluto de R$1.998,268459. Reutilizar integralmente o
+envelope pré-bloco de R$163,298016 projetaria R$1.999,581061 e excederia o teto
+em R$1,312602. Por isso, a etapa Oracle permanece inelegível até a adoção de um
+envelope reduzido de no máximo R$161,985414, a confirmação financeira humana e
+uma autorização Oracle separada. Nenhuma aprovação ou autorização cloud foi
+gerada. A observação, a elegibilidade fail-closed e a revisão estão em
+[`cost-window-20260919-20261121-v1.8-postblock1.json`](./cost-window-20260919-20261121-v1.8-postblock1.json),
+[`post-block-1-financial-review-eligibility-v1.8-20261121.json`](./post-block-1-financial-review-eligibility-v1.8-20261121.json)
+e
+[`post-block-1-financial-review-v1.8-20261121.json`](./post-block-1-financial-review-v1.8-20261121.json).
+Em 21/11/2026, o pesquisador aprovou explicitamente o envelope reduzido de
+R$161,985414, sem elevar o teto absoluto, e autorizou separadamente a
+recriação temporária do cluster e somente a execução Oracle da candidata 1.
+Staging e PDT não foram autorizados a repetir. Os registros vinculados estão em
+[`post-block-1-financial-approval-v1.8-20261121.json`](./post-block-1-financial-approval-v1.8-20261121.json)
+e
+[`oracle-block-1-cloud-authorization-v1.8-20261121.json`](./oracle-block-1-cloud-authorization-v1.8-20261121.json).
+Uma atualização Billing imediatamente anterior à janela Oracle confirmou o
+mesmo custo bruto, sem consumo adicional desde a revisão pós-bloco. A etapa
+ficou financeiramente elegível dentro do envelope reduzido, mas continua
+bloqueada até a confirmação do ambiente protegido. A evidência e a revisão
+estão em
+[`cost-window-20260919-20261121-v1.8-preoracle1.json`](./cost-window-20260919-20261121-v1.8-preoracle1.json)
+e
+[`pre-oracle-1-financial-review-v1.8-20261121.json`](./pre-oracle-1-financial-review-v1.8-20261121.json).
+
 Antes do bloco 1 da coleta v1.8, a candidata opaca
 `cand-2aeweofqphemins4` foi publicada no PR #25 sem labels de execução. A CI
 convencional pré-staging passou, mas staging, PDT e Oracle não executaram. Uma

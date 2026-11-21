@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "review_id": "pre-oracle-1-financial-review-v1.8-20261121",
+  "reviewed_at": "2026-11-21T03:41:42Z",
+  "project_id": "microservices-demo-tcc",
+  "protocol_id": "checkout-pdt-comparison-v1.8",
+  "candidate_id": "cand-2aeweofqphemins4",
+  "candidate_sequence": 1,
+  "decision": "eligible-for-authorized-oracle-window-subject-to-protected-human-gate",
+  "billing": {
+    "evidence_path": "experiment/evidence/finance/cost-window-20260919-20261121-v1.8-preoracle1.json",
+    "evidence_sha256": "a6a36b8abbdd62d1ad10e1240fc435faf68308988730a7dd048a1ccbee7e7938",
+    "billing_data_as_of": "2026-11-20T23:44:58Z",
+    "last_usage_end_time": "2026-11-20T20:00:00Z",
+    "gross_cost_brl": 1836.283045,
+    "credits_brl": -1836.289253,
+    "net_cost_brl": -0.006208,
+    "approved_remaining_gross_envelope_brl": 161.985414,
+    "project_gross_cost_budget_brl": 1998.268459,
+    "remaining_gross_budget_brl": 161.985414,
+    "absolute_cap_pass": true,
+    "cost_changed_since_post_block_review": false
+  },
+  "authorization_bindings": {
+    "financial_approval_path": "experiment/evidence/finance/post-block-1-financial-approval-v1.8-20261121.json",
+    "financial_approval_sha256": "3dc63bcd756c80456c3235926d703b309e92833f7142faa464adf43d850c994e",
+    "cloud_authorization_path": "experiment/evidence/finance/oracle-block-1-cloud-authorization-v1.8-20261121.json",
+    "cloud_authorization_sha256": "f17afc409e6a3c12239633e59ccdbffb8caa161817b6b450e2a6b7432abd9f59"
+  },
+  "execution_scope": {
+    "temporary_cluster_recreation": true,
+    "oracle_candidate_1": true,
+    "staging_rerun": false,
+    "pdt_rerun": false,
+    "operational_deployment": false,
+    "cluster_deletion_required": true
+  },
+  "remaining_gate": "protected-human-approval-for-isolated-oracle-validation",
+  "cloud_execution_started": false,
+  "gcp_mutation_performed": false,
+  "github_mutation_performed": false
+}

@@ -998,6 +998,22 @@ o corpus foram rotacionados. A coleta agora depende da publicação desse estado
 da instalação protegida da chave e da autorização financeira/cloud de cada
 bloco.
 
+No bloco 1 v1.8, a candidata `cand-2aeweofqphemins4` concluiu a esteira
+convencional, três repetições válidas de staging e três repetições PDT válidas.
+Controle e tratamento aprovaram `deploy-as-is`, o gate permaneceu em
+`awaiting-human-confirmation`, nenhum rótulo Oracle foi revelado e não houve
+mutação operacional. O cluster foi excluído após a coleta pareada. A consulta
+Billing pós-exclusão passou a cobrir a remoção e registrou R$1.836,283045
+brutos, com R$161,985414 restantes até o teto absoluto. A revisão local ficou
+fail-closed para Oracle porque reutilizar o envelope pré-bloco inteiro excederia
+o teto em R$1,312602. O próximo passo exige reduzir o envelope ao saldo atual,
+obter a confirmação financeira humana e autorizar separadamente a validação
+isolada no Oracle. Em 21/11/2026, o pesquisador aprovou o envelope reduzido de
+R$161,985414 e autorizou recriar temporariamente o cluster para executar somente
+o Oracle da candidata 1, com exclusão obrigatória em falha, pausa ou conclusão.
+Essa autorização não inclui nova execução de staging ou PDT. A confirmação do
+ambiente protegido do GitHub e a execução Oracle permanecem pendentes.
+
 ### Fase 8 — Análise final
 
 - [x] implementar composição do dataset a partir de evidências seladas;

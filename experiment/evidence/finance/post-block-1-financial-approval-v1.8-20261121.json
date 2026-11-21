@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "approval_id": "post-block-1-financial-approval-v1.8-20261121",
+  "approved_at": "2026-11-21T03:40:52Z",
+  "project_id": "microservices-demo-tcc",
+  "protocol_id": "checkout-pdt-comparison-v1.8",
+  "candidate_id": "cand-2aeweofqphemins4",
+  "candidate_sequence": 1,
+  "decision": "approved-reduced-post-block-financial-envelope",
+  "authorization_literal": "APPROVE_POST_BLOCK_1_FINANCIAL_REVIEW_V1_8_WITH_REMAINING_GROSS_ENVELOPE_161_985414_BRL_AND_ABSOLUTE_CAP_1998_268459_BRL",
+  "bindings": {
+    "financial_review_path": "experiment/evidence/finance/post-block-1-financial-review-v1.8-20261121.json",
+    "financial_review_sha256": "5596c63d292045d21fbe902dc7c0b02b67c2621c903c19a33613027b86d9ec56",
+    "eligibility_path": "experiment/evidence/finance/post-block-1-financial-review-eligibility-v1.8-20261121.json",
+    "eligibility_sha256": "cf5e65b97f39fd2ddfb234abac275df70391b06c0d9c0c5c972b335d662ee0ee",
+    "billing_evidence_path": "experiment/evidence/finance/cost-window-20260919-20261121-v1.8-postblock1.json",
+    "billing_evidence_sha256": "9af22eb87d935677de55e7083a239da17e0c1bbcfe8533bd25987979563e9df4"
+  },
+  "financial_limits": {
+    "observed_project_gross_cost_brl": 1836.283045,
+    "approved_remaining_gross_envelope_brl": 161.985414,
+    "project_gross_cost_budget_brl": 1998.268459,
+    "absolute_cap_increased": false
+  },
+  "authorization_boundaries": {
+    "financial_review_approved": true,
+    "cluster_recreation_authorized": false,
+    "staging_execution_authorized": false,
+    "pdt_execution_authorized": false,
+    "oracle_execution_authorized": false,
+    "candidate_merge_authorized": false
+  }
+}
