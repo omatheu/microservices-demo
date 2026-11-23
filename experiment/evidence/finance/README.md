@@ -4,6 +4,32 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Em `2026-11-23T01:06:47Z`, o guard incremental foi realinhado para a baseline
+final de R$1.841,214182 e o envelope de R$157,054277. O plano aplicado alterou
+somente um budget existente, sem criar ou destruir recursos; o plano posterior
+ficou sem diferenças e o inventário confirmou zero clusters. O recibo está em
+[`budget-guard-v1.9-final-realignment-20261123.json`](./budget-guard-v1.9-final-realignment-20261123.json).
+Em seguida, o bundle de componentes v1.9 congelou cinco políticas e dois
+manifests, manteve o protocolo e a coleta bloqueados e elevou a auditoria para
+15/17. A candidata exata e a auditoria estão em
+[`protocol-freeze-candidate-v1.9-20261123T010718Z.json`](./protocol-freeze-candidate-v1.9-20261123T010718Z.json)
+e
+[`pre-freeze-audit-v1.9-components-20261123T010718Z.json`](./pre-freeze-audit-v1.9-components-20261123T010718Z.json).
+A aprovação financeira humana canônica foi vinculada à candidata exata sem
+autorizar cloud. A auditoria passou a 16/17 e a elegibilidade da aprovação
+final do pesquisador está registrada em
+[`researcher-approval-eligibility-v1.9-20261123T011230Z.json`](./researcher-approval-eligibility-v1.9-20261123T011230Z.json).
+Após a confirmação explícita do pesquisador sobre a coleta parcial, a auditoria
+passou 17/17 e o finalizador promoveu a v1.9 para `frozen` em
+`2026-11-23T01:15:54Z`. O protocolo congelado possui SHA-256
+`7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae`.
+Os recibos estão em
+[`pre-freeze-audit-v1.9-ready-20261123T011554Z.json`](./pre-freeze-audit-v1.9-ready-20261123T011554Z.json)
+e
+[`protocol-freeze-finalization-v1.9-20261123T011554Z.json`](./protocol-freeze-finalization-v1.9-20261123T011554Z.json).
+O congelamento mantém `cloud_execution_authorized=false`; nenhum corpus v1.9
+foi gerado nesta etapa.
+
 Após a tentativa inválida `45020108835`, o cluster foi excluído em
 `2026-11-22T12:22:08Z`. A consulta final somente leitura, limitada a 100 MB,
 agora cobre uso encerrado às `2026-11-22T14:00:00Z`, com

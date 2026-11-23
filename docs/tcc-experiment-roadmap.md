@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 22 de novembro de 2026.
+> **Última verificação:** 23 de novembro de 2026.
 
 ## Objetivo do experimento
 
@@ -136,13 +136,22 @@ como Partial Digital Twin.
 - [x] Emenda operacional v1.9 preparada localmente: retry sob `ERR` trap
   testado, supervisão dos túneis, quiescência entre tentativas, estabilidade
   contínua, bloqueio de snapshot PDT degradado e guards financeiros Terraform.
-- [x] Guard financeiro v1.9 aplicado no GCP sem recriar GKE: o budget incremental
-  foi alinhado ao envelope então vigente de R$157,455476, com zero recursos
-  adicionados ou destruídos; o cluster permaneceu ausente. A baseline final
-  reduziu a margem para R$157,054277 e exige realinhar somente os limiares de
-  alerta antes de outra execução cloud.
+- [x] Guard financeiro v1.9 realinhado no GCP sem recriar GKE: o budget
+  incremental usa a baseline final de R$1.841,214182 e o envelope de
+  R$157,054277; foram 0 recursos adicionados, 1 budget alterado em-place e 0
+  destruídos, com plano posterior sem drift e zero clusters.
 - [x] Protocolo, políticas e manifests v1.9 retornaram ao estado fail-closed;
   aprovações e corpus v1.8 foram retirados da área ativa sem revelar rótulos.
+- [x] Bundle local de componentes v1.9 aplicado: cinco políticas e dois
+  manifests congelados, 51/51 hashes válidos e auditoria em 15/17; faltam
+  somente a revisão financeira e a aprovação do pesquisador.
+- [x] Revisão financeira v1.9 aprovada contra a baseline final e o protocolo
+  exato, sem autorização cloud; auditoria em 16/17 e elegibilidade confirmada
+  para a aprovação final do pesquisador.
+- [x] Aprovação do pesquisador v1.9 registrada após reconhecer a coleta parcial;
+  auditoria 17/17 e protocolo congelado em `2026-11-23T01:15:54Z`, com
+  SHA-256 `7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae`,
+  sem autorização cloud e sem recriar o cluster.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -271,9 +280,9 @@ execução autorizada em cloud ou análise dos resultados.
 25. [concluído parcialmente e invalidado para inferência] preservar as
    tentativas v1.8, registrar a regressão de orquestração/infraestrutura e
    aplicar localmente a emenda v1.9 sem reinterpretar os resultados;
-26. [Billing pós-exclusão concluído] publicar e incorporar a emenda v1.9,
-   realinhar os alertas, renovar as duas aprovações, passar a auditoria 17/17,
-   congelar a v1.9 e gerar chave e corpus novos;
+26. [congelamento concluído localmente em 23/11/2026] aprovação do pesquisador
+   registrada, auditoria 17/17 e protocolo v1.9 congelado; resta gerar chave e
+   corpus novos antes de qualquer execução;
 27. materializar candidatas v1.9 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
@@ -698,16 +707,18 @@ Os operadores candidatos e os controles estão catalogados em
 **Estado:** os congelamentos anteriores permanecem preservados no histórico do
 Git. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-está bloqueado como candidato v1.9; mantém 18 candidatas, três repetições, seis
+está congelado como v1.9; mantém 18 candidatas, três repetições, seis
 blocos, a mesma regra de agregação e o mesmo plano pareado. A baseline financeira
 final pós-exclusão é R$1.841,214182, com envelope máximo de R$157,054277 até o
-teto absoluto; a revisão somente leitura confirmou elegibilidade para aprovação
-financeira humana. Os runtimes v1.8
+teto absoluto; as aprovações financeira e do pesquisador vinculam o candidato
+exato e a auditoria pré-freeze passou 17/17. Os runtimes v1.8
 corrigidos permanecem publicados e vinculados porque a v1.9 altera somente a
 orquestração externa às imagens. O corpus v1.8 `corpus-zkf5mounepuhq` e todos
-os anteriores são históricos; não há corpus ativo v1.9. A auditoria atual passa
-8/17 controles e falha fechado até congelar componentes e renovar as duas
-aprovações.
+os anteriores são históricos; não há corpus ativo v1.9. As cinco políticas e
+os dois manifests foram congelados como um bundle local coerente. O protocolo
+v1.9 final possui SHA-256
+`7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae`;
+isso não autoriza execução cloud.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -1126,8 +1137,8 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [ ] renovar o congelamento do protocolo v1.9, corpus, sementes e regra de
-  parada antes de retomar a coleta;
+- [ ] gerar e validar o corpus v1.9, preservando as sementes e a regra de
+  parada do protocolo já congelado, antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;
 - [x] randomizar a ordem das candidatas;

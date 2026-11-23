@@ -1,0 +1,23 @@
+{
+  "acknowledgements": {
+    "changes_require_new_protocol_version": true,
+    "no_oracle_labels_revealed_before_amendment": true,
+    "partial_collection_before_amendment_reviewed": true,
+    "prior_evidence_preserved_without_reinterpretation": true,
+    "protocol_reviewed": true
+  },
+  "approved_at": "2026-11-23T01:14:51Z",
+  "approved_by": "omatheu",
+  "candidate_protocol_sha256": "d47ddf740f59b248dabf567b84274f11541889693e35a0016678135ccdf4de2d",
+  "cloud_execution_authorized": false,
+  "decision": "approve-protocol-freeze",
+  "prior_collection": {
+    "candidate_flows_started": 6,
+    "complete_decision_pairs": 1,
+    "evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
+    "oracle_adjudications": 0,
+    "oracle_labels_revealed": 0
+  },
+  "protocol_id": "checkout-pdt-comparison-v1.9",
+  "schema_version": "1.1.0"
+}

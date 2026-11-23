@@ -2,6 +2,7 @@ import json
 import os
 import pathlib
 import subprocess
+import tempfile
 import unittest
 
 
@@ -43,14 +44,28 @@ class RepeatedComparativeCandidateRunnerTests(unittest.TestCase):
         self.assertNotIn("contains active pods", result.stderr)
 
     def test_unfrozen_protocol_is_rejected_before_candidate_or_cluster_access(self):
-        result = subprocess.run(
-            [str(SCRIPT_PATH)],
-            cwd=REPO_ROOT,
-            env=self.environment(cloud="true", cost="true"),
-            capture_output=True,
-            text=True,
-            check=False,
-        )
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            protocol = json.loads(
+                (REPO_ROOT / "experiment/protocol/protocol-v1.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            protocol["status"] = "pre-registration-candidate"
+            protocol["confirmatory_collection_allowed"] = False
+            protocol["frozen_at"] = None
+            protocol_path = pathlib.Path(temporary_directory) / "protocol.json"
+            protocol_path.write_text(json.dumps(protocol), encoding="utf-8")
+            environment = self.environment(cloud="true", cost="true")
+            environment["PROTOCOL_FILE"] = str(protocol_path)
+
+            result = subprocess.run(
+                [str(SCRIPT_PATH)],
+                cwd=REPO_ROOT,
+                env=environment,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(
