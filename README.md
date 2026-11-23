@@ -24,10 +24,11 @@ executed Oracle, and no Oracle label was revealed. Operational amendment v1.9
 fixes the retry control flow, supervises runner tunnels, requires inter-attempt
 quiescence and continuous workload stability, prevents degraded PDT snapshots,
 and binds Terraform budgets to the exact protocol ceilings. Executable
-regression tests cover those controls. The policies and runtime manifests are
-now frozen as one v1.9 component bundle while the protocol remains a locked
-pre-registration candidate; the former v1.8 approvals and public corpus were
-retired from the active area and must be renewed before any cloud execution.
+regression tests cover those controls. The policies, runtime manifests and
+protocol are frozen as one v1.9 bundle after the renewed financial and
+researcher approvals and a 17/17 audit. The former v1.8 public corpus was
+retired without revealing Oracle labels; a new v1.9 corpus was generated with
+a fresh protected key before any further cloud execution.
 The final post-exclusion financial baseline is R$1,841.214182 gross with at
 most R$157.054277 remaining under the unchanged R$1,998.268459 absolute cap.
 The Billing export covers the cluster deletion, the cluster remains absent and
@@ -42,10 +43,11 @@ The passive Oracle GitHub controls remain installed, while every execution
 switch is `false` and no GKE cluster exists. Runtime publication was performed
 through its isolated Artifact Registry-only path for earlier protocol versions.
 The immutable v1.8 runtime images remain reusable because v1.9 changes only
-runner-side orchestration. The renewed financial review is approved without
-authorizing cloud, and the audit passes 16/17; only researcher approval remains
-before the final 17/17 freeze. No v1.9 corpus is active. A new blinded corpus
-and explicit block authorization remain required after freezing.
+runner-side orchestration. The renewed financial review and researcher
+approval do not authorize cloud. The audit passes 17/17, and the active blinded
+corpus `corpus-2p6gcipdrzgxg` contains 18 opaque candidates in six blocks of
+three. Explicit financial and cloud authorization remains required before any
+block can execute.
 
 ## Architecture
 

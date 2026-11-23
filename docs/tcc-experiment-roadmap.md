@@ -152,6 +152,9 @@ como Partial Digital Twin.
   auditoria 17/17 e protocolo congelado em `2026-11-23T01:15:54Z`, com
   SHA-256 `7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae`,
   sem autorização cloud e sem recriar o cluster.
+- [x] Chave de cegamento v1.9 rotacionada e instalada no ambiente protegido;
+  corpus opaco `corpus-2p6gcipdrzgxg` validado com 18 candidatas, três
+  repetições e seis blocos, mantendo todos os kill switches em `false`.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -280,9 +283,9 @@ execução autorizada em cloud ou análise dos resultados.
 25. [concluído parcialmente e invalidado para inferência] preservar as
    tentativas v1.8, registrar a regressão de orquestração/infraestrutura e
    aplicar localmente a emenda v1.9 sem reinterpretar os resultados;
-26. [congelamento concluído localmente em 23/11/2026] aprovação do pesquisador
-   registrada, auditoria 17/17 e protocolo v1.9 congelado; resta gerar chave e
-   corpus novos antes de qualquer execução;
+26. [concluído em 23/11/2026] aprovação do pesquisador registrada, auditoria
+   17/17, protocolo v1.9 congelado, chave rotacionada e corpus opaco novo
+   validado antes de qualquer execução;
 27. materializar candidatas v1.9 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
@@ -714,7 +717,8 @@ teto absoluto; as aprovações financeira e do pesquisador vinculam o candidato
 exato e a auditoria pré-freeze passou 17/17. Os runtimes v1.8
 corrigidos permanecem publicados e vinculados porque a v1.9 altera somente a
 orquestração externa às imagens. O corpus v1.8 `corpus-zkf5mounepuhq` e todos
-os anteriores são históricos; não há corpus ativo v1.9. As cinco políticas e
+os anteriores são históricos; o corpus ativo v1.9 é
+`corpus-2p6gcipdrzgxg`. As cinco políticas e
 os dois manifests foram congelados como um bundle local coerente. O protocolo
 v1.9 final possui SHA-256
 `7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae`;
@@ -1137,7 +1141,7 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [ ] gerar e validar o corpus v1.9, preservando as sementes e a regra de
+- [x] gerar e validar o corpus v1.9, preservando as sementes e a regra de
   parada do protocolo já congelado, antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;
