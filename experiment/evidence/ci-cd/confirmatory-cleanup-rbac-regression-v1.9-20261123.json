@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "confirmatory-cleanup-rbac-regression-v1.9-20261123",
+  "captured_at": "2026-11-23T03:03:37Z",
+  "protocol_id": "checkout-pdt-comparison-v1.9",
+  "workflow_run": {
+    "repository": "omatheu/microservices-demo",
+    "pull_request_number": 30,
+    "run_id": "45101639286",
+    "run_url": "https://github.com/omatheu/microservices-demo/actions/runs/45101639286",
+    "head_sha": "c36636cd12c68ca44a189855ca1991fbea904c8d",
+    "paired_job_id": "137453632336",
+    "conclusion": "failure"
+  },
+  "opaque_candidate": {
+    "candidate_id": "cand-iyzzv33o2ar3bjbq",
+    "intended_label_revealed": false,
+    "oracle_manifest_accessed": false
+  },
+  "preserved_pipeline_result": {
+    "pipeline_id": "paired-cand-iyzzv33o2ar3bjbq-confirmatory-20261123T024351Z",
+    "summary_sha256": "53a0a0576a7169d53141d820c31054b4a676ad275ad8de69dc6957475d55f5ab",
+    "control_decision": "block",
+    "treatment_decision": "block",
+    "treatment_source": "inherited-control-block",
+    "staging_executed": false,
+    "pdt_executed": false,
+    "human_confirmation_required": false,
+    "operational_mutation_performed": false
+  },
+  "failure": {
+    "step": "Enforce cleanup of billable experimental workloads",
+    "missing_permissions": [
+      {
+        "api_group": "",
+        "resource": "endpoints",
+        "verb": "list",
+        "namespaces": [
+          "staging",
+          "pdt"
+        ]
+      },
+      {
+        "api_group": "discovery.k8s.io",
+        "resource": "endpointslices",
+        "verb": "list",
+        "namespaces": [
+          "staging",
+          "pdt"
+        ]
+      }
+    ],
+    "classification": "infrastructure-invalid",
+    "oracle_job_conclusion": "skipped",
+    "oracle_adjudication_produced": false,
+    "oracle_label_revealed": false
+  },
+  "fail_safe": {
+    "github_execution_gates_disabled": true,
+    "pull_request_execution_labels_removed": true,
+    "cluster_deleted": true,
+    "cluster_absence_verified_at": "2026-11-23T02:55:30Z",
+    "persistent_billing_and_identity_resources_preserved": true
+  },
+  "disposition": {
+    "confirmatory_observation_complete": false,
+    "include_in_v1_9_confirmatory_analysis": false,
+    "repeat_under_same_protocol_or_corpus": false,
+    "required_action": "Version the cleanup RBAC and preflight mechanics, renew the freeze and rotate the blinded corpus before another confirmatory execution."
+  },
+  "cloud_execution_authorized": false
+}

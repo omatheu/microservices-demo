@@ -1,6 +1,12 @@
 # Corpus confirmatório
 
-O corpus confirmatório ativo v1.9 foi gerado em 23/11/2026 UTC somente depois
+Não existe corpus confirmatório ativo enquanto a v1.10 aguarda revisão
+financeira, aprovação do pesquisador e novo congelamento 17/17. A emenda
+operacional v1.10 retirou o corpus v1.9 da área ativa depois da tentativa
+incompleta `45101639286`, sem abrir o manifesto Oracle nem revelar rótulos. Uma
+nova chave e um corpus novo serão obrigatórios depois do congelamento v1.10.
+
+O corpus confirmatório histórico v1.9 foi gerado em 23/11/2026 UTC somente depois
 da revisão financeira, aprovação do pesquisador, auditoria pré-freeze 17/17 e
 congelamento do protocolo. O corpus `corpus-2p6gcipdrzgxg` contém 18
 identificadores opacos, três repetições por candidata e seis blocos de três. Ele
@@ -11,7 +17,7 @@ tem SHA-256
 e compromisso Oracle
 `3936c0b850c01fc5fea67214bacf9dd1f22d8ea0a5c68179d11fcd95d999c32c`.
 A chave e o manifesto Oracle permanecem privados com permissão `0600`; somente
-a chave codificada foi instalada no secret protegido. O corpus não autoriza
+a chave codificada foi instalada no secret protegido. O corpus não autorizava
 execução cloud por si só. O recibo sanitizado da rotação está em
 [`../../evidence/oracle/corpus-rotation-v1.9-20261123T015519Z.json`](../../evidence/oracle/corpus-rotation-v1.9-20261123T015519Z.json).
 
@@ -149,9 +155,10 @@ históricos em diretório local privado. As chaves e os manifestos Oracle v1.3,
 v1.4, v1.5 e v1.6 também permanecem nos diretórios privados ignorados pelo Git, com
 permissões 0600, e nunca podem ser copiados para este diretório versionado. O
 secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` contém a chave v1.9 correspondente ao corpus
-ativo. O valor permanece oculto e só é disponibilizado ao job Oracle do
-ambiente protegido; os kill switches permanecem desarmados.
+`TCC_ORACLE_BLINDING_KEY_B64` ainda contém a chave histórica v1.9, agora
+inelegível para execução. O valor permanece oculto e os kill switches seguem
+desarmados; depois do congelamento v1.10, o secret deverá receber somente a
+chave nova correspondente ao corpus novo.
 
 O mesmo ambiente protegido deve conter:
 

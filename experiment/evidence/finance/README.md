@@ -4,6 +4,16 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Após a tentativa incompleta v1.9 `45101639286`, a emenda v1.10 aplicou
+localmente o bundle de componentes em `2026-11-23T03:23:36Z`. O protocolo
+permanece `pre-registration-candidate`, a coleta está desabilitada e os 52
+inputs vinculados foram validados. A auditoria passa 15/17; faltam revisão
+financeira pós-exclusão completa e aprovação do pesquisador. Nenhum recurso
+cloud foi criado ou alterado. Os recibos estão em
+[`protocol-freeze-candidate-v1.10-20261123T032336Z.json`](./protocol-freeze-candidate-v1.10-20261123T032336Z.json)
+e
+[`pre-freeze-audit-v1.10-components-20261123T032336Z.json`](./pre-freeze-audit-v1.10-components-20261123T032336Z.json).
+
 Antes do bloco 1 da coleta v1.9, a candidata opaca
 `cand-iyzzv33o2ar3bjbq` foi publicada no PR #30 sem labels de execução. Os
 cinco checks públicos passaram. O preflight convencional de engenharia selou

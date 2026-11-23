@@ -1,10 +1,10 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** o protocolo operacional v1.9 está congelado na `main` após as
-> aprovações financeira e do pesquisador e auditoria 17/17. Políticas e
-> manifests permanecem vinculados ao mesmo bundle; o corpus v1.8 foi retirado
-> da área ativa sem revelar rótulos e o corpus opaco v1.9 foi gerado com chave
-> nova e compromisso Oracle validado.
+> **Status:** a emenda operacional v1.10 está implementada localmente e o
+> protocolo voltou ao estado `pre-registration-candidate`, com coleta
+> confirmatória bloqueada. O congelamento e o corpus v1.9 foram preservados
+> historicamente e retirados da área ativa sem revelar rótulos. Aprovações,
+> nova auditoria 17/17 e corpus v1.10 ainda não existem.
 > Nenhuma execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
@@ -134,6 +134,18 @@ e compromisso Oracle
 A chave foi instalada no secret protegido `TCC_ORACLE_BLINDING_KEY_B64`; o
 manifesto Oracle permanece privado, os três kill switches continuam em
 `false` e nenhuma execução cloud foi autorizada.
+
+Na primeira candidata v1.9, o run `45101639286` selou um bloqueio convencional
+e a decisão de tratamento herdada, sem executar staging ou PDT. O cleanup
+final, porém, não podia listar Endpoints nem EndpointSlices nos namespaces
+mutáveis; o job falhou, o Oracle foi ignorado e nenhum rótulo foi revelado. O
+registro
+[`../evidence/ci-cd/confirmatory-cleanup-rbac-regression-v1.9-20261123.json`](../evidence/ci-cd/confirmatory-cleanup-rbac-regression-v1.9-20261123.json)
+preserva a tentativa como `infrastructure-invalid`. A emenda
+[`amendments/orchestration-v1.10-cleanup-rbac-preflight.json`](./amendments/orchestration-v1.10-cleanup-rbac-preflight.json)
+acrescenta somente leitura desses recursos e um preflight antes da candidata.
+O protocolo v1.10 permanece fail-closed; o Billing pós-run, as duas aprovações,
+o congelamento 17/17 e um corpus novo continuam obrigatórios.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
