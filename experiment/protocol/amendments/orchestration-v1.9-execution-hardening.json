@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "orchestration-v1.9-execution-hardening",
+  "status": "implemented-awaiting-freeze",
+  "authorized_at": "2026-11-22T15:02:56Z",
+  "authorization_literal": "Aplique as correções",
+  "authorization_context": "The researcher selected the complete pre-recreation remediation list and explicitly requested that every listed correction be applied. The authorization is limited to local implementation and protocol preparation; it does not authorize cloud execution, runtime publication, pull-request publication or merge.",
+  "publication_authorization": {
+    "authorized_at": "2026-11-23T00:48:15Z",
+    "authorization_literal": "continue",
+    "scope": "Publish the completed v1.9 execution-hardening changes and open a review pull request. This does not authorize merge, cloud execution, runtime publication, protocol approvals, corpus generation or candidate execution."
+  },
+  "reason": "The v1.8 candidate-1 attempts exposed orchestration and infrastructure controls that can suppress the preregistered retry or misclassify runner tunnel loss as candidate behavior. A forensic review also found that repetition cleanup did not prove network quiescence, PDT source capture did not prove continuous operational health, and the active Terraform variable file diverged from the frozen absolute cap.",
+  "preserved_prior_collection": {
+    "candidate_flows_started_before_amendment": 6,
+    "complete_decision_pairs_before_amendment": 1,
+    "oracle_adjudications_before_amendment": 0,
+    "oracle_labels_revealed_before_amendment": 0,
+    "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation"
+  },
+  "superseded_freeze": {
+    "git_commit": "6419521c6a0cd4f90b8d000959dc252f259ab263",
+    "git_tree": "2f70f8a4000430beab7685ff197714169e00b848",
+    "protocol_id": "checkout-pdt-comparison-v1.8",
+    "protocol_sha256": "c55d9a8d85c2ed3e0d1709e5bb15244723e8b60d1714e29e7d73c79a7438ab86",
+    "frozen_at": "2026-11-20T14:25:07Z",
+    "corpus_id": "corpus-zkf5mounepuhq",
+    "public_corpus_sha256": "53ab1e6fa4e47d462d5b56556a04c29a4693d00367275208bd214cb5cf909d6f",
+    "pdt_runtime_manifest_sha256": "af7a04690db78d816ba48bcd06b948dad1053ac9f9cde0398c47d4c5ee021300",
+    "oracle_suite_manifest_sha256": "3901092fc1d70f23d2ef9dbf32c1cd868904b9b0c68b116a6796cb4fb93cbaff"
+  },
+  "incident_evidence": {
+    "path": "experiment/evidence/ci-cd/confirmatory-execution-hardening-review-v1.8-20261122.json",
+    "sha256": "d941662a95c417324fe087a03cc1877795e33080ebfe657cc7a1389bdf086bfa"
+  },
+  "authorized_changes": [
+    "Disable and restore the Bash ERR trap only around expected-failure command pipelines so the original and replacement staging and PDT attempts are both reachable.",
+    "Add an executable regression proving a first failed attempt and a second successful attempt under the production retry helper.",
+    "Supervise every staging, PDT and Oracle port-forward process and classify tunnel loss as infrastructure-invalid rather than candidate failure.",
+    "Require cleanup to reach zero experimental resources and remain quiescent for a fixed interval before a replacement attempt starts.",
+    "Require non-candidate workloads to remain continuously ready with stable restart counts before staging and PDT measurement while preserving checkoutservice unavailability as candidate behavior.",
+    "Require the operational source to remain continuously healthy and bind the stability receipt into every PDT snapshot.",
+    "Bind Terraform cluster and budget plans to the exact protocol gross cap and incremental ceiling, and block cluster creation while the protocol is not frozen.",
+    "Renew input hashes, policies, approvals, protocol freeze and blinded corpus as v1.9 before any further confirmatory execution."
+  ],
+  "explicitly_unchanged": [
+    "research question and primary estimand",
+    "candidate count, block count and majority repetition rule",
+    "mutation operators and parameter spaces",
+    "PDT model thresholds and deployable alternatives",
+    "Oracle functional and performance classification rules",
+    "absolute project gross cost cap",
+    "human confirmation requirement before Oracle",
+    "mandatory cleanup and post-block financial review"
+  ],
+  "financial_guardrail": {
+    "absolute_project_budget_brl": 1998.268459,
+    "maximum_pre_amendment_remaining_envelope_brl": 157.455476,
+    "post_run_45020108835_export_complete": true,
+    "post_run_45020108835_final_gross_cost_brl": 1841.214182,
+    "post_run_45020108835_remaining_envelope_brl": 157.054277,
+    "post_run_45020108835_billing_data_as_of": "2026-11-22T17:09:01Z",
+    "post_run_45020108835_last_usage_end_time": "2026-11-22T14:00:00Z",
+    "post_run_45020108835_cluster_deleted_at": "2026-11-22T12:22:08Z",
+    "post_run_45020108835_evidence": {
+      "path": "experiment/evidence/finance/cost-window-20260919-20261122-v1.8-run45020108835-postdelete-final.json",
+      "sha256": "96bf50676ad6169636a1e6c1206456535c9173a047bcfd2030aeb4c5729ed7c6"
+    },
+    "new_financial_review_required_before_freeze": true,
+    "absolute_budget_increased": false
+  },
+  "runtime_publication_required": false,
+  "implementation_completed_at": "2026-11-22T17:09:01Z",
+  "security_policy_weakened": false,
+  "cloud_execution_authorized": false,
+  "protocol_freeze_authorized": false,
+  "pull_request_publication_authorized": true,
+  "merge_authorized": false
+}

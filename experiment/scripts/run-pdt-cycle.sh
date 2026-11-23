@@ -3,6 +3,7 @@
 set -euo pipefail
 
 repo_root=$(git rev-parse --show-toplevel)
+source "${repo_root}/experiment/scripts/lib/port-forward-supervisor.sh"
 candidate_file=${CANDIDATE_FILE:-${repo_root}/experiment/pdt/candidates/current.json}
 conventional_decision_file=${CONVENTIONAL_DECISION:-}
 mode=${MODE:-engineering}
@@ -23,7 +24,6 @@ candidate_definition_sha256=$(sha256sum "$candidate_file" | cut -d ' ' -f1)
 cycle_timestamp=$(date -u +%Y%m%dT%H%M%SZ)
 cycle_id="pdt-${candidate_id}-r${repetition}-${cycle_timestamp}"
 cycle_dir="${repo_root}/experiment/evidence/pdt-cycles/${cycle_id}"
-port_forward_pid=""
 controller_manifest=""
 controller_job=""
 
@@ -106,16 +106,8 @@ write_status() {
     '{cycle_id: $cycle_id, state: $state, updated_at: $timestamp}' > "${cycle_dir}/status.json"
 }
 
-stop_port_forward() {
-  if [[ -n "$port_forward_pid" ]] && kill -0 "$port_forward_pid" 2>/dev/null; then
-    kill "$port_forward_pid" 2>/dev/null || true
-    wait "$port_forward_pid" 2>/dev/null || true
-  fi
-  port_forward_pid=""
-}
-
 cleanup_pdt() {
-  stop_port_forward
+  stop_supervised_port_forwards
   kubectl delete deployment loadgenerator --namespace "$namespace" --ignore-not-found --wait=true --timeout=5m >/dev/null 2>&1 || true
   kubectl delete -k "$pdt_overlay" --ignore-not-found --wait=true --timeout=10m >/dev/null 2>&1 || true
 }
@@ -136,6 +128,42 @@ on_error() {
   fi
   cleanup_controller
   cleanup_pdt
+}
+
+fail_infrastructure() {
+  local phase=$1
+  local reason=$2
+  jq -n --arg cycle_id "$cycle_id" --arg phase "$phase" --arg reason "$reason" \
+    --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" '
+    {
+      schema_version: "1.0.0",
+      cycle_id: $cycle_id,
+      classification: "infrastructure-invalid",
+      phase: $phase,
+      reason: $reason,
+      recorded_at: $timestamp,
+      pdt_decision_produced: false
+    }' >"${cycle_dir}/infrastructure-invalid.json"
+  trap - ERR
+  write_status infrastructure-invalid
+  cleanup_controller
+  cleanup_pdt
+  exit "$SUPERVISED_PORT_FORWARD_EXIT_CODE"
+}
+
+guarded_curl() {
+  local phase=$1
+  shift
+  local curl_status
+  if "$@"; then
+    return 0
+  else
+    curl_status=$?
+  fi
+  if ! assert_supervised_port_forwards "$phase"; then
+    return "$SUPERVISED_PORT_FORWARD_EXIT_CODE"
+  fi
+  return "$curl_status"
 }
 
 write_status running
@@ -220,9 +248,19 @@ while IFS= read -r alternative; do
   done < <(jq -r '.immutable_artifacts[] | @base64' "$conventional_decision_file")
 
   mapfile -t deployments < <(kubectl get deployments --namespace "$namespace" -o json | jq -r '.items[].metadata.name' | sort)
+  : >"${alternative_dir}/rollout.log"
   for deployment in "${deployments[@]}"; do
-    kubectl rollout status "deployment/${deployment}" --namespace "$namespace" --timeout=12m
-  done > "${alternative_dir}/rollout.log"
+    if [[ "$deployment" == "checkoutservice" ]]; then
+      if ! kubectl rollout status "deployment/${deployment}" --namespace "$namespace" --timeout=12m \
+        >>"${alternative_dir}/rollout.log" 2>&1; then
+        printf '%s\n' "checkoutservice rollout unavailable; preserving as candidate behavior" \
+          >>"${alternative_dir}/candidate-unavailability.log"
+      fi
+    elif ! kubectl rollout status "deployment/${deployment}" --namespace "$namespace" --timeout=12m \
+      >>"${alternative_dir}/rollout.log" 2>&1; then
+      fail_infrastructure rollout "non-candidate deployment ${deployment} did not become ready"
+    fi
+  done
 
   jq -n --arg namespace "$namespace" --slurpfile snapshot "$snapshot_file" '
     ($snapshot[0].synchronized_state.workloads[] | select(.name == "loadgenerator")) as $load |
@@ -244,17 +282,39 @@ while IFS= read -r alternative; do
       }
     }' > "${alternative_dir}/loadgenerator.json"
   kubectl apply -f "${alternative_dir}/loadgenerator.json" >/dev/null
-  kubectl rollout status deployment/loadgenerator --namespace "$namespace" --timeout=8m >> "${alternative_dir}/rollout.log"
+  if ! kubectl rollout status deployment/loadgenerator --namespace "$namespace" --timeout=8m \
+    >>"${alternative_dir}/rollout.log" 2>&1; then
+    fail_infrastructure rollout "non-candidate deployment loadgenerator did not become ready"
+  fi
 
-  kubectl port-forward --namespace "$namespace" service/frontend "${local_port}:80" > "${alternative_dir}/port-forward.log" 2>&1 &
-  port_forward_pid=$!
+  if ! NAMESPACE="$namespace" MINIMUM_EXPECTED_DEPLOYMENTS=12 EXCLUDED_DEPLOYMENTS=checkoutservice \
+    OUTPUT_FILE="${alternative_dir}/workload-stability.json" \
+    "${repo_root}/experiment/scripts/wait-for-workload-stability.sh" >/dev/null; then
+    fail_infrastructure workload-stability "PDT workloads did not remain continuously ready"
+  fi
+
+  if ! start_supervised_port_forward "$namespace" frontend "$local_port" 80 "${alternative_dir}/port-forward.log"; then
+    fail_infrastructure port-forward-startup "PDT frontend port-forward did not become ready"
+  fi
+  frontend_ready=false
   for _ in $(seq 1 60); do
-    if curl -fsS --max-time 2 "http://127.0.0.1:${local_port}/" >/dev/null 2>&1; then break; fi
+    if guarded_curl port-forward-health curl -fsS --max-time 2 "http://127.0.0.1:${local_port}/" >/dev/null 2>&1; then
+      frontend_ready=true
+      break
+    else
+      curl_status=$?
+      if (( curl_status == SUPERVISED_PORT_FORWARD_EXIT_CODE )); then
+        fail_infrastructure port-forward-health "PDT frontend port-forward was lost during health verification"
+      fi
+    fi
     sleep 1
   done
-  curl -fsS --max-time 5 "http://127.0.0.1:${local_port}/" >/dev/null
+  [[ "$frontend_ready" == "true" ]] || fail_infrastructure port-forward-health "PDT frontend tunnel never became healthy"
 
   if (( warmup_seconds > 0 )); then sleep "$warmup_seconds"; fi
+  if ! assert_supervised_port_forwards post-warmup; then
+    fail_infrastructure post-warmup "PDT frontend port-forward was lost during warmup"
+  fi
   kubectl get deployments --namespace "$namespace" -o json > "${alternative_dir}/deployments-start.json"
   kubectl get pods --namespace "$namespace" -o json > "${alternative_dir}/pods-start.json"
   restart_start=$(jq '[.items[].status.containerStatuses[]?.restartCount] | add // 0' "${alternative_dir}/pods-start.json")
@@ -267,12 +327,21 @@ while IFS= read -r alternative; do
   paths=("/" "/product/0PUK6V6EV0" "/cart" "/setCurrency")
   methods=("GET" "GET" "GET" "POST")
   for sequence in $(seq 1 "$sample_count"); do
+    if ! assert_supervised_port_forwards "http-sample-${sequence}-preflight"; then
+      fail_infrastructure "http-sample-${sequence}-preflight" "PDT frontend port-forward was lost before sampling"
+    fi
     profile_index=$(((sequence - 1) % 4)); path=${paths[$profile_index]}; method=${methods[$profile_index]}
     timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
     if [[ "$method" == "POST" ]]; then
-      curl_result=$(curl --silent --show-error --output /dev/null --max-time 15 --request POST --data 'currency_code=USD' --write-out '%{http_code},%{time_total}' "http://127.0.0.1:${local_port}${path}" || printf '000,15.000000')
+      if curl_result=$(guarded_curl "http-sample-${sequence}" curl --silent --show-error --output /dev/null --max-time 15 --request POST --data 'currency_code=USD' --write-out '%{http_code},%{time_total}' "http://127.0.0.1:${local_port}${path}"); then :; else
+        curl_status=$?; (( curl_status == SUPERVISED_PORT_FORWARD_EXIT_CODE )) && fail_infrastructure "http-sample-${sequence}" "PDT frontend port-forward was lost during sampling"
+        curl_result='000,15.000000'
+      fi
     else
-      curl_result=$(curl --silent --show-error --output /dev/null --max-time 15 --write-out '%{http_code},%{time_total}' "http://127.0.0.1:${local_port}${path}" || printf '000,15.000000')
+      if curl_result=$(guarded_curl "http-sample-${sequence}" curl --silent --show-error --output /dev/null --max-time 15 --write-out '%{http_code},%{time_total}' "http://127.0.0.1:${local_port}${path}"); then :; else
+        curl_status=$?; (( curl_status == SUPERVISED_PORT_FORWARD_EXIT_CODE )) && fail_infrastructure "http-sample-${sequence}" "PDT frontend port-forward was lost during sampling"
+        curl_result='000,15.000000'
+      fi
     fi
     http_status=${curl_result%%,*}; latency_seconds=${curl_result#*,}
     latency_ms=$(awk -v seconds="$latency_seconds" 'BEGIN {printf "%.3f", seconds * 1000}')
@@ -284,15 +353,26 @@ while IFS= read -r alternative; do
   printf 'sequence,timestamp_utc,http_status,latency_ms,confirmation_marker,success\n' > "${alternative_dir}/checkout-tests.csv"
   expiration_year=$((10#$(date -u +%Y) + 1))
   for checkout_sequence in $(seq 1 "$checkout_test_count"); do
+    if ! assert_supervised_port_forwards "checkout-${checkout_sequence}-preflight"; then
+      fail_infrastructure "checkout-${checkout_sequence}-preflight" "PDT frontend port-forward was lost before checkout testing"
+    fi
     cookie_file="${alternative_dir}/checkout-cookie-${checkout_sequence}.txt"
     response_file="${alternative_dir}/checkout-response-${checkout_sequence}.html"
-    curl -fsS --max-time 15 --cookie-jar "$cookie_file" --cookie "$cookie_file" \
-      "http://127.0.0.1:${local_port}/product/0PUK6V6EV0" >/dev/null || true
-    curl -fsS --max-time 15 --cookie-jar "$cookie_file" --cookie "$cookie_file" \
+    if ! guarded_curl "checkout-${checkout_sequence}-product" curl -fsS --max-time 15 \
+      --cookie-jar "$cookie_file" --cookie "$cookie_file" \
+      "http://127.0.0.1:${local_port}/product/0PUK6V6EV0" >/dev/null; then
+      assert_supervised_port_forwards "checkout-${checkout_sequence}-product" || \
+        fail_infrastructure "checkout-${checkout_sequence}-product" "PDT frontend port-forward was lost during checkout setup"
+    fi
+    if ! guarded_curl "checkout-${checkout_sequence}-cart" curl -fsS --max-time 15 \
+      --cookie-jar "$cookie_file" --cookie "$cookie_file" \
       --request POST --data 'product_id=0PUK6V6EV0&quantity=1' \
-      "http://127.0.0.1:${local_port}/cart" >/dev/null || true
+      "http://127.0.0.1:${local_port}/cart" >/dev/null; then
+      assert_supervised_port_forwards "checkout-${checkout_sequence}-cart" || \
+        fail_infrastructure "checkout-${checkout_sequence}-cart" "PDT frontend port-forward was lost during checkout setup"
+    fi
     checkout_timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-    if checkout_result=$(curl --silent --show-error --output "$response_file" --max-time 30 \
+    if checkout_result=$(guarded_curl "checkout-${checkout_sequence}-submit" curl --silent --show-error --output "$response_file" --max-time 30 \
       --cookie-jar "$cookie_file" --cookie "$cookie_file" --request POST \
       --data-urlencode 'email=twin@example.com' \
       --data-urlencode 'street_address=1600 Amphitheatre Parkway' \
@@ -305,11 +385,15 @@ while IFS= read -r alternative; do
       --write-out '%{http_code},%{time_total}' "http://127.0.0.1:${local_port}/cart/checkout"); then
       :
     else
+      curl_status=$?
+      if (( curl_status == SUPERVISED_PORT_FORWARD_EXIT_CODE )); then
+        fail_infrastructure "checkout-${checkout_sequence}-submit" "PDT frontend port-forward was lost during checkout"
+      fi
       checkout_result='000,30.000000'
     fi
     checkout_status=${checkout_result%%,*}; checkout_latency_seconds=${checkout_result#*,}
     checkout_latency_ms=$(awk -v seconds="$checkout_latency_seconds" 'BEGIN {printf "%.3f", seconds * 1000}')
-    if grep -q 'Your order is complete!' "$response_file"; then confirmation_marker=true; else confirmation_marker=false; fi
+    if [[ -f "$response_file" ]] && grep -q 'Your order is complete!' "$response_file"; then confirmation_marker=true; else confirmation_marker=false; fi
     if [[ "$checkout_status" =~ ^2[0-9][0-9]$ && "$confirmation_marker" == "true" ]]; then checkout_success=true; else checkout_success=false; fi
     printf '%s,%s,%s,%s,%s,%s\n' "$checkout_sequence" "$checkout_timestamp" "$checkout_status" "$checkout_latency_ms" "$confirmation_marker" "$checkout_success" >> "${alternative_dir}/checkout-tests.csv"
   done
@@ -332,10 +416,18 @@ while IFS= read -r alternative; do
     negative_response_file="${alternative_dir}/negative-${negative_test_id}-response.html"
     negative_cart_file="${alternative_dir}/negative-${negative_test_id}-cart.html"
 
-    curl -fsS --max-time 15 --cookie-jar "$negative_cookie_file" --cookie "$negative_cookie_file" \
+    if ! assert_supervised_port_forwards "negative-${negative_test_id}-preflight"; then
+      fail_infrastructure "negative-${negative_test_id}-preflight" "PDT frontend port-forward was lost before negative-path testing"
+    fi
+
+    if ! guarded_curl "negative-${negative_test_id}-cart-setup" curl -fsS --max-time 15 \
+      --cookie-jar "$negative_cookie_file" --cookie "$negative_cookie_file" \
       --request POST --data 'product_id=0PUK6V6EV0&quantity=1' \
-      "http://127.0.0.1:${local_port}/cart" >/dev/null
-    if negative_result=$(curl --silent --show-error --output "$negative_response_file" --max-time 30 \
+      "http://127.0.0.1:${local_port}/cart" >/dev/null; then
+      assert_supervised_port_forwards "negative-${negative_test_id}-cart-setup" || \
+        fail_infrastructure "negative-${negative_test_id}-cart-setup" "PDT frontend port-forward was lost during negative-path setup"
+    fi
+    if negative_result=$(guarded_curl "negative-${negative_test_id}-submit" curl --silent --show-error --output "$negative_response_file" --max-time 30 \
       --cookie-jar "$negative_cookie_file" --cookie "$negative_cookie_file" --request POST \
       --data-urlencode 'email=twin-negative@example.com' \
       --data-urlencode 'street_address=1600 Amphitheatre Parkway' \
@@ -348,12 +440,20 @@ while IFS= read -r alternative; do
       "http://127.0.0.1:${local_port}/cart/checkout"); then
       :
     else
+      curl_status=$?
+      if (( curl_status == SUPERVISED_PORT_FORWARD_EXIT_CODE )); then
+        fail_infrastructure "negative-${negative_test_id}-submit" "PDT frontend port-forward was lost during negative-path checkout"
+      fi
       negative_result='000'
     fi
-    curl -fsS --max-time 15 --cookie-jar "$negative_cookie_file" --cookie "$negative_cookie_file" \
-      "http://127.0.0.1:${local_port}/cart" > "$negative_cart_file"
-    if grep -q 'Your order is complete!' "$negative_response_file"; then confirmation_absent=false; else confirmation_absent=true; fi
-    if grep -q '/product/0PUK6V6EV0' "$negative_cart_file"; then cart_retained=true; else cart_retained=false; fi
+    if ! guarded_curl "negative-${negative_test_id}-cart-check" curl -fsS --max-time 15 \
+      --cookie-jar "$negative_cookie_file" --cookie "$negative_cookie_file" \
+      "http://127.0.0.1:${local_port}/cart" > "$negative_cart_file"; then
+      assert_supervised_port_forwards "negative-${negative_test_id}-cart-check" || \
+        fail_infrastructure "negative-${negative_test_id}-cart-check" "PDT frontend port-forward was lost during negative-path verification"
+    fi
+    if [[ -f "$negative_response_file" ]] && grep -q 'Your order is complete!' "$negative_response_file"; then confirmation_absent=false; else confirmation_absent=true; fi
+    if [[ -f "$negative_cart_file" ]] && grep -q '/product/0PUK6V6EV0' "$negative_cart_file"; then cart_retained=true; else cart_retained=false; fi
     if [[ "$negative_result" == "500" && "$confirmation_absent" == "true" && "$cart_retained" == "true" ]]; then
       negative_success=true
     else
@@ -364,6 +464,10 @@ while IFS= read -r alternative; do
   negative_successes=$(awk -F, 'NR > 1 && $5 == "true" {n++} END {print n + 0}' "${alternative_dir}/checkout-negative-tests.csv")
   negative_failures=$((negative_test_count - negative_successes))
   measurement_ended_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+  if ! assert_supervised_port_forwards measurement-end; then
+    fail_infrastructure measurement-end "PDT frontend port-forward was lost before evidence finalization"
+  fi
 
   kubectl get deployments --namespace "$namespace" -o json > "${alternative_dir}/deployments-end.json"
   kubectl get pods --namespace "$namespace" -o json > "${alternative_dir}/pods-end.json"

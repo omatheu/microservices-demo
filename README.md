@@ -18,25 +18,20 @@ This fork implements a paired comparison between a complete conventional
 CI/CD pipeline with staging and the same pipeline augmented by a predictive and
 prescriptive Partial Digital Twin of `checkoutservice`. The operational GKE
 baseline, conventional gates, PDT controller, mutation operators, and
-independent oracle are implemented. Three incomplete candidate flows are
-preserved, including one v1.6 flow with a sealed conventional staging approval,
-but no paired PDT decision or Oracle label has been collected. A timestamp
-contract defect stopped the PDT before its counterfactuals; the narrowly scoped
-v1.7 correction was frozen after all 17 controls passed, and its 18-candidate
-blinded corpus remains preserved as historical evidence. Before any v1.7
-execution, the protected image gate on PR #24 detected `CVE-2026-97054` in the
-Go 1.27.3 standard library of the Oracle harness. Security amendment v1.8
-updates the affected Go builds to 1.27.4 by immutable base-image digest. Clean
-local rebuilds, SBOMs, HIGH/CRITICAL scans and Go tests pass for all four
-affected or control images. The corrected three experiment runtimes were then
-published through the Artifact Registry-only identity and bound by immutable
-digest to one protected provenance. The v1.8 component-freeze bundle is now
-applied, both human approvals are bound to the exact candidate, and all 17
-freeze controls pass. The protocol is frozen and a new 18-candidate blinded
-corpus is bound to its final SHA-256.
-The complete v1.8 post-publication Billing review records R$1,834.970443 gross
-cost and R$163.298016 remaining under the unchanged absolute cap. The cluster has been deleted
-and cloud execution is explicitly locked. A
+independent oracle are implemented. The v1.8 collection attempts are preserved
+as historical evidence; one produced a paired staging/PDT decision, none
+executed Oracle, and no Oracle label was revealed. Operational amendment v1.9
+fixes the retry control flow, supervises runner tunnels, requires inter-attempt
+quiescence and continuous workload stability, prevents degraded PDT snapshots,
+and binds Terraform budgets to the exact protocol ceilings. Executable
+regression tests cover those controls. The protocol, policies and manifests are
+now locked as pre-registration candidates; the former v1.8 approvals and
+public corpus were retired from the active area and must be renewed before any
+cloud execution.
+The final post-exclusion financial baseline is R$1,841.214182 gross with at
+most R$157.054277 remaining under the unchanged R$1,998.268459 absolute cap.
+The Billing export covers the cluster deletion, the cluster remains absent and
+cloud execution is explicitly locked. A
 read-only Oracle readiness audit verifies GitHub protection,
 keyless identity, least-privilege Kubernetes RBAC, frozen artifacts and an
 empty Oracle namespace before execution can be enabled. See the
@@ -46,9 +41,10 @@ live status and exit criteria.
 The passive Oracle GitHub controls remain installed, while every execution
 switch is `false` and no GKE cluster exists. Runtime publication was performed
 through its isolated Artifact Registry-only path for earlier protocol versions.
-The v1.8 images, components, protocol and corpus are bound and frozen, while
-cloud execution remains unauthorized. Every future experimental block still
-requires a separate financial review and explicit cloud authorization.
+The immutable v1.8 runtime images remain reusable because v1.9 changes only
+runner-side orchestration. The v1.9 components are not frozen and no v1.9
+corpus is active. A renewed financial review, researcher approval, 17/17 freeze,
+new blinded corpus and explicit block authorization are required in that order.
 
 ## Architecture
 

@@ -2,8 +2,10 @@ project_id = "replace-me"
 region     = "us-central1"
 
 billing_account_id       = "000000-000000-000000"
-gross_cost_budget_amount = 10
-experiment_spend_budget_amount = 5
+# These values must exactly match the active protocol. Any new financial
+# review must update the protocol and this file together before planning.
+gross_cost_budget_amount      = 1998.268459
+experiment_spend_budget_amount = 157.054277
 
 # Keep enabled until you explicitly intend to destroy the cluster.
 deletion_protection = true

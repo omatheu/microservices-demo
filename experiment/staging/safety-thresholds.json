@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "status": "frozen",
-  "frozen_at": "2026-11-20T04:57:03Z",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
   "method": "predeclared-safe-staging-calibration",
   "decision_values": [
     "PASS",
@@ -16,6 +16,12 @@
     "maximum_functional_failures": 0,
     "maximum_unavailable_deployments": 0,
     "maximum_restart_increase": 0
+  },
+  "availability_scope": {
+    "pre_measurement_infrastructure_gate": "all non-candidate deployments must remain continuously ready with stable restart counts",
+    "candidate_target": "checkoutservice",
+    "candidate_target_unavailability": "deterministic candidate FAIL, never infrastructure-invalid",
+    "measurement_health_thresholds": "maximum_unavailable_deployments and maximum_restart_increase apply to the complete deployed application"
   },
   "workload": {
     "warmup_seconds": 60,

@@ -42,7 +42,7 @@ class RepeatedComparativeCandidateRunnerTests(unittest.TestCase):
         self.assertIn("starts billable GKE workloads", result.stderr)
         self.assertNotIn("contains active pods", result.stderr)
 
-    def test_engineering_candidate_is_rejected_before_cluster_access(self):
+    def test_unfrozen_protocol_is_rejected_before_candidate_or_cluster_access(self):
         result = subprocess.run(
             [str(SCRIPT_PATH)],
             cwd=REPO_ROOT,
@@ -54,7 +54,7 @@ class RepeatedComparativeCandidateRunnerTests(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(
-            "Candidate is not eligible for confirmatory repetition orchestration.",
+            "Confirmatory repetition orchestration requires the frozen three-repetition protocol.",
             result.stderr,
         )
         self.assertNotIn("contains active pods", result.stderr)
@@ -72,6 +72,10 @@ class RepeatedComparativeCandidateRunnerTests(unittest.TestCase):
         self.assertIn("evaluate-deployment-gate.py", rendered)
         self.assertIn("prepare-deployment-action.py", rendered)
         self.assertIn("cleanup-experimental-workloads.sh", rendered)
+        self.assertIn("run_logged_attempt attempt_exit", rendered)
+        self.assertIn("run_logged_attempt snapshot_exit", rendered)
+        self.assertIn("run_logged_attempt pdt_exit", rendered)
+        self.assertNotIn("set +e", rendered)
         self.assertIn("oracle-binding-snapshot.json", rendered)
         self.assertIn(
             'if (( ${#valid_pdt_repetitions[@]} < 2 )); then', rendered

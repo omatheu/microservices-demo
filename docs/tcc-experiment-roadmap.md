@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 20 de novembro de 2026.
+> **Última verificação:** 22 de novembro de 2026.
 
 ## Objetivo do experimento
 
@@ -126,6 +126,23 @@ como Partial Digital Twin.
   desde a revisão pré-execução e margem reduzida para R$157,455476. A tentativa
   continua inelegível como resultado confirmatório, mas a revisão permite
   solicitar uma nova autorização humana sem elevar o teto absoluto.
+- [x] Tentativa `45020108835` preservada como `infrastructure-invalid`: o
+  staging parou antes de produzir uma nova repetição válida; nenhum Oracle
+  executou, nenhum rótulo foi revelado, os gates foram desarmados e o cluster
+  foi excluído em `2026-11-22T12:22:08Z`.
+- [x] Billing final pós-exclusão consolidado: último uso às
+  `2026-11-22T14:00:00Z`, dados até `17:09:01Z`, custo bruto de
+  R$1.841,214182 e margem de R$157,054277 até o teto absoluto.
+- [x] Emenda operacional v1.9 preparada localmente: retry sob `ERR` trap
+  testado, supervisão dos túneis, quiescência entre tentativas, estabilidade
+  contínua, bloqueio de snapshot PDT degradado e guards financeiros Terraform.
+- [x] Guard financeiro v1.9 aplicado no GCP sem recriar GKE: o budget incremental
+  foi alinhado ao envelope então vigente de R$157,455476, com zero recursos
+  adicionados ou destruídos; o cluster permaneceu ausente. A baseline final
+  reduziu a margem para R$157,054277 e exige realinhar somente os limiares de
+  alerta antes de outra execução cloud.
+- [x] Protocolo, políticas e manifests v1.9 retornaram ao estado fail-closed;
+  aprovações e corpus v1.8 foram retirados da área ativa sem revelar rótulos.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -251,10 +268,16 @@ execução autorizada em cloud ou análise dos resultados.
 24. [concluído localmente em 20/11/2026] congelar políticas e manifests,
    renovar as aprovações financeira e do pesquisador, passar a auditoria
    17/17, congelar a v1.8 e rotacionar a chave e o corpus;
-25. materializar candidatas v1.8 novas e executar os seis blocos pareados, com
+25. [concluído parcialmente e invalidado para inferência] preservar as
+   tentativas v1.8, registrar a regressão de orquestração/infraestrutura e
+   aplicar localmente a emenda v1.9 sem reinterpretar os resultados;
+26. [Billing pós-exclusão concluído] publicar e incorporar a emenda v1.9,
+   realinhar os alertas, renovar as duas aprovações, passar a auditoria 17/17,
+   congelar a v1.9 e gerar chave e corpus novos;
+27. materializar candidatas v1.9 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
-26. consolidar o dataset, calcular métricas, revisar ameaças à validade,
+28. consolidar o dataset, calcular métricas, revisar ameaças à validade,
    exportar o pacote reproduzível, remover a infraestrutura e conferir o custo
    final.
 
@@ -675,15 +698,16 @@ Os operadores candidatos e os controles estão catalogados em
 **Estado:** os congelamentos anteriores permanecem preservados no histórico do
 Git. O protocolo executável em
 [`../experiment/protocol/protocol-v1.json`](../experiment/protocol/protocol-v1.json)
-está congelado como v1.8; mantém 18 candidatas, três repetições, seis blocos, a
-mesma regra de agregação e o mesmo plano pareado. A observação financeira final
-é R$1.834,970443, com R$163,298016 restantes até o teto absoluto, e cobre toda
-a janela de exclusão. Os bindings v1.7 foram invalidados pelo achado de
-segurança; os runtimes v1.8 corrigidos foram publicados, vinculados a uma nova
-proveniência e congelados com as políticas. O corpus ativo v1.8 é
-`corpus-zkf5mounepuhq`, vinculado ao protocolo congelado; o corpus histórico
-v1.7 `corpus-dk3zrooqiepv4` foi invalidado antes de qualquer execução. A
-auditoria atual passa 17/17 controles.
+está bloqueado como candidato v1.9; mantém 18 candidatas, três repetições, seis
+blocos, a mesma regra de agregação e o mesmo plano pareado. A baseline financeira
+final pós-exclusão é R$1.841,214182, com envelope máximo de R$157,054277 até o
+teto absoluto; a revisão somente leitura confirmou elegibilidade para aprovação
+financeira humana. Os runtimes v1.8
+corrigidos permanecem publicados e vinculados porque a v1.9 altera somente a
+orquestração externa às imagens. O corpus v1.8 `corpus-zkf5mounepuhq` e todos
+os anteriores são históricos; não há corpus ativo v1.9. A auditoria atual passa
+8/17 controles e falha fechado até congelar componentes e renovar as duas
+aprovações.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle
@@ -1102,7 +1126,7 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles metodológicos
 
 - [ ] usar as mesmas candidatas na esteira convencional e na esteira acrescida do PDT;
-- [x] renovar o congelamento do protocolo v1.8, corpus, sementes e regra de
+- [ ] renovar o congelamento do protocolo v1.9, corpus, sementes e regra de
   parada antes de retomar a coleta;
 - [x] usar sementes ou perfis de carga reproduzíveis nos pilotos;
 - [x] separar aquecimento e medição;
@@ -1121,8 +1145,8 @@ intervalo de confiança quando o número de repetições permitir.
 ## Controles financeiros e operacionais
 
 - [x] orçamento bruto contábil absoluto preservado em R$1.998,268459;
-- [x] reduzir o teto incremental v1.8 para R$163,298016 na revisão
-  pré-publicação, sem elevar o teto absoluto;
+- [x] reduzir o envelope máximo candidato para R$157,455476 após as tentativas
+  v1.8, sem elevar o teto absoluto;
 - [x] alertas de 25% a 100%;
 - [x] quotas por namespace;
 - [x] somente um Load Balancer permitido;
@@ -1152,11 +1176,13 @@ executou consulta faturável nem produziu revisão financeira. A evidência est�
 em
 [`../experiment/evidence/finance/billing-export-activation-20260929T052504Z.json`](../experiment/evidence/finance/billing-export-activation-20260929T052504Z.json).
 
-O workflow protegido agora reserva uma janela própria após a execução pareada
-para um cleanup independente dos runners internos. O script valida o contexto
-exato do cluster, restringe a mutação aos controladores de `staging`, `pdt` e
-`pdt-system`, não remove volumes e falha se qualquer pod ativo permanecer. Essa
-proteção foi implementada e testada localmente, mas ainda não foi exercitada no
+O workflow protegido reserva uma janela própria após a execução pareada para
+um cleanup independente dos runners internos. O script valida o contexto exato
+do cluster, restringe a mutação aos controladores e recursos transitórios de
+`staging`, `pdt` e `pdt-system`, não remove volumes e exige contagem zero de
+pods, deployments, ReplicaSets, Services, endpoints, EndpointSlices,
+NetworkPolicies e Jobs durante uma janela fixa de quiescência. Essa proteção
+v1.9 foi implementada e testada localmente, mas ainda não foi exercitada no
 cluster porque nenhuma nova execução cloud foi autorizada.
 
 ## Definição de experimento completo

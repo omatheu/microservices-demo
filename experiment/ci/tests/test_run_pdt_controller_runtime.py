@@ -86,6 +86,17 @@ class RunPdtControllerRuntimeTests(unittest.TestCase):
         self.assertGreaterEqual(rendered.count("cleanup_controller"), 5)
         self.assertIn("kubectl delete -f", rendered)
 
+    def test_pdt_measurement_requires_stability_and_supervised_tunnel(self):
+        rendered = RUNNER.read_text(encoding="utf-8")
+
+        self.assertIn("wait-for-workload-stability.sh", rendered)
+        self.assertIn("EXCLUDED_DEPLOYMENTS=checkoutservice", rendered)
+        self.assertIn('if [[ "$deployment" == "checkoutservice" ]]', rendered)
+        self.assertIn("preserving as candidate behavior", rendered)
+        self.assertIn("non-candidate deployment ${deployment} did not become ready", rendered)
+        self.assertIn("start_supervised_port_forward", rendered)
+        self.assertIn('classification: "infrastructure-invalid"', rendered)
+
     def test_frozen_runtime_scope_includes_the_controller_rbac(self):
         manifest = json.loads(RUNTIME_MANIFEST.read_text(encoding="utf-8"))
         paths = {item["path"] for item in manifest["files"]}

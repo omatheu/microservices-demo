@@ -4,6 +4,18 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Após a tentativa inválida `45020108835`, o cluster foi excluído em
+`2026-11-22T12:22:08Z`. A consulta final somente leitura, limitada a 100 MB,
+agora cobre uso encerrado às `2026-11-22T14:00:00Z`, com
+`billing_data_as_of=2026-11-22T17:09:01Z`. O custo bruto observado é
+R$1.841,214182 e restam R$157,054277 até o teto absoluto inalterado de
+R$1.998,268459. A revisão local confirmou elegibilidade para uma nova
+aprovação financeira humana, sem gerar aprovação, autorização cloud ou
+mutação em GCP/GitHub. A observação e a elegibilidade estão em
+[`cost-window-20260919-20261122-v1.8-run45020108835-postdelete-final.json`](./cost-window-20260919-20261122-v1.8-run45020108835-postdelete-final.json)
+e
+[`pre-freeze-financial-review-eligibility-v1.9-20261122.json`](./pre-freeze-financial-review-eligibility-v1.9-20261122.json).
+
 Depois do bloco 1 da coleta v1.8, o cluster foi excluído aproximadamente às
 `2026-11-20T16:21:00Z`. A consulta Billing limitada a 100 MB passou a cobrir
 uso encerrado às `2026-11-20T20:00:00Z`, com

@@ -3,6 +3,7 @@
 set -euo pipefail
 
 repo_root=$(git rev-parse --show-toplevel)
+source "${repo_root}/experiment/scripts/lib/port-forward-supervisor.sh"
 mode=${MODE:-engineering}
 candidate_id=${CANDIDATE_ID:-}
 candidate_definition=${CANDIDATE_DEFINITION:-}
@@ -31,9 +32,9 @@ cost_review=${COST_REVIEW_ACKNOWLEDGED:-false}
 allow_oracle=${ALLOW_ORACLE_CLOUD_EXECUTION:-false}
 candidate_rollout_timeout=${CANDIDATE_ROLLOUT_TIMEOUT:-3m}
 
-port_forward_pid=""
 cloud_started=false
 run_succeeded=false
+infrastructure_invalid=false
 run_dir=""
 runtime_manifest=""
 human_gate_validation=""
@@ -331,17 +332,9 @@ write_status() {
     '{run_id: $run_id, state: $state, updated_at: $timestamp}' >"${run_dir}/status.json"
 }
 
-stop_port_forward() {
-  if [[ -n "$port_forward_pid" ]] && kill -0 "$port_forward_pid" 2>/dev/null; then
-    kill "$port_forward_pid" 2>/dev/null || true
-    wait "$port_forward_pid" 2>/dev/null || true
-  fi
-  port_forward_pid=""
-}
-
 cleanup_runtime() {
   local cleanup_ok=true
-  stop_port_forward
+  stop_supervised_port_forwards
   if [[ "$cloud_started" == "true" && -f "$runtime_manifest" ]]; then
     if ! kubectl delete -f "$runtime_manifest" --ignore-not-found --wait=true --timeout=10m \
       >>"${run_dir}/cleanup.log" 2>&1; then
@@ -367,7 +360,9 @@ on_exit() {
   trap - EXIT
   if [[ "$run_succeeded" != "true" ]]; then
     cleanup_runtime || true
-    write_status failed || true
+    if [[ "$infrastructure_invalid" != "true" ]]; then
+      write_status failed || true
+    fi
   fi
   exit "$exit_code"
 }
@@ -387,6 +382,40 @@ run_with_deadline() {
   local remaining
   remaining=$(remaining_seconds)
   timeout --signal=TERM --kill-after=10s "${remaining}s" "$@"
+}
+
+fail_infrastructure() {
+  local phase=$1
+  local reason=$2
+  infrastructure_invalid=true
+  jq -n --arg run_id "$run_id" --arg phase "$phase" --arg reason "$reason" \
+    --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" '
+    {
+      schema_version: "1.0.0",
+      run_id: $run_id,
+      classification: "infrastructure-invalid",
+      phase: $phase,
+      reason: $reason,
+      recorded_at: $timestamp,
+      oracle_observation_produced: false
+    }' >"${run_dir}/infrastructure-invalid.json"
+  write_status infrastructure-invalid
+  exit "$SUPERVISED_PORT_FORWARD_EXIT_CODE"
+}
+
+run_endpoint_command() {
+  local phase=$1
+  shift
+  local command_status
+  if run_with_deadline "$@"; then
+    command_status=0
+  else
+    command_status=$?
+  fi
+  if ! assert_supervised_port_forwards "$phase"; then
+    fail_infrastructure "$phase" "Oracle harness port-forward was lost"
+  fi
+  return "$command_status"
 }
 
 write_status running
@@ -471,23 +500,29 @@ kubectl get pods --namespace "$namespace" -o json >"${run_dir}/pods-start.json"
 kubectl get services --namespace "$namespace" -o json >"${run_dir}/services.json"
 kubectl get events --namespace "$namespace" -o json >"${run_dir}/events-start.json"
 
-kubectl port-forward --namespace "$namespace" service/oracle-harness \
-  "${local_port}:8080" >"${run_dir}/port-forward.log" 2>&1 &
-port_forward_pid=$!
+if ! start_supervised_port_forward "$namespace" oracle-harness "$local_port" 8080 "${run_dir}/port-forward.log"; then
+  fail_infrastructure port-forward-startup "Oracle harness port-forward did not become ready"
+fi
+harness_ready=false
 for _ in $(seq 1 60); do
-  if ! kill -0 "$port_forward_pid" 2>/dev/null; then
-    echo "Oracle harness port-forward exited before becoming healthy." >&2
-    exit 1
+  if ! assert_supervised_port_forwards port-forward-health; then
+    fail_infrastructure port-forward-health "Oracle harness port-forward exited before becoming healthy"
   fi
   if curl -fsS --max-time 2 "http://127.0.0.1:${local_port}/healthz" >/dev/null 2>&1; then
+    harness_ready=true
     break
   fi
   sleep 1
 done
-curl -fsS --max-time 5 "http://127.0.0.1:${local_port}/healthz" >"${run_dir}/harness-health.txt"
+[[ "$harness_ready" == "true" ]] || fail_infrastructure port-forward-health "Oracle harness tunnel never became healthy"
+if ! curl -fsS --max-time 5 "http://127.0.0.1:${local_port}/healthz" >"${run_dir}/harness-health.txt"; then
+  assert_supervised_port_forwards port-forward-health || \
+    fail_infrastructure port-forward-health "Oracle harness port-forward was lost after health verification"
+  exit 1
+fi
 endpoint="http://127.0.0.1:${local_port}"
 
-run_with_deadline python3 "${repo_root}/experiment/scripts/run-oracle-functional-suite.py" \
+run_endpoint_command functional-suite python3 "${repo_root}/experiment/scripts/run-oracle-functional-suite.py" \
   --policy "$policy_file" --candidate-id "$candidate_id" \
   --alternative-id "$alternative_id" --repetition "$repetition" \
   --endpoint "$endpoint" --output-directory "$functional_dir" \
@@ -525,9 +560,13 @@ while IFS= read -r profile_id; do
   if [[ -n "$engineering_users" ]]; then
     profile_command+=(--engineering-users "$engineering_users")
   fi
-  run_with_deadline "${profile_command[@]}" >"${performance_dir}/${profile_id}.log"
+  run_endpoint_command "performance-${profile_id}" "${profile_command[@]}" >"${performance_dir}/${profile_id}.log"
   performance_arguments+=(--performance-profile "$profile_output")
 done < <(jq -r '.performance_profiles[] | select(.required == true) | .id' "$policy_file")
+
+if ! assert_supervised_port_forwards oracle-measurement-end; then
+  fail_infrastructure oracle-measurement-end "Oracle harness port-forward was lost before evidence finalization"
+fi
 
 kubectl get deployments --namespace "$namespace" -o json >"${run_dir}/deployments-end.json"
 kubectl get pods --namespace "$namespace" -o json >"${run_dir}/pods-end.json"

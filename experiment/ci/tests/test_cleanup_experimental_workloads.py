@@ -23,6 +23,12 @@ elif [[ "$1 $2" == "get pods" ]]; then
   fi
 elif [[ "$1" == "delete" ]]; then
   touch "${CLEANUP_MARKER}"
+elif [[ "$1" == "get" ]]; then
+  if [[ -f "${CLEANUP_MARKER}" ]]; then
+    printf '%s\n' '{"items": []}'
+  else
+    printf '%s\n' '{"items": [{"kind": "Deployment"}]}'
+  fi
 else
   printf 'unexpected kubectl arguments: %s\n' "$*" >&2
   exit 1
@@ -54,6 +60,8 @@ class CleanupExperimentalWorkloadsTests(unittest.TestCase):
                 "KUBECTL_LOG": str(self.log),
                 "CLEANUP_MARKER": str(self.marker),
                 "FAKE_CONTEXT": "gke_microservices-demo-tcc_us-central1_online-boutique-experiment",
+                "QUIESCENCE_WINDOW_SECONDS": "0",
+                "POLL_INTERVAL_SECONDS": "1",
             }
         )
         return environment
@@ -76,6 +84,7 @@ class CleanupExperimentalWorkloadsTests(unittest.TestCase):
         self.assertEqual(evidence["allowed_namespaces"], ["staging", "pdt", "pdt-system"])
         self.assertEqual(evidence["before_active_pods"], 3)
         self.assertEqual(evidence["after_active_pods"], 0)
+        self.assertEqual(evidence["after_resources"], 0)
         self.assertTrue(evidence["cleanup_complete"])
         self.assertFalse(evidence["operational_namespace_touched"])
         self.assertFalse(evidence["oracle_namespace_touched"])
@@ -86,8 +95,8 @@ class CleanupExperimentalWorkloadsTests(unittest.TestCase):
         self.assertEqual(
             deletes,
             [
-                "delete deployments.apps --all --namespace staging --ignore-not-found --wait=false",
-                "delete deployments.apps --all --namespace pdt --ignore-not-found --wait=false",
+                "delete deployments.apps,services,networkpolicies.networking.k8s.io --all --namespace staging --ignore-not-found --wait=false",
+                "delete deployments.apps,services,networkpolicies.networking.k8s.io --all --namespace pdt --ignore-not-found --wait=false",
                 "delete jobs.batch --all --namespace pdt-system --ignore-not-found --wait=false",
             ],
         )
