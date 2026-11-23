@@ -1,11 +1,24 @@
 # Corpus confirmatório
 
-Não há corpus confirmatório ativo. A emenda operacional v1.9 retirou o corpus
-v1.8 da área ativa depois das tentativas de infraestrutura, sem revelar rótulos
-Oracle. O arquivo continua verificável no congelamento histórico abaixo e no
-commit `6419521c6a0cd4f90b8d000959dc252f259ab263`. Um corpus v1.9 deverá usar chave
-nova e só poderá ser gerado depois da revisão financeira, aprovação do
-pesquisador, auditoria 17/17 e congelamento do protocolo v1.9.
+O corpus confirmatório ativo v1.9 foi gerado em 23/11/2026 UTC somente depois
+da revisão financeira, aprovação do pesquisador, auditoria pré-freeze 17/17 e
+congelamento do protocolo. O corpus `corpus-2p6gcipdrzgxg` contém 18
+identificadores opacos, três repetições por candidata e seis blocos de três. Ele
+está vinculado ao protocolo congelado de SHA-256
+`7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae`,
+tem SHA-256
+`a6f125cadfe807aff0f45717e8f69e9d3ecbe572202815b6e99c571eae18bac3`
+e compromisso Oracle
+`3936c0b850c01fc5fea67214bacf9dd1f22d8ea0a5c68179d11fcd95d999c32c`.
+A chave e o manifesto Oracle permanecem privados com permissão `0600`; somente
+a chave codificada foi instalada no secret protegido. O corpus não autoriza
+execução cloud por si só. O recibo sanitizado da rotação está em
+[`../../evidence/oracle/corpus-rotation-v1.9-20261123T015519Z.json`](../../evidence/oracle/corpus-rotation-v1.9-20261123T015519Z.json).
+
+A emenda operacional v1.9 retirou o corpus v1.8 da área ativa depois das
+tentativas de infraestrutura, sem revelar rótulos Oracle. O arquivo continua
+verificável no congelamento histórico abaixo e no commit
+`6419521c6a0cd4f90b8d000959dc252f259ab263`.
 
 O corpus confirmatório histórico v1.8 foi gerado em 20/11/2026 UTC somente depois
 da auditoria pré-freeze 17/17 e do congelamento do protocolo. O corpus
@@ -136,9 +149,9 @@ históricos em diretório local privado. As chaves e os manifestos Oracle v1.3,
 v1.4, v1.5 e v1.6 também permanecem nos diretórios privados ignorados pelo Git, com
 permissões 0600, e nunca podem ser copiados para este diretório versionado. O
 secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` contém uma chave histórica invalidada e permanece
-desarmado. Ele só deve ser substituído por uma chave v1.9 nova em uma operação
-protegida e explicitamente autorizada, sem expor seu valor.
+`TCC_ORACLE_BLINDING_KEY_B64` contém a chave v1.9 correspondente ao corpus
+ativo. O valor permanece oculto e só é disponibilizado ao job Oracle do
+ambiente protegido; os kill switches permanecem desarmados.
 
 O mesmo ambiente protegido deve conter:
 

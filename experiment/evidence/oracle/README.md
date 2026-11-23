@@ -1,5 +1,12 @@
 # Evidências do oráculo
 
+Em 23/11/2026, depois do congelamento v1.9, uma chave nova gerou o corpus opaco
+`corpus-2p6gcipdrzgxg`. O corpus público foi validado contra o protocolo
+congelado, o manifesto permaneceu privado e a chave foi instalada no secret do
+ambiente protegido sem expor seu valor. Os kill switches continuam em `false`
+e nenhuma execução cloud foi autorizada. O recibo sanitizado está em
+[`corpus-rotation-v1.9-20261123T015519Z.json`](./corpus-rotation-v1.9-20261123T015519Z.json).
+
 O snapshot somente leitura mais recente
 [`oracle-execution-readiness-post-passive-20260929T055153Z.json`](./oracle-execution-readiness-post-passive-20260929T055153Z.json)
 registra o estado posterior ao lote passivo: 18/22 checks passaram, equivalentes

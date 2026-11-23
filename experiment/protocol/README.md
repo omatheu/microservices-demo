@@ -1,9 +1,10 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** o protocolo operacional v1.9 está congelado localmente após as
+> **Status:** o protocolo operacional v1.9 está congelado na `main` após as
 > aprovações financeira e do pesquisador e auditoria 17/17. Políticas e
 > manifests permanecem vinculados ao mesmo bundle; o corpus v1.8 foi retirado
-> da área ativa sem revelar rótulos e o corpus v1.9 ainda não foi gerado.
+> da área ativa sem revelar rótulos e o corpus opaco v1.9 foi gerado com chave
+> nova e compromisso Oracle validado.
 > Nenhuma execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
@@ -124,6 +125,15 @@ pesquisador sobre a coleta parcial, a auditoria passou 17/17 e o finalizador
 congelou o protocolo em `2026-11-23T01:15:54Z`, com SHA-256
 `7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae`.
 O congelamento não gera corpus, não autoriza execução cloud e não recria GKE.
+Depois do congelamento, uma chave nova gerou o corpus opaco v1.9
+`corpus-2p6gcipdrzgxg`, com 18 candidatas, três repetições e seis blocos. O
+arquivo público possui SHA-256
+`a6f125cadfe807aff0f45717e8f69e9d3ecbe572202815b6e99c571eae18bac3`
+e compromisso Oracle
+`3936c0b850c01fc5fea67214bacf9dd1f22d8ea0a5c68179d11fcd95d999c32c`.
+A chave foi instalada no secret protegido `TCC_ORACLE_BLINDING_KEY_B64`; o
+manifesto Oracle permanece privado, os três kill switches continuam em
+`false` e nenhuma execução cloud foi autorizada.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
