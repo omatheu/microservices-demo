@@ -15,7 +15,10 @@ manifests, manteve o protocolo e a coleta bloqueados e elevou a auditoria para
 [`protocol-freeze-candidate-v1.9-20261123T010718Z.json`](./protocol-freeze-candidate-v1.9-20261123T010718Z.json)
 e
 [`pre-freeze-audit-v1.9-components-20261123T010718Z.json`](./pre-freeze-audit-v1.9-components-20261123T010718Z.json).
-Faltam somente as duas aprovações humanas; nenhuma foi gerada automaticamente.
+A aprovação financeira humana canônica foi vinculada à candidata exata sem
+autorizar cloud. A auditoria passou a 16/17 e a elegibilidade da aprovação
+final do pesquisador está registrada em
+[`researcher-approval-eligibility-v1.9-20261123T011230Z.json`](./researcher-approval-eligibility-v1.9-20261123T011230Z.json).
 
 Após a tentativa inválida `45020108835`, o cluster foi excluído em
 `2026-11-22T12:22:08Z`. A consulta final somente leitura, limitada a 100 MB,

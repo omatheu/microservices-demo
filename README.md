@@ -42,10 +42,10 @@ The passive Oracle GitHub controls remain installed, while every execution
 switch is `false` and no GKE cluster exists. Runtime publication was performed
 through its isolated Artifact Registry-only path for earlier protocol versions.
 The immutable v1.8 runtime images remain reusable because v1.9 changes only
-runner-side orchestration. The component audit passes 15/17; only the renewed
-financial review and researcher approval remain before the final 17/17 freeze.
-No v1.9 corpus is active. A new blinded corpus and explicit block authorization
-remain required after freezing.
+runner-side orchestration. The renewed financial review is approved without
+authorizing cloud, and the audit passes 16/17; only researcher approval remains
+before the final 17/17 freeze. No v1.9 corpus is active. A new blinded corpus
+and explicit block authorization remain required after freezing.
 
 ## Architecture
 

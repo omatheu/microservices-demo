@@ -145,6 +145,9 @@ como Partial Digital Twin.
 - [x] Bundle local de componentes v1.9 aplicado: cinco políticas e dois
   manifests congelados, 51/51 hashes válidos e auditoria em 15/17; faltam
   somente a revisão financeira e a aprovação do pesquisador.
+- [x] Revisão financeira v1.9 aprovada contra a baseline final e o protocolo
+  exato, sem autorização cloud; auditoria em 16/17 e elegibilidade confirmada
+  para a aprovação final do pesquisador.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -273,9 +276,9 @@ execução autorizada em cloud ou análise dos resultados.
 25. [concluído parcialmente e invalidado para inferência] preservar as
    tentativas v1.8, registrar a regressão de orquestração/infraestrutura e
    aplicar localmente a emenda v1.9 sem reinterpretar os resultados;
-26. [emenda, Billing, alertas e bundle de componentes concluídos] renovar as
-   duas aprovações, passar a auditoria 17/17, congelar a v1.9 e gerar chave e
-   corpus novos;
+26. [emenda, Billing, alertas, componentes e revisão financeira concluídos]
+   registrar a aprovação do pesquisador, passar a auditoria 17/17, congelar a
+   v1.9 e gerar chave e corpus novos;
 27. materializar candidatas v1.9 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
@@ -709,7 +712,8 @@ corrigidos permanecem publicados e vinculados porque a v1.9 altera somente a
 orquestração externa às imagens. O corpus v1.8 `corpus-zkf5mounepuhq` e todos
 os anteriores são históricos; não há corpus ativo v1.9. As cinco políticas e
 os dois manifests foram congelados como um bundle local coerente. A auditoria
-atual passa 15/17 controles e falha fechado até renovar as duas aprovações.
+atual passa 16/17 controles após a revisão financeira e falha fechado somente
+até a aprovação final do pesquisador.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle

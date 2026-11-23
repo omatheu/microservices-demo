@@ -116,7 +116,10 @@ baseline final: 0 recursos adicionados, 1 budget alterado em-place, 0
 destruídos, plano posterior sem drift e zero clusters. O bundle local congelou
 as cinco políticas e os dois manifests em `2026-11-23T01:07:18Z`, preservando
 o protocolo como candidato com coleta desabilitada. A auditoria passa 15/17;
-faltam somente a revisão financeira e a aprovação do pesquisador.
+faltavam a revisão financeira e a aprovação do pesquisador. A revisão
+financeira humana posterior vinculou a evidência Billing exata e elevou a
+auditoria para 16/17 sem autorizar cloud; resta somente a aprovação do
+pesquisador.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
