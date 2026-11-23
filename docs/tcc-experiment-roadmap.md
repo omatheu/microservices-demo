@@ -168,7 +168,11 @@ como Partial Digital Twin.
   sem aprovações nem corpus ativo e sem execução cloud.
 - [x] Billing pós-exclusão v1.9 completo, revisão financeira e aprovação do
   pesquisador renovadas, auditoria 17/17 e protocolo v1.10 congelado em
-  `2026-11-23T11:42:06Z`, ainda sem corpus ativo ou autorização cloud.
+  `2026-11-23T11:42:06Z`, ainda sem autorização cloud.
+- [x] Congelamento v1.10 incorporado a `main` pelo PR #33; chave de cegamento
+  rotacionada e instalada no ambiente protegido, corpus opaco
+  `corpus-od2dc4lcwrmiy` validado com 18 candidatas, três repetições e seis
+  blocos, mantendo os kill switches em `false` e o cluster ausente.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -216,11 +220,12 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-Antes de retomar a lista acima, a v1.10 ainda exige publicação do congelamento,
-rotação da chave e geração/validação de um corpus opaco novo. Esses passos não
-autorizam por si mesmos a execução cloud.
+O congelamento e o corpus v1.10 já estão prontos. O próximo passo é materializar
+a primeira candidata opaca e renovar a revisão financeira pré-bloco, ainda sem
+recriar o cluster. A execução cloud continua dependente de autorização humana
+separada e dos gates financeiros do protocolo.
 
-### Caminho crítico atual — 19/11/2026
+### Caminho crítico atual — 23/11/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,
@@ -304,7 +309,7 @@ autorizam por si mesmos a execução cloud.
 26. [concluído em 23/11/2026] aprovação do pesquisador registrada, auditoria
    17/17, protocolo v1.9 congelado, chave rotacionada e corpus opaco novo
    validado antes de qualquer execução;
-27. materializar candidatas v1.9 novas e executar os seis blocos pareados, com
+27. materializar candidatas v1.10 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
 28. consolidar o dataset, calcular métricas, revisar ameaças à validade,

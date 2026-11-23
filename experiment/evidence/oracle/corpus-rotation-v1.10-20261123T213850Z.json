@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "mechanism": "blinded-corpus-rotation",
+  "protocol_id": "checkout-pdt-comparison-v1.10",
+  "protocol_sha256": "21ef4e19cf6c741fcac6356877a18c21edde3dba3091a5d98e5dbb5d7170ada1",
+  "corpus_id": "corpus-od2dc4lcwrmiy",
+  "public_corpus_path": "experiment/protocol/corpus/public-corpus.json",
+  "public_corpus_sha256": "449a284137b9dbec0da4dcbaf8f6766391128fe1772532ed2c7165834710662a",
+  "generated_at": "2026-11-23T21:38:29.294796Z",
+  "candidate_count": 18,
+  "technical_repetitions_per_candidate": 3,
+  "block_count": 6,
+  "block_size": 3,
+  "confirmatory_eligible": true,
+  "oracle_manifest_commitment_sha256": "8cbf8db31986c305c6acb26849b09da9b8d5d358d623b985762d8b1e85f7bcbe",
+  "public_corpus_oracle_fields_exposed": false,
+  "private_key_mode": "0600",
+  "private_oracle_manifest_mode": "0600",
+  "private_artifacts_versioned": false,
+  "github_secret": {
+    "environment": "tcc-experiment",
+    "name": "TCC_ORACLE_BLINDING_KEY_B64",
+    "updated_at": "2026-11-23T21:38:50Z",
+    "value_exposed": false
+  },
+  "kill_switches": {
+    "TCC_COST_REVIEW_ACKNOWLEDGED": false,
+    "TCC_ORACLE_EXECUTION_ACKNOWLEDGED": false,
+    "TCC_RUNTIME_PUBLICATION_ACKNOWLEDGED": false
+  },
+  "cloud_execution_authorized": false,
+  "cloud_execution_performed": false,
+  "gcp_mutation_performed": false,
+  "github_secret_mutation_performed": true
+}
