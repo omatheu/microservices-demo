@@ -4,6 +4,21 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Antes do bloco 1 da coleta v1.9, a candidata opaca
+`cand-iyzzv33o2ar3bjbq` foi publicada no PR #30 sem labels de execução. Os
+cinco checks públicos passaram. O preflight convencional de engenharia selou
+decisão `block` no gate `kubernetes-policy`; confirmatório, staging, PDT e
+Oracle não executaram. Uma consulta Billing real limitada a 100 MB observou
+R$1.841,690664 brutos, R$0,476482 acima da baseline pós-exclusão. A margem até
+o teto absoluto caiu de R$157,054277 para R$156,577795. A revisão permite
+solicitar uma autorização confirmatória separada somente com esse envelope
+reduzido e uma atualização Billing imediatamente antes de qualquer recriação
+do cluster. Ela não autoriza merge da candidata, GKE, staging, PDT ou Oracle.
+A observação e a revisão estão em
+[`cost-window-20260919-20261123-v1.9-preblock1.json`](./cost-window-20260919-20261123-v1.9-preblock1.json)
+e
+[`pre-block-1-financial-review-v1.9-20261123.json`](./pre-block-1-financial-review-v1.9-20261123.json).
+
 Em `2026-11-23T01:06:47Z`, o guard incremental foi realinhado para a baseline
 final de R$1.841,214182 e o envelope de R$157,054277. O plano aplicado alterou
 somente um budget existente, sem criar ou destruir recursos; o plano posterior
