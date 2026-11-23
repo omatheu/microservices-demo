@@ -144,8 +144,9 @@ registro
 preserva a tentativa como `infrastructure-invalid`. A emenda
 [`amendments/orchestration-v1.10-cleanup-rbac-preflight.json`](./amendments/orchestration-v1.10-cleanup-rbac-preflight.json)
 acrescenta somente leitura desses recursos e um preflight antes da candidata.
-O protocolo v1.10 permanece fail-closed; o Billing pós-run, as duas aprovações,
-o congelamento 17/17 e um corpus novo continuam obrigatórios.
+O protocolo v1.10 permanece fail-closed. O Billing pós-run já cobre a exclusão
+e é elegível para revisão humana com R$156,496903 de envelope máximo; as duas
+aprovações, o congelamento 17/17 e um corpus novo continuam obrigatórios.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

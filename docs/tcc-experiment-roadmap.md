@@ -213,8 +213,8 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-Antes de retomar a lista acima, a v1.10 ainda exige Billing pós-exclusão
-completo, revisão financeira humana, publicação/merge separados da emenda,
+Antes de retomar a lista acima, a v1.10 ainda exige a revisão financeira
+humana sobre o Billing pós-exclusão já completo, merge separado da emenda,
 auditoria 17/17, aprovação do pesquisador e rotação de chave/corpus.
 
 ### Caminho crítico atual — 19/11/2026

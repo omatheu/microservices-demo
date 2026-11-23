@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "mechanism": "protocol-freeze-candidate-bundle",
+  "status": "prepared-requires-application-and-approvals",
+  "frozen_at_for_components": "2026-11-23T03:23:36Z",
+  "regenerated_at": "2026-11-23T10:45:16Z",
+  "financial_evidence": {
+    "path": "experiment/evidence/finance/cost-window-20260919-20261123-v1.9-run45101639286-postdelete-final.json",
+    "sha256": "198e67a2988454d5dbc4cb29f330f4e7f48cc83a949d186c806627667ddae235",
+    "gross_cost_brl": 1841.771556,
+    "remaining_gross_envelope_brl": 156.496903
+  },
+  "publication_binding": {
+    "schema_version": "1.0.0",
+    "publication_summary_sha256": "cbe56108b25cdf7627f3835b8958de6d49ff7006bc86712cf897f2c3937ed4a2",
+    "repository": "omatheu/microservices-demo",
+    "source_commit": "c79dedef2549ac4cd77d210d1e779f3f672f6b39",
+    "source_tree": "55452b90bea215c008f07964e6cde1d23ed2d5b9",
+    "pull_request_number": 24,
+    "workflow_run_id": "44667362567",
+    "published_at": "2026-11-20T03:26:02Z",
+    "build_platform": "linux/amd64",
+    "protected_environment": "tcc-experiment",
+    "explicit_cloud_gate": true,
+    "cost_review_acknowledged": true
+  },
+  "candidate_protocol_sha256": "64eb3bea8fb9cf543a770215f7602f52e2490e99733ea81c6b9e24ff68fb1e1f",
+  "proposed_files": [
+    {
+      "path": "experiment/ci/policy.json",
+      "sha256": "77ec065d130ca4f6179461fe1cc1c3ca5602bcc8c6ea391a615f48a156330e1b"
+    },
+    {
+      "path": "experiment/oracle/policy-v1.json",
+      "sha256": "3ef226cb010c86dddb5c90eff8b9f4ff89b4d2caec1408156ad9490cc226560d"
+    },
+    {
+      "path": "experiment/oracle/suite-manifest.json",
+      "sha256": "4a94c1fe0df171a87b5e95c28e409f43a170dd2889eebae1c58ebdd940efa439"
+    },
+    {
+      "path": "experiment/pdt/fidelity-policy.json",
+      "sha256": "bd463e0c4f71691703b5c78f00cff1b0b4400ce91e441013fe60fe98f1e04f77"
+    },
+    {
+      "path": "experiment/pdt/model-policy.json",
+      "sha256": "cad0ba755826ffd1124f1fb0b978f84fffe5cb92dd2d4505bbda88bd458eeb4e"
+    },
+    {
+      "path": "experiment/pdt/runtime-manifest.json",
+      "sha256": "20946e62b7f2d3cc18fbc69103ef9c53ba51dff42f8928dbfff16a2eb8afcbce"
+    },
+    {
+      "path": "experiment/protocol/protocol-v1.json",
+      "sha256": "64eb3bea8fb9cf543a770215f7602f52e2490e99733ea81c6b9e24ff68fb1e1f"
+    },
+    {
+      "path": "experiment/staging/safety-thresholds.json",
+      "sha256": "1ccc901a874eef882137c3d30680baf4378dbd64c1af8415234817c5a74f9d8f"
+    }
+  ],
+  "protocol_status_after_application": "pre-registration-candidate",
+  "confirmatory_collection_allowed_after_application": false,
+  "cloud_execution_authorized": false,
+  "cloud_mutation_performed": false,
+  "active_repository_files_modified": true
+}

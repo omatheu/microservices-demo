@@ -49,9 +49,16 @@
   ],
   "financial_guardrail": {
     "absolute_project_budget_brl": 1998.268459,
-    "last_complete_preexecution_gross_cost_brl": 1841.690664,
-    "last_observed_remaining_envelope_brl": 156.577795,
-    "post_run_45101639286_export_complete": false,
+    "final_post_run_gross_cost_brl": 1841.771556,
+    "remaining_gross_envelope_brl": 156.496903,
+    "post_run_45101639286_export_complete": true,
+    "last_usage_end_time": "2026-11-23T04:00:00Z",
+    "billing_data_as_of": "2026-11-23T07:24:36Z",
+    "cluster_absence_verified_at": "2026-11-23T02:55:30Z",
+    "evidence": {
+      "path": "experiment/evidence/finance/cost-window-20260919-20261123-v1.9-run45101639286-postdelete-final.json",
+      "sha256": "198e67a2988454d5dbc4cb29f330f4e7f48cc83a949d186c806627667ddae235"
+    },
     "new_financial_review_required_before_freeze": true,
     "absolute_budget_increased": false
   },

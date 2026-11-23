@@ -298,12 +298,12 @@
   },
   "execution_limits": {
     "cloud_execution_authorization": "explicit-user-authorization-required-after-freeze",
-    "financial_baseline_gross_cost_brl": 1841.690664,
+    "financial_baseline_gross_cost_brl": 1841.771556,
     "project_gross_cost_budget_brl": 1998.268459,
-    "proposed_incremental_spend_ceiling_brl": 156.577795,
+    "proposed_incremental_spend_ceiling_brl": 156.496903,
     "mandatory_cost_review_at_brl": 150,
     "minimum_promotional_credit_reserve_brl": 10,
-    "maximum_promotional_credit_consumption_brl": 156.577795,
+    "maximum_promotional_credit_consumption_brl": 156.496903,
     "billing_alert_is_hard_cap": false,
     "candidate_block_size": 3,
     "cost_review_after_every_block": true,
@@ -505,7 +505,7 @@
     },
     "protocol_amendment_record": {
       "path": "experiment/protocol/amendments/orchestration-v1.10-cleanup-rbac-preflight.json",
-      "sha256": "b5657529c58704c36a507e904c2d1ac50c26d6097bfeaf283acc3592a9b14d1c"
+      "sha256": "b38501d17fa01121898a93a00bd094d67e4c1a8f62d900b6db881d4b052400eb"
     },
     "promotional_credit_observation": {
       "path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",

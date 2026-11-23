@@ -123,8 +123,8 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         self.assertEqual(2, value["amendment"]["complete_decision_pairs_before_amendment"])
         self.assertEqual(0, value["amendment"]["oracle_labels_revealed_before_amendment"])
         self.assertEqual(1998.268459, value["execution_limits"]["project_gross_cost_budget_brl"])
-        self.assertEqual(1841.690664, value["execution_limits"]["financial_baseline_gross_cost_brl"])
-        self.assertEqual(156.577795, value["execution_limits"]["proposed_incremental_spend_ceiling_brl"])
+        self.assertEqual(1841.771556, value["execution_limits"]["financial_baseline_gross_cost_brl"])
+        self.assertEqual(156.496903, value["execution_limits"]["proposed_incremental_spend_ceiling_brl"])
         self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
         self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
 
