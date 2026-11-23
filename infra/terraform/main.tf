@@ -1,4 +1,9 @@
 locals {
+  experiment_protocol          = jsondecode(file("${path.module}/../../experiment/protocol/protocol-v1.json"))
+  protocol_execution_limits    = local.experiment_protocol.execution_limits
+  protocol_gross_cost_cap      = local.protocol_execution_limits.project_gross_cost_budget_brl
+  protocol_incremental_ceiling = local.protocol_execution_limits.proposed_incremental_spend_ceiling_brl
+
   budget_units = floor(var.gross_cost_budget_amount)
   budget_nanos = floor(((var.gross_cost_budget_amount - local.budget_units) * 1000000000) + 0.5)
 
@@ -88,6 +93,20 @@ resource "google_container_cluster" "experiment" {
     precondition {
       condition     = var.allow_billable_resources
       error_message = "Billable resource creation is locked. Confirm credits, budgets, quotas, and the execution window before setting allow_billable_resources=true."
+    }
+    precondition {
+      condition = (
+        local.experiment_protocol.status == "frozen" &&
+        local.experiment_protocol.confirmatory_collection_allowed == true
+      )
+      error_message = "Cluster creation is blocked until the active protocol version is frozen and confirmatory collection is enabled."
+    }
+    precondition {
+      condition = (
+        abs(var.gross_cost_budget_amount - local.protocol_gross_cost_cap) < 0.000001 &&
+        abs(var.experiment_spend_budget_amount - local.protocol_incremental_ceiling) < 0.000001
+      )
+      error_message = "Terraform financial variables drift from the active protocol gross cap or incremental ceiling."
     }
   }
 

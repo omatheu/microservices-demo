@@ -20,6 +20,9 @@ REQUIRED_INPUTS = {
     "human_gate_recorder",
     "confirmatory_analyzer",
     "confirmatory_repetition_runner",
+    "expected_failure_attempt_control",
+    "port_forward_supervisor",
+    "workload_stability_gate",
     "analysis_dataset_composer",
     "protocol_freeze_auditor",
     "researcher_approval_preparer",
@@ -36,6 +39,7 @@ REQUIRED_INPUTS = {
     "billing_cost_query",
     "validity_threat_register",
     "confirmatory_orchestration_incident",
+    "confirmatory_execution_hardening_review",
     "baseline_evidence_validator",
     "operational_baseline_summary",
     "checkout_baseline_summary",
@@ -44,6 +48,8 @@ REQUIRED_INPUTS = {
     "staging_contract_probe",
     "staging_thresholds",
     "pdt_model_policy",
+    "pdt_source_capture",
+    "pdt_cycle_runner",
     "pdt_repetition_aggregator",
     "pdt_runtime_manifest",
     "mutation_registry",
@@ -51,6 +57,9 @@ REQUIRED_INPUTS = {
     "protocol_amendment_record",
     "promotional_credit_observation",
     "oracle_suite_manifest",
+    "oracle_repetition_runner",
+    "terraform_cluster_financial_guard",
+    "terraform_budget_financial_guard",
 }
 
 

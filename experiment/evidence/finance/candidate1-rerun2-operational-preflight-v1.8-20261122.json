@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0.0",
+  "preflight_id": "candidate1-rerun2-operational-preflight-v1.8-20261122",
+  "recorded_at": "2026-11-22T11:56:02Z",
+  "project_id": "microservices-demo-tcc",
+  "protocol_id": "checkout-pdt-comparison-v1.8",
+  "candidate_id": "cand-2aeweofqphemins4",
+  "pull_request": 25,
+  "authorization_path": "experiment/evidence/finance/paired-rerun-with-operational-baseline-cloud-authorization-v1.8-20261122.json",
+  "terraform": {
+    "plan_sha256": "30e03426a7fe11b110dfe268622a0793c99c9b087cf23a78a975e7103560ef62",
+    "plan_summary": "25-to-add-0-to-change-0-to-destroy",
+    "apply_summary": "25-added-0-changed-0-destroyed",
+    "state_sha256_after_apply": "8489b34c8f36c0c67bea72b7269ad3cab4faed6ab60d3fd333d63f25cc86c448"
+  },
+  "cluster": {
+    "name": "online-boutique-experiment",
+    "region": "us-central1",
+    "type": "GKE Autopilot",
+    "created_at": "2026-11-22T11:47:00Z",
+    "status": "RUNNING",
+    "master_version": "1.36.4-gke.2377000",
+    "deletion_protection": true
+  },
+  "operational_baseline": {
+    "overlay": "infra/kustomize/operational",
+    "rendered_sha256": "88a9bf4153a29daadf63b0d1f8303861fd574eb9a7de703060269eb9bc835761",
+    "deployment_count": 12,
+    "all_deployments_desired_ready_and_available": true,
+    "loadgenerator_desired_replicas": 1,
+    "loadgenerator_ready_replicas": 1,
+    "loadgenerator_available_replicas": 1,
+    "checkoutservice_ready": true
+  },
+  "isolation": {
+    "staging_workloads_present": false,
+    "pdt_workloads_present": false,
+    "pdt_system_jobs_present": false,
+    "oracle_workloads_present": false
+  },
+  "github_identity_rbac": {
+    "operational_deployment_read": true,
+    "staging_deployment_create": true,
+    "pdt_system_job_create": true,
+    "oracle_deployment_create": true
+  },
+  "github_gate_state": {
+    "cost_review_acknowledged": false,
+    "oracle_execution_acknowledged": false,
+    "runtime_publication_acknowledged": false,
+    "pull_request_labels": [],
+    "workflow_armed": false
+  },
+  "decision": "operational-preflight-pass-eligible-to-arm-authorized-workflow",
+  "protocol_change_performed": false,
+  "runtime_publication_performed": false,
+  "candidate_execution_started": false
+}

@@ -54,6 +54,12 @@ class RunOracleRepetitionTests(unittest.TestCase):
         self.assertIn('pdt_prediction_decision:', self.script)
         self.assertIn('pdt_invalid_repetition_ledger:', self.script)
 
+    def test_oracle_harness_tunnel_is_supervised_during_endpoint_calls(self):
+        self.assertIn("start_supervised_port_forward", self.script)
+        self.assertIn("run_endpoint_command functional-suite", self.script)
+        self.assertIn('classification: "infrastructure-invalid"', self.script)
+        self.assertIn("oracle-measurement-end", self.script)
+
     def test_cloud_execution_is_fail_closed_before_kubectl(self):
         with tempfile.TemporaryDirectory() as directory:
             root = pathlib.Path(directory)

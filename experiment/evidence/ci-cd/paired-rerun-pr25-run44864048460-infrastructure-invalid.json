@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "paired-rerun-pr25-run44864048460-infrastructure-invalid",
+  "recorded_at": "2026-11-21T09:50:43Z",
+  "project_id": "microservices-demo-tcc",
+  "protocol_id": "checkout-pdt-comparison-v1.8",
+  "candidate_id": "cand-2aeweofqphemins4",
+  "candidate_sequence": 1,
+  "pull_request": {
+    "number": 25,
+    "head_sha": "fae58b6fae15390ee6eac7e5fc4eb94d99869790",
+    "state_after_cleanup": "OPEN",
+    "labels_after_cleanup": []
+  },
+  "workflow": {
+    "run_id": 44864048460,
+    "run_url": "https://github.com/omatheu/microservices-demo/actions/runs/44864048460",
+    "attempt": 1,
+    "conclusion": "failure",
+    "started_at": "2026-11-21T09:21:31Z",
+    "completed_at": "2026-11-21T09:39:43Z"
+  },
+  "classification": "infrastructure-invalid-before-pdt",
+  "experimental_results": {
+    "local_ci": "pass",
+    "staging_repetitions": [
+      {"repetition": 1, "decision": "PASS", "valid": true},
+      {"repetition": 2, "decision": "PASS", "valid": true},
+      {"repetition": 3, "decision": "PASS", "valid": true}
+    ],
+    "conventional_aggregate": "approve",
+    "conventional_decision_sealed": true,
+    "pdt_executed": false,
+    "oracle_executed": false,
+    "oracle_label_revealed": false,
+    "human_gate_reached": false,
+    "eligible_for_confirmatory_corpus": false
+  },
+  "failure": {
+    "stage": "capture-pdt-source-state",
+    "message": "error: error from server (NotFound): deployments.apps \"loadgenerator\" not found in namespace \"operational\"",
+    "operational_deployments_observed": 0,
+    "operational_pods_observed": 0,
+    "root_cause": "operational baseline was not installed after temporary cluster recreation",
+    "repository_requirement": "infra/README.md requires infra/kustomize/operational to be applied and available before experimental environments"
+  },
+  "artifact": {
+    "github_artifact_id": 14701732697,
+    "github_artifact_name": "paired-experiment-pr-25-fae58b6fae15390ee6eac7e5fc4eb94d99869790",
+    "durable_backup_path": "/home/omatheu/Documents/Codex/Online-Boutique-TCC-Evidence/run-44864048460",
+    "file_count": 251,
+    "size_bytes": 6646873,
+    "tree_sha256": "e0d2e4017d53f229151afef354b86347249fcfc74df8e153482cb9100f0876dc",
+    "conventional_decision_sha256": "cf4d6dc7a6f1890888852f5de0239e45813e789dd9ea4165fd423a304509fc59",
+    "pdt_snapshot_failure_log_sha256": "2b3d285b551fe59c0bf0a29de98ddc1a1970dfea166b7b00fdc3bdd0d72e1706",
+    "workflow_cleanup_receipt_sha256": "568f8fa1ccd23948853c4a26cb650134dd84d299985cb252ad24a437ea1be942"
+  },
+  "cleanup": {
+    "workflow_cleanup_complete": true,
+    "workflow_cleanup_after_active_pods": 0,
+    "github_cost_review_acknowledged": false,
+    "github_oracle_execution_acknowledged": false,
+    "github_runtime_publication_acknowledged": false,
+    "cluster_create_started_at": "2026-11-21T04:02:46.966694680Z",
+    "cluster_create_completed_at": "2026-11-21T04:06:29.245700964Z",
+    "cluster_delete_started_at": "2026-11-21T09:43:57.282739841Z",
+    "cluster_delete_completed_at": "2026-11-21T09:48:53.293223964Z",
+    "cluster_delete_operation": "operation-1795254237282-7c2fd5ea-0917-4dc5-a6a4-15e6c913fe30",
+    "cluster_inventory_after_cleanup": [],
+    "terraform_destroy_plan_sha256": "6724e16706012fe91042bcd4ca9e66a6f26b95fa9a118fef74967ac91c702205",
+    "terraform_state_after_cleanup_sha256": "829e5c4e6e35e0e004deafff6323b70310d704fb3d4fede2bb97ba1de6ffe4fd",
+    "terraform_result": "0-added-0-changed-25-destroyed",
+    "preserved_resources": [
+      "Cloud Billing export",
+      "billing budgets",
+      "Artifact Registry",
+      "GitHub federation and IAM",
+      "GitHub repository and pull request"
+    ]
+  },
+  "financial_state": {
+    "observation_path": "experiment/evidence/finance/cost-window-20260919-20261121-v1.8-run44864048460-postdelete-pending.json",
+    "observation_sha256": "7ed6811edf94a6f0140cdea89d1de121aa7bf628b1fbbe2ea9fd83a45b5f85ff",
+    "gross_cost_brl_observed": 1836.749562,
+    "absolute_cap_brl": 1998.268459,
+    "observed_remaining_gross_envelope_brl": 161.518897,
+    "billing_covers_cluster_deletion": false,
+    "state": "pending-post-deletion-export-coverage"
+  },
+  "retry_gates": {
+    "post_deletion_billing_review_required": true,
+    "new_human_cloud_authorization_required": true,
+    "operational_baseline_installation_required": true,
+    "operational_baseline_readiness_preflight_required": true,
+    "reuse_as_confirmatory_result": false
+  }
+}

@@ -38,6 +38,13 @@ resource "google_billing_budget" "experiment" {
     }
   }
 
+  lifecycle {
+    precondition {
+      condition     = abs(var.gross_cost_budget_amount - local.protocol_gross_cost_cap) < 0.000001
+      error_message = "Gross-cost budget drifted from the active protocol absolute cap."
+    }
+  }
+
   depends_on = [google_project_service.required["billingbudgets.googleapis.com"]]
 }
 
@@ -81,6 +88,16 @@ resource "google_billing_budget" "experiment_spend_guard" {
         (var.experiment_spend_budget_amount * threshold_rules.value)
       ) / local.experiment_cumulative_budget_amount
       spend_basis = "CURRENT_SPEND"
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition = (
+        abs(var.gross_cost_budget_amount - local.protocol_gross_cost_cap) < 0.000001 &&
+        abs(var.experiment_spend_budget_amount - local.protocol_incremental_ceiling) < 0.000001
+      )
+      error_message = "Experiment budget drifted from the active protocol financial limits."
     }
   }
 

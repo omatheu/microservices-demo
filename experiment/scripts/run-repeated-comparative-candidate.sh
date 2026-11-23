@@ -3,6 +3,7 @@
 set -euo pipefail
 
 repo_root=$(git rev-parse --show-toplevel)
+source "${repo_root}/experiment/scripts/lib/attempt-control.sh"
 protocol_file=${PROTOCOL_FILE:-${repo_root}/experiment/protocol/protocol-v1.json}
 candidate_id=${CANDIDATE_ID:-}
 candidate_definition=${CANDIDATE_DEFINITION:-}
@@ -121,6 +122,7 @@ write_status running
 trap on_error ERR
 
 ci_log="${pipeline_dir}/local-ci.log"
+ci_exit=0
 ci_command=(
   env
   MODE=confirmatory
@@ -131,10 +133,7 @@ ci_command=(
   "ARTIFACT_REGISTRY_PREFIX=${artifact_registry_prefix}"
   "${repo_root}/experiment/scripts/run-conventional-ci-local.sh"
 )
-set +e
-"${ci_command[@]}" 2>&1 | tee "$ci_log"
-ci_exit=${PIPESTATUS[0]}
-set -e
+run_logged_attempt ci_exit "$ci_log" on_error "${ci_command[@]}"
 ci_dir=$(awk -F'Evidence: ' '/^Evidence: / {path=$2} END {print path}' "$ci_log")
 local_decision="${ci_dir}/ci-local-decision.json"
 [[ -n "$ci_dir" && -f "$local_decision" ]] || {
@@ -184,15 +183,13 @@ declare -A staging_failure_one staging_failure_two
 
 for repetition in 1 2 3; do
   for attempt in 1 2; do
+    attempt_exit=0
     log="${pipeline_dir}/staging-r${repetition}-attempt${attempt}.log"
-    set +e
-    env MODE=confirmatory LOCAL_CI_DECISION="$local_decision" \
+    run_logged_attempt attempt_exit "$log" on_error \
+      env MODE=confirmatory LOCAL_CI_DECISION="$local_decision" \
       CANDIDATE_DEFINITION="$candidate_definition" CANDIDATE_ID="$candidate_id" \
       REPETITION="$repetition" \
-      "${repo_root}/experiment/scripts/run-traditional-staging.sh" \
-      2>&1 | tee "$log"
-    attempt_exit=${PIPESTATUS[0]}
-    set -e
+      "${repo_root}/experiment/scripts/run-traditional-staging.sh"
     cleanup_after_attempt "staging-r${repetition}-attempt${attempt}"
     staging_dir=$(tail -n 1 "$log")
     staging_decision="${staging_dir}/decision.json"
@@ -322,25 +319,23 @@ declare -A pdt_failure_one pdt_failure_two
 for repetition in "${valid_staging_repetitions[@]}"; do
   repetition_succeeded=false
   for attempt in 1 2; do
+    snapshot_exit=0
+    pdt_exit=0
     snapshot_log="${pipeline_dir}/pdt-snapshot-r${repetition}-attempt${attempt}.log"
     pdt_log="${pipeline_dir}/pdt-r${repetition}-attempt${attempt}.log"
-    set +e
-    "${repo_root}/experiment/scripts/capture-pdt-source-state.sh" \
-      2>&1 | tee "$snapshot_log"
-    snapshot_exit=${PIPESTATUS[0]}
+    run_logged_attempt snapshot_exit "$snapshot_log" on_error \
+      "${repo_root}/experiment/scripts/capture-pdt-source-state.sh"
     snapshot_dir=$(tail -n 1 "$snapshot_log")
     snapshot_file="${snapshot_dir}/pdt-input-state.json"
     if [[ "$snapshot_exit" -eq 0 && -f "$snapshot_file" ]]; then
-      env MODE=confirmatory CANDIDATE_FILE="$candidate_definition" \
+      run_logged_attempt pdt_exit "$pdt_log" on_error \
+        env MODE=confirmatory CANDIDATE_FILE="$candidate_definition" \
         CONVENTIONAL_DECISION="$conventional_decision" SNAPSHOT_FILE="$snapshot_file" \
         REPETITION="$repetition" PDT_CONTROLLER_IMAGE="$controller_image" \
-        "${repo_root}/experiment/scripts/run-pdt-cycle.sh" \
-        2>&1 | tee "$pdt_log"
-      pdt_exit=${PIPESTATUS[0]}
+        "${repo_root}/experiment/scripts/run-pdt-cycle.sh"
     else
       pdt_exit=$snapshot_exit
     fi
-    set -e
     cleanup_after_attempt "pdt-r${repetition}-attempt${attempt}"
     pdt_dir=$(tail -n 1 "$pdt_log" 2>/dev/null || true)
     pdt_decision="${pdt_dir}/decision.json"

@@ -1,27 +1,29 @@
 {
   "schema_version": "1.0.0",
-  "protocol_id": "checkout-pdt-comparison-v1.8",
-  "status": "frozen",
-  "confirmatory_collection_allowed": true,
-  "frozen_at": "2026-11-20T14:25:07Z",
+  "protocol_id": "checkout-pdt-comparison-v1.9",
+  "status": "pre-registration-candidate",
+  "confirmatory_collection_allowed": false,
+  "frozen_at": null,
   "amendment": {
-    "amendment_id": "security-v1.8-preexecution",
-    "authorized_at": "2026-11-19T17:52:08Z",
-    "previous_protocol_id": "checkout-pdt-comparison-v1.7",
-    "previous_protocol_sha256": "9ae5ed8fb37d4421ad5327a47f3b65631b43a577d6c3b42a96fb031e620c77c4",
-    "previous_freeze_commit": "c8cb7a3f3afd0dff812173549ca8d7222eb6db7b",
-    "confirmatory_observations_before_amendment": 3,
-    "complete_decision_pairs_before_amendment": 0,
+    "amendment_id": "orchestration-v1.9-execution-hardening",
+    "authorized_at": "2026-11-22T15:02:56Z",
+    "previous_protocol_id": "checkout-pdt-comparison-v1.8",
+    "previous_protocol_sha256": "c55d9a8d85c2ed3e0d1709e5bb15244723e8b60d1714e29e7d73c79a7438ab86",
+    "previous_freeze_commit": "6419521c6a0cd4f90b8d000959dc252f259ab263",
+    "confirmatory_observations_before_amendment": 6,
+    "complete_decision_pairs_before_amendment": 1,
     "oracle_adjudications_before_amendment": 0,
     "oracle_labels_revealed_before_amendment": 0,
     "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
     "scope": [
-      "upgrade the oracle-harness and checkoutservice Go builder from 1.27.3 to 1.27.4 by immutable digest",
-      "block CVE-2026-97054 without weakening the HIGH/CRITICAL runtime gate",
-      "republish and rebind the three experiment runtimes to one protected provenance",
-      "renew approvals, protocol freeze and blinded corpus rotation before any v1.8 execution"
+      "make the preregistered staging and PDT retry reachable under the ERR trap",
+      "separate runner tunnel loss from candidate behavior in staging, PDT and Oracle",
+      "require quiescence and continuous non-candidate workload stability between repetitions",
+      "bind operational baseline stability into each PDT source snapshot",
+      "bind Terraform cluster creation and budgets to the protocol financial limits",
+      "renew approvals, protocol freeze and blinded corpus rotation before any v1.9 execution"
     ],
-    "record": "experiment/protocol/amendments/security-v1.8-preexecution.json"
+    "record": "experiment/protocol/amendments/orchestration-v1.9-execution-hardening.json"
   },
   "twin_object": "checkoutservice",
   "research_design": {
@@ -41,7 +43,7 @@
     "sample_size_rationale": "Fixed feasibility corpus sized before evaluation results; estimates use exact intervals and no minimum-effect claim."
   },
   "randomization": {
-    "public_seed_label": "checkout-pdt-v1.8-fixed-before-corpus",
+    "public_seed_label": "checkout-pdt-v1.9-fixed-before-corpus",
     "algorithm": "HMAC-SHA256 keyed deterministic sampling and Fisher-Yates order",
     "candidate_identifier_prefix": "cand-",
     "blinding_key_minimum_bytes": 32,
@@ -298,12 +300,12 @@
   },
   "execution_limits": {
     "cloud_execution_authorization": "explicit-user-authorization-required-after-freeze",
-    "financial_baseline_gross_cost_brl": 1834.970443,
+    "financial_baseline_gross_cost_brl": 1841.214182,
     "project_gross_cost_budget_brl": 1998.268459,
-    "proposed_incremental_spend_ceiling_brl": 163.298016,
+    "proposed_incremental_spend_ceiling_brl": 157.054277,
     "mandatory_cost_review_at_brl": 150,
     "minimum_promotional_credit_reserve_brl": 10,
-    "maximum_promotional_credit_consumption_brl": 163.298016,
+    "maximum_promotional_credit_consumption_brl": 157.054277,
     "billing_alert_is_hard_cap": false,
     "candidate_block_size": 3,
     "cost_review_after_every_block": true,
@@ -321,7 +323,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "596b8388f4bd9e04d16db2e31eb483c8b1d3e67534f53f50db1f51ae2135b114"
+      "sha256": "28812110593b7b9ae98f68bc6126068bcfa3adedca330aa5a20f6afca666fe56"
     },
     "conventional_workflow_outcome_validator": {
       "path": "experiment/scripts/validate-conventional-workflow-outcome.py",
@@ -345,7 +347,7 @@
     },
     "experimental_workload_cleanup": {
       "path": "experiment/scripts/cleanup-experimental-workloads.sh",
-      "sha256": "6eac521294f6106ceed90b3316b40211d08c6e52909bc7d2616517d85c6a38a0"
+      "sha256": "cb22f04921f67d5b86720f4af95bd43a9877a8b78195a18aa5c635acb1e239f3"
     },
     "deployment_action_preparer": {
       "path": "experiment/scripts/prepare-deployment-action.py",
@@ -361,7 +363,19 @@
     },
     "confirmatory_repetition_runner": {
       "path": "experiment/scripts/run-repeated-comparative-candidate.sh",
-      "sha256": "7a9f5ff04404842b83b3afbe2a828cc4f01655c20dfa569c8cf4b34e3663b849"
+      "sha256": "2ab539eb1ee39414a4243ce7d2b2b4587ba8a6d8ab0126a0c396445b3c50e712"
+    },
+    "expected_failure_attempt_control": {
+      "path": "experiment/scripts/lib/attempt-control.sh",
+      "sha256": "2c0838f79a98544fe9d63d18b575f7e1fda330962582308bb44c2565314921f7"
+    },
+    "port_forward_supervisor": {
+      "path": "experiment/scripts/lib/port-forward-supervisor.sh",
+      "sha256": "ada51c12f46ee5ae89b63d69f41a131ba0a6cbb719f7e7f0e3fefd574f78a7d4"
+    },
+    "workload_stability_gate": {
+      "path": "experiment/scripts/wait-for-workload-stability.sh",
+      "sha256": "0ddab7c92bf9a354dad69f1765c435b975f8293ee70efa7f6502c51d9f5494f5"
     },
     "analysis_dataset_composer": {
       "path": "experiment/scripts/compose-analysis-dataset.py",
@@ -401,7 +415,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "14f7bcd279ca29efe893556e510bbe336ee15a3735eec7697e0b592f5a1c92b0"
+      "sha256": "1f376edd1d0e15cb1485522a7c76eaea4176148bd0525df58e56a3036e497ae3"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -427,6 +441,10 @@
       "path": "experiment/evidence/ci-cd/confirmatory-orchestration-regression-pr21-20261118.json",
       "sha256": "0eb9a6737b815979ab8159e1c12a196946027cfa9cceab0b77bec148288243af"
     },
+    "confirmatory_execution_hardening_review": {
+      "path": "experiment/evidence/ci-cd/confirmatory-execution-hardening-review-v1.8-20261122.json",
+      "sha256": "d941662a95c417324fe087a03cc1877795e33080ebfe657cc7a1389bdf086bfa"
+    },
     "baseline_evidence_validator": {
       "path": "experiment/scripts/validate-baseline-evidence.py",
       "sha256": "7e00ff599e29c02dd613e1fea87bb93f838da94037502aa97af9bc2e87f4da11"
@@ -445,7 +463,7 @@
     },
     "traditional_staging_runner": {
       "path": "experiment/scripts/run-traditional-staging.sh",
-      "sha256": "f53bf25430b1a9a3e92c9aa3630aadb18b42a11a595f23479bfc562a549b8647"
+      "sha256": "f3604d20f939077a7ebbdb162d5634a2a1945dfc9926a10f89b218451d47d839"
     },
     "staging_contract_probe": {
       "path": "src/checkoutservice/cmd/stagingcontract/main.go",
@@ -453,11 +471,19 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "c8b918da569a751bc583c495da08491beb8238b03f3f2d6dfbea2cb4a62136d9"
+      "sha256": "1e0b46b51475789c28ccb5f4e177731e446db315428e6ed19c415258a9c48910"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "be25f68bbaa619c02b15934c3d54406f64b44d5882fb93e04c17f62c0dec0ae0"
+      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+    },
+    "pdt_source_capture": {
+      "path": "experiment/scripts/capture-pdt-source-state.sh",
+      "sha256": "15622dc5cda578664efd910c01f8f47ffd9e079e15327f33c196f5b67c42e91a"
+    },
+    "pdt_cycle_runner": {
+      "path": "experiment/scripts/run-pdt-cycle.sh",
+      "sha256": "e11547c5bfa6798a848843e9b7ac03680a13bd49293c5f8af21066620f6b4636"
     },
     "pdt_repetition_aggregator": {
       "path": "experiment/scripts/aggregate-pdt-repetitions.py",
@@ -465,19 +491,19 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "af7a04690db78d816ba48bcd06b948dad1053ac9f9cde0398c47d4c5ee021300"
+      "sha256": "ddf09d3bca1b64cd3050db4c650c1f62b18544189ffd2ed91d124c54417fbf10"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
-      "sha256": "33194e530443be305e594f06c7f8660c36690b5efa9f0457fb4cad96362f4ad1"
+      "sha256": "420f4ab48a1dbc1dd6285197700aa08521d788f9c56d98a8bce3e2a22fe041eb"
     },
     "blinded_corpus_manager": {
       "path": "experiment/scripts/manage-blinded-corpus.py",
       "sha256": "303da77e3cd804f24e89c95fa22cf487c393a7a4800d02e4eb717d09c825ea97"
     },
     "protocol_amendment_record": {
-      "path": "experiment/protocol/amendments/security-v1.8-preexecution.json",
-      "sha256": "327b8f05c4095dbfaf89ff6667514308061cb9e17b5be0d2ce0cb675d0b40c5b"
+      "path": "experiment/protocol/amendments/orchestration-v1.9-execution-hardening.json",
+      "sha256": "e68a6eeb469256f70f33ef2a9a25b9c539ee58aec3bd1de121d19642584fc69c"
     },
     "promotional_credit_observation": {
       "path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",
@@ -485,7 +511,19 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "3901092fc1d70f23d2ef9dbf32c1cd868904b9b0c68b116a6796cb4fb93cbaff"
+      "sha256": "362b2f5de712655022b728a1be234ebc5fbbd708000bd20ab828fadf3c620b2a"
+    },
+    "oracle_repetition_runner": {
+      "path": "experiment/scripts/run-oracle-repetition.sh",
+      "sha256": "aee42299d683266f6e226cff7ef1ae69cbee07a09cd92bff321d0ae4acc174a4"
+    },
+    "terraform_cluster_financial_guard": {
+      "path": "infra/terraform/main.tf",
+      "sha256": "a17fcf18d376dff4f2aead1d5a9bbc6ac168adb3071882138cceb1b5086305aa"
+    },
+    "terraform_budget_financial_guard": {
+      "path": "infra/terraform/budget.tf",
+      "sha256": "081ab000157a37e58c4fac53f95a05e50f9248b8d26d14d6fefc936a424c4653"
     }
   },
   "required_before_freeze": [

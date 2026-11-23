@@ -1,8 +1,9 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** o protocolo v1.8 está congelado após auditoria 17/17 e o corpus
-> opaco novo foi gerado. O Billing pós-publicação está completo, mas nenhuma
-> execução cloud foi autorizada e nenhum cluster existe.
+> **Status:** a emenda operacional v1.9 está preparada localmente em modo
+> fail-closed. Protocolo, políticas e manifests estão como candidatos não
+> congelados; as aprovações e o corpus v1.8 foram retirados da área ativa sem
+> revelar rótulos. Nenhuma execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -79,6 +80,36 @@ auditoria passou 17/17 e o finalizador congelou o protocolo em
 `c55d9a8d85c2ed3e0d1709e5bb15244723e8b60d1714e29e7d73c79a7438ab86`.
 Uma chave nova gerou o corpus opaco `corpus-zkf5mounepuhq`. As duas aprovações
 mantêm `cloud_execution_authorized=false`.
+
+As tentativas v1.8 posteriores foram preservadas sem reclassificar resultados:
+seis fluxos iniciados, um par staging/PDT completo, zero adjudicações Oracle e
+zero rótulos revelados. A revisão forense registrou que o `ERR` trap tornava o
+retry inacessível, túneis `port-forward` não eram supervisionados, o cleanup não
+provava quiescência, a estabilidade contínua não era exigida e snapshots PDT
+podiam partir de uma baseline degradada. A emenda
+[`amendments/orchestration-v1.9-execution-hardening.json`](./amendments/orchestration-v1.9-execution-hardening.json)
+autoriza a correção desses controles. A autorização posterior de publicação
+permite somente abrir o PR da emenda, sem merge nem execução cloud. Ela mantém
+o teto bruto de R$1.998,268459, fixa a baseline pós-exclusão em
+R$1.841,214182 e o envelope máximo candidato em R$157,054277, e exige aprovação
+financeira, aprovação do pesquisador, auditoria 17/17 e corpus novo antes de
+outra execução. Os runtimes v1.8 por digest não precisam ser republicados
+porque as mudanças são nos runners e nos guards Terraform, fora das imagens.
+
+Em 22 de novembro, a alteração financeira autorizada foi aplicada somente aos
+budgets. O Terraform atualizou em-place o guard incremental para o envelope de
+R$157,455476, não adicionou nem destruiu recursos e confirmou zero clusters. O
+recibo está em
+[`../evidence/finance/budget-guard-v1.9-application-20261122.json`](../evidence/finance/budget-guard-v1.9-application-20261122.json).
+Essa atualização não é uma revisão financeira pós-exclusão, não congela a v1.9
+e não autoriza execução experimental.
+
+A consulta final pós-exclusão, limitada a 100 MB, cobre a remoção do cluster
+em `2026-11-22T12:22:08Z`: o último uso termina às `14:00:00Z` e os dados estão
+consolidados até `17:09:01Z`. Ela observa R$1.841,214182 brutos e deixa
+R$157,054277 até o teto absoluto. A revisão somente leitura confirmou
+elegibilidade para uma nova aprovação financeira humana, sem gerar aprovação
+ou autorização cloud.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

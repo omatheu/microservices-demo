@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "confirmatory-execution-hardening-review-v1.8-20261122",
+  "recorded_at": "2026-11-22T15:02:56Z",
+  "project_id": "microservices-demo-tcc",
+  "protocol_id": "checkout-pdt-comparison-v1.8",
+  "classification": "confirmatory-orchestration-and-infrastructure-regression",
+  "review_scope": {
+    "mode": "forensic-static-and-read-only-cloud-inventory",
+    "cluster_recreated": false,
+    "candidate_executed": false,
+    "github_mutated": false,
+    "gcp_mutated": false
+  },
+  "preserved_attempts": [
+    {
+      "workflow_run_id": 44763951607,
+      "disposition": "incomplete-after-paired-decisions-without-oracle",
+      "oracle_label_revealed": false
+    },
+    {
+      "workflow_run_id": 44864048460,
+      "disposition": "infrastructure-invalid-before-pdt",
+      "evidence_path": "experiment/evidence/ci-cd/paired-rerun-pr25-run44864048460-infrastructure-invalid.json",
+      "evidence_sha256": "5dd3932a3c55b8b03ad7311387cfedd9d511a088e21d13c635611e3d7749e8e0",
+      "oracle_label_revealed": false
+    },
+    {
+      "workflow_run_id": 45020108835,
+      "disposition": "infrastructure-invalid-during-staging-repetition-2",
+      "evidence_path": "experiment/evidence/ci-cd/paired-rerun-pr25-run45020108835-infrastructure-invalid.json",
+      "evidence_sha256": "bd2bb71cbf6693504158916368a4d083285d0733174a5f56ba7499ca2abfbe24",
+      "oracle_label_revealed": false
+    }
+  ],
+  "findings": [
+    {
+      "id": "ERR-TRAP-RETRY",
+      "severity": "critical",
+      "status": "confirmed",
+      "finding": "The global Bash ERR trap terminates an expected failed staging or PDT attempt before PIPESTATUS is captured, so the preregistered replacement attempt is not executed."
+    },
+    {
+      "id": "PORT-FORWARD-LIVENESS",
+      "severity": "high",
+      "status": "confirmed",
+      "finding": "Runner-to-cluster port-forward processes were checked only at startup; a lost tunnel could be recorded as candidate HTTP 000 failures."
+    },
+    {
+      "id": "REPETITION-QUIESCENCE",
+      "severity": "high",
+      "status": "probable-contributor",
+      "finding": "The next repetition started as CNI endpoint teardown from the prior repetition was still active because cleanup required only zero active pods."
+    },
+    {
+      "id": "WORKLOAD-STABILITY",
+      "severity": "high",
+      "status": "confirmed-control-gap",
+      "finding": "Rollout success was momentary and did not require a continuous ready, restart-stable interval before warmup and measurement."
+    },
+    {
+      "id": "PDT-SOURCE-STABILITY",
+      "severity": "high",
+      "status": "confirmed-control-gap",
+      "finding": "The PDT source capture accepted an operational snapshot without proving continuous baseline health or binding that proof to the snapshot."
+    },
+    {
+      "id": "TERRAFORM-FINANCIAL-DRIFT",
+      "severity": "critical",
+      "status": "confirmed",
+      "finding": "The active ignored terraform.tfvars used R$1751.10 while the frozen absolute cap is R$1998.268459; targeted cluster plans masked the two persistent budget updates visible in a full plan."
+    }
+  ],
+  "methodological_disposition": {
+    "candidate_failure_inferred": false,
+    "prior_evidence_reinterpreted": false,
+    "complete_oracle_adjudications": 0,
+    "oracle_labels_revealed": 0,
+    "next_cloud_execution_allowed": false,
+    "required_action": "versioned operational amendment, renewed freeze, renewed financial review and renewed researcher approval"
+  }
+}

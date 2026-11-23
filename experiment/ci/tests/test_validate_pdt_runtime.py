@@ -41,20 +41,20 @@ def publication_binding():
 
 
 class ValidatePdtRuntimeTests(unittest.TestCase):
-    def test_active_amended_runtime_is_published_and_frozen(self):
+    def test_active_amended_runtime_keeps_publication_but_is_unfrozen(self):
         value = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
 
         result = MODULE.validate(REPO_ROOT, value)
 
         self.assertTrue(result["image_ready"])
         self.assertTrue(result["publication_bound"])
-        self.assertTrue(result["frozen"])
+        self.assertFalse(result["frozen"])
 
     def test_candidate_runtime_files_are_bound_but_image_is_pending(self):
         result = MODULE.validate(REPO_ROOT, manifest())
 
         self.assertEqual(result["runtime_id"], "checkout-pdt-controller-v1")
-        self.assertEqual(result["file_count"], 15)
+        self.assertEqual(result["file_count"], 17)
         self.assertIn(
             "experiment/scripts/bind-runtime-publication.py",
             {item["path"] for item in manifest()["files"]},

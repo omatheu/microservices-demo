@@ -37,6 +37,17 @@ class FinancialBudgetControlsTests(unittest.TestCase):
         self.assertIn("cumulative_budget_amount", guard_outputs)
         self.assertIn("local.experiment_financial_baseline_amount", guard_outputs)
 
+    def test_cluster_and_budgets_are_bound_to_protocol_financial_limits(self):
+        main = (STACK / "main.tf").read_text(encoding="utf-8")
+        budget = (STACK / "budget.tf").read_text(encoding="utf-8")
+
+        self.assertIn("protocol_gross_cost_cap", main)
+        self.assertIn("protocol_incremental_ceiling", main)
+        self.assertIn('local.experiment_protocol.status == "frozen"', main)
+        self.assertIn("Terraform financial variables drift", main)
+        self.assertIn("Gross-cost budget drifted", budget)
+        self.assertIn("Experiment budget drifted", budget)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "review_id": "post-paired-rerun-financial-review-v1.8-20261121",
+  "reviewed_at": "2026-11-21T17:26:48Z",
+  "project_id": "microservices-demo-tcc",
+  "protocol_id": "checkout-pdt-comparison-v1.8",
+  "candidate_id": "cand-2aeweofqphemins4",
+  "candidate_sequence": 1,
+  "workflow_run_id": 44864048460,
+  "attempt_classification": "infrastructure-invalid-before-pdt",
+  "decision": "eligible-for-new-human-cloud-authorization-with-reduced-envelope",
+  "billing": {
+    "evidence_path": "experiment/evidence/finance/cost-window-20260919-20261121-v1.8-run44864048460-postdelete-final.json",
+    "evidence_sha256": "32df0902051dcf636a8eab1d7ca2325732114c60aa17c613c1816beb9afea53a",
+    "billing_data_as_of": "2026-11-21T16:56:01Z",
+    "last_usage_end_time": "2026-11-21T13:00:00Z",
+    "cluster_deleted_at": "2026-11-21T09:48:53.293223964Z",
+    "cluster_deletion_covered": true,
+    "gross_cost_brl": 1840.812983,
+    "credits_brl": -1840.819197,
+    "net_cost_brl": -0.006214,
+    "pre_rerun_gross_baseline_brl": 1836.283045,
+    "rerun_incremental_gross_cost_brl": 4.529938,
+    "project_gross_cost_budget_brl": 1998.268459,
+    "remaining_gross_budget_brl": 157.455476,
+    "absolute_cap_pass": true
+  },
+  "eligibility": {
+    "eligible_for_new_human_authorization": true,
+    "maximum_reduced_incremental_ceiling_brl": 157.455476,
+    "prior_authorization_consumed": true,
+    "prior_authorization_explicitly_excluded_operational_deployment": true,
+    "required_authorization_scope": [
+      "temporary cluster recreation",
+      "installation of the frozen operational baseline before workflow arming",
+      "readiness preflight requiring all operational deployments and deployment/loadgenerator",
+      "candidate 1 staging, PDT, protected human gate and Oracle in the exact frozen workflow",
+      "cluster deletion on failure, pause or completion"
+    ],
+    "protocol_change_required": false,
+    "runtime_republication_required": false
+  },
+  "controls": {
+    "maximum_bytes_billed": 100000000,
+    "query_cache_enabled": true,
+    "approval_generated": false,
+    "cloud_execution_authorized": false,
+    "gcp_mutation_performed": false,
+    "github_mutation_performed": false,
+    "oracle_label_revealed": false
+  }
+}

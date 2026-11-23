@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "runtime_id": "checkout-pdt-controller-v1",
-  "status": "frozen",
-  "frozen_at": "2026-11-20T04:57:03Z",
+  "status": "pre-registration-candidate",
+  "frozen_at": null,
   "files": [
     {
       "path": "experiment/pdt/controller/checkout_pdt_controller.py",
@@ -30,7 +30,7 @@
     },
     {
       "path": "experiment/scripts/run-pdt-cycle.sh",
-      "sha256": "9efde358ac104ee7645ea7fb6809043743d81d3efcd5cae403669749399b9aa5"
+      "sha256": "e11547c5bfa6798a848843e9b7ac03680a13bd49293c5f8af21066620f6b4636"
     },
     {
       "path": "experiment/scripts/decide-pdt.py",
@@ -38,7 +38,15 @@
     },
     {
       "path": "experiment/scripts/capture-pdt-source-state.sh",
-      "sha256": "cc33324bcf02360309866a31ecca852fad9f7bb081969e7cf0ba31f759906b2b"
+      "sha256": "15622dc5cda578664efd910c01f8f47ffd9e079e15327f33c196f5b67c42e91a"
+    },
+    {
+      "path": "experiment/scripts/lib/port-forward-supervisor.sh",
+      "sha256": "ada51c12f46ee5ae89b63d69f41a131ba0a6cbb719f7e7f0e3fefd574f78a7d4"
+    },
+    {
+      "path": "experiment/scripts/wait-for-workload-stability.sh",
+      "sha256": "0ddab7c92bf9a354dad69f1765c435b975f8293ee70efa7f6502c51d9f5494f5"
     },
     {
       "path": "experiment/scripts/export-observability-window.sh",
@@ -62,7 +70,7 @@
     },
     {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "be25f68bbaa619c02b15934c3d54406f64b44d5882fb93e04c17f62c0dec0ae0"
+      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
     }
   ],
   "controller_image": "us-central1-docker.pkg.dev/microservices-demo-tcc/online-boutique-experiment/checkout-pdt-controller@sha256:dd0391cc006469c1f81269704672dbc9732058e86019677fd9a12cf9997aeb68",

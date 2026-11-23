@@ -4,6 +4,70 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Após a tentativa inválida `45020108835`, o cluster foi excluído em
+`2026-11-22T12:22:08Z`. A consulta final somente leitura, limitada a 100 MB,
+agora cobre uso encerrado às `2026-11-22T14:00:00Z`, com
+`billing_data_as_of=2026-11-22T17:09:01Z`. O custo bruto observado é
+R$1.841,214182 e restam R$157,054277 até o teto absoluto inalterado de
+R$1.998,268459. A revisão local confirmou elegibilidade para uma nova
+aprovação financeira humana, sem gerar aprovação, autorização cloud ou
+mutação em GCP/GitHub. A observação e a elegibilidade estão em
+[`cost-window-20260919-20261122-v1.8-run45020108835-postdelete-final.json`](./cost-window-20260919-20261122-v1.8-run45020108835-postdelete-final.json)
+e
+[`pre-freeze-financial-review-eligibility-v1.9-20261122.json`](./pre-freeze-financial-review-eligibility-v1.9-20261122.json).
+
+Depois do bloco 1 da coleta v1.8, o cluster foi excluído aproximadamente às
+`2026-11-20T16:21:00Z`. A consulta Billing limitada a 100 MB passou a cobrir
+uso encerrado às `2026-11-20T20:00:00Z`, com
+`billing_data_as_of=2026-11-20T23:44:58Z`. O custo bruto observado é
+R$1.836,283045, aumento de R$1,312602 sobre a baseline pré-bloco, e restam
+R$161,985414 até o teto absoluto de R$1.998,268459. Reutilizar integralmente o
+envelope pré-bloco de R$163,298016 projetaria R$1.999,581061 e excederia o teto
+em R$1,312602. Por isso, a etapa Oracle permanece inelegível até a adoção de um
+envelope reduzido de no máximo R$161,985414, a confirmação financeira humana e
+uma autorização Oracle separada. Nenhuma aprovação ou autorização cloud foi
+gerada. A observação, a elegibilidade fail-closed e a revisão estão em
+[`cost-window-20260919-20261121-v1.8-postblock1.json`](./cost-window-20260919-20261121-v1.8-postblock1.json),
+[`post-block-1-financial-review-eligibility-v1.8-20261121.json`](./post-block-1-financial-review-eligibility-v1.8-20261121.json)
+e
+[`post-block-1-financial-review-v1.8-20261121.json`](./post-block-1-financial-review-v1.8-20261121.json).
+Em 21/11/2026, o pesquisador aprovou explicitamente o envelope reduzido de
+R$161,985414, sem elevar o teto absoluto, e autorizou separadamente a
+recriação temporária do cluster e somente a execução Oracle da candidata 1.
+Staging e PDT não foram autorizados a repetir. Os registros vinculados estão em
+[`post-block-1-financial-approval-v1.8-20261121.json`](./post-block-1-financial-approval-v1.8-20261121.json)
+e
+[`oracle-block-1-cloud-authorization-v1.8-20261121.json`](./oracle-block-1-cloud-authorization-v1.8-20261121.json).
+Uma atualização Billing imediatamente anterior à janela Oracle confirmou o
+mesmo custo bruto, sem consumo adicional desde a revisão pós-bloco. A etapa
+ficou financeiramente elegível dentro do envelope reduzido, mas continua
+bloqueada até a confirmação do ambiente protegido. A evidência e a revisão
+estão em
+[`cost-window-20260919-20261121-v1.8-preoracle1.json`](./cost-window-20260919-20261121-v1.8-preoracle1.json)
+e
+[`pre-oracle-1-financial-review-v1.8-20261121.json`](./pre-oracle-1-financial-review-v1.8-20261121.json).
+Como o run `44763951607` foi armado sem o rótulo Oracle, ele permanece
+preservado como tentativa incompleta sem Oracle. O pesquisador autorizou uma
+reexecução controlada de staging e PDT da mesma candidata exclusivamente para
+rearmar o gate Oracle no workflow congelado. O teto absoluto e o envelope
+restante não mudaram, e a exclusão do cluster continua obrigatória em falha,
+pausa ou conclusão. A exceção operacional está vinculada em
+[`paired-rerun-cloud-authorization-v1.8-20261121.json`](./paired-rerun-cloud-authorization-v1.8-20261121.json).
+O run rearmado `44864048460` concluiu CI e três repetições válidas de staging,
+mas falhou antes do PDT porque o baseline `operational` não havia sido aplicado
+após a recriação temporária do cluster. A tentativa foi classificada como
+`infrastructure-invalid-before-pdt`, não revelou o rótulo Oracle e não integra
+o corpus confirmatório. O workflow limpou os workloads, os gates do GitHub
+foram desarmados e o cluster foi excluído às
+`2026-11-21T09:48:53.293223964Z`, preservando Billing, budgets, Artifact
+Registry, IAM e GitHub. A evidência está em
+[`paired-rerun-pr25-run44864048460-infrastructure-invalid.json`](../ci-cd/paired-rerun-pr25-run44864048460-infrastructure-invalid.json).
+A leitura Billing pós-exclusão ainda cobre uso somente até `05:00Z`, registra
+R$1.836,749562 brutos e R$161,518897 de margem observada; portanto, o fechamento
+financeiro e qualquer retry permanecem bloqueados até o export cobrir a
+exclusão. A observação pendente está em
+[`cost-window-20260919-20261121-v1.8-run44864048460-postdelete-pending.json`](./cost-window-20260919-20261121-v1.8-run44864048460-postdelete-pending.json).
+
 Antes do bloco 1 da coleta v1.8, a candidata opaca
 `cand-2aeweofqphemins4` foi publicada no PR #25 sem labels de execução. A CI
 convencional pré-staging passou, mas staging, PDT e Oracle não executaram. Uma
@@ -503,3 +567,21 @@ há mudança; com a trava ligada aparecem somente a API do BigQuery e o dataset
 `US`, sem alterações em GKE, Kubernetes, Artifact Registry, IAM ou orçamento.
 A evidência está em
 [`billing-export-plan-readiness-20260920T224203Z.json`](./billing-export-plan-readiness-20260920T224203Z.json).
+
+## Fechamento pós-tentativa pareada v1.8
+
+O export posterior ao run `44864048460` passou a cobrir a exclusão do cluster
+concluída em `2026-11-21T09:48:53.293223964Z`. A observação limitada a 100 MB
+registra R$1.840,812983 de custo bruto, R$4,529938 acima da baseline
+pré-reexecução e R$157,455476 de margem até o teto absoluto de
+R$1.998,268459. O snapshot está em
+[`cost-window-20260919-20261121-v1.8-run44864048460-postdelete-final.json`](./cost-window-20260919-20261121-v1.8-run44864048460-postdelete-final.json).
+
+A revisão
+[`post-paired-rerun-financial-review-v1.8-20261121.json`](./post-paired-rerun-financial-review-v1.8-20261121.json)
+não cria aprovação nem autorização cloud. Ela somente confirma elegibilidade
+financeira para solicitar uma nova decisão humana com envelope máximo reduzido
+para R$157,455476. Como a autorização consumida excluía explicitamente o
+deployment operacional, a próxima autorização precisa incluir a instalação do
+baseline congelado e o preflight de `deployment/loadgenerator` antes de armar o
+workflow. Nenhuma mudança de protocolo ou republicação de runtime é necessária.

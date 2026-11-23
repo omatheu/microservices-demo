@@ -1,6 +1,13 @@
 # Corpus confirmatório
 
-O corpus confirmatório ativo v1.8 foi gerado em 20/11/2026 UTC somente depois
+Não há corpus confirmatório ativo. A emenda operacional v1.9 retirou o corpus
+v1.8 da área ativa depois das tentativas de infraestrutura, sem revelar rótulos
+Oracle. O arquivo continua verificável no congelamento histórico abaixo e no
+commit `6419521c6a0cd4f90b8d000959dc252f259ab263`. Um corpus v1.9 deverá usar chave
+nova e só poderá ser gerado depois da revisão financeira, aprovação do
+pesquisador, auditoria 17/17 e congelamento do protocolo v1.9.
+
+O corpus confirmatório histórico v1.8 foi gerado em 20/11/2026 UTC somente depois
 da auditoria pré-freeze 17/17 e do congelamento do protocolo. O corpus
 `corpus-zkf5mounepuhq` contém 18 identificadores opacos, três repetições por
 candidata e seis blocos de três. Ele está vinculado ao protocolo congelado de
@@ -9,8 +16,8 @@ tem SHA-256
 `53ab1e6fa4e47d462d5b56556a04c29a4693d00367275208bd214cb5cf909d6f` e
 compromisso Oracle
 `1a4ab57b897327bd929675a391a04b441b47477883ad0ee219a95213f2de207f`.
-A chave e o manifesto Oracle v1.8 permanecem privados com permissão `0600`; o
-congelamento não autoriza execução cloud.
+A chave e o manifesto Oracle v1.8 permanecem privados com permissão `0600`; não
+podem ser reutilizados pela v1.9. O congelamento histórico não autoriza execução cloud.
 
 O corpus confirmatório v1.7 foi gerado em 19/11/2026 UTC somente depois da
 auditoria pré-freeze 17/17 e do congelamento do protocolo. O corpus
@@ -130,7 +137,7 @@ v1.4, v1.5 e v1.6 também permanecem nos diretórios privados ignorados pelo Git
 permissões 0600, e nunca podem ser copiados para este diretório versionado. O
 secret protegido
 `TCC_ORACLE_BLINDING_KEY_B64` contém uma chave histórica invalidada e permanece
-desarmado. Ele só deve ser substituído pela chave v1.8 nova em uma operação
+desarmado. Ele só deve ser substituído por uma chave v1.9 nova em uma operação
 protegida e explicitamente autorizada, sem expor seu valor.
 
 O mesmo ambiente protegido deve conter:

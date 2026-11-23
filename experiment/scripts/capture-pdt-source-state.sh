@@ -20,7 +20,7 @@ window_start=$(date -u -d "${lookback_minutes} minutes ago" +%Y-%m-%dT%H:%M:%SZ)
 require_command() {
   command -v "$1" >/dev/null 2>&1 || { echo "Required command not found: $1" >&2; exit 1; }
 }
-for command_name in gcloud git jq kubectl; do require_command "$command_name"; done
+for command_name in gcloud git jq kubectl sha256sum; do require_command "$command_name"; done
 [[ "$lookback_minutes" =~ ^[1-9][0-9]*$ ]] || { echo "LOOKBACK_MINUTES must be a positive integer." >&2; exit 1; }
 
 mkdir -p "$snapshot_dir"
@@ -34,6 +34,25 @@ trap 'write_status failed' ERR
 cp "$binding_file" "${snapshot_dir}/source-binding.json"
 gcloud container clusters describe "$cluster_name" --region "$cluster_location" --project "$project_id" --format=json > "${snapshot_dir}/cluster.json"
 kubectl get namespace "$source_namespace" -o json > "${snapshot_dir}/namespace.json"
+if ! NAMESPACE="$source_namespace" MINIMUM_EXPECTED_DEPLOYMENTS=12 \
+  OUTPUT_FILE="${snapshot_dir}/operational-workload-stability.json" \
+  "${repo_root}/experiment/scripts/wait-for-workload-stability.sh" >/dev/null; then
+  jq -n --arg snapshot_id "$snapshot_id" --arg namespace "$source_namespace" \
+    --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" '
+    {
+      schema_version: "1.0.0",
+      snapshot_id: $snapshot_id,
+      classification: "infrastructure-invalid",
+      phase: "operational-source-readiness",
+      namespace: $namespace,
+      reason: "operational baseline did not remain continuously ready",
+      recorded_at: $timestamp,
+      snapshot_eligible: false
+    }' >"${snapshot_dir}/infrastructure-invalid.json"
+  trap - ERR
+  write_status infrastructure-invalid
+  exit 70
+fi
 kubectl get deployments --namespace "$source_namespace" -o json > "${snapshot_dir}/deployments.json"
 kubectl get pods --namespace "$source_namespace" -o json > "${snapshot_dir}/pods.json"
 kubectl get services --namespace "$source_namespace" -o json > "${snapshot_dir}/services.json"
@@ -80,6 +99,7 @@ jq -n \
   --arg cluster_self_link "$(jq -r '.selfLink' "${snapshot_dir}/cluster.json")" \
   --arg namespace_uid "$(jq -r '.metadata.uid' "${snapshot_dir}/namespace.json")" \
   --arg observability_evidence "${observability_dir#"${repo_root}"/}" \
+  --arg operational_stability_sha256 "$(sha256sum "${snapshot_dir}/operational-workload-stability.json" | cut -d ' ' -f1)" \
   --arg git_commit "$(git -C "$repo_root" rev-parse HEAD)" \
   --slurpfile workloads "${snapshot_dir}/workload-state.json" \
   --slurpfile load_profile "${snapshot_dir}/load-profile.json" \
@@ -105,7 +125,14 @@ jq -n \
       load_profile: $load_profile[0],
       resource_quotas: $quotas[0].items
     },
-    evidence: {observability: $observability_evidence},
+    evidence: {
+      observability: $observability_evidence,
+      operational_workload_stability: {
+        path: "operational-workload-stability.json",
+        sha256: $operational_stability_sha256,
+        state: "stable"
+      }
+    },
     provenance: {git_commit: $git_commit, immutable_for_decision: true}
   }' > "${snapshot_dir}/pdt-input-state.json"
 

@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "authorization_id": "oracle-block-1-cloud-authorization-v1.8-20261121",
+  "authorized_at": "2026-11-21T03:40:52Z",
+  "project_id": "microservices-demo-tcc",
+  "protocol_id": "checkout-pdt-comparison-v1.8",
+  "candidate_id": "cand-2aeweofqphemins4",
+  "candidate_sequence": 1,
+  "authorization_literal": "AUTORIZO_RECRIACAO_TEMPORARIA_DO_CLUSTER_E_EXECUCAO_ORACLE_DA_CANDIDATA_1_V1_8_COM_TETO_BRUTO_ABSOLUTO_DE_1998_268459_REAIS_ENVELOPE_RESTANTE_MAXIMO_DE_161_985414_REAIS_E_EXCLUSAO_DO_CLUSTER_EM_CASO_DE_FALHA_PAUSA_OU_CONCLUSAO",
+  "financial_approval_binding": {
+    "path": "experiment/evidence/finance/post-block-1-financial-approval-v1.8-20261121.json",
+    "sha256": "3dc63bcd756c80456c3235926d703b309e92833f7142faa464adf43d850c994e",
+    "approved_remaining_gross_envelope_brl": 161.985414,
+    "project_gross_cost_budget_brl": 1998.268459
+  },
+  "authorized_actions": {
+    "preexecution_billing_refresh_maximum_bytes": 100000000,
+    "temporary_cluster_recreation": true,
+    "candidate_1_oracle_execution": true,
+    "oracle_namespace_cleanup": true,
+    "cluster_deletion_on_failure_pause_or_completion": true
+  },
+  "explicitly_not_authorized": {
+    "staging_rerun": true,
+    "pdt_rerun": true,
+    "operational_deployment": true,
+    "candidate_merge": true,
+    "absolute_cap_increase": true,
+    "additional_candidates": true
+  },
+  "execution_controls": {
+    "project_gross_cost_budget_brl": 1998.268459,
+    "maximum_remaining_gross_envelope_brl": 161.985414,
+    "abort_on_financial_gate_failure": true,
+    "require_protected_human_gate": true,
+    "require_no_oracle_label_reveal_before_sealed_decisions": true,
+    "require_cluster_deletion_receipt": true
+  }
+}
