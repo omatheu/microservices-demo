@@ -44,6 +44,28 @@ class GithubFederationTerraformTests(unittest.TestCase):
         self.assertNotIn('"oracle"', mutable)
         self.assertIn("github_experiment_operational_reader", federation)
 
+    def test_mutable_namespace_role_can_inventory_cleanup_generated_endpoints(self):
+        federation = FEDERATION.read_text(encoding="utf-8")
+        mutator = federation.split(
+            'resource "kubernetes_role_v1" "github_experiment_mutator"', 1
+        )[1].split('resource "kubernetes_role_binding_v1"', 1)[0]
+
+        self.assertIn('api_groups = [""]\n    resources  = ["endpoints"]', mutator)
+        self.assertIn(
+            'api_groups = ["discovery.k8s.io"]\n    resources  = ["endpointslices"]',
+            mutator,
+        )
+        endpoint_rule = mutator.split('resources  = ["endpoints"]', 1)[1].split("}", 1)[0]
+        endpoint_slice_rule = mutator.split(
+            'resources  = ["endpointslices"]', 1
+        )[1].split("}", 1)[0]
+        self.assertIn('verbs      = ["list"]', endpoint_rule)
+        self.assertIn('verbs      = ["list"]', endpoint_slice_rule)
+        self.assertNotIn("create", endpoint_rule)
+        self.assertNotIn("delete", endpoint_rule)
+        self.assertNotIn("create", endpoint_slice_rule)
+        self.assertNotIn("delete", endpoint_slice_rule)
+
     def test_pdt_system_permission_is_limited_to_on_demand_controller_jobs(self):
         federation = FEDERATION.read_text(encoding="utf-8")
         controller = federation.split(

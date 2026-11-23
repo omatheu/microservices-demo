@@ -188,6 +188,18 @@ resource "kubernetes_role_v1" "github_experiment_mutator" {
 
   rule {
     api_groups = [""]
+    resources  = ["endpoints"]
+    verbs      = ["list"]
+  }
+
+  rule {
+    api_groups = ["discovery.k8s.io"]
+    resources  = ["endpointslices"]
+    verbs      = ["list"]
+  }
+
+  rule {
+    api_groups = [""]
     resources  = ["pods/log"]
     verbs      = ["get"]
   }

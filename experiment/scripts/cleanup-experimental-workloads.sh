@@ -3,6 +3,7 @@
 set -euo pipefail
 
 allow_cleanup=${ALLOW_EXPERIMENTAL_CLEANUP:-false}
+preflight_only=${CLEANUP_PREFLIGHT_ONLY:-false}
 output_file=${OUTPUT_FILE:-}
 expected_context="gke_microservices-demo-tcc_us-central1_online-boutique-experiment"
 workload_namespaces=(staging pdt)
@@ -25,7 +26,11 @@ if [[ "$allow_cleanup" != "true" ]]; then
   echo "Experimental cleanup requires ALLOW_EXPERIMENTAL_CLEANUP=true." >&2
   exit 1
 fi
-if [[ -z "$output_file" ]]; then
+if [[ "$preflight_only" != "true" && "$preflight_only" != "false" ]]; then
+  echo "CLEANUP_PREFLIGHT_ONLY must be true or false." >&2
+  exit 1
+fi
+if [[ "$preflight_only" == "false" && -z "$output_file" ]]; then
   echo "OUTPUT_FILE is required for cleanup evidence." >&2
   exit 1
 fi
@@ -44,6 +49,47 @@ current_context=$(kubectl config current-context)
 if [[ "$current_context" != "$expected_context" ]]; then
   echo "Refusing cleanup outside the reviewed experiment cluster context." >&2
   exit 1
+fi
+
+require_permission() {
+  local verb=$1
+  local resource=$2
+  local namespace=$3
+  local allowed
+  allowed=$(kubectl auth can-i "$verb" "$resource" --namespace "$namespace" 2>/dev/null || true)
+  if [[ "$allowed" != "yes" ]]; then
+    echo "Missing cleanup RBAC permission: ${verb} ${resource} in namespace ${namespace}." >&2
+    return 1
+  fi
+}
+
+verify_cleanup_permissions() {
+  local namespace
+  local resource
+  for namespace in "${workload_namespaces[@]}"; do
+    for resource in \
+      pods \
+      deployments.apps \
+      replicasets.apps \
+      services \
+      endpoints \
+      endpointslices.discovery.k8s.io \
+      networkpolicies.networking.k8s.io; do
+      require_permission list "$resource" "$namespace"
+    done
+    for resource in deployments.apps services networkpolicies.networking.k8s.io; do
+      require_permission delete "$resource" "$namespace"
+    done
+  done
+  require_permission list pods "$controller_namespace"
+  require_permission list jobs.batch "$controller_namespace"
+  require_permission delete jobs.batch "$controller_namespace"
+}
+
+verify_cleanup_permissions
+if [[ "$preflight_only" == "true" ]]; then
+  echo "Experimental cleanup RBAC preflight passed."
+  exit 0
 fi
 
 temporary_directory=$(mktemp -d)
