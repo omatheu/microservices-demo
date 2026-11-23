@@ -4,6 +4,22 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Antes do bloco 1 da coleta v1.10, a candidata opaca
+`cand-cgfz5ej6ehby4hvr` foi publicada no PR #35 sem labels de execução. Os
+testes de código, os gates convencionais de engenharia e a validação das
+imagens passaram; a decisão pré-staging foi `pass`. Nenhuma execução
+confirmatória, staging cloud, PDT ou Oracle ocorreu. A consulta Billing real,
+somente leitura e limitada a 100 MB observou R$1.842,253299 brutos,
+R$0,481743 acima da baseline v1.10. A margem até o teto absoluto caiu de
+R$156,496903 para R$156,015160. A revisão permite solicitar uma autorização
+confirmatória separada somente com esse envelope reduzido e com nova leitura
+Billing imediatamente antes de qualquer recriação do cluster. Ela não autoriza
+merge da candidata, GKE ou execução experimental. A observação e a revisão
+estão em
+[`cost-window-20260919-20261124-v1.10-preblock1.json`](./cost-window-20260919-20261124-v1.10-preblock1.json)
+e
+[`pre-block-1-financial-review-v1.10-20261123.json`](./pre-block-1-financial-review-v1.10-20261123.json).
+
 Após a tentativa incompleta v1.9 `45101639286`, a emenda v1.10 aplicou
 localmente o bundle de componentes em `2026-11-23T03:23:36Z`. O Billing final
 passou a cobrir a exclusão do cluster: R$1.841,771556 brutos e envelope máximo

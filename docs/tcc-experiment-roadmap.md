@@ -173,6 +173,13 @@ como Partial Digital Twin.
   rotacionada e instalada no ambiente protegido, corpus opaco
   `corpus-od2dc4lcwrmiy` validado com 18 candidatas, três repetições e seis
   blocos, mantendo os kill switches em `false` e o cluster ausente.
+- [x] Candidata 1 v1.10 `cand-cgfz5ej6ehby4hvr` materializada no PR #35 sem
+  labels cloud; testes de código, imagens e gates convencionais passaram com
+  decisão pré-staging `pass`, sem execução confirmatória ou criação de recursos.
+- [x] Revisão financeira pré-bloco v1.10 limitada a 100 MB: custo bruto de
+  R$1.842,253299, acréscimo de R$0,481743 sobre a baseline congelada e margem
+  reduzida para R$156,015160 até o teto absoluto, exigindo nova leitura
+  imediatamente antes de qualquer execução cloud.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -220,10 +227,12 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-O congelamento e o corpus v1.10 já estão prontos. O próximo passo é materializar
-a primeira candidata opaca e renovar a revisão financeira pré-bloco, ainda sem
-recriar o cluster. A execução cloud continua dependente de autorização humana
-separada e dos gates financeiros do protocolo.
+O congelamento, o corpus, a candidata 1 e a revisão financeira pré-bloco v1.10
+já estão prontos. O próximo passo exige uma autorização humana separada que
+adote no máximo o envelope bruto restante de R$156,015160, seguida por uma
+revalidação Billing imediatamente anterior à janela. Somente depois disso o
+cluster temporário poderá ser recriado e a execução pareada de staging e PDT
+poderá começar; o Oracle continuará condicionado ao gate humano protegido.
 
 ### Caminho crítico atual — 23/11/2026
 
