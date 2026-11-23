@@ -1,9 +1,10 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** a emenda operacional v1.9 está preparada localmente em modo
-> fail-closed. Protocolo, políticas e manifests estão como candidatos não
-> congelados; as aprovações e o corpus v1.8 foram retirados da área ativa sem
-> revelar rótulos. Nenhuma execução cloud foi autorizada e nenhum cluster existe.
+> **Status:** o protocolo operacional v1.9 está congelado localmente após as
+> aprovações financeira e do pesquisador e auditoria 17/17. Políticas e
+> manifests permanecem vinculados ao mesmo bundle; o corpus v1.8 foi retirado
+> da área ativa sem revelar rótulos e o corpus v1.9 ainda não foi gerado.
+> Nenhuma execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -118,8 +119,11 @@ as cinco políticas e os dois manifests em `2026-11-23T01:07:18Z`, preservando
 o protocolo como candidato com coleta desabilitada. A auditoria passa 15/17;
 faltavam a revisão financeira e a aprovação do pesquisador. A revisão
 financeira humana posterior vinculou a evidência Billing exata e elevou a
-auditoria para 16/17 sem autorizar cloud; resta somente a aprovação do
-pesquisador.
+auditoria para 16/17 sem autorizar cloud. Após a aprovação explícita do
+pesquisador sobre a coleta parcial, a auditoria passou 17/17 e o finalizador
+congelou o protocolo em `2026-11-23T01:15:54Z`, com SHA-256
+`7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae`.
+O congelamento não gera corpus, não autoriza execução cloud e não recria GKE.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

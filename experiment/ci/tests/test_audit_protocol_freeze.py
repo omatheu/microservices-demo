@@ -108,13 +108,13 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_v19_locked_before_renewed_approvals(self):
+    def test_active_protocol_is_v19_frozen_after_renewed_approvals(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
         self.assertEqual("checkout-pdt-comparison-v1.9", value["protocol_id"])
-        self.assertEqual("pre-registration-candidate", value["status"])
-        self.assertFalse(value["confirmatory_collection_allowed"])
-        self.assertIsNone(value["frozen_at"])
+        self.assertEqual("frozen", value["status"])
+        self.assertTrue(value["confirmatory_collection_allowed"])
+        self.assertEqual("2026-11-23T01:15:54Z", value["frozen_at"])
         self.assertEqual(
             "orchestration-v1.9-execution-hardening",
             value["amendment"]["amendment_id"],

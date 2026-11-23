@@ -14,7 +14,7 @@ set -euo pipefail
 [[ "$1" == "port-forward" ]]
 printf 'Forwarding from 127.0.0.1:18080 -> 80\n'
 if [[ "${PORT_FORWARD_MODE}" == "exit" ]]; then
-  sleep 0.2
+  while [[ ! -e "${PORT_FORWARD_EXIT_SIGNAL}" ]]; do sleep 0.01; done
   exit 0
 fi
 trap 'exit 0' TERM INT
@@ -39,6 +39,7 @@ class PortForwardSupervisorTests(unittest.TestCase):
             {
                 "PATH": f"{self.bin_dir}:{environment['PATH']}",
                 "PORT_FORWARD_MODE": mode,
+                "PORT_FORWARD_EXIT_SIGNAL": str(self.root / "exit.signal"),
                 "SUPERVISOR_LIBRARY": str(LIBRARY),
                 "FORWARD_LOG": str(self.root / f"{mode}.log"),
             }
@@ -47,7 +48,10 @@ class PortForwardSupervisorTests(unittest.TestCase):
 set -euo pipefail
 source "${SUPERVISOR_LIBRARY}"
 start_supervised_port_forward staging frontend 18080 80 "${FORWARD_LOG}"
-sleep 1
+if [[ "${PORT_FORWARD_MODE}" == "exit" ]]; then
+  touch "${PORT_FORWARD_EXIT_SIGNAL}"
+  sleep 0.1
+fi
 if assert_supervised_port_forwards test-phase; then
   status=0
 else

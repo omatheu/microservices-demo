@@ -19,6 +19,16 @@ A aprovação financeira humana canônica foi vinculada à candidata exata sem
 autorizar cloud. A auditoria passou a 16/17 e a elegibilidade da aprovação
 final do pesquisador está registrada em
 [`researcher-approval-eligibility-v1.9-20261123T011230Z.json`](./researcher-approval-eligibility-v1.9-20261123T011230Z.json).
+Após a confirmação explícita do pesquisador sobre a coleta parcial, a auditoria
+passou 17/17 e o finalizador promoveu a v1.9 para `frozen` em
+`2026-11-23T01:15:54Z`. O protocolo congelado possui SHA-256
+`7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae`.
+Os recibos estão em
+[`pre-freeze-audit-v1.9-ready-20261123T011554Z.json`](./pre-freeze-audit-v1.9-ready-20261123T011554Z.json)
+e
+[`protocol-freeze-finalization-v1.9-20261123T011554Z.json`](./protocol-freeze-finalization-v1.9-20261123T011554Z.json).
+O congelamento mantém `cloud_execution_authorized=false`; nenhum corpus v1.9
+foi gerado nesta etapa.
 
 Após a tentativa inválida `45020108835`, o cluster foi excluído em
 `2026-11-22T12:22:08Z`. A consulta final somente leitura, limitada a 100 MB,
