@@ -4,6 +4,27 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Após a tentativa incompleta v1.9 `45101639286`, a emenda v1.10 aplicou
+localmente o bundle de componentes em `2026-11-23T03:23:36Z`. O Billing final
+passou a cobrir a exclusão do cluster: R$1.841,771556 brutos e envelope máximo
+de R$156,496903 até o teto absoluto de R$1.998,268459. A consulta foi limitada
+a 100 MB e a elegibilidade financeira passou sem gerar aprovação. O protocolo
+permanece `pre-registration-candidate`, a coleta está desabilitada e os 52
+inputs vinculados foram validados. A auditoria passa 15/17; faltam a aprovação
+financeira humana e a aprovação do pesquisador. Nenhum recurso cloud foi
+criado ou alterado. A observação e a elegibilidade estão em
+[`cost-window-20260919-20261123-v1.9-run45101639286-postdelete-final.json`](./cost-window-20260919-20261123-v1.9-run45101639286-postdelete-final.json)
+e
+[`pre-freeze-financial-review-eligibility-v1.10-20261123T104516Z.json`](./pre-freeze-financial-review-eligibility-v1.10-20261123T104516Z.json).
+O bundle e a auditoria regenerados sobre a evidência final estão em
+[`protocol-freeze-candidate-v1.10-finalbilling-20261123T104516Z.json`](./protocol-freeze-candidate-v1.10-finalbilling-20261123T104516Z.json)
+e
+[`pre-freeze-audit-v1.10-finalbilling-20261123T104516Z.json`](./pre-freeze-audit-v1.10-finalbilling-20261123T104516Z.json).
+Os recibos iniciais, anteriores à completude do Billing, permanecem em
+[`protocol-freeze-candidate-v1.10-20261123T032336Z.json`](./protocol-freeze-candidate-v1.10-20261123T032336Z.json)
+e
+[`pre-freeze-audit-v1.10-components-20261123T032336Z.json`](./pre-freeze-audit-v1.10-components-20261123T032336Z.json).
+
 Antes do bloco 1 da coleta v1.9, a candidata opaca
 `cand-iyzzv33o2ar3bjbq` foi publicada no PR #30 sem labels de execução. Os
 cinco checks públicos passaram. O preflight convencional de engenharia selou

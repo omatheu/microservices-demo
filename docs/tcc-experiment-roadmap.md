@@ -155,6 +155,17 @@ como Partial Digital Twin.
 - [x] Chave de cegamento v1.9 rotacionada e instalada no ambiente protegido;
   corpus opaco `corpus-2p6gcipdrzgxg` validado com 18 candidatas, três
   repetições e seis blocos, mantendo todos os kill switches em `false`.
+- [x] Tentativa confirmatória v1.9 `45101639286` preservada como
+  `infrastructure-invalid`: a CI bloqueou a candidata e o tratamento herdou o
+  bloqueio, mas o cleanup falhou por ausência de leitura de Endpoints e
+  EndpointSlices; Oracle não executou e nenhum rótulo foi revelado.
+- [x] Fail-safe pós-tentativa concluído: gates e labels removidos, evidências
+  privadas preservadas e cluster temporário excluído, mantendo Billing,
+  budgets, Artifact Registry e IAM.
+- [x] Emenda operacional v1.10 implementada localmente: RBAC limitado a `list`
+  dos dois recursos, preflight completo antes da candidata e regressões para
+  as duas negações observadas. O protocolo voltou a candidato fail-closed,
+  sem aprovações nem corpus ativo e sem execução cloud.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -201,6 +212,10 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] validação das previsões no ambiente-oráculo isolado;
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
+
+Antes de retomar a lista acima, a v1.10 ainda exige a revisão financeira
+humana sobre o Billing pós-exclusão já completo, merge separado da emenda,
+auditoria 17/17, aprovação do pesquisador e rotação de chave/corpus.
 
 ### Caminho crítico atual — 19/11/2026
 

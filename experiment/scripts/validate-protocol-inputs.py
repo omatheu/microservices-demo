@@ -40,6 +40,7 @@ REQUIRED_INPUTS = {
     "validity_threat_register",
     "confirmatory_orchestration_incident",
     "confirmatory_execution_hardening_review",
+    "confirmatory_cleanup_rbac_incident",
     "baseline_evidence_validator",
     "operational_baseline_summary",
     "checkout_baseline_summary",

@@ -108,23 +108,23 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_v19_frozen_after_renewed_approvals(self):
+    def test_active_protocol_is_v110_candidate_after_cleanup_rbac_incident(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.9", value["protocol_id"])
-        self.assertEqual("frozen", value["status"])
-        self.assertTrue(value["confirmatory_collection_allowed"])
-        self.assertEqual("2026-11-23T01:15:54Z", value["frozen_at"])
+        self.assertEqual("checkout-pdt-comparison-v1.10", value["protocol_id"])
+        self.assertEqual("pre-registration-candidate", value["status"])
+        self.assertFalse(value["confirmatory_collection_allowed"])
+        self.assertIsNone(value["frozen_at"])
         self.assertEqual(
-            "orchestration-v1.9-execution-hardening",
+            "orchestration-v1.10-cleanup-rbac-preflight",
             value["amendment"]["amendment_id"],
         )
-        self.assertEqual(6, value["amendment"]["confirmatory_observations_before_amendment"])
-        self.assertEqual(1, value["amendment"]["complete_decision_pairs_before_amendment"])
+        self.assertEqual(7, value["amendment"]["confirmatory_observations_before_amendment"])
+        self.assertEqual(2, value["amendment"]["complete_decision_pairs_before_amendment"])
         self.assertEqual(0, value["amendment"]["oracle_labels_revealed_before_amendment"])
         self.assertEqual(1998.268459, value["execution_limits"]["project_gross_cost_budget_brl"])
-        self.assertEqual(1841.214182, value["execution_limits"]["financial_baseline_gross_cost_brl"])
-        self.assertEqual(157.054277, value["execution_limits"]["proposed_incremental_spend_ceiling_brl"])
+        self.assertEqual(1841.771556, value["execution_limits"]["financial_baseline_gross_cost_brl"])
+        self.assertEqual(156.496903, value["execution_limits"]["proposed_incremental_spend_ceiling_brl"])
         self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
         self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
 

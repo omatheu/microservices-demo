@@ -1,0 +1,30 @@
+{
+  "blocking_requirements": [
+    "researcher-approval",
+    "financial-review"
+  ],
+  "check_count": 17,
+  "checks": [
+    {"detail": "declared=18, operators=18", "id": "protocol-structure", "passed": true},
+    {"detail": "draft protocol must keep confirmatory collection disabled", "id": "collection-locked-before-freeze", "passed": true},
+    {"detail": "verified 52 protocol input bindings", "id": "frozen-input-hashes", "passed": true},
+    {"detail": "implemented=13/13", "id": "mutation-operators-implemented", "passed": true},
+    {"detail": "status=frozen", "id": "ci-policy-frozen", "passed": true},
+    {"detail": "status=frozen", "id": "staging-thresholds-frozen", "passed": true},
+    {"detail": "status=frozen", "id": "pdt-model-policy-frozen", "passed": true},
+    {"detail": "status=frozen", "id": "pdt-fidelity-policy-frozen", "passed": true},
+    {"detail": "status=frozen", "id": "oracle-policy-frozen", "passed": true},
+    {"detail": "verified 17 PDT runtime files", "id": "pdt-runtime-file-hashes", "passed": true},
+    {"detail": "controller image requires an immutable digest and publication provenance", "id": "pdt-controller-image-bound", "passed": true},
+    {"detail": "status=frozen", "id": "pdt-runtime-frozen", "passed": true},
+    {"detail": "verified 29 oracle files", "id": "oracle-file-hashes", "passed": true},
+    {"detail": "both images require immutable digests and the same publication provenance", "id": "oracle-images-bound", "passed": true},
+    {"detail": "status=frozen", "id": "oracle-suite-frozen", "passed": true},
+    {"detail": "explicit protocol approval is required and does not authorize cloud execution", "id": "researcher-approval", "passed": false},
+    {"detail": "ceiling=R$156.577795, mandatory review=R$150, promotional reserve valid=True", "id": "financial-review", "passed": false}
+  ],
+  "passed_count": 15,
+  "protocol_id": "checkout-pdt-comparison-v1.10",
+  "protocol_sha256": "a70aaf3c6a9f8392f9b1955a4d2b28468dd8477a48e9d1f5932f98e732ea2f68",
+  "ready_to_freeze": false
+}

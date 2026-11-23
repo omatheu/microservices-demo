@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "orchestration-v1.10-cleanup-rbac-preflight",
+  "status": "implemented-awaiting-freeze",
+  "authorized_at": "2026-11-23T03:03:37Z",
+  "authorization_literal": "AUTORIZO_EMENDA_OPERACIONAL_V1_10_POS_TENTATIVA_INCOMPLETA_PARA_CORRIGIR_RBAC_DE_CLEANUP_ADICIONAR_TESTES_E_PREPARAR_NOVO_CONGELAMENTO_SEM_EXECUCAO_CLOUD",
+  "authorization_scope": "Implement the local v1.10 operational amendment, cleanup RBAC correction, executable regression tests and a fail-closed freeze candidate. This does not authorize cloud changes, commit publication, pull-request creation, merge, protocol approvals, key rotation, corpus generation or candidate execution.",
+  "reason": "The first v1.9 confirmatory candidate produced sealed control and inherited treatment block decisions, but the paired job failed while inventorying cleanup resources because the namespace Role did not allow listing core Endpoints or discovery.k8s.io EndpointSlices. The cleanup failure skipped the independent Oracle and left the flow incomplete even though no experimental workload was active.",
+  "superseded_freeze": {
+    "git_commit": "377769d38f8e6a0fa9f909147e4f1a4189e216e0",
+    "protocol_id": "checkout-pdt-comparison-v1.9",
+    "protocol_sha256": "7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae",
+    "frozen_at": "2026-11-23T01:15:54Z",
+    "corpus_id": "corpus-2p6gcipdrzgxg",
+    "public_corpus_sha256": "a6f125cadfe807aff0f45717e8f69e9d3ecbe572202815b6e99c571eae18bac3",
+    "oracle_manifest_commitment_sha256": "3936c0b850c01fc5fea67214bacf9dd1f22d8ea0a5c68179d11fcd95d999c32c"
+  },
+  "preserved_prior_collection": {
+    "candidate_flows_started_before_amendment": 7,
+    "complete_decision_pairs_before_amendment": 2,
+    "oracle_adjudications_before_amendment": 0,
+    "oracle_labels_revealed_before_amendment": 0,
+    "v1_9_attempts": 1,
+    "v1_9_complete_oracle_adjudications": 0,
+    "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation"
+  },
+  "incident_evidence": {
+    "path": "experiment/evidence/ci-cd/confirmatory-cleanup-rbac-regression-v1.9-20261123.json",
+    "sha256": "0609e09b8ac59fd67a856b04e0e6eae23298a3af2da407963bd90329f4ccf9cd"
+  },
+  "authorized_changes": [
+    "Grant list-only access to core Endpoints and discovery.k8s.io EndpointSlices in the existing staging and PDT namespace Role.",
+    "Run a cleanup authorization preflight after cluster authentication and before any candidate execution.",
+    "Validate every list and delete permission used by the cleanup implementation without mutating workloads during preflight.",
+    "Add executable regressions for both the complete permission set and the exact Endpoints and EndpointSlices denials observed in run 45101639286.",
+    "Preserve the v1.9 run as infrastructure-invalid, remove the active approvals and corpus, and prepare a new v1.10 freeze candidate.",
+    "Require completed post-run Billing coverage, renewed financial and researcher approvals, a 17/17 freeze audit and a newly blinded corpus before any further confirmatory execution."
+  ],
+  "explicitly_unchanged": [
+    "research question and primary estimand",
+    "candidate count, block count and majority repetition rule",
+    "mutation operators and parameter spaces",
+    "PDT model thresholds and deployable alternatives",
+    "Oracle functional and performance classification rules",
+    "absolute project gross cost cap",
+    "human confirmation requirement before Oracle",
+    "mandatory cleanup and post-block financial review",
+    "published runtime image digests"
+  ],
+  "financial_guardrail": {
+    "absolute_project_budget_brl": 1998.268459,
+    "final_post_run_gross_cost_brl": 1841.771556,
+    "remaining_gross_envelope_brl": 156.496903,
+    "post_run_45101639286_export_complete": true,
+    "last_usage_end_time": "2026-11-23T04:00:00Z",
+    "billing_data_as_of": "2026-11-23T07:24:36Z",
+    "cluster_absence_verified_at": "2026-11-23T02:55:30Z",
+    "evidence": {
+      "path": "experiment/evidence/finance/cost-window-20260919-20261123-v1.9-run45101639286-postdelete-final.json",
+      "sha256": "198e67a2988454d5dbc4cb29f330f4e7f48cc83a949d186c806627667ddae235"
+    },
+    "new_financial_review_required_before_freeze": true,
+    "absolute_budget_increased": false
+  },
+  "runtime_publication_required": false,
+  "security_policy_weakened": false,
+  "cloud_execution_authorized": false,
+  "protocol_freeze_authorized": false,
+  "pull_request_publication_authorized": false,
+  "merge_authorized": false
+}

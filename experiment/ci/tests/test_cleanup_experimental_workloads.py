@@ -21,6 +21,12 @@ elif [[ "$1 $2" == "get pods" ]]; then
   else
     printf '%s\n' '{"items": [{"status": {"phase": "Running"}}]}'
   fi
+elif [[ "$1 $2" == "auth can-i" ]]; then
+  if [[ "${DENY_RESOURCE:-}" == "$4" ]]; then
+    printf '%s\n' 'no'
+    exit 1
+  fi
+  printf '%s\n' 'yes'
 elif [[ "$1" == "delete" ]]; then
   touch "${CLEANUP_MARKER}"
 elif [[ "$1" == "get" ]]; then
@@ -122,6 +128,48 @@ class CleanupExperimentalWorkloadsTests(unittest.TestCase):
         self.assertIn("outside the reviewed experiment cluster", result.stderr)
         calls = self.log.read_text(encoding="utf-8").splitlines()
         self.assertEqual(calls, ["config current-context"])
+
+    def test_preflight_proves_cleanup_permissions_without_deleting_workloads(self):
+        environment = self.environment()
+        environment["CLEANUP_PREFLIGHT_ONLY"] = "true"
+        environment.pop("OUTPUT_FILE")
+
+        result = self.run_script(environment)
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("cleanup RBAC preflight passed", result.stdout)
+        calls = self.log.read_text(encoding="utf-8").splitlines()
+        self.assertIn("auth can-i list endpoints --namespace staging", calls)
+        self.assertIn(
+            "auth can-i list endpointslices.discovery.k8s.io --namespace staging",
+            calls,
+        )
+        self.assertIn("auth can-i list endpoints --namespace pdt", calls)
+        self.assertIn(
+            "auth can-i list endpointslices.discovery.k8s.io --namespace pdt",
+            calls,
+        )
+        self.assertFalse(any(call.startswith("delete ") for call in calls))
+        self.assertFalse(self.output.exists())
+
+    def test_preflight_reproduces_observed_endpoint_inventory_denials(self):
+        for denied_resource in ("endpoints", "endpointslices.discovery.k8s.io"):
+            with self.subTest(denied_resource=denied_resource):
+                self.log.unlink(missing_ok=True)
+                environment = self.environment()
+                environment["CLEANUP_PREFLIGHT_ONLY"] = "true"
+                environment["DENY_RESOURCE"] = denied_resource
+                environment.pop("OUTPUT_FILE")
+
+                result = self.run_script(environment)
+
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(
+                    f"Missing cleanup RBAC permission: list {denied_resource}",
+                    result.stderr,
+                )
+                calls = self.log.read_text(encoding="utf-8").splitlines()
+                self.assertFalse(any(call.startswith("delete ") for call in calls))
 
 
 if __name__ == "__main__":

@@ -81,6 +81,7 @@ Uma ameaça materializada não autoriza remover uma candidata porque seu resulta
 | `I-16` | Uma suposição incorreta sobre a rede do cluster poderia transformar falha da infraestrutura do oráculo em aparente dano da candidata. | Exigir execução de engenharia anterior à coleta, validar o resolvedor DNS real do GKE, tratar falhas de transporte sem exceção no avaliador e repetir o congelamento quando a suíte mudar. | `oracle-engineering-runner-validation-20261005T013207Z.json`, NetworkPolicy renderizada, testes de regressão e nova auditoria 17/17. | Mudanças futuras do dataplane ou do DNS do GKE ainda exigem nova validação de engenharia. |
 | `I-17` | Vulnerabilidades divulgadas depois do congelamento podem tornar um runtime inseguro mesmo sem mudança no código do experimento. | Manter o gate fixo de CVEs HIGH/CRITICAL corrigíveis, interromper a coleta, abrir emenda pré-coleta, atualizar versões por digest e exigir nova publicação, aprovações, congelamento e corpus. | Artefato Trivy do PR #12, registro `runtime-security-regression-pr12-20261012.json`, SBOMs e scans da v1.2. | Novos avisos podem surgir após a republicação; o instante e a base de vulnerabilidades do scan devem ser registrados. |
 | `I-18` | Um bloqueio substantivo da CI ser convertido em falha terminal do workflow pode produzir pares incompletos e exclusão enviesada justamente das candidatas detectadas pelo controle. | Aceitar progressão somente para candidata experimental reconhecida com exit canônico, decisão convencional `block` selada e vínculo SHA-256; manter PRs comuns fail-closed; preservar a observação parcial sem repetição ou reinterpretação; reiniciar a coleta sob nova versão e corpus. | Run `40110941002`, artefato `12566257648`, decisões seladas, registro `confirmatory-orchestration-regression-pr13-20261024.json` e emenda v1.3. | A primeira decisão convencional foi observada antes da correção; por isso ela não entra no novo corpus, mas deve permanecer relatada como fluxo v1.2 incompleto. |
+| `I-19` | O cleanup consultar recursos não autorizados pelo RBAC pode transformar um par de decisões já selado em falha de infraestrutura e impedir o Oracle, criando pares sem ground truth de forma dependente da orquestração. | Conceder somente `list` de Endpoints e EndpointSlices nos namespaces mutáveis e executar, antes da candidata, um preflight de todas as permissões de leitura e exclusão usadas pelo cleanup; preservar a tentativa incompleta e renovar versão, aprovações e corpus. | Run `45101639286`, resumo pareado de SHA-256 `53a0a0576a7169d53141d820c31054b4a676ad275ad8de69dc6957475d55f5ab`, registro `confirmatory-cleanup-rbac-regression-v1.9-20261123.json` e testes executáveis da v1.10. | Mudanças futuras de APIs ou recursos consultados exigem atualizar conjuntamente o preflight, o Role e os testes; o preflight prova autorização, não a disponibilidade futura da API. |
 
 ## Validade de conclusão estatística
 
@@ -151,6 +152,15 @@ execução cloud. A emenda v1.3 preserva os hashes dessa observação parcial,
 proíbe sua repetição ou reinterpretação, corrige apenas a transição terminal e
 exige nova aprovação, congelamento e corpus. O resultado v1.2 será relatado
 como fluxo incompleto e não será misturado à análise confirmatória v1.3.
+
+Em 23 de novembro de 2026, `I-19` materializou-se na primeira candidata v1.9.
+A CI selou `block` e o tratamento herdou o mesmo bloqueio sem executar staging
+ou PDT, mas o cleanup final tentou inventariar Endpoints e EndpointSlices que a
+Role do runner não podia listar. O job falhou e o Oracle foi ignorado; nenhum
+rótulo foi revelado. A tentativa permanece como fluxo incompleto
+`infrastructure-invalid` e não entra na análise confirmatória. A emenda v1.10
+limita o RBAC novo à leitura desses dois recursos, adiciona um preflight antes
+da candidata e exige nova aprovação, congelamento e corpus.
 
 ## Evidência de auditoria
 

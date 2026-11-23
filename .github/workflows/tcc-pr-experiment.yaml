@@ -332,6 +332,15 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+      - name: Preflight experimental cleanup RBAC before candidate execution
+        shell: bash
+        env:
+          ALLOW_EXPERIMENTAL_CLEANUP: "true"
+          CLEANUP_PREFLIGHT_ONLY: "true"
+        run: |
+          set -euo pipefail
+          ./experiment/scripts/cleanup-experimental-workloads.sh
+
       - name: Run the paired conventional and PDT pipeline
         id: paired
         timeout-minutes: 180
