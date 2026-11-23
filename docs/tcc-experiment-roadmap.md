@@ -166,6 +166,9 @@ como Partial Digital Twin.
   dos dois recursos, preflight completo antes da candidata e regressões para
   as duas negações observadas. O protocolo voltou a candidato fail-closed,
   sem aprovações nem corpus ativo e sem execução cloud.
+- [x] Billing pós-exclusão v1.9 completo, revisão financeira e aprovação do
+  pesquisador renovadas, auditoria 17/17 e protocolo v1.10 congelado em
+  `2026-11-23T11:42:06Z`, ainda sem corpus ativo ou autorização cloud.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -213,9 +216,9 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-Antes de retomar a lista acima, a v1.10 ainda exige a revisão financeira
-humana sobre o Billing pós-exclusão já completo, merge separado da emenda,
-auditoria 17/17, aprovação do pesquisador e rotação de chave/corpus.
+Antes de retomar a lista acima, a v1.10 ainda exige publicação do congelamento,
+rotação da chave e geração/validação de um corpus opaco novo. Esses passos não
+autorizam por si mesmos a execução cloud.
 
 ### Caminho crítico atual — 19/11/2026
 

@@ -1,11 +1,11 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** a emenda operacional v1.10 está implementada localmente e o
-> protocolo voltou ao estado `pre-registration-candidate`, com coleta
-> confirmatória bloqueada. O congelamento e o corpus v1.9 foram preservados
-> historicamente e retirados da área ativa sem revelar rótulos. Aprovações,
-> nova auditoria 17/17 e corpus v1.10 ainda não existem.
-> Nenhuma execução cloud foi autorizada e nenhum cluster existe.
+> **Status:** a emenda operacional v1.10 está congelada desde
+> `2026-11-23T11:42:06Z`. A revisão financeira e a aprovação do pesquisador
+> levaram a auditoria a 17/17 controles, vinculada ao protocolo congelado de
+> SHA-256 `21ef4e19cf6c741fcac6356877a18c21edde3dba3091a5d98e5dbb5d7170ada1`.
+> O corpus v1.9 permanece somente como histórico e ainda não existe corpus
+> ativo v1.10. Nenhuma execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
