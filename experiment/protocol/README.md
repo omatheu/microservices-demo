@@ -4,8 +4,11 @@
 > `2026-11-23T11:42:06Z`. A revisão financeira e a aprovação do pesquisador
 > levaram a auditoria a 17/17 controles, vinculada ao protocolo congelado de
 > SHA-256 `21ef4e19cf6c741fcac6356877a18c21edde3dba3091a5d98e5dbb5d7170ada1`.
-> O corpus v1.9 permanece somente como histórico e ainda não existe corpus
-> ativo v1.10. Nenhuma execução cloud foi autorizada e nenhum cluster existe.
+> Depois do merge do PR #33, uma chave nova gerou o corpus ativo v1.10
+> `corpus-od2dc4lcwrmiy`, com SHA-256 público
+> `449a284137b9dbec0da4dcbaf8f6766391128fe1772532ed2c7165834710662a`.
+> A chave foi instalada no secret protegido, os kill switches continuam em
+> `false`, nenhuma execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -144,9 +147,12 @@ registro
 preserva a tentativa como `infrastructure-invalid`. A emenda
 [`amendments/orchestration-v1.10-cleanup-rbac-preflight.json`](./amendments/orchestration-v1.10-cleanup-rbac-preflight.json)
 acrescenta somente leitura desses recursos e um preflight antes da candidata.
-O protocolo v1.10 permanece fail-closed. O Billing pós-run já cobre a exclusão
-e é elegível para revisão humana com R$156,496903 de envelope máximo; as duas
-aprovações, o congelamento 17/17 e um corpus novo continuam obrigatórios.
+O Billing pós-run cobriu a exclusão e deixou R$156,496903 de envelope máximo.
+As duas aprovações foram renovadas, a auditoria passou 17/17, o protocolo foi
+congelado em `2026-11-23T11:42:06Z` e incorporado a `main` pelo PR #33. Depois
+do merge, uma chave nova gerou e validou o corpus opaco v1.10
+`corpus-od2dc4lcwrmiy`; o secret protegido foi rotacionado, mas os kill switches
+permanecem desarmados e nenhuma execução cloud foi autorizada.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

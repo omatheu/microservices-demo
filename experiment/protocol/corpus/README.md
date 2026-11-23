@@ -1,10 +1,24 @@
 # Corpus confirmatório
 
-Não existe corpus confirmatório ativo enquanto a v1.10 aguarda revisão
-financeira, aprovação do pesquisador e novo congelamento 17/17. A emenda
-operacional v1.10 retirou o corpus v1.9 da área ativa depois da tentativa
-incompleta `45101639286`, sem abrir o manifesto Oracle nem revelar rótulos. Uma
-nova chave e um corpus novo serão obrigatórios depois do congelamento v1.10.
+O corpus confirmatório ativo v1.10 foi gerado em 23/11/2026 UTC somente depois
+da revisão financeira, da aprovação do pesquisador, da auditoria pré-freeze
+17/17, do congelamento do protocolo e do merge do PR #33. O corpus
+`corpus-od2dc4lcwrmiy` contém 18 identificadores opacos, três repetições por
+candidata e seis blocos de três. Ele está vinculado ao protocolo congelado de
+SHA-256 `21ef4e19cf6c741fcac6356877a18c21edde3dba3091a5d98e5dbb5d7170ada1`,
+tem SHA-256
+`449a284137b9dbec0da4dcbaf8f6766391128fe1772532ed2c7165834710662a` e
+compromisso Oracle
+`8cbf8db31986c305c6acb26849b09da9b8d5d358d623b985762d8b1e85f7bcbe`.
+A chave e o manifesto Oracle permanecem privados com permissão `0600`; somente
+a chave codificada foi instalada no secret protegido. Os três kill switches
+continuam em `false`, o cluster continua ausente e nenhum passo autorizou
+execução cloud. O recibo sanitizado da rotação está em
+[`../../evidence/oracle/corpus-rotation-v1.10-20261123T213850Z.json`](../../evidence/oracle/corpus-rotation-v1.10-20261123T213850Z.json).
+
+A emenda operacional v1.10 retirou o corpus v1.9 da área ativa depois da
+tentativa incompleta `45101639286`, sem abrir o manifesto Oracle nem revelar
+rótulos. O corpus histórico v1.9 abaixo não pode ser reutilizado pela v1.10.
 
 O corpus confirmatório histórico v1.9 foi gerado em 23/11/2026 UTC somente depois
 da revisão financeira, aprovação do pesquisador, auditoria pré-freeze 17/17 e

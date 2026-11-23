@@ -1,5 +1,13 @@
 # Evidências do oráculo
 
+Em 23/11/2026, depois do congelamento v1.10 e do merge do PR #33, uma chave
+nova gerou o corpus opaco `corpus-od2dc4lcwrmiy`. O corpus público foi validado
+contra o protocolo congelado, o manifesto permaneceu privado e a chave foi
+instalada no secret do ambiente protegido sem expor seu valor. Os kill switches
+continuam em `false`, nenhum PR foi armado e nenhuma execução cloud foi
+autorizada. O recibo sanitizado está em
+[`corpus-rotation-v1.10-20261123T213850Z.json`](./corpus-rotation-v1.10-20261123T213850Z.json).
+
 Em 23/11/2026, depois do congelamento v1.9, uma chave nova gerou o corpus opaco
 `corpus-2p6gcipdrzgxg`. O corpus público foi validado contra o protocolo
 congelado, o manifesto permaneceu privado e a chave foi instalada no secret do
