@@ -20,6 +20,13 @@ O bundle e a auditoria regenerados sobre a evidência final estão em
 [`protocol-freeze-candidate-v1.10-finalbilling-20261123T104516Z.json`](./protocol-freeze-candidate-v1.10-finalbilling-20261123T104516Z.json)
 e
 [`pre-freeze-audit-v1.10-finalbilling-20261123T104516Z.json`](./pre-freeze-audit-v1.10-finalbilling-20261123T104516Z.json).
+As aprovações humana e financeira levaram a auditoria a 17/17 e o protocolo
+v1.10 foi congelado em `2026-11-23T11:42:06Z`, com SHA-256
+`21ef4e19cf6c741fcac6356877a18c21edde3dba3091a5d98e5dbb5d7170ada1`.
+O congelamento não autoriza cloud e ainda não gera corpus. Os recibos estão em
+[`pre-freeze-audit-v1.10-20261123T114206Z.json`](./pre-freeze-audit-v1.10-20261123T114206Z.json)
+e
+[`protocol-freeze-finalization-v1.10-20261123T114206Z.json`](./protocol-freeze-finalization-v1.10-20261123T114206Z.json).
 Os recibos iniciais, anteriores à completude do Billing, permanecem em
 [`protocol-freeze-candidate-v1.10-20261123T032336Z.json`](./protocol-freeze-candidate-v1.10-20261123T032336Z.json)
 e
