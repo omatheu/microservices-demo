@@ -4,6 +4,19 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Em `2026-11-23T01:06:47Z`, o guard incremental foi realinhado para a baseline
+final de R$1.841,214182 e o envelope de R$157,054277. O plano aplicado alterou
+somente um budget existente, sem criar ou destruir recursos; o plano posterior
+ficou sem diferenças e o inventário confirmou zero clusters. O recibo está em
+[`budget-guard-v1.9-final-realignment-20261123.json`](./budget-guard-v1.9-final-realignment-20261123.json).
+Em seguida, o bundle de componentes v1.9 congelou cinco políticas e dois
+manifests, manteve o protocolo e a coleta bloqueados e elevou a auditoria para
+15/17. A candidata exata e a auditoria estão em
+[`protocol-freeze-candidate-v1.9-20261123T010718Z.json`](./protocol-freeze-candidate-v1.9-20261123T010718Z.json)
+e
+[`pre-freeze-audit-v1.9-components-20261123T010718Z.json`](./pre-freeze-audit-v1.9-components-20261123T010718Z.json).
+Faltam somente as duas aprovações humanas; nenhuma foi gerada automaticamente.
+
 Após a tentativa inválida `45020108835`, o cluster foi excluído em
 `2026-11-22T12:22:08Z`. A consulta final somente leitura, limitada a 100 MB,
 agora cobre uso encerrado às `2026-11-22T14:00:00Z`, com

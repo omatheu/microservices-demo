@@ -136,13 +136,15 @@ como Partial Digital Twin.
 - [x] Emenda operacional v1.9 preparada localmente: retry sob `ERR` trap
   testado, supervisão dos túneis, quiescência entre tentativas, estabilidade
   contínua, bloqueio de snapshot PDT degradado e guards financeiros Terraform.
-- [x] Guard financeiro v1.9 aplicado no GCP sem recriar GKE: o budget incremental
-  foi alinhado ao envelope então vigente de R$157,455476, com zero recursos
-  adicionados ou destruídos; o cluster permaneceu ausente. A baseline final
-  reduziu a margem para R$157,054277 e exige realinhar somente os limiares de
-  alerta antes de outra execução cloud.
+- [x] Guard financeiro v1.9 realinhado no GCP sem recriar GKE: o budget
+  incremental usa a baseline final de R$1.841,214182 e o envelope de
+  R$157,054277; foram 0 recursos adicionados, 1 budget alterado em-place e 0
+  destruídos, com plano posterior sem drift e zero clusters.
 - [x] Protocolo, políticas e manifests v1.9 retornaram ao estado fail-closed;
   aprovações e corpus v1.8 foram retirados da área ativa sem revelar rótulos.
+- [x] Bundle local de componentes v1.9 aplicado: cinco políticas e dois
+  manifests congelados, 51/51 hashes válidos e auditoria em 15/17; faltam
+  somente a revisão financeira e a aprovação do pesquisador.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -271,9 +273,9 @@ execução autorizada em cloud ou análise dos resultados.
 25. [concluído parcialmente e invalidado para inferência] preservar as
    tentativas v1.8, registrar a regressão de orquestração/infraestrutura e
    aplicar localmente a emenda v1.9 sem reinterpretar os resultados;
-26. [Billing pós-exclusão concluído] publicar e incorporar a emenda v1.9,
-   realinhar os alertas, renovar as duas aprovações, passar a auditoria 17/17,
-   congelar a v1.9 e gerar chave e corpus novos;
+26. [emenda, Billing, alertas e bundle de componentes concluídos] renovar as
+   duas aprovações, passar a auditoria 17/17, congelar a v1.9 e gerar chave e
+   corpus novos;
 27. materializar candidatas v1.9 novas e executar os seis blocos pareados, com
    revisão financeira e exclusão do cluster após cada bloco; quando o PDT
    produzir uma decisão, obter a confirmação humana real antes do Oracle;
@@ -705,9 +707,9 @@ teto absoluto; a revisão somente leitura confirmou elegibilidade para aprovaç�
 financeira humana. Os runtimes v1.8
 corrigidos permanecem publicados e vinculados porque a v1.9 altera somente a
 orquestração externa às imagens. O corpus v1.8 `corpus-zkf5mounepuhq` e todos
-os anteriores são históricos; não há corpus ativo v1.9. A auditoria atual passa
-8/17 controles e falha fechado até congelar componentes e renovar as duas
-aprovações.
+os anteriores são históricos; não há corpus ativo v1.9. As cinco políticas e
+os dois manifests foram congelados como um bundle local coerente. A auditoria
+atual passa 15/17 controles e falha fechado até renovar as duas aprovações.
 
 Os 13 operadores definidos no protocolo continuam com materialização
 determinística e cobertura de todas as combinações de parâmetros. O controle

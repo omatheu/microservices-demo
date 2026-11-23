@@ -323,7 +323,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "28812110593b7b9ae98f68bc6126068bcfa3adedca330aa5a20f6afca666fe56"
+      "sha256": "a84552b75b5aff6555e7383bfbf8843738f4c346e9332f5d25348ed0b67db67f"
     },
     "conventional_workflow_outcome_validator": {
       "path": "experiment/scripts/validate-conventional-workflow-outcome.py",
@@ -471,11 +471,11 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "1e0b46b51475789c28ccb5f4e177731e446db315428e6ed19c415258a9c48910"
+      "sha256": "0c5c742f391ae4a35d164ed4e9f6b1cd553ec7b9fbf51d67ae77345baca74062"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "bd2d35234c3a93feebbff3ec6d4bb8795fd915146e44cff2cccb63f717b4bf4d"
+      "sha256": "081cd0342abfd5393c8f915df4df678ac2f416dea44b89ee70ac8584134e4446"
     },
     "pdt_source_capture": {
       "path": "experiment/scripts/capture-pdt-source-state.sh",
@@ -491,7 +491,7 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "ddf09d3bca1b64cd3050db4c650c1f62b18544189ffd2ed91d124c54417fbf10"
+      "sha256": "35ddcfdfaa3533b099eae1380c1e98e8488f5570fb7128a41c1b3c33bc760046"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
@@ -511,7 +511,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "362b2f5de712655022b728a1be234ebc5fbbd708000bd20ab828fadf3c620b2a"
+      "sha256": "e3eeb15e0db7072c7cfccfa7820fe41bd34313befdb7bee494c44eee80b3cd6e"
     },
     "oracle_repetition_runner": {
       "path": "experiment/scripts/run-oracle-repetition.sh",

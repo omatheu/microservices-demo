@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "budget-guard-v1.9-final-realignment-20261123",
+  "recorded_at": "2026-11-23T01:06:47Z",
+  "project_id": "microservices-demo-tcc",
+  "billing_account_id": "016329-9946EB-FE858E",
+  "protocol_id": "checkout-pdt-comparison-v1.9",
+  "authorization": {
+    "literal": "AUTORIZO_REALINHAMENTO_DOS_ALERTAS_FINANCEIROS_E_PREPARACAO_LOCAL_DO_CONGELAMENTO_V1_9_SEM_RECRIAR_CLUSTER_NEM_EXECUTAR_CLOUD",
+    "scope": "Realign existing Billing budget alert thresholds and prepare the local v1.9 freeze candidate without recreating GKE or running staging, PDT or Oracle."
+  },
+  "operation": {
+    "tool": "Terraform",
+    "saved_plan_sha256": "5145ee679f96416ba577d27e5d429175466c3de7d9af125d0872d83d5b0c88ac",
+    "scope": [
+      "google_billing_budget.experiment",
+      "google_billing_budget.experiment_spend_guard"
+    ],
+    "result": {
+      "added": 0,
+      "changed": 1,
+      "destroyed": 0
+    },
+    "changed_resource": "billingAccounts/016329-9946EB-FE858E/budgets/7b5793ae-1f25-4658-ae86-02728f2d289a",
+    "cluster_resources_changed": false,
+    "github_changed": false
+  },
+  "financial_controls": {
+    "gross_cost_cap_brl": 1998.268459,
+    "final_post_deletion_gross_cost_baseline_brl": 1841.214182,
+    "maximum_incremental_envelope_brl": 157.054277,
+    "incremental_guard_cumulative_alert_amounts_brl": [
+      1880.47775125,
+      1919.7413205,
+      1959.00488975,
+      1982.5630313,
+      1998.268459
+    ],
+    "incremental_guard_alert_amounts_brl": [
+      39.26356925,
+      78.5271385,
+      117.79070775,
+      141.3488493,
+      157.054277
+    ]
+  },
+  "verification": {
+    "post_apply_targeted_plan_exit_code": 0,
+    "post_apply_targeted_plan_changes": 0,
+    "gke_cluster_count": 0,
+    "terraform_state_sha256_before": "4e0f788113eb599028150e48aa8b496197872e74177e9952e82ddd4c863ab6ee",
+    "terraform_state_sha256_after": "e9aecd2a0e9e171506b36762c11ae146119274fa4b8740b33665b2ce937c9614"
+  },
+  "guard_state": {
+    "allow_billable_resources": false,
+    "protocol_status": "pre-registration-candidate",
+    "confirmatory_collection_allowed": false,
+    "cloud_experiment_execution_authorized": false
+  },
+  "cost_effect": "Cloud Billing budget configuration is an alert rather than a hard cap. This operation updated only an existing budget and created no billable workload."
+}

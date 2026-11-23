@@ -111,6 +111,13 @@ R$157,054277 até o teto absoluto. A revisão somente leitura confirmou
 elegibilidade para uma nova aprovação financeira humana, sem gerar aprovação
 ou autorização cloud.
 
+Depois do merge da emenda v1.9, o guard incremental foi realinhado para a
+baseline final: 0 recursos adicionados, 1 budget alterado em-place, 0
+destruídos, plano posterior sem drift e zero clusters. O bundle local congelou
+as cinco políticas e os dois manifests em `2026-11-23T01:07:18Z`, preservando
+o protocolo como candidato com coleta desabilitada. A auditoria passa 15/17;
+faltam somente a revisão financeira e a aprovação do pesquisador.
+
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do
 GKE e um caminho de exceção para coleções nulas no avaliador funcional. A

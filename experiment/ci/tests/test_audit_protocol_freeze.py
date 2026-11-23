@@ -128,24 +128,15 @@ class AuditProtocolFreezeTests(unittest.TestCase):
         self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
         self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
 
-    def test_unfrozen_candidate_requires_components_and_both_approvals(self):
+    def test_component_frozen_candidate_requires_both_approvals(self):
         result = MODULE.audit(REPO_ROOT, protocol())
 
         self.assertFalse(result["ready_to_freeze"])
         self.assertEqual(
-            {
-                "ci-policy-frozen",
-                "staging-thresholds-frozen",
-                "pdt-model-policy-frozen",
-                "pdt-fidelity-policy-frozen",
-                "oracle-policy-frozen",
-                "pdt-runtime-frozen",
-                "oracle-suite-frozen",
-                "researcher-approval",
-                "financial-review",
-            },
+            {"researcher-approval", "financial-review"},
             set(result["blocking_requirements"]),
         )
+        self.assertEqual(15, result["passed_count"])
 
     def test_current_candidate_passes_implemented_and_hashed_inputs(self):
         result = MODULE.audit(REPO_ROOT, protocol())
