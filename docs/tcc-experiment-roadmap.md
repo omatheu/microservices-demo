@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 23 de novembro de 2026.
+> **Última verificação:** 24 de novembro de 2026.
 
 ## Objetivo do experimento
 
@@ -180,6 +180,18 @@ como Partial Digital Twin.
   R$1.842,253299, acréscimo de R$0,481743 sobre a baseline congelada e margem
   reduzida para R$156,015160 até o teto absoluto, exigindo nova leitura
   imediatamente antes de qualquer execução cloud.
+- [x] Run v1.10 `45279248514` preservado como `completed-excluded` antes do
+  rótulo: instabilidade de probes invalidou as repetições PDT e o Oracle foi
+  agendado indevidamente apesar do estado terminal excluído.
+- [x] Emenda v1.11 preparada localmente: probes de `emailservice` e
+  `recommendationservice` endurecidos, Oracle condicionado a
+  `pipeline_state == completed`, regressões executáveis e protocolo novamente
+  fail-closed, sem aprovações ou corpus ativos.
+- [x] Teto bruto total v1.11 elevado explicitamente para R$2.500, com baseline
+  observada de R$1.842,253299, envelope de R$657,746701 e reconciliação Billing
+  assíncrona sem dispensar cleanup.
+- [x] Revisão financeira, aprovação do pesquisador e auditoria 17/17 concluídas;
+  protocolo v1.11 congelado em `2026-11-24T03:05:47Z`.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -227,14 +239,13 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-O congelamento, o corpus, a candidata 1 e a revisão financeira pré-bloco v1.10
-já estão prontos. O próximo passo exige uma autorização humana separada que
-adote no máximo o envelope bruto restante de R$156,015160, seguida por uma
-revalidação Billing imediatamente anterior à janela. Somente depois disso o
-cluster temporário poderá ser recriado e a execução pareada de staging e PDT
-poderá começar; o Oracle continuará condicionado ao gate humano protegido.
+O Billing pós-run `45279248514` ainda termina antes do início da execução, mas
+a autorização literal de risco financeiro tornou a reconciliação assíncrona e
+aprovou o ciclo v1.11 até R$2.500 brutos. O congelamento foi concluído; restam
+rotação da chave, corpus opaco v1.11, publicação/merge e os seis blocos cloud,
+sempre com exclusão do cluster antes do bloco seguinte.
 
-### Caminho crítico atual — 23/11/2026
+### Caminho crítico atual — 24/11/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,

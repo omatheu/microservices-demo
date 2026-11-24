@@ -95,9 +95,17 @@ class TccGithubWorkflowTests(unittest.TestCase):
         )
         self.assertEqual(oracle["concurrency"]["cancel-in-progress"], "false")
         self.assertIn("oracle_authorized == 'true'", oracle["if"])
+        self.assertIn("pipeline_state == 'completed'", oracle["if"])
         self.assertIn("mode == 'confirmatory'", oracle["if"])
         self.assertIn("human-gate-receipt.result == 'success'", oracle["if"])
         self.assertIn("human-gate-receipt.result == 'skipped'", oracle["if"])
+
+        paired = workflow["jobs"]["paired-experiment"]
+        self.assertEqual(
+            paired["outputs"]["pipeline_state"],
+            "${{ steps.paired.outputs.pipeline_state }}",
+        )
+        self.assertIn("pipeline_state=$(jq -er '.state'", rendered)
 
     def test_oracle_job_is_explicitly_armed_and_keeps_private_inputs_out_of_pr_code(self):
         workflow = load(CLOUD_WORKFLOW)

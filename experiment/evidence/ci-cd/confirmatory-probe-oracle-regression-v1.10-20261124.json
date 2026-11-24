@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "incident_id": "confirmatory-probe-oracle-regression-v1.10-20261124",
+  "recorded_at": "2026-11-24T02:44:49Z",
+  "repository": "omatheu/microservices-demo",
+  "workflow_run": {
+    "run_id": "45279248514",
+    "url": "https://github.com/omatheu/microservices-demo/actions/runs/45279248514",
+    "workflow_head_sha": "2b62471578506b1034806638c36d2bdcfca952c1",
+    "candidate_pull_request": 35,
+    "candidate_head_sha": "a2c1c4fefa5c7f43579d68e5ff272b66bd99c5d3",
+    "candidate_id": "cand-cgfz5ej6ehby4hvr",
+    "started_at": "2026-11-23T22:23:43Z",
+    "completed_at": "2026-11-24T02:20:58Z",
+    "conclusion": "failure"
+  },
+  "paired_pipeline": {
+    "job_id": "138059113103",
+    "job_conclusion": "success",
+    "state": "completed-excluded",
+    "outcome": "excluded-before-oracle-label",
+    "reason": "insufficient-valid-paired-repetitions-after-retry",
+    "oracle_label_revealed": false,
+    "human_confirmation_required": false,
+    "status_sha256": "b565a0f73749b0b0ac25c28fa1841387df20626a8073bb9fed765d5f6a41a2f1",
+    "summary_sha256": "21159b8f7854490f72f619e7fe93b422d385d0d783461b8f0ddd1559741c17b8",
+    "paired_infrastructure_invalid_ledger_sha256": "47c539f3e979cf492c13a02157c001bdf034ded3fae695bc8d4d7d08a378e9c2",
+    "staging_infrastructure_invalid_ledger_sha256": "819e54b316181de55c0e74ccc5698464d38fd5975c98753291850ebdbf92b738"
+  },
+  "observed_probe_regression": {
+    "affected_services": [
+      "emailservice",
+      "recommendationservice"
+    ],
+    "environment": "GKE Autopilot cold-start deployments in staging and PDT",
+    "symptoms": [
+      "gRPC readiness and liveness probes exceeded their implicit one-second timeout",
+      "emailservice was killed by liveness and accumulated repeated exit-137 restarts",
+      "PDT repetitions 2 and 3 remained unhealthy after their single authorized retries"
+    ],
+    "root_cause": "The Python services had no startup probe and used the Kubernetes default one-second timeout for both readiness and liveness during cold start.",
+    "candidate_behavior_attribution": "infrastructure-invalid-before-oracle-label"
+  },
+  "observed_oracle_regression": {
+    "job_id": "138160281952",
+    "job_conclusion": "failure",
+    "root_cause": "The workflow gated Oracle on the paired job result and human-gate output, but did not require status.json.state to equal completed.",
+    "effect": "Oracle was scheduled for a pipeline that had already terminated as completed-excluded and then failed closed before label access.",
+    "oracle_label_revealed": false
+  },
+  "remediation": {
+    "probe_contract": "Add a bounded 120-second gRPC startup window and explicit five-second timeouts to readiness and liveness for emailservice and recommendationservice in both manifest bases.",
+    "oracle_contract": "Expose the paired pipeline state as a job output and require pipeline_state == completed before scheduling Oracle.",
+    "runtime_image_publication_required": false,
+    "protocol_refreeze_required": true,
+    "new_blinded_corpus_required": true
+  },
+  "preservation": {
+    "private_artifacts_backed_up": true,
+    "cleanup_receipt_sha256": "c1279265f917c899e4032fde6a8b7833df1d020325ee54cf085ea75662a64e75",
+    "cluster_absence_verified": true,
+    "active_cloud_kill_switches": false,
+    "active_cloud_labels": false,
+    "candidate_reexecution_authorized": false
+  },
+  "billing": {
+    "post_cleanup_export_complete": false,
+    "last_usage_end_time": "2026-11-23T20:00:00Z",
+    "run_started_at": "2026-11-23T22:23:43Z",
+    "snapshot_sha256": "346841983c329c1072044c5cbebbfec687634c4e8d624117c35c1dfbab808815",
+    "new_financial_review_required_before_freeze": true
+  }
+}

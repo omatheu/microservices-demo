@@ -1,27 +1,27 @@
 {
   "schema_version": "1.0.0",
-  "protocol_id": "checkout-pdt-comparison-v1.10",
+  "protocol_id": "checkout-pdt-comparison-v1.11",
   "status": "frozen",
   "confirmatory_collection_allowed": true,
-  "frozen_at": "2026-11-23T11:42:06Z",
+  "frozen_at": "2026-11-24T03:05:47Z",
   "amendment": {
-    "amendment_id": "orchestration-v1.10-cleanup-rbac-preflight",
-    "authorized_at": "2026-11-23T03:03:37Z",
-    "previous_protocol_id": "checkout-pdt-comparison-v1.9",
-    "previous_protocol_sha256": "7bc2c7f10a66152b7d7ec50aafe64cb59ab69ad15a4f8571b4d85485295893ae",
-    "previous_freeze_commit": "377769d38f8e6a0fa9f909147e4f1a4189e216e0",
-    "confirmatory_observations_before_amendment": 7,
+    "amendment_id": "orchestration-v1.11-probe-oracle-gating",
+    "authorized_at": "2026-11-24T02:44:49Z",
+    "previous_protocol_id": "checkout-pdt-comparison-v1.10",
+    "previous_protocol_sha256": "21ef4e19cf6c741fcac6356877a18c21edde3dba3091a5d98e5dbb5d7170ada1",
+    "previous_freeze_commit": "473d2cf8835814e9bbbdc94f9c7edc8afd157152",
+    "confirmatory_observations_before_amendment": 8,
     "complete_decision_pairs_before_amendment": 2,
     "oracle_adjudications_before_amendment": 0,
     "oracle_labels_revealed_before_amendment": 0,
     "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
     "scope": [
-      "grant list-only access to Endpoints and EndpointSlices in staging and PDT",
-      "prove every cleanup list and delete authorization before candidate execution",
-      "preserve the incomplete v1.9 attempt without reexecution or reinterpretation",
-      "renew input hashes, approvals, protocol freeze and blinded corpus rotation before any v1.10 execution"
+      "stabilize emailservice and recommendationservice cold-start probes",
+      "require paired pipeline state completed before scheduling Oracle",
+      "preserve the completed-excluded v1.10 attempt without reexecution or reinterpretation",
+      "renew input hashes, approvals, protocol freeze and blinded corpus rotation before any v1.11 execution"
     ],
-    "record": "experiment/protocol/amendments/orchestration-v1.10-cleanup-rbac-preflight.json"
+    "record": "experiment/protocol/amendments/orchestration-v1.11-probe-oracle-gating.json"
   },
   "twin_object": "checkoutservice",
   "research_design": {
@@ -41,7 +41,7 @@
     "sample_size_rationale": "Fixed feasibility corpus sized before evaluation results; estimates use exact intervals and no minimum-effect claim."
   },
   "randomization": {
-    "public_seed_label": "checkout-pdt-v1.10-fixed-before-corpus",
+    "public_seed_label": "checkout-pdt-v1.11-fixed-before-corpus",
     "algorithm": "HMAC-SHA256 keyed deterministic sampling and Fisher-Yates order",
     "candidate_identifier_prefix": "cand-",
     "blinding_key_minimum_bytes": 32,
@@ -298,12 +298,12 @@
   },
   "execution_limits": {
     "cloud_execution_authorization": "explicit-user-authorization-required-after-freeze",
-    "financial_baseline_gross_cost_brl": 1841.771556,
-    "project_gross_cost_budget_brl": 1998.268459,
-    "proposed_incremental_spend_ceiling_brl": 156.496903,
+    "financial_baseline_gross_cost_brl": 1842.253299,
+    "project_gross_cost_budget_brl": 2500.0,
+    "proposed_incremental_spend_ceiling_brl": 657.746701,
     "mandatory_cost_review_at_brl": 150,
     "minimum_promotional_credit_reserve_brl": 10,
-    "maximum_promotional_credit_consumption_brl": 156.496903,
+    "maximum_promotional_credit_consumption_brl": 657.746701,
     "billing_alert_is_hard_cap": false,
     "candidate_block_size": 3,
     "cost_review_after_every_block": true,
@@ -315,13 +315,17 @@
     "maximum_total_experimental_cpu_request_hours": 180,
     "public_load_balancers_created": 0,
     "concurrent_experimental_namespaces": 1,
-    "stop_when_cost_data_unavailable_after_block": true,
+    "billing_reconciliation_mode": "asynchronous-after-block-explicit-risk-acceptance",
+    "post_block_billing_reconciliation_required": true,
+    "billing_risk_acceptance_total_cap_brl": 2500.0,
+    "billing_risk_acceptance_authorization_sha256": "184b557e5f9112a657085d2cd6148154531b4fe53825ee5cbc4cd780c3af3fce",
+    "stop_when_cost_data_unavailable_after_block": false,
     "cleanup_required_before_next_condition": true
   },
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "77ec065d130ca4f6179461fe1cc1c3ca5602bcc8c6ea391a615f48a156330e1b"
+      "sha256": "c0bcb7288a151c6d56f0213916d93fe954b0edccfcfcf49eaef0b2821b07e666"
     },
     "conventional_workflow_outcome_validator": {
       "path": "experiment/scripts/validate-conventional-workflow-outcome.py",
@@ -381,7 +385,7 @@
     },
     "protocol_freeze_auditor": {
       "path": "experiment/scripts/audit-protocol-freeze.py",
-      "sha256": "58485927c9db87f033635fd5c6376b81bf3e7e0f2142b469c2800308ff3b7f5b"
+      "sha256": "d7378f30db3899dbbb57008fcf3ee5b01a555d7f70f4d8b6fe70e76fadd9a004"
     },
     "researcher_approval_preparer": {
       "path": "experiment/scripts/prepare-researcher-approval.py",
@@ -413,7 +417,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "e1a36afdb6db16fce51939e185e99311646b138fa8f26f5e0f38c9b31e410de9"
+      "sha256": "f3d2fba850bad2c108bc5a00092da44539e04406b7fd2aa68931dc3d4505b67b"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -421,7 +425,23 @@
     },
     "cloud_experiment_workflow": {
       "path": ".github/workflows/tcc-pr-experiment.yaml",
-      "sha256": "b687fb7ab7d1c521cac04a7bd8336b538f98f3e4dba09cbef032387175f1cf07"
+      "sha256": "124395a52f3a13231c1e8eed4f26569a58d35620a94bc0a28cbcf8026ed16c70"
+    },
+    "emailservice_direct_manifest": {
+      "path": "kubernetes-manifests/emailservice.yaml",
+      "sha256": "f342e6ece826ed18019dbcdd85447e17b93880395ac5982f640901cd17124ec7"
+    },
+    "recommendationservice_direct_manifest": {
+      "path": "kubernetes-manifests/recommendationservice.yaml",
+      "sha256": "2de5a8fb71f0d3c42229edb20a93cefea86381cb4985fdcc78b862199887e673"
+    },
+    "emailservice_kustomize_base": {
+      "path": "kustomize/base/emailservice.yaml",
+      "sha256": "2decb569600b2bd405e050d4156802ec21739ba7714312ed0edd569c3ee63343"
+    },
+    "recommendationservice_kustomize_base": {
+      "path": "kustomize/base/recommendationservice.yaml",
+      "sha256": "9d24d99b04863ccfe02428757902e80467126256fce907d3ad86b2761f5404d5"
     },
     "billing_export_infrastructure": {
       "path": "infra/terraform-billing-export/main.tf",
@@ -433,7 +453,7 @@
     },
     "validity_threat_register": {
       "path": "docs/tcc-validity-threats.md",
-      "sha256": "b62913810ce026d8b402af39547420a5729ec32d36008d0aadc051b1e64079a1"
+      "sha256": "5af299593e93c10e07f7d34b1fde24e017655c708744923caf8bdd6708e13474"
     },
     "confirmatory_orchestration_incident": {
       "path": "experiment/evidence/ci-cd/confirmatory-orchestration-regression-pr21-20261118.json",
@@ -446,6 +466,10 @@
     "confirmatory_cleanup_rbac_incident": {
       "path": "experiment/evidence/ci-cd/confirmatory-cleanup-rbac-regression-v1.9-20261123.json",
       "sha256": "0609e09b8ac59fd67a856b04e0e6eae23298a3af2da407963bd90329f4ccf9cd"
+    },
+    "confirmatory_probe_oracle_incident": {
+      "path": "experiment/evidence/ci-cd/confirmatory-probe-oracle-regression-v1.10-20261124.json",
+      "sha256": "ec5e082dd6958bed687738b24d677ffa3d55180c162de5c9d1c96a2246c9dfbd"
     },
     "baseline_evidence_validator": {
       "path": "experiment/scripts/validate-baseline-evidence.py",
@@ -473,11 +497,11 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "1ccc901a874eef882137c3d30680baf4378dbd64c1af8415234817c5a74f9d8f"
+      "sha256": "e0713ddd60460e389b671de3b41c47146bb18149a7359b06c36ef2d21d889cf5"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "cad0ba755826ffd1124f1fb0b978f84fffe5cb92dd2d4505bbda88bd458eeb4e"
+      "sha256": "5eb6c774fcc7e654056dbff7bb495a6f1d6fb92cd2ef0e789f852dfdcd481e6b"
     },
     "pdt_source_capture": {
       "path": "experiment/scripts/capture-pdt-source-state.sh",
@@ -493,19 +517,19 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "20946e62b7f2d3cc18fbc69103ef9c53ba51dff42f8928dbfff16a2eb8afcbce"
+      "sha256": "96f670833ad2401acb5e37b063b93e4336d20c751b645a299a9af6e0551e176c"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
-      "sha256": "5ee242921aac3da2bff74583c5b56798a236ad70272e2fc556240dcd6e790649"
+      "sha256": "3735337b72d652b91f7bfd81fadb3801a3a3049bdc6bd30e3da55a24bde500c6"
     },
     "blinded_corpus_manager": {
       "path": "experiment/scripts/manage-blinded-corpus.py",
       "sha256": "303da77e3cd804f24e89c95fa22cf487c393a7a4800d02e4eb717d09c825ea97"
     },
     "protocol_amendment_record": {
-      "path": "experiment/protocol/amendments/orchestration-v1.10-cleanup-rbac-preflight.json",
-      "sha256": "b38501d17fa01121898a93a00bd094d67e4c1a8f62d900b6db881d4b052400eb"
+      "path": "experiment/protocol/amendments/orchestration-v1.11-probe-oracle-gating.json",
+      "sha256": "7e33951a1dffe95ce006b7b24cd5714f185444ca8cf563d218adbc737421f204"
     },
     "promotional_credit_observation": {
       "path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",
@@ -513,7 +537,7 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "4a94c1fe0df171a87b5e95c28e409f43a170dd2889eebae1c58ebdd940efa439"
+      "sha256": "8e07c68d61d18d63c06d767db5888931310f100dc60f715874f4a63d1e295f3c"
     },
     "oracle_repetition_runner": {
       "path": "experiment/scripts/run-oracle-repetition.sh",
@@ -547,6 +571,7 @@
     "confirmatory-orchestration-regression-pr17-20261117",
     "confirmatory-orchestration-regression-pr21-20261118",
     "runtime-security-regression-pr24-20261119",
-    "confirmatory-cleanup-rbac-regression-v1.9-20261123"
+    "confirmatory-cleanup-rbac-regression-v1.9-20261123",
+    "confirmatory-probe-oracle-regression-v1.10-20261124"
   ]
 }

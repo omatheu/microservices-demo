@@ -108,25 +108,32 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_frozen_v110_after_cleanup_rbac_incident(self):
+    def test_active_protocol_is_frozen_v111_after_probe_oracle_incident(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.10", value["protocol_id"])
+        self.assertEqual("checkout-pdt-comparison-v1.11", value["protocol_id"])
         self.assertEqual("frozen", value["status"])
         self.assertTrue(value["confirmatory_collection_allowed"])
-        self.assertEqual("2026-11-23T11:42:06Z", value["frozen_at"])
+        self.assertEqual("2026-11-24T03:05:47Z", value["frozen_at"])
         self.assertEqual(
-            "orchestration-v1.10-cleanup-rbac-preflight",
+            "orchestration-v1.11-probe-oracle-gating",
             value["amendment"]["amendment_id"],
         )
-        self.assertEqual(7, value["amendment"]["confirmatory_observations_before_amendment"])
+        self.assertEqual(8, value["amendment"]["confirmatory_observations_before_amendment"])
         self.assertEqual(2, value["amendment"]["complete_decision_pairs_before_amendment"])
         self.assertEqual(0, value["amendment"]["oracle_labels_revealed_before_amendment"])
-        self.assertEqual(1998.268459, value["execution_limits"]["project_gross_cost_budget_brl"])
-        self.assertEqual(1841.771556, value["execution_limits"]["financial_baseline_gross_cost_brl"])
-        self.assertEqual(156.496903, value["execution_limits"]["proposed_incremental_spend_ceiling_brl"])
+        self.assertEqual(2500.0, value["execution_limits"]["project_gross_cost_budget_brl"])
+        self.assertEqual(1842.253299, value["execution_limits"]["financial_baseline_gross_cost_brl"])
+        self.assertEqual(657.746701, value["execution_limits"]["proposed_incremental_spend_ceiling_brl"])
         self.assertEqual(10, value["execution_limits"]["minimum_promotional_credit_reserve_brl"])
         self.assertTrue(value["execution_limits"]["delete_cluster_after_every_block"])
+        self.assertFalse(
+            value["execution_limits"]["stop_when_cost_data_unavailable_after_block"]
+        )
+        self.assertEqual(
+            "asynchronous-after-block-explicit-risk-acceptance",
+            value["execution_limits"]["billing_reconciliation_mode"],
+        )
 
     def test_component_frozen_candidate_requires_both_approvals(self):
         result = MODULE.audit(REPO_ROOT, protocol())

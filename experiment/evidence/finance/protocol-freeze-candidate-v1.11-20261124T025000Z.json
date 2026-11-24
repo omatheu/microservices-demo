@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "mechanism": "protocol-freeze-component-bundle",
+  "status": "components-applied-awaiting-approvals",
+  "frozen_at_for_components": "2026-11-24T02:50:00Z",
+  "candidate_protocol_sha256": "dc116aec7001b3f0c8df5652bc1c114c47512f0f44b4c2915cb589af83192aa0",
+  "applied_files": [
+    {
+      "path": "experiment/ci/policy.json",
+      "sha256": "c0bcb7288a151c6d56f0213916d93fe954b0edccfcfcf49eaef0b2821b07e666"
+    },
+    {
+      "path": "experiment/oracle/policy-v1.json",
+      "sha256": "ba2214086351785c89e3bd93647cf1e4de784bd7ce8c43ac1c88a482a4b9f4d0"
+    },
+    {
+      "path": "experiment/oracle/suite-manifest.json",
+      "sha256": "8e07c68d61d18d63c06d767db5888931310f100dc60f715874f4a63d1e295f3c"
+    },
+    {
+      "path": "experiment/pdt/fidelity-policy.json",
+      "sha256": "43f570b3294204a6c2eb802d243f291766dc405a2eeb28219622ee86ffe9808f"
+    },
+    {
+      "path": "experiment/pdt/model-policy.json",
+      "sha256": "5eb6c774fcc7e654056dbff7bb495a6f1d6fb92cd2ef0e789f852dfdcd481e6b"
+    },
+    {
+      "path": "experiment/pdt/runtime-manifest.json",
+      "sha256": "96f670833ad2401acb5e37b063b93e4336d20c751b645a299a9af6e0551e176c"
+    },
+    {
+      "path": "experiment/protocol/protocol-v1.json",
+      "sha256": "dc116aec7001b3f0c8df5652bc1c114c47512f0f44b4c2915cb589af83192aa0"
+    },
+    {
+      "path": "experiment/staging/safety-thresholds.json",
+      "sha256": "e0713ddd60460e389b671de3b41c47146bb18149a7359b06c36ef2d21d889cf5"
+    }
+  ],
+  "protocol_status_after_application": "pre-registration-candidate",
+  "confirmatory_collection_allowed_after_application": false,
+  "financial_review_present": false,
+  "researcher_approval_present": false,
+  "cloud_execution_authorized": false,
+  "cloud_mutation_performed": false
+}

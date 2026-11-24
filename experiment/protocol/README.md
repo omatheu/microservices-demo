@@ -1,14 +1,12 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** a emenda operacional v1.10 está congelada desde
-> `2026-11-23T11:42:06Z`. A revisão financeira e a aprovação do pesquisador
-> levaram a auditoria a 17/17 controles, vinculada ao protocolo congelado de
-> SHA-256 `21ef4e19cf6c741fcac6356877a18c21edde3dba3091a5d98e5dbb5d7170ada1`.
-> Depois do merge do PR #33, uma chave nova gerou o corpus ativo v1.10
-> `corpus-od2dc4lcwrmiy`, com SHA-256 público
-> `449a284137b9dbec0da4dcbaf8f6766391128fe1772532ed2c7165834710662a`.
-> A chave foi instalada no secret protegido, os kill switches continuam em
-> `false`, nenhuma execução cloud foi autorizada e nenhum cluster existe.
+> **Status:** a emenda operacional v1.11 está implementada e congelada em
+> `2026-11-24T03:05:47Z`, após auditoria 17/17. A autorização literal do
+> pesquisador elevou o teto bruto total para R$2.500, aprovou a reconciliação
+> assíncrona do Billing, o novo congelamento, a rotação de chave/corpus, a
+> publicação/merge e os seis blocos cloud com cleanup obrigatório. O corpus
+> v1.10 permanece preservado historicamente, sem revelar rótulos, e nenhum
+> cluster existia no instante do congelamento v1.11.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -153,6 +151,26 @@ congelado em `2026-11-23T11:42:06Z` e incorporado a `main` pelo PR #33. Depois
 do merge, uma chave nova gerou e validou o corpus opaco v1.10
 `corpus-od2dc4lcwrmiy`; o secret protegido foi rotacionado, mas os kill switches
 permanecem desarmados e nenhuma execução cloud foi autorizada.
+
+Na primeira candidata v1.10, o run `45279248514` obteve duas repetições válidas
+de staging, mas as repetições PDT 2 e 3 permaneceram inválidas após o retry
+único. Os probes gRPC com timeout implícito de um segundo e sem `startupProbe`
+reiniciaram `emailservice` e mantiveram também `recommendationservice`
+indisponível durante cold start. A pipeline terminou `completed-excluded`, sem
+abrir o rótulo; mesmo assim, o workflow agendou o Oracle porque validava o
+resultado do job, não o estado terminal da pipeline. O registro
+[`../evidence/ci-cd/confirmatory-probe-oracle-regression-v1.10-20261124.json`](../evidence/ci-cd/confirmatory-probe-oracle-regression-v1.10-20261124.json)
+preserva a tentativa sem reexecução ou reinterpretação. A emenda
+[`amendments/orchestration-v1.11-probe-oracle-gating.json`](./amendments/orchestration-v1.11-probe-oracle-gating.json)
+adiciona uma janela de startup limitada aos dois serviços e exige o estado
+exato `completed` antes de agendar o Oracle. A observação Billing disponível
+fixou uma baseline real de R$1.842,253299. Com a aceitação explícita do risco,
+o teto bruto total passou a R$2.500 e o envelope v1.11 a R$657,746701; a
+reconciliação financeira permanece obrigatória, mas assíncrona. As duas
+aprovações vincularam o SHA-256 candidato
+`36bfe8591f276adab8e5468b293ac7d5963c0908ee3d49061d23905266e5490e`, a
+auditoria passou 17/17 e o protocolo foi congelado com SHA-256
+`e44d987d3520c836b44fb18374864c5d2cde2282e145b5fca71d99bf2328b8af`.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

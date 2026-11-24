@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "mechanism": "protocol-freeze-finalization",
+  "status": "proposed-frozen-protocol-requires-application",
+  "protocol_id": "checkout-pdt-comparison-v1.11",
+  "candidate_protocol_sha256": "36bfe8591f276adab8e5468b293ac7d5963c0908ee3d49061d23905266e5490e",
+  "frozen_protocol_sha256": "e44d987d3520c836b44fb18374864c5d2cde2282e145b5fca71d99bf2328b8af",
+  "frozen_at": "2026-11-24T03:05:47Z",
+  "component_frozen_at": {
+    "experiment/ci/policy.json": "2026-11-24T02:50:00Z",
+    "experiment/oracle/policy-v1.json": "2026-11-24T02:50:00Z",
+    "experiment/oracle/suite-manifest.json": "2026-11-24T02:50:00Z",
+    "experiment/pdt/fidelity-policy.json": "2026-11-24T02:50:00Z",
+    "experiment/pdt/model-policy.json": "2026-11-24T02:50:00Z",
+    "experiment/pdt/runtime-manifest.json": "2026-11-24T02:50:00Z",
+    "experiment/staging/safety-thresholds.json": "2026-11-24T02:50:00Z"
+  },
+  "pre_freeze_audit_sha256": "44b8206d41dd51dfd2c5d2ff4975520434a6aead4039c6ab57ad9072d5e85ec4",
+  "pre_freeze_audit": {"passed_count": 17, "check_count": 17, "blocking_requirements": []},
+  "researcher_approval": {
+    "path": "experiment/protocol/approvals/researcher-approval-v1.json",
+    "sha256": "e7f504f23f318147a0753abbf0bd8b54e54c598958fcb4c7e5e521b681e52573"
+  },
+  "financial_review": {
+    "path": "experiment/protocol/approvals/cost-review-v1.json",
+    "sha256": "cff1dfa68b58cb96c0f4b3176b13f1d74229ab187219a16ac02500c85642ff60"
+  },
+  "confirmatory_collection_allowed": true,
+  "cloud_execution_authorized": false,
+  "cloud_mutation_performed": false,
+  "active_repository_files_modified": false
+}
