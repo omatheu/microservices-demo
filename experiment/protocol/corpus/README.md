@@ -1,10 +1,17 @@
 # Corpus confirmatório
 
-Não há corpus confirmatório ativo para a v1.11. A emenda operacional retirou o
-arquivo público v1.10 da área ativa sem abrir o manifesto Oracle nem revelar
-rótulos. Um corpus v1.11 só pode ser gerado com chave nova depois do Billing
-pós-run completo, das duas aprovações, da auditoria 17/17 e do novo
-congelamento.
+O corpus confirmatório ativo v1.11 foi gerado em 24/11/2026 UTC depois das duas
+aprovações, da auditoria 17/17 e do congelamento. O corpus
+`corpus-zfobh62c3qmwu` contém 18 identificadores opacos, três repetições por
+candidata e seis blocos de três. Ele está vinculado ao protocolo congelado de
+SHA-256 `e44d987d3520c836b44fb18374864c5d2cde2282e145b5fca71d99bf2328b8af`,
+tem SHA-256
+`2a28a7e9e461977f71ed145e5fee85aab3dd1848ec0235f640d2655f60f06eb3` e
+compromisso Oracle
+`6634d5342f1dc8198d99f47f8fc432e1237ca48f72d59d138bfe8d830c817ca3`.
+A chave nova foi instalada no secret protegido, sem exposição; chave e
+manifesto privado permanecem `0600`. Os kill switches foram mantidos em
+`false` após a rotação e só serão armados durante a janela cloud autorizada.
 
 O corpus confirmatório histórico v1.10 foi gerado em 23/11/2026 UTC somente depois
 da revisão financeira, da aprovação do pesquisador, da auditoria pré-freeze
@@ -175,10 +182,9 @@ históricos em diretório local privado. As chaves e os manifestos Oracle v1.3,
 v1.4, v1.5 e v1.6 também permanecem nos diretórios privados ignorados pelo Git, com
 permissões 0600, e nunca podem ser copiados para este diretório versionado. O
 secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` ainda contém a chave histórica v1.10, agora
-inelegível para execução. O valor permanece oculto e os kill switches seguem
-desarmados; depois do congelamento v1.11, o secret deverá receber somente a
-chave nova correspondente ao corpus novo.
+`TCC_ORACLE_BLINDING_KEY_B64` contém a chave privada v1.11 correspondente ao
+corpus ativo. O valor permanece oculto e os kill switches seguem desarmados
+fora das janelas de execução.
 
 O mesmo ambiente protegido deve conter:
 

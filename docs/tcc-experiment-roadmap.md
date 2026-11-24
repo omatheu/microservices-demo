@@ -3,7 +3,7 @@
 > **Documento vivo:** acompanhamento da implementação do experimento definido em
 > [`tcc-experiment-plan.md`](./tcc-experiment-plan.md).
 >
-> **Última verificação:** 23 de novembro de 2026.
+> **Última verificação:** 24 de novembro de 2026.
 
 ## Objetivo do experimento
 
@@ -187,6 +187,11 @@ como Partial Digital Twin.
   `recommendationservice` endurecidos, Oracle condicionado a
   `pipeline_state == completed`, regressões executáveis e protocolo novamente
   fail-closed, sem aprovações ou corpus ativos.
+- [x] Teto bruto total v1.11 elevado explicitamente para R$2.500, com baseline
+  observada de R$1.842,253299, envelope de R$657,746701 e reconciliação Billing
+  assíncrona sem dispensar cleanup.
+- [x] Revisão financeira, aprovação do pesquisador e auditoria 17/17 concluídas;
+  protocolo v1.11 congelado em `2026-11-24T03:05:47Z`.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -234,14 +239,13 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-O Billing pós-run `45279248514` ainda termina antes do início da execução. A
-v1.11 pode ser revisada e testada localmente agora, mas somente a cobertura
-financeira completa permite renovar baseline/envelope, obter as duas
-aprovações, concluir a auditoria 17/17, congelar e rotacionar chave/corpus.
-Recriação de cluster e execução das 18 candidatas permanecem proibidas até essa
-cadeia terminar e existir nova autorização financeira/cloud por bloco.
+O Billing pós-run `45279248514` ainda termina antes do início da execução, mas
+a autorização literal de risco financeiro tornou a reconciliação assíncrona e
+aprovou o ciclo v1.11 até R$2.500 brutos. O congelamento foi concluído; restam
+rotação da chave, corpus opaco v1.11, publicação/merge e os seis blocos cloud,
+sempre com exclusão do cluster antes do bloco seguinte.
 
-### Caminho crítico atual — 23/11/2026
+### Caminho crítico atual — 24/11/2026
 
 1. [concluído em 05/10/2026] executar uma validação Oracle de engenharia; ela
    identificou a incompatibilidade com NodeLocal DNS e o erro de coleções nulas,

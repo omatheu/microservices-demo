@@ -267,7 +267,17 @@ def validate_promotional_credit_reserve(repo_root, protocol):
         and maximum_consumption == ceiling
         and limits.get("cost_review_after_every_block") is True
         and limits.get("delete_cluster_after_every_block") is True
-        and limits.get("stop_when_cost_data_unavailable_after_block") is True
+        and limits.get("billing_reconciliation_mode")
+        == "asynchronous-after-block-explicit-risk-acceptance"
+        and limits.get("post_block_billing_reconciliation_required") is True
+        and limits.get("billing_risk_acceptance_total_cap_brl") == project_budget
+        and isinstance(
+            limits.get("billing_risk_acceptance_authorization_sha256"), str
+        )
+        and DIGEST_PATTERN.fullmatch(
+            limits["billing_risk_acceptance_authorization_sha256"]
+        )
+        and limits.get("stop_when_cost_data_unavailable_after_block") is False
         and limits.get("cleanup_required_before_next_condition") is True
         and limits.get("concurrent_experimental_namespaces") == 1
         and isinstance(evidence, dict)

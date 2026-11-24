@@ -4,7 +4,10 @@
   "status": "implemented-awaiting-freeze",
   "authorization_recorded_at": "2026-11-24T02:44:49Z",
   "authorization_source": "explicit numbered request in the current researcher chat",
-  "authorization_scope": "Implement the two local systemic corrections, prepare a fail-closed v1.11 amendment and renew local input bindings. This does not authorize cloud execution, protocol approval, freeze finalization, secret rotation, corpus generation, pull-request publication or merge.",
+  "authorization_scope": "Implement the two systemic corrections and complete v1.11. A later literal authorization raises the total gross project cap to R$2500, approves protocol review and freeze, key rotation, corpus generation, pull-request publication and merge, and all six cloud blocks without waiting for Billing, with mandatory cleanup.",
+  "completion_authorization_recorded_at": "2026-11-24T03:03:49Z",
+  "completion_authorization_literal": "AUTORIZO_TETO_BRUTO_TOTAL_DE_2500_REAIS_APROVACAO_E_CONGELAMENTO_V1_11_ROTACAO_DE_CHAVE_GERACAO_DO_CORPUS_PUBLICACAO_E_MERGE_DO_PR_E_EXECUCAO_DOS_6_BLOCOS_SEM_AGUARDAR_O_BILLING_COM_CLEANUP_OBRIGATORIO",
+  "completion_authorization_sha256": "184b557e5f9112a657085d2cd6148154531b4fe53825ee5cbc4cd780c3af3fce",
   "reason": "The first v1.10 candidate ended completed-excluded before the Oracle label because cold-start gRPC probes repeatedly destabilized emailservice and recommendationservice. The workflow then scheduled Oracle because the paired job itself succeeded even though the pipeline state was not completed.",
   "superseded_freeze": {
     "git_commit": "473d2cf8835814e9bbbdc94f9c7edc8afd157152",
@@ -34,7 +37,7 @@
     "Export the paired pipeline state from status.json and require the exact terminal state completed before scheduling Oracle.",
     "Add executable regressions for both manifest sources, all four experiment overlays and the Oracle scheduling condition.",
     "Preserve run 45279248514 as completed-excluded before the Oracle label, remove the v1.10 approvals and corpus from the active area, and prepare a v1.11 freeze candidate.",
-    "Require complete post-run Billing coverage, renewed financial and researcher approvals, a 17/17 freeze audit and a newly blinded corpus before any v1.11 execution."
+    "Use the latest real Billing observation as the v1.11 financial baseline, reconcile Billing asynchronously, bind the explicit R$2500 risk acceptance, renew financial and researcher approvals, pass a 17/17 freeze audit and generate a newly blinded corpus before v1.11 execution."
   ],
   "explicitly_unchanged": [
     "research question and primary estimand",
@@ -42,13 +45,13 @@
     "mutation operators and parameter spaces",
     "PDT model thresholds and deployable alternatives",
     "Oracle functional and performance classification rules",
-    "absolute project gross cost cap",
+    "runtime duration and mandatory cleanup controls",
     "human confirmation requirement when a deploy action is prepared",
-    "mandatory cleanup and post-block financial review",
+    "mandatory cleanup and post-block asynchronous financial reconciliation",
     "published runtime image digests"
   ],
   "financial_guardrail": {
-    "absolute_project_budget_brl": 1998.268459,
+    "absolute_project_budget_brl": 2500.0,
     "frozen_v1_10_baseline_gross_cost_brl": 1841.771556,
     "frozen_v1_10_remaining_gross_envelope_brl": 156.496903,
     "pre_run_45279248514_observed_gross_cost_brl": 1842.253299,
@@ -56,15 +59,18 @@
     "post_run_45279248514_export_complete": false,
     "last_observed_usage_end_time": "2026-11-23T20:00:00Z",
     "run_started_at": "2026-11-23T22:23:43Z",
+    "accepted_v1_11_baseline_gross_cost_brl": 1842.253299,
+    "authorized_v1_11_remaining_gross_envelope_brl": 657.746701,
+    "billing_reconciliation_mode": "asynchronous-after-block-explicit-risk-acceptance",
     "new_financial_review_required_before_freeze": true,
-    "absolute_budget_increased": false
+    "absolute_budget_increased": true
   },
   "runtime_publication_required": false,
   "security_policy_weakened": false,
-  "cloud_execution_authorized": false,
-  "protocol_freeze_authorized": false,
-  "key_rotation_authorized": false,
-  "corpus_generation_authorized": false,
-  "pull_request_publication_authorized": false,
-  "merge_authorized": false
+  "cloud_execution_authorized": true,
+  "protocol_freeze_authorized": true,
+  "key_rotation_authorized": true,
+  "corpus_generation_authorized": true,
+  "pull_request_publication_authorized": true,
+  "merge_authorized": true
 }

@@ -1,13 +1,12 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** a emenda operacional v1.11 está implementada localmente e o
-> protocolo voltou a `pre-registration-candidate`, com coleta confirmatória
-> bloqueada. O congelamento, as aprovações e o corpus v1.10 permanecem
-> preservados historicamente, mas foram retirados da área ativa sem revelar
-> rótulos. O Billing pós-run ainda não cobre a janela do run `45279248514`;
-> portanto revisão financeira, aprovação do pesquisador, auditoria 17/17,
-> novo congelamento e rotação de chave/corpus permanecem pendentes.
-> Nenhuma execução cloud foi autorizada e nenhum cluster existe.
+> **Status:** a emenda operacional v1.11 está implementada e congelada em
+> `2026-11-24T03:05:47Z`, após auditoria 17/17. A autorização literal do
+> pesquisador elevou o teto bruto total para R$2.500, aprovou a reconciliação
+> assíncrona do Billing, o novo congelamento, a rotação de chave/corpus, a
+> publicação/merge e os seis blocos cloud com cleanup obrigatório. O corpus
+> v1.10 permanece preservado historicamente, sem revelar rótulos, e nenhum
+> cluster existia no instante do congelamento v1.11.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -164,8 +163,14 @@ resultado do job, não o estado terminal da pipeline. O registro
 preserva a tentativa sem reexecução ou reinterpretação. A emenda
 [`amendments/orchestration-v1.11-probe-oracle-gating.json`](./amendments/orchestration-v1.11-probe-oracle-gating.json)
 adiciona uma janela de startup limitada aos dois serviços e exige o estado
-exato `completed` antes de agendar o Oracle. O protocolo v1.11 permanece
-fail-closed até a cadeia de Billing, aprovações, freeze e novo corpus terminar.
+exato `completed` antes de agendar o Oracle. A observação Billing disponível
+fixou uma baseline real de R$1.842,253299. Com a aceitação explícita do risco,
+o teto bruto total passou a R$2.500 e o envelope v1.11 a R$657,746701; a
+reconciliação financeira permanece obrigatória, mas assíncrona. As duas
+aprovações vincularam o SHA-256 candidato
+`36bfe8591f276adab8e5468b293ac7d5963c0908ee3d49061d23905266e5490e`, a
+auditoria passou 17/17 e o protocolo foi congelado com SHA-256
+`e44d987d3520c836b44fb18374864c5d2cde2282e145b5fca71d99bf2328b8af`.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

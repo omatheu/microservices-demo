@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
   "protocol_id": "checkout-pdt-comparison-v1.11",
-  "status": "pre-registration-candidate",
-  "confirmatory_collection_allowed": false,
-  "frozen_at": null,
+  "status": "frozen",
+  "confirmatory_collection_allowed": true,
+  "frozen_at": "2026-11-24T03:05:47Z",
   "amendment": {
     "amendment_id": "orchestration-v1.11-probe-oracle-gating",
     "authorized_at": "2026-11-24T02:44:49Z",
@@ -298,12 +298,12 @@
   },
   "execution_limits": {
     "cloud_execution_authorization": "explicit-user-authorization-required-after-freeze",
-    "financial_baseline_gross_cost_brl": 1841.771556,
-    "project_gross_cost_budget_brl": 1998.268459,
-    "proposed_incremental_spend_ceiling_brl": 156.496903,
+    "financial_baseline_gross_cost_brl": 1842.253299,
+    "project_gross_cost_budget_brl": 2500.0,
+    "proposed_incremental_spend_ceiling_brl": 657.746701,
     "mandatory_cost_review_at_brl": 150,
     "minimum_promotional_credit_reserve_brl": 10,
-    "maximum_promotional_credit_consumption_brl": 156.496903,
+    "maximum_promotional_credit_consumption_brl": 657.746701,
     "billing_alert_is_hard_cap": false,
     "candidate_block_size": 3,
     "cost_review_after_every_block": true,
@@ -315,7 +315,11 @@
     "maximum_total_experimental_cpu_request_hours": 180,
     "public_load_balancers_created": 0,
     "concurrent_experimental_namespaces": 1,
-    "stop_when_cost_data_unavailable_after_block": true,
+    "billing_reconciliation_mode": "asynchronous-after-block-explicit-risk-acceptance",
+    "post_block_billing_reconciliation_required": true,
+    "billing_risk_acceptance_total_cap_brl": 2500.0,
+    "billing_risk_acceptance_authorization_sha256": "184b557e5f9112a657085d2cd6148154531b4fe53825ee5cbc4cd780c3af3fce",
+    "stop_when_cost_data_unavailable_after_block": false,
     "cleanup_required_before_next_condition": true
   },
   "frozen_inputs": {
@@ -381,7 +385,7 @@
     },
     "protocol_freeze_auditor": {
       "path": "experiment/scripts/audit-protocol-freeze.py",
-      "sha256": "58485927c9db87f033635fd5c6376b81bf3e7e0f2142b469c2800308ff3b7f5b"
+      "sha256": "d7378f30db3899dbbb57008fcf3ee5b01a555d7f70f4d8b6fe70e76fadd9a004"
     },
     "researcher_approval_preparer": {
       "path": "experiment/scripts/prepare-researcher-approval.py",
@@ -525,7 +529,7 @@
     },
     "protocol_amendment_record": {
       "path": "experiment/protocol/amendments/orchestration-v1.11-probe-oracle-gating.json",
-      "sha256": "038a3fceee6500ced0dad2fbc0c0465a3ed0a5f0bce1d34554c552306d7708d3"
+      "sha256": "7e33951a1dffe95ce006b7b24cd5714f185444ca8cf563d218adbc737421f204"
     },
     "promotional_credit_observation": {
       "path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",

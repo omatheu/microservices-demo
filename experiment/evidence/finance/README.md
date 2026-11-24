@@ -4,18 +4,22 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
-Após o run v1.10 `45279248514`, a emenda v1.11 aplicou localmente o bundle de
-componentes em `2026-11-24T02:50:00Z`. Os 57 inputs conferem e a auditoria
-passa 15/17; faltam exclusivamente a revisão financeira e a aprovação do
-pesquisador. O snapshot Billing disponível ainda termina em
-`2026-11-23T20:00:00Z`, antes do início do run às `22:23:43Z`, portanto é
-inelegível para atualizar baseline ou envelope. O protocolo permanece
-`pre-registration-candidate`, a coleta está desabilitada e não existe corpus
-ativo. Os recibos locais estão em
+Após o run v1.10 `45279248514`, a emenda v1.11 aplicou o bundle de componentes
+em `2026-11-24T02:50:00Z`. A consulta real limitada a 100 MB observou
+R$1.842,253299 brutos e permaneceu anterior ao run; o pesquisador aceitou
+explicitamente esse atraso, elevou o teto bruto total para R$2.500 e autorizou
+reconciliação assíncrona, sem dispensar o cleanup. O envelope autorizado ficou
+em R$657,746701. Revisão financeira e aprovação do pesquisador vincularam o
+candidato exato, a auditoria passou 17/17 e o protocolo foi congelado em
+`2026-11-24T03:05:47Z`, com SHA-256
+`e44d987d3520c836b44fb18374864c5d2cde2282e145b5fca71d99bf2328b8af`.
+A observação e os recibos estão em
+[`cost-window-20260919-20261123-v1.11-risk-baseline.json`](./cost-window-20260919-20261123-v1.11-risk-baseline.json),
 [`protocol-freeze-candidate-v1.11-20261124T025000Z.json`](./protocol-freeze-candidate-v1.11-20261124T025000Z.json)
+[`pre-freeze-audit-v1.11-components-20261124T025000Z.json`](./pre-freeze-audit-v1.11-components-20261124T025000Z.json),
+[`pre-freeze-audit-v1.11-ready-20261124T030547Z.json`](./pre-freeze-audit-v1.11-ready-20261124T030547Z.json)
 e
-[`pre-freeze-audit-v1.11-components-20261124T025000Z.json`](./pre-freeze-audit-v1.11-components-20261124T025000Z.json).
-Nenhum recurso cloud foi criado ou alterado.
+[`protocol-freeze-finalization-v1.11-20261124T030547Z.json`](./protocol-freeze-finalization-v1.11-20261124T030547Z.json).
 
 Antes do bloco 1 da coleta v1.10, a candidata opaca
 `cand-cgfz5ej6ehby4hvr` foi publicada no PR #35 sem labels de execução. Os
