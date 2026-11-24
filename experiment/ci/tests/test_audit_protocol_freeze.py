@@ -108,18 +108,18 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_frozen_v110_after_cleanup_rbac_incident(self):
+    def test_active_protocol_is_v111_candidate_after_probe_oracle_incident(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.10", value["protocol_id"])
-        self.assertEqual("frozen", value["status"])
-        self.assertTrue(value["confirmatory_collection_allowed"])
-        self.assertEqual("2026-11-23T11:42:06Z", value["frozen_at"])
+        self.assertEqual("checkout-pdt-comparison-v1.11", value["protocol_id"])
+        self.assertEqual("pre-registration-candidate", value["status"])
+        self.assertFalse(value["confirmatory_collection_allowed"])
+        self.assertIsNone(value["frozen_at"])
         self.assertEqual(
-            "orchestration-v1.10-cleanup-rbac-preflight",
+            "orchestration-v1.11-probe-oracle-gating",
             value["amendment"]["amendment_id"],
         )
-        self.assertEqual(7, value["amendment"]["confirmatory_observations_before_amendment"])
+        self.assertEqual(8, value["amendment"]["confirmatory_observations_before_amendment"])
         self.assertEqual(2, value["amendment"]["complete_decision_pairs_before_amendment"])
         self.assertEqual(0, value["amendment"]["oracle_labels_revealed_before_amendment"])
         self.assertEqual(1998.268459, value["execution_limits"]["project_gross_cost_budget_brl"])

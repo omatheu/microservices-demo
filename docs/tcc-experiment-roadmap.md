@@ -180,6 +180,13 @@ como Partial Digital Twin.
   R$1.842,253299, acréscimo de R$0,481743 sobre a baseline congelada e margem
   reduzida para R$156,015160 até o teto absoluto, exigindo nova leitura
   imediatamente antes de qualquer execução cloud.
+- [x] Run v1.10 `45279248514` preservado como `completed-excluded` antes do
+  rótulo: instabilidade de probes invalidou as repetições PDT e o Oracle foi
+  agendado indevidamente apesar do estado terminal excluído.
+- [x] Emenda v1.11 preparada localmente: probes de `emailservice` e
+  `recommendationservice` endurecidos, Oracle condicionado a
+  `pipeline_state == completed`, regressões executáveis e protocolo novamente
+  fail-closed, sem aprovações ou corpus ativos.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -227,12 +234,12 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-O congelamento, o corpus, a candidata 1 e a revisão financeira pré-bloco v1.10
-já estão prontos. O próximo passo exige uma autorização humana separada que
-adote no máximo o envelope bruto restante de R$156,015160, seguida por uma
-revalidação Billing imediatamente anterior à janela. Somente depois disso o
-cluster temporário poderá ser recriado e a execução pareada de staging e PDT
-poderá começar; o Oracle continuará condicionado ao gate humano protegido.
+O Billing pós-run `45279248514` ainda termina antes do início da execução. A
+v1.11 pode ser revisada e testada localmente agora, mas somente a cobertura
+financeira completa permite renovar baseline/envelope, obter as duas
+aprovações, concluir a auditoria 17/17, congelar e rotacionar chave/corpus.
+Recriação de cluster e execução das 18 candidatas permanecem proibidas até essa
+cadeia terminar e existir nova autorização financeira/cloud por bloco.
 
 ### Caminho crítico atual — 23/11/2026
 

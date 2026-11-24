@@ -173,6 +173,7 @@ jobs:
       id-token: write
     outputs:
       human_gate_required: ${{ steps.paired.outputs.human_gate_required }}
+      pipeline_state: ${{ steps.paired.outputs.pipeline_state }}
       candidate_id: ${{ steps.candidate.outputs.candidate_id }}
       mode: ${{ steps.candidate.outputs.mode }}
     steps:
@@ -366,8 +367,10 @@ jobs:
               2>&1 | tee "${RUNNER_TEMP}/paired-experiment.log"
           fi
           pipeline_dir=$(tail -n 1 "${RUNNER_TEMP}/paired-experiment.log")
-          [[ -d "${pipeline_dir}" && -f "${pipeline_dir}/summary.json" ]]
+          [[ -d "${pipeline_dir}" && -f "${pipeline_dir}/summary.json" && -f "${pipeline_dir}/status.json" ]]
           echo "pipeline_dir=${pipeline_dir}" >> "${GITHUB_OUTPUT}"
+          pipeline_state=$(jq -er '.state' "${pipeline_dir}/status.json")
+          echo "pipeline_state=${pipeline_state}" >> "${GITHUB_OUTPUT}"
           human_gate_required=$(jq -r '
             .human_confirmation_required == true
             and .deployment_action_prepared == true
@@ -485,6 +488,7 @@ jobs:
       always() &&
       needs.authorize.outputs.oracle_authorized == 'true' &&
       needs.paired-experiment.result == 'success' &&
+      needs.paired-experiment.outputs.pipeline_state == 'completed' &&
       needs.paired-experiment.outputs.mode == 'confirmatory' &&
       ((needs.paired-experiment.outputs.human_gate_required == 'true' &&
         needs.human-gate-receipt.result == 'success') ||

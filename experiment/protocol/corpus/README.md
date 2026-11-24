@@ -1,6 +1,12 @@
 # Corpus confirmatório
 
-O corpus confirmatório ativo v1.10 foi gerado em 23/11/2026 UTC somente depois
+Não há corpus confirmatório ativo para a v1.11. A emenda operacional retirou o
+arquivo público v1.10 da área ativa sem abrir o manifesto Oracle nem revelar
+rótulos. Um corpus v1.11 só pode ser gerado com chave nova depois do Billing
+pós-run completo, das duas aprovações, da auditoria 17/17 e do novo
+congelamento.
+
+O corpus confirmatório histórico v1.10 foi gerado em 23/11/2026 UTC somente depois
 da revisão financeira, da aprovação do pesquisador, da auditoria pré-freeze
 17/17, do congelamento do protocolo e do merge do PR #33. O corpus
 `corpus-od2dc4lcwrmiy` contém 18 identificadores opacos, três repetições por
@@ -169,9 +175,9 @@ históricos em diretório local privado. As chaves e os manifestos Oracle v1.3,
 v1.4, v1.5 e v1.6 também permanecem nos diretórios privados ignorados pelo Git, com
 permissões 0600, e nunca podem ser copiados para este diretório versionado. O
 secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` ainda contém a chave histórica v1.9, agora
+`TCC_ORACLE_BLINDING_KEY_B64` ainda contém a chave histórica v1.10, agora
 inelegível para execução. O valor permanece oculto e os kill switches seguem
-desarmados; depois do congelamento v1.10, o secret deverá receber somente a
+desarmados; depois do congelamento v1.11, o secret deverá receber somente a
 chave nova correspondente ao corpus novo.
 
 O mesmo ambiente protegido deve conter:

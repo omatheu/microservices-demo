@@ -1,14 +1,13 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** a emenda operacional v1.10 está congelada desde
-> `2026-11-23T11:42:06Z`. A revisão financeira e a aprovação do pesquisador
-> levaram a auditoria a 17/17 controles, vinculada ao protocolo congelado de
-> SHA-256 `21ef4e19cf6c741fcac6356877a18c21edde3dba3091a5d98e5dbb5d7170ada1`.
-> Depois do merge do PR #33, uma chave nova gerou o corpus ativo v1.10
-> `corpus-od2dc4lcwrmiy`, com SHA-256 público
-> `449a284137b9dbec0da4dcbaf8f6766391128fe1772532ed2c7165834710662a`.
-> A chave foi instalada no secret protegido, os kill switches continuam em
-> `false`, nenhuma execução cloud foi autorizada e nenhum cluster existe.
+> **Status:** a emenda operacional v1.11 está implementada localmente e o
+> protocolo voltou a `pre-registration-candidate`, com coleta confirmatória
+> bloqueada. O congelamento, as aprovações e o corpus v1.10 permanecem
+> preservados historicamente, mas foram retirados da área ativa sem revelar
+> rótulos. O Billing pós-run ainda não cobre a janela do run `45279248514`;
+> portanto revisão financeira, aprovação do pesquisador, auditoria 17/17,
+> novo congelamento e rotação de chave/corpus permanecem pendentes.
+> Nenhuma execução cloud foi autorizada e nenhum cluster existe.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -153,6 +152,20 @@ congelado em `2026-11-23T11:42:06Z` e incorporado a `main` pelo PR #33. Depois
 do merge, uma chave nova gerou e validou o corpus opaco v1.10
 `corpus-od2dc4lcwrmiy`; o secret protegido foi rotacionado, mas os kill switches
 permanecem desarmados e nenhuma execução cloud foi autorizada.
+
+Na primeira candidata v1.10, o run `45279248514` obteve duas repetições válidas
+de staging, mas as repetições PDT 2 e 3 permaneceram inválidas após o retry
+único. Os probes gRPC com timeout implícito de um segundo e sem `startupProbe`
+reiniciaram `emailservice` e mantiveram também `recommendationservice`
+indisponível durante cold start. A pipeline terminou `completed-excluded`, sem
+abrir o rótulo; mesmo assim, o workflow agendou o Oracle porque validava o
+resultado do job, não o estado terminal da pipeline. O registro
+[`../evidence/ci-cd/confirmatory-probe-oracle-regression-v1.10-20261124.json`](../evidence/ci-cd/confirmatory-probe-oracle-regression-v1.10-20261124.json)
+preserva a tentativa sem reexecução ou reinterpretação. A emenda
+[`amendments/orchestration-v1.11-probe-oracle-gating.json`](./amendments/orchestration-v1.11-probe-oracle-gating.json)
+adiciona uma janela de startup limitada aos dois serviços e exige o estado
+exato `completed` antes de agendar o Oracle. O protocolo v1.11 permanece
+fail-closed até a cadeia de Billing, aprovações, freeze e novo corpus terminar.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

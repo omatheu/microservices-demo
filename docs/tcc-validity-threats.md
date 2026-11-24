@@ -82,6 +82,7 @@ Uma ameaça materializada não autoriza remover uma candidata porque seu resulta
 | `I-17` | Vulnerabilidades divulgadas depois do congelamento podem tornar um runtime inseguro mesmo sem mudança no código do experimento. | Manter o gate fixo de CVEs HIGH/CRITICAL corrigíveis, interromper a coleta, abrir emenda pré-coleta, atualizar versões por digest e exigir nova publicação, aprovações, congelamento e corpus. | Artefato Trivy do PR #12, registro `runtime-security-regression-pr12-20261012.json`, SBOMs e scans da v1.2. | Novos avisos podem surgir após a republicação; o instante e a base de vulnerabilidades do scan devem ser registrados. |
 | `I-18` | Um bloqueio substantivo da CI ser convertido em falha terminal do workflow pode produzir pares incompletos e exclusão enviesada justamente das candidatas detectadas pelo controle. | Aceitar progressão somente para candidata experimental reconhecida com exit canônico, decisão convencional `block` selada e vínculo SHA-256; manter PRs comuns fail-closed; preservar a observação parcial sem repetição ou reinterpretação; reiniciar a coleta sob nova versão e corpus. | Run `40110941002`, artefato `12566257648`, decisões seladas, registro `confirmatory-orchestration-regression-pr13-20261024.json` e emenda v1.3. | A primeira decisão convencional foi observada antes da correção; por isso ela não entra no novo corpus, mas deve permanecer relatada como fluxo v1.2 incompleto. |
 | `I-19` | O cleanup consultar recursos não autorizados pelo RBAC pode transformar um par de decisões já selado em falha de infraestrutura e impedir o Oracle, criando pares sem ground truth de forma dependente da orquestração. | Conceder somente `list` de Endpoints e EndpointSlices nos namespaces mutáveis e executar, antes da candidata, um preflight de todas as permissões de leitura e exclusão usadas pelo cleanup; preservar a tentativa incompleta e renovar versão, aprovações e corpus. | Run `45101639286`, resumo pareado de SHA-256 `53a0a0576a7169d53141d820c31054b4a676ad275ad8de69dc6957475d55f5ab`, registro `confirmatory-cleanup-rbac-regression-v1.9-20261123.json` e testes executáveis da v1.10. | Mudanças futuras de APIs ou recursos consultados exigem atualizar conjuntamente o preflight, o Role e os testes; o preflight prova autorização, não a disponibilidade futura da API. |
+| `I-20` | Probes excessivamente agressivos durante cold start podem converter latência transitória do Autopilot em reinícios e exclusões; além disso, usar apenas o resultado do job pode agendar o Oracle para uma pipeline já excluída. | Dar aos dois serviços Python uma janela de startup limitada, explicitar timeouts de probes e exigir `status.json.state == completed` antes de agendar o Oracle; preservar a exclusão pré-rótulo e renovar versão, aprovações e corpus. | Run `45279248514`, status de SHA-256 `b565a0f73749b0b0ac25c28fa1841387df20626a8073bb9fed765d5f6a41a2f1`, registro `confirmatory-probe-oracle-regression-v1.10-20261124.json`, renders dos quatro overlays e testes da v1.11. | A janela reduz falsos negativos de cold start, mas não elimina indisponibilidade genuína; o gate continua fail-closed e o timeout permanece finito. |
 
 ## Validade de conclusão estatística
 
@@ -161,6 +162,16 @@ rótulo foi revelado. A tentativa permanece como fluxo incompleto
 `infrastructure-invalid` e não entra na análise confirmatória. A emenda v1.10
 limita o RBAC novo à leitura desses dois recursos, adiciona um preflight antes
 da candidata e exige nova aprovação, congelamento e corpus.
+
+Em 24 de novembro de 2026, `I-20` materializou-se na primeira candidata v1.10.
+Os probes gRPC de `emailservice` e `recommendationservice` usavam o timeout
+implícito de um segundo e não possuíam `startupProbe`; a instabilidade de cold
+start invalidou as repetições PDT depois do retry único. A pipeline terminou
+`completed-excluded` sem abrir rótulo, mas o workflow ainda agendou o Oracle
+porque inspecionava somente o resultado do job pareado. A tentativa permanece
+excluída antes do Oracle e não entra na análise confirmatória. A emenda v1.11
+limita a janela de startup a 120 segundos, mantém probes periódicos com timeout
+explícito de cinco segundos e exige o estado `completed` antes do Oracle.
 
 ## Evidência de auditoria
 
