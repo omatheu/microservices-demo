@@ -153,7 +153,11 @@ function convert (call, callback) {
         nanos: from.nanos / data[from.currency_code]
       });
 
-      euros.nanos = Math.round(euros.nanos);
+      if (request.to_code === 'JPY') {
+        euros.nanos = Math.trunc(euros.nanos);
+      } else {
+        euros.nanos = Math.round(euros.nanos);
+      }
 
       // Convert: EUR --> to_currency
       const result = _carry({
