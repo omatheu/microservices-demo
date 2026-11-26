@@ -2,15 +2,15 @@
   "schema_version": "1.0.0",
   "suite_id": "checkout-independent-oracle-v1",
   "status": "frozen",
-  "frozen_at": "2026-11-26T01:34:59Z",
+  "frozen_at": "2026-11-26T04:17:46Z",
   "files": [
     {
       "path": "experiment/oracle/policy-v1.json",
-      "sha256": "cd12f2472f2a83303234d831d6215d908ec0cd48b6e59181f525c0932ac76a7c"
+      "sha256": "1c8d365558831bc988d5ac950f4ca6999740aebe092f4105f060d3c9425843ba"
     },
     {
       "path": "experiment/pdt/fidelity-policy.json",
-      "sha256": "43f570b3294204a6c2eb802d243f291766dc405a2eeb28219622ee86ffe9808f"
+      "sha256": "322deb978130ea1f6c1cb826d7fe7cac6abfbeb754e8df30d90b32f913f3e7a7"
     },
     {
       "path": "experiment/oracle/harness/Dockerfile",
@@ -98,7 +98,11 @@
     },
     {
       "path": "experiment/scripts/run-oracle-repetition.sh",
-      "sha256": "aee42299d683266f6e226cff7ef1ae69cbee07a09cd92bff321d0ae4acc174a4"
+      "sha256": "be2538eeab4b49d5c9b7fa0f8bd9cfb89164f61133915c32b1d0550540a717c8"
+    },
+    {
+      "path": "experiment/scripts/lib/oracle-runtime-quiescence.sh",
+      "sha256": "2263993de1481fe0a847fdb2636145173da15b6506ab645c8f6a03ea89b4fd90"
     },
     {
       "path": "experiment/scripts/lib/port-forward-supervisor.sh",

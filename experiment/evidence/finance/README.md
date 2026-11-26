@@ -4,6 +4,18 @@ Este diretório registra somente observações necessárias à governança do
 protocolo. Um orçamento do Cloud Billing é um alerta, não um limite rígido, e
 não substitui a revisão do custo incremental entre blocos.
 
+Antes da revisão v1.13, uma nova consulta real, somente leitura e limitada a
+100 MB, manteve o bruto em R$1.881,838245 e a margem em R$618,161755 até o teto
+absoluto de R$2.500. O Billing estava disponível até
+`2026-11-25T23:57:44Z`; a observação não autoriza mutação cloud nem nova coleta.
+A evidência está em
+[`cost-window-20260919-20261126-v1.13-pre-freeze.json`](./cost-window-20260919-20261126-v1.13-pre-freeze.json).
+A revisão, a aprovação e a auditoria passaram 17/17; o protocolo foi congelado
+em `2026-11-26T04:19:31Z`. Os recibos estão em
+[`pre-freeze-audit-v1.13-20261126T041915Z.json`](./pre-freeze-audit-v1.13-20261126T041915Z.json)
+e
+[`protocol-freeze-finalization-v1.13-20261126T041915Z.json`](./protocol-freeze-finalization-v1.13-20261126T041915Z.json).
+
 Antes do congelamento v1.12, a consulta Billing real, somente leitura e
 limitada a 100 MB, observou R$1.881,838245 brutos até
 `2026-11-25T23:08:14Z`. Isso corresponde a R$39,584946 acima da baseline

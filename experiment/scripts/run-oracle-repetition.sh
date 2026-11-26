@@ -4,6 +4,7 @@ set -euo pipefail
 
 repo_root=$(git rev-parse --show-toplevel)
 source "${repo_root}/experiment/scripts/lib/port-forward-supervisor.sh"
+source "${repo_root}/experiment/scripts/lib/oracle-runtime-quiescence.sh"
 mode=${MODE:-engineering}
 candidate_id=${CANDIDATE_ID:-}
 candidate_definition=${CANDIDATE_DEFINITION:-}
@@ -31,6 +32,9 @@ allow_cloud=${ALLOW_EXPERIMENTAL_CLOUD_EXECUTION:-false}
 cost_review=${COST_REVIEW_ACKNOWLEDGED:-false}
 allow_oracle=${ALLOW_ORACLE_CLOUD_EXECUTION:-false}
 candidate_rollout_timeout=${CANDIDATE_ROLLOUT_TIMEOUT:-3m}
+cleanup_timeout_seconds=${ORACLE_CLEANUP_TIMEOUT_SECONDS:-600}
+cleanup_poll_interval_seconds=${ORACLE_CLEANUP_POLL_INTERVAL_SECONDS:-2}
+cleanup_quiescence_window_seconds=${ORACLE_CLEANUP_QUIESCENCE_WINDOW_SECONDS:-5}
 
 cloud_started=false
 run_succeeded=false
@@ -48,7 +52,7 @@ require_command() {
   }
 }
 
-for command_name in curl date find git jq kubectl python3 sha256sum sort stat timeout; do
+for command_name in awk curl date find git jq kubectl python3 sha256sum sleep sort stat timeout; do
   require_command "$command_name"
 done
 
@@ -74,6 +78,17 @@ done
 }
 if [[ ! "$local_port" =~ ^[1-9][0-9]*$ ]] || (( local_port > 65535 )); then
   echo "LOCAL_PORT must be between 1 and 65535." >&2
+  exit 1
+fi
+for cleanup_control in cleanup_timeout_seconds cleanup_poll_interval_seconds cleanup_quiescence_window_seconds; do
+  cleanup_value=${!cleanup_control}
+  if [[ ! "$cleanup_value" =~ ^[0-9]+$ ]]; then
+    echo "Oracle cleanup timing controls must be non-negative integers." >&2
+    exit 1
+  fi
+done
+if (( cleanup_timeout_seconds == 0 || cleanup_poll_interval_seconds == 0 )); then
+  echo "Oracle cleanup timeout and poll interval must be positive." >&2
   exit 1
 fi
 for required_file in "$candidate_definition" "$conventional_decision" "$private_work_item" "$snapshot_file" "$policy_file" "$fidelity_policy"; do
@@ -334,20 +349,46 @@ write_status() {
 
 cleanup_runtime() {
   local cleanup_ok=true
+  local before_active_pods=0
   stop_supervised_port_forwards
   if [[ "$cloud_started" == "true" && -f "$runtime_manifest" ]]; then
-    if ! kubectl delete -f "$runtime_manifest" --ignore-not-found --wait=true --timeout=10m \
+    before_active_pods=$(oracle_active_pod_count "$namespace") || cleanup_ok=false
+    if ! kubectl delete -f "$runtime_manifest" --ignore-not-found --wait=false \
       >>"${run_dir}/cleanup.log" 2>&1; then
       cleanup_ok=false
     fi
-    if [[ -n $(kubectl get deployments --namespace "$namespace" \
-      --selector experiment-role=oracle-runtime -o name 2>>"${run_dir}/cleanup.log") ]]; then
+    if ! wait_for_oracle_runtime_quiescence \
+      "$namespace" "$runtime_manifest" "${run_dir}/cleanup.log" \
+      "$cleanup_timeout_seconds" "$cleanup_poll_interval_seconds" \
+      "$cleanup_quiescence_window_seconds"; then
       cleanup_ok=false
     fi
   fi
   jq -n --argjson attempted "$cloud_started" --argjson completed "$cleanup_ok" \
+    --argjson before_active_pods "$before_active_pods" \
+    --argjson after_active_pods "${ORACLE_CLEANUP_AFTER_ACTIVE_PODS:-0}" \
+    --argjson remaining_runtime_resources "${ORACLE_CLEANUP_REMAINING_RESOURCES:-0}" \
+    --argjson observations "${ORACLE_CLEANUP_OBSERVATIONS:-0}" \
+    --argjson timeout_seconds "$cleanup_timeout_seconds" \
+    --argjson poll_interval_seconds "$cleanup_poll_interval_seconds" \
+    --argjson quiescence_window_seconds "$cleanup_quiescence_window_seconds" \
+    --argjson observed_quiescent_seconds "${ORACLE_CLEANUP_QUIESCENT_SECONDS:-0}" \
     --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-    '{attempted: $attempted, completed: $completed, checked_at: $timestamp}' \
+    '{
+      schema_version: "1.1.0",
+      mechanism: "oracle-repetition-runtime-cleanup",
+      attempted: $attempted,
+      completed: $completed,
+      checked_at: $timestamp,
+      before_active_pods: $before_active_pods,
+      after_active_pods: $after_active_pods,
+      remaining_runtime_resources: $remaining_runtime_resources,
+      observations: $observations,
+      timeout_seconds: $timeout_seconds,
+      poll_interval_seconds: $poll_interval_seconds,
+      quiescence_window_seconds: $quiescence_window_seconds,
+      observed_quiescent_seconds: $observed_quiescent_seconds
+    }' \
     >"${run_dir}/cleanup.json"
   if [[ "$cleanup_ok" != "true" ]]; then
     return 1

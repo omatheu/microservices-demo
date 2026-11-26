@@ -1,5 +1,19 @@
 # Corpus confirmatório
 
+O corpus confirmatório v1.13 foi gerado em 26/11/2026 UTC somente depois das
+duas aprovações, da auditoria 17/17, de 427 testes e do congelamento. Ele contém
+18 identificadores opacos, três repetições por candidata e seis blocos de três,
+está vinculado ao protocolo congelado de SHA-256
+`146261a8216268e80d733f199c99a47d42e8bcf239cae5b1d6e5066953c038f8` e
+tem SHA-256
+`0aa95e80495dd8b081b81225e166f2bedf2a5c7f47e8a61077c9a5a9eb3ce346`.
+A chave protegida foi rotacionada sem exposição; chave e manifesto privado
+permanecem `0600`. Os controles de execução seguem desligados, não há cluster e
+o recibo sanitizado está em
+[`../../evidence/oracle/corpus-rotation-v1.13-20261126T042047Z.json`](../../evidence/oracle/corpus-rotation-v1.13-20261126T042047Z.json).
+Os resultados v1.12 permanecem históricos e não serão misturados à análise
+primária sucessora.
+
 O corpus confirmatório v1.12 foi gerado em 26/11/2026 UTC somente depois das
 duas aprovações, da auditoria 17/17 e do congelamento. Ele contém 18
 identificadores opacos, três repetições por candidata e seis blocos de três,

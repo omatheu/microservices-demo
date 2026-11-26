@@ -47,6 +47,7 @@ REQUIRED_INPUTS = {
     "confirmatory_cleanup_rbac_incident",
     "confirmatory_probe_oracle_incident",
     "confirmatory_preartifact_capability_incident",
+    "confirmatory_runtime_quiescence_incident",
     "baseline_evidence_validator",
     "operational_baseline_summary",
     "checkout_baseline_summary",
@@ -65,6 +66,7 @@ REQUIRED_INPUTS = {
     "promotional_credit_observation",
     "oracle_suite_manifest",
     "oracle_repetition_runner",
+    "oracle_runtime_quiescence",
     "terraform_cluster_financial_guard",
     "terraform_budget_financial_guard",
 }

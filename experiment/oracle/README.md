@@ -345,6 +345,16 @@ novos hashes, aprovações, congelamento, chave e corpus antes de reiniciar a
 coleta. O registro sanitizado está em
 [`../evidence/oracle/confirmatory-preartifact-capability-regression-v1.11-20261126.json`](../evidence/oracle/confirmatory-preartifact-capability-regression-v1.11-20261126.json).
 
+A v1.12 revelou uma corrida distinta na fronteira entre repetições: excluir os
+controladores com espera não garantia que todos os pods em encerramento e os
+demais recursos ligados ao manifesto já tivessem desaparecido. A v1.13 mede os
+dois inventários, aguarda zero estável por uma janela explícita e aborta ao
+atingir o timeout. O recibo de cleanup registra contagens antes/depois, número
+de observações e duração quiescente sem incorporar conteúdo protegido. O teste
+de regressão mantém pods e recursos visíveis por sondagens sucessivas para
+provar que a próxima repetição não começa cedo. O incidente sanitizado está em
+[`../evidence/oracle/confirmatory-runtime-quiescence-regression-v1.12-20261126.json`](../evidence/oracle/confirmatory-runtime-quiescence-regression-v1.12-20261126.json).
+
 Uma execução de engenharia materializou e selou as quatro candidatas
 pré-artefato do rascunho atual. A CI bloqueou todas, e os três verificadores
 independentes produziram quatro observações válidas, todas prejudiciais e

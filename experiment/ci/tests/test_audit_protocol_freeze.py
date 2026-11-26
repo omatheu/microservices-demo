@@ -108,20 +108,20 @@ def cost_review(binding):
 
 
 class AuditProtocolFreezeTests(unittest.TestCase):
-    def test_active_protocol_is_frozen_v112_after_oracle_incident(self):
+    def test_active_protocol_is_frozen_v113_after_quiescence_incident(self):
         value = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("checkout-pdt-comparison-v1.12", value["protocol_id"])
+        self.assertEqual("checkout-pdt-comparison-v1.13", value["protocol_id"])
         self.assertEqual("frozen", value["status"])
         self.assertTrue(value["confirmatory_collection_allowed"])
-        self.assertEqual("2026-11-26T01:46:00Z", value["frozen_at"])
+        self.assertEqual("2026-11-26T04:19:31Z", value["frozen_at"])
         self.assertEqual(
-            "oracle-v1.12-preartifact-capability",
+            "orchestration-v1.13-oracle-quiescence",
             value["amendment"]["amendment_id"],
         )
-        self.assertEqual(13, value["amendment"]["confirmatory_observations_before_amendment"])
-        self.assertEqual(5, value["amendment"]["complete_decision_pairs_before_amendment"])
-        self.assertEqual(3, value["amendment"]["oracle_adjudications_before_amendment"])
+        self.assertEqual(2, value["amendment"]["confirmatory_observations_before_amendment"])
+        self.assertEqual(1, value["amendment"]["complete_decision_pairs_before_amendment"])
+        self.assertEqual(1, value["amendment"]["oracle_adjudications_before_amendment"])
         self.assertEqual(0, value["amendment"]["oracle_labels_revealed_before_amendment"])
         self.assertEqual(2500.0, value["execution_limits"]["project_gross_cost_budget_brl"])
         self.assertEqual(1881.838245, value["execution_limits"]["financial_baseline_gross_cost_brl"])
