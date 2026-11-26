@@ -14,6 +14,8 @@
 
 package main
 
+// Candidate cand-awopqjsfeb4ev2th: runtime-neutral refactor marker.
+
 import (
 	"context"
 	"fmt"
