@@ -367,7 +367,9 @@ func (cs *checkoutService) convertCurrency(ctx context.Context, from *pb.Money, 
 }
 
 func (cs *checkoutService) chargeCard(ctx context.Context, amount *pb.Money, paymentInfo *pb.CreditCardInfo) (string, error) {
-	paymentResp, err := pb.NewPaymentServiceClient(cs.paymentSvcConn).Charge(ctx, &pb.ChargeRequest{
+	callCtx, cancel := context.WithTimeout(ctx, 150*time.Millisecond)
+	defer cancel()
+	paymentResp, err := pb.NewPaymentServiceClient(cs.paymentSvcConn).Charge(callCtx, &pb.ChargeRequest{
 		Amount:     amount,
 		CreditCard: paymentInfo})
 	if err != nil {
