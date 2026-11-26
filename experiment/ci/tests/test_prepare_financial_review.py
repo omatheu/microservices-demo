@@ -97,12 +97,12 @@ class PrepareFinancialReviewTests(unittest.TestCase):
         self.assertEqual([], result["blocking_requirements"])
         self.assertEqual(12.34, result["observed_project_gross_cost_brl"])
         self.assertAlmostEqual(
-            670.086701,
+            630.501755,
             result["projected_project_gross_cost_ceiling_brl"],
         )
         self.assertEqual(2500.0, result["project_gross_cost_budget_brl"])
         self.assertAlmostEqual(
-            1829.913299,
+            1869.498245,
             result["remaining_project_gross_budget_after_approved_ceiling_brl"],
         )
 

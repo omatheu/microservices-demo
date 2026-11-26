@@ -2,11 +2,11 @@
   "schema_version": "1.0.0",
   "suite_id": "checkout-independent-oracle-v1",
   "status": "frozen",
-  "frozen_at": "2026-11-24T02:50:00Z",
+  "frozen_at": "2026-11-26T01:34:59Z",
   "files": [
     {
       "path": "experiment/oracle/policy-v1.json",
-      "sha256": "ba2214086351785c89e3bd93647cf1e4de784bd7ce8c43ac1c88a482a4b9f4d0"
+      "sha256": "cd12f2472f2a83303234d831d6215d908ec0cd48b6e59181f525c0932ac76a7c"
     },
     {
       "path": "experiment/pdt/fidelity-policy.json",
@@ -74,7 +74,11 @@
     },
     {
       "path": "experiment/scripts/evaluate-oracle-preartifact.py",
-      "sha256": "49d2c45067e7799ae49de23efcaaa41f261a23a4a623a7bfe8a6152dd84ac1e4"
+      "sha256": "d671f19d0d96c3e8ee950f006bc52f962123c85178c632ac500b66926ca8f2f9"
+    },
+    {
+      "path": "experiment/scripts/verify-preartifact-tail-latency.js",
+      "sha256": "89e73937cbe139d5900cd2fd13dc9e1286c9c7545d1376810792f7c3626b1784"
     },
     {
       "path": "experiment/scripts/prepare-sealed-preartifact-inputs.py",

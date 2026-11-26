@@ -329,10 +329,21 @@ Para candidatas bloqueadas antes de existir artefato,
 confere a ligação exata entre definição, item privado, ordem de trabalho, patch,
 commit/árvore e evidência da CI. Depois executa uma verificação independente:
 `go test` em imagem fixada para falhas de compilação/teste, busca redigida do
-canário sintético de segredo ou inspeção do manifesto renderizado para
-privilégio proibido. Falha da ferramenta é classificada como execução inválida,
-nunca como dano. O rótulo pretendido só é comparado depois de calculado o
-rótulo observado.
+canário sintético de segredo, inspeção do manifesto renderizado para privilégio
+proibido ou reprodução comportamental de uma classe de latência seletiva. O
+último verificador usa imagem Node fixada por digest, rede desabilitada, mounts
+somente leitura, relógio virtual e observações redigidas; ele mede cem chamadas
+sem esperar tempo real nem executar dependências da candidata. Falha da
+ferramenta é classificada como execução inválida, nunca como dano. O rótulo
+pretendido só é comparado depois de calculado o rótulo observado.
+
+A v1.11 encontrou de forma fail-closed uma classe válida do corpus que ainda
+não possuía verificador pré-artefato registrado. As duas tentativas foram
+preservadas e limpas sem abrir rótulos. A emenda v1.12 adiciona somente esse
+instrumento independente, mantém parâmetros e estimando inalterados e exige
+novos hashes, aprovações, congelamento, chave e corpus antes de reiniciar a
+coleta. O registro sanitizado está em
+[`../evidence/oracle/confirmatory-preartifact-capability-regression-v1.11-20261126.json`](../evidence/oracle/confirmatory-preartifact-capability-regression-v1.11-20261126.json).
 
 Uma execução de engenharia materializou e selou as quatro candidatas
 pré-artefato do rascunho atual. A CI bloqueou todas, e os três verificadores

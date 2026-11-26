@@ -192,6 +192,12 @@ como Partial Digital Twin.
   assíncrona sem dispensar cleanup.
 - [x] Revisão financeira, aprovação do pesquisador e auditoria 17/17 concluídas;
   protocolo v1.11 congelado em `2026-11-24T03:05:47Z`.
+- [x] Lacuna determinística do verificador pré-artefato v1.11 diagnosticada
+  após duas tentativas preservadas e cleanup completo, sem abrir rótulos.
+- [x] Emenda v1.12 autorizada e implementada localmente com verificação
+  comportamental independente, runtime imutável e evidência redigida.
+- [ ] Renovar hashes, revisão financeira, aprovação, auditoria 17/17,
+  congelamento, chave e corpus v1.12 antes de reiniciar a coleta integral.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -239,11 +245,10 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-O Billing pós-run `45279248514` ainda termina antes do início da execução, mas
-a autorização literal de risco financeiro tornou a reconciliação assíncrona e
-aprovou o ciclo v1.11 até R$2.500 brutos. O congelamento foi concluído; restam
-rotação da chave, corpus opaco v1.11, publicação/merge e os seis blocos cloud,
-sempre com exclusão do cluster antes do bloco seguinte.
+O ciclo v1.11 permanece preservado no commit congelado e não será misturado à
+análise primária sucessora. A v1.12 mantém o teto de R$2.500 e a reconciliação
+somente em leitura; antes de qualquer cloud ainda faltam os novos bindings,
+aprovações, auditoria, congelamento, chave e corpus.
 
 ### Caminho crítico atual — 24/11/2026
 

@@ -1,19 +1,19 @@
 {
-  "approved_incremental_spend_ceiling_brl": 657.746701,
-  "billing_data_as_of": "2026-11-23T23:24:40Z",
+  "approved_incremental_spend_ceiling_brl": 618.161755,
+  "billing_data_as_of": "2026-11-25T23:08:14Z",
   "cloud_execution_authorized": false,
   "cost_data_available": true,
   "decision": "approved-for-protocol-freeze",
   "evidence": {
-    "path": "experiment/evidence/finance/cost-window-20260919-20261123-v1.11-risk-baseline.json",
-    "sha256": "48d340884b7600a728e67ed92c4e7517f83b5749e3b840a118fa16f7ea933742"
+    "path": "experiment/evidence/finance/cost-window-20260919-20261126-v1.12-pre-freeze.json",
+    "sha256": "fa8e6c6fe4cfebd2bdbc66fe0fdc6943a36de802199d6d7257e070e2d2742539"
   },
   "mandatory_incremental_review_at_brl": 150,
   "project_gross_cost_budget_brl": 2500.0,
-  "project_gross_cost_observed_brl": 1842.253299,
+  "project_gross_cost_observed_brl": 1881.838245,
   "project_id": "microservices-demo-tcc",
   "projected_project_gross_cost_ceiling_brl": 2500.0,
-  "protocol_id": "checkout-pdt-comparison-v1.11",
-  "reviewed_at": "2026-11-24T03:05:25Z",
+  "protocol_id": "checkout-pdt-comparison-v1.12",
+  "reviewed_at": "2026-11-26T01:45:33Z",
   "schema_version": "1.1.0"
 }

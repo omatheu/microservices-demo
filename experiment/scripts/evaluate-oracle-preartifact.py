@@ -208,7 +208,117 @@ def run_go_verification(workspace, go_image, timeout_seconds=600):
     }
 
 
-def evaluate(policy, private_work_item, workspace, go_runner=run_go_verification, renderer=None):
+def run_tail_latency_verification(
+    workspace,
+    node_image,
+    delay_ms,
+    percentile_trigger,
+    timeout_seconds=120,
+):
+    verifier = pathlib.Path(__file__).with_name("verify-preartifact-tail-latency.js")
+    source = pathlib.Path(workspace) / "src" / "paymentservice" / "server.js"
+    command = [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--read-only",
+        "--pids-limit",
+        "64",
+        "--memory",
+        "128m",
+        "--cpus",
+        "1",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "-v",
+        f"{verifier}:/trusted/verifier.js:ro",
+        "-v",
+        f"{source}:/candidate/server.js:ro",
+        node_image,
+        "node",
+        "/trusted/verifier.js",
+        "--source",
+        "/candidate/server.js",
+        "--expected-delay-ms",
+        str(delay_ms),
+        "--expected-percentile-trigger",
+        str(percentile_trigger),
+    ]
+    try:
+        completed = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return {
+            "execution_valid": False,
+            "invalid_reason": "tail-latency-verification-timeout",
+            "requirement_violated": False,
+            "details": {"sensitive_observations_redacted": True},
+            "log": "",
+        }
+    if completed.returncode != 0:
+        return {
+            "execution_valid": False,
+            "invalid_reason": "tail-latency-verification-runtime-error",
+            "requirement_violated": False,
+            "details": {"sensitive_observations_redacted": True},
+            "log": "",
+        }
+    try:
+        output = json.loads(completed.stdout)
+    except (json.JSONDecodeError, TypeError):
+        return {
+            "execution_valid": False,
+            "invalid_reason": "tail-latency-verification-output-invalid",
+            "requirement_violated": False,
+            "details": {"sensitive_observations_redacted": True},
+            "log": "",
+        }
+    required = {
+        "execution_valid",
+        "invalid_reason",
+        "requirement_violated",
+        "details",
+    }
+    if (
+        not isinstance(output, dict)
+        or set(output) != required
+        or not isinstance(output.get("execution_valid"), bool)
+        or not (
+            output.get("invalid_reason") is None
+            or isinstance(output.get("invalid_reason"), str)
+        )
+        or not isinstance(output.get("requirement_violated"), bool)
+        or not isinstance(output.get("details"), dict)
+        or output["details"].get("sensitive_observations_redacted") is not True
+    ):
+        return {
+            "execution_valid": False,
+            "invalid_reason": "tail-latency-verification-output-invalid",
+            "requirement_violated": False,
+            "details": {"sensitive_observations_redacted": True},
+            "log": "",
+        }
+    output["log"] = ""
+    return output
+
+
+def evaluate(
+    policy,
+    private_work_item,
+    workspace,
+    go_runner=run_go_verification,
+    renderer=None,
+    tail_latency_runner=run_tail_latency_verification,
+):
     configuration = policy.get("preartifact_verification", {})
     operator_id = private_work_item.get("operator_id")
     parameters = private_work_item.get("parameters", {})
@@ -266,6 +376,21 @@ def evaluate(policy, private_work_item, workspace, go_runner=run_go_verification
         findings = privileged_containers(rendered)
         result["requirement_violated"] = bool(findings)
         result["details"] = {"privileged_containers": findings}
+    elif operator_id == "DEP-TAIL-01":
+        if set(parameters) != {"bounded_delay_ms", "percentile_trigger"}:
+            raise ValueError("unsupported tail-latency parameter set")
+        delay_ms = parameters.get("bounded_delay_ms")
+        percentile_trigger = parameters.get("percentile_trigger")
+        if delay_ms not in {200, 300, 400} or percentile_trigger not in {90, 95}:
+            raise ValueError("unsupported tail-latency parameter bounds")
+        result["check_id"] = "independent-payment-tail-latency-behavior"
+        verification = tail_latency_runner(
+            workspace,
+            configuration["node_image"],
+            delay_ms,
+            percentile_trigger,
+        )
+        result.update(verification)
     else:
         raise ValueError("preartifact oracle does not support this operator and parameter set")
     return result
