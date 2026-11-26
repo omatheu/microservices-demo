@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "candidate_id": "cand-cgfz5ej6ehby4hvr",
+  "evidence_classification": "confirmatory-candidate",
+  "confirmatory_eligibility": true,
+  "twin_object": "checkoutservice",
+  "alternatives": [
+    {
+      "id": "deploy-as-is",
+      "action": "deploy",
+      "configuration_changes": [
+        {
+          "deployment": "checkoutservice",
+          "patch": {
+            "spec": {
+              "template": {
+                "spec": {
+                  "containers": [
+                    {
+                      "name": "server",
+                      "resources": {
+                        "requests": {
+                          "cpu": "50m"
+                        },
+                        "limits": {
+                          "cpu": "50m"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "change_cost": 0
+    },
+    {
+      "id": "restore-baseline-cpu",
+      "action": "deploy",
+      "configuration_changes": [
+        {
+          "deployment": "checkoutservice",
+          "patch": {
+            "spec": {
+              "template": {
+                "spec": {
+                  "containers": [
+                    {
+                      "name": "server",
+                      "resources": {
+                        "requests": {
+                          "cpu": "100m"
+                        },
+                        "limits": {
+                          "cpu": "200m"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "change_cost": 1
+    },
+    {
+      "id": "block",
+      "action": "block",
+      "configuration_changes": [],
+      "change_cost": 10
+    }
+  ]
+}
