@@ -243,7 +243,7 @@ func (cs *checkoutService) PlaceOrder(ctx context.Context, req *pb.PlaceOrderReq
 	total := pb.Money{CurrencyCode: req.UserCurrency,
 		Units: 0,
 		Nanos: 0}
-	total = money.Must(money.Sum(total, *prep.shippingCostLocalized))
+	// Synthetic mutation: shipping is omitted from the charged total.
 	for _, it := range prep.orderItems {
 		multPrice := money.MultiplySlow(*it.Cost, uint32(it.GetItem().GetQuantity()))
 		total = money.Must(money.Sum(total, multPrice))
