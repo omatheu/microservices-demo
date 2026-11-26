@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "oracle-v1.12-preartifact-capability",
+  "status": "implemented-awaiting-freeze",
+  "authorization_recorded_at": "2026-11-26T01:30:00Z",
+  "authorization_source": "explicit request in the current researcher chat after a plain-language explanation of the version boundary",
+  "authorization_literal": "Pode implementar a nova versão congelada e reiniciar a coleta sob ela.",
+  "authorization_sha256": "79b0d579b00b26dba3e07142cc4b26cc8934af28b98535de15276088244bc780",
+  "reason": "The frozen v1.11 independent preartifact evaluator lacked a registered behavioral verifier for one valid blinded case class. Repetition without a new version would deterministically fail before adjudication.",
+  "superseded_freeze": {
+    "git_commit": "0810bb51fc886daa5896f4c7963c23a93fd586e4",
+    "protocol_id": "checkout-pdt-comparison-v1.11",
+    "protocol_sha256": "e44d987d3520c836b44fb18374864c5d2cde2282e145b5fca71d99bf2328b8af",
+    "frozen_at": "2026-11-24T03:05:47Z",
+    "corpus_id": "corpus-zfobh62c3qmwu",
+    "public_corpus_sha256": "2a28a7e9e461977f71ed145e5fee85aab3dd1848ec0235f640d2655f60f06eb3"
+  },
+  "preserved_prior_collection": {
+    "candidate_flows_started_before_amendment": 13,
+    "complete_decision_pairs_before_amendment": 5,
+    "oracle_adjudications_before_amendment": 3,
+    "oracle_labels_revealed_before_amendment": 0,
+    "v1_11_unique_candidates_started": 5,
+    "v1_11_completed_block_count": 1,
+    "v1_11_completed_excluded_before_label": 1,
+    "v1_11_failed_attempts_for_affected_case": 2,
+    "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
+    "carry_forward_into_v1_12_primary_analysis": false
+  },
+  "incident_evidence": {
+    "path": "experiment/evidence/oracle/confirmatory-preartifact-capability-regression-v1.11-20261126.json",
+    "sha256": "b660f80b43df51af588795a191fbd3c323139c3492ae2a43a5562680b7ebfaaa"
+  },
+  "authorized_changes": [
+    "Add one independent fail-closed behavioral verifier for the previously unsupported preartifact class.",
+    "Use a pinned runtime, an isolated virtual clock, no network, read-only mounts and redacted observations.",
+    "Treat verifier, runtime or binding failures as invalid rather than harmful and never use the intended label as input.",
+    "Add positive, negative, malformed-input and tool-failure regression tests.",
+    "Invalidate the active v1.11 approvals and corpus, renew all hashes and approvals, freeze v1.12, rotate the blinding key and generate a new opaque corpus.",
+    "Restart the full confirmatory collection under v1.12 without mixing v1.11 outcomes into the v1.12 primary analysis."
+  ],
+  "explicitly_unchanged": [
+    "research question and primary estimand",
+    "candidate count, three repetitions, six blocks and majority repetition rule",
+    "mutation operators and parameter spaces",
+    "PDT model thresholds and deployable alternatives",
+    "Oracle functional and performance classification rules",
+    "runtime duration and mandatory cleanup controls",
+    "absolute gross project budget of R$2500",
+    "human gate and cloud authorization controls",
+    "published runtime image digests"
+  ],
+  "financial_guardrail": {
+    "absolute_project_budget_brl": 2500.0,
+    "frozen_v1_11_baseline_gross_cost_brl": 1842.253299,
+    "latest_read_only_gross_cost_brl": 1881.838245,
+    "latest_incremental_cost_brl": 39.584946,
+    "latest_remaining_gross_envelope_brl": 618.161755,
+    "cost_evidence": {
+      "path": "experiment/evidence/finance/cost-window-20260919-20261126-v1.12-pre-freeze.json",
+      "sha256": "fa8e6c6fe4cfebd2bdbc66fe0fdc6943a36de802199d6d7257e070e2d2742539"
+    },
+    "billing_reconciliation_mode": "asynchronous-after-block-explicit-risk-acceptance",
+    "new_financial_review_required_before_freeze": true,
+    "absolute_budget_increased": false
+  },
+  "runtime_publication_required": false,
+  "security_policy_weakened": false,
+  "cloud_execution_authorized": true,
+  "protocol_freeze_authorized": true,
+  "key_rotation_authorized": true,
+  "corpus_generation_authorized": true,
+  "pull_request_publication_authorized": true,
+  "merge_authorized": true
+}

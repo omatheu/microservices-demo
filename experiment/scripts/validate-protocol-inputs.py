@@ -46,6 +46,7 @@ REQUIRED_INPUTS = {
     "confirmatory_execution_hardening_review",
     "confirmatory_cleanup_rbac_incident",
     "confirmatory_probe_oracle_incident",
+    "confirmatory_preartifact_capability_incident",
     "baseline_evidence_validator",
     "operational_baseline_summary",
     "checkout_baseline_summary",

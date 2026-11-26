@@ -1,7 +1,21 @@
 # Corpus confirmatório
 
-O corpus confirmatório ativo v1.11 foi gerado em 24/11/2026 UTC depois das duas
-aprovações, da auditoria 17/17 e do congelamento. O corpus
+O corpus confirmatório v1.12 foi gerado em 26/11/2026 UTC somente depois das
+duas aprovações, da auditoria 17/17 e do congelamento. Ele contém 18
+identificadores opacos, três repetições por candidata e seis blocos de três,
+está vinculado ao protocolo congelado de SHA-256
+`e5aa17eb29aa7c880676f74641f9a29c30e5cabe4e213dd121797ea8d2302ed5` e
+tem SHA-256
+`bd9aa3734e72a13d24fc2b8cc13c2bbdcc2c926112043f8272b196d18cd2300f`.
+A chave foi rotacionada no secret protegido sem exposição; a chave e o
+manifesto privado permanecem `0600`. Os kill switches continuam em `false`,
+o cluster continua ausente e o recibo sanitizado da rotação está em
+[`../../evidence/oracle/corpus-rotation-v1.12-20261126T014745Z.json`](../../evidence/oracle/corpus-rotation-v1.12-20261126T014745Z.json).
+Os resultados v1.11 permanecem históricos e não serão misturados à análise
+primária sucessora.
+
+O corpus confirmatório histórico v1.11 foi gerado em 24/11/2026 UTC depois das
+duas aprovações, da auditoria 17/17 e do congelamento. O corpus
 `corpus-zfobh62c3qmwu` contém 18 identificadores opacos, três repetições por
 candidata e seis blocos de três. Ele está vinculado ao protocolo congelado de
 SHA-256 `e44d987d3520c836b44fb18374864c5d2cde2282e145b5fca71d99bf2328b8af`,
@@ -182,9 +196,9 @@ históricos em diretório local privado. As chaves e os manifestos Oracle v1.3,
 v1.4, v1.5 e v1.6 também permanecem nos diretórios privados ignorados pelo Git, com
 permissões 0600, e nunca podem ser copiados para este diretório versionado. O
 secret protegido
-`TCC_ORACLE_BLINDING_KEY_B64` contém a chave privada v1.11 correspondente ao
-corpus ativo. O valor permanece oculto e os kill switches seguem desarmados
-fora das janelas de execução.
+`TCC_ORACLE_BLINDING_KEY_B64` só pode ser rotacionado para a nova chave depois
+do congelamento v1.12. O valor permanece oculto e os kill switches seguem
+desarmados fora das janelas de execução.
 
 O mesmo ambiente protegido deve conter:
 

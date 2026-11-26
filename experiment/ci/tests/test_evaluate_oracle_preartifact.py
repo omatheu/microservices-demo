@@ -225,6 +225,84 @@ spec:
             "checkoutservice",
         )
 
+    def test_tail_latency_behavior_is_observed_without_intended_label(self):
+        observed = {}
+
+        def behavior_runner(workspace, image, delay_ms, percentile_trigger):
+            observed.update(
+                workspace=workspace,
+                image=image,
+                delay_ms=delay_ms,
+                percentile_trigger=percentile_trigger,
+            )
+            return {
+                "execution_valid": True,
+                "invalid_reason": None,
+                "requirement_violated": True,
+                "details": {
+                    "behavioral_profile_match": True,
+                    "sample_size": 100,
+                    "sensitive_observations_redacted": True,
+                },
+                "log": "",
+            }
+
+        private_item = {
+            "operator_id": "DEP-TAIL-01",
+            "parameters": {"bounded_delay_ms": 300, "percentile_trigger": 95},
+            "intended_label": "safe",
+        }
+        result = MODULE.evaluate(
+            policy(),
+            private_item,
+            pathlib.Path("/sealed-candidate"),
+            tail_latency_runner=behavior_runner,
+        )
+
+        self.assertTrue(result["requirement_violated"])
+        self.assertNotIn("intended_label", result)
+        self.assertEqual(observed["workspace"], pathlib.Path("/sealed-candidate"))
+        self.assertEqual(observed["delay_ms"], 300)
+        self.assertEqual(observed["percentile_trigger"], 95)
+
+    def test_tail_latency_tool_failure_is_invalid_not_harmful(self):
+        def unavailable_runner(_workspace, _image, _delay_ms, _percentile_trigger):
+            return {
+                "execution_valid": False,
+                "invalid_reason": "tail-latency-verification-runtime-error",
+                "requirement_violated": False,
+                "details": {"sensitive_observations_redacted": True},
+                "log": "",
+            }
+
+        private_item = {
+            "operator_id": "DEP-TAIL-01",
+            "parameters": {"bounded_delay_ms": 200, "percentile_trigger": 90},
+            "intended_label": "harmful",
+        }
+        result = MODULE.evaluate(
+            policy(),
+            private_item,
+            pathlib.Path("/sealed-candidate"),
+            tail_latency_runner=unavailable_runner,
+        )
+
+        self.assertFalse(result["execution_valid"])
+        self.assertFalse(result["requirement_violated"])
+
+    def test_tail_latency_rejects_unregistered_parameters(self):
+        private_item = {
+            "operator_id": "DEP-TAIL-01",
+            "parameters": {
+                "bounded_delay_ms": 200,
+                "percentile_trigger": 90,
+                "unexpected": True,
+            },
+        }
+
+        with self.assertRaisesRegex(ValueError, "parameter set"):
+            MODULE.evaluate(policy(), private_item, pathlib.Path("/unused"))
+
 
 if __name__ == "__main__":
     unittest.main()

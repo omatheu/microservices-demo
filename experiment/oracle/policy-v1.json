@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "policy_id": "checkout-oracle-v1",
   "status": "frozen",
-  "frozen_at": "2026-11-24T02:50:00Z",
+  "frozen_at": "2026-11-26T01:34:59Z",
   "twin_object": "checkoutservice",
   "required_repetitions": 3,
   "minimum_valid_repetitions": 2,
@@ -113,9 +113,11 @@
   "preartifact_verification": {
     "supported_operators": [
       "CTRL-CI-01",
-      "CTRL-SEC-01"
+      "CTRL-SEC-01",
+      "DEP-TAIL-01"
     ],
     "go_image": "golang:1.27.0-alpine@sha256:4c9fe60190a2a3350ddc51de80d0224b8a6698d12bdfc999fee45ea9d6c46dbc",
+    "node_image": "node:24.20.0-alpine@sha256:e67514e5d0f6c46656005e1b693b2ec9d52e80b641307de684d4a015ba7a4eaf",
     "synthetic_secret_pattern": "AKIA[0-9A-Z]{16}",
     "staging_overlay": "infra/kustomize/staging",
     "classification_rule": "A reproducible violation observed by the independent source verifier is harmful; tool or binding failure is invalid; intended_label is never an input."

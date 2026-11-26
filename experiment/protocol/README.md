@@ -1,12 +1,13 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** a emenda operacional v1.11 está implementada e congelada em
-> `2026-11-24T03:05:47Z`, após auditoria 17/17. A autorização literal do
-> pesquisador elevou o teto bruto total para R$2.500, aprovou a reconciliação
-> assíncrona do Billing, o novo congelamento, a rotação de chave/corpus, a
-> publicação/merge e os seis blocos cloud com cleanup obrigatório. O corpus
-> v1.10 permanece preservado historicamente, sem revelar rótulos, e nenhum
-> cluster existia no instante do congelamento v1.11.
+> **Status:** a emenda v1.12 foi aprovada e congelada em
+> `2026-11-26T01:46:00Z`, após auditoria 17/17. A chave e o corpus v1.12 foram
+> rotacionados sem exposição; a coleta permanece operacionalmente bloqueada
+> até a publicação e validação do congelamento no branch protegido. A
+> v1.11 permanece preservada no commit `0810bb51`, sem reinterpretação nem
+> mistura com a futura análise primária v1.12. A leitura Billing pré-freeze
+> observou R$1.881,838245 brutos, deixando R$618,161755 até o teto de
+> R$2.500; variáveis e labels estão desarmados e não há cluster.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -171,6 +172,19 @@ aprovações vincularam o SHA-256 candidato
 `36bfe8591f276adab8e5468b293ac7d5963c0908ee3d49061d23905266e5490e`, a
 auditoria passou 17/17 e o protocolo foi congelado com SHA-256
 `e44d987d3520c836b44fb18374864c5d2cde2282e145b5fca71d99bf2328b8af`.
+
+Durante o segundo caso do bloco 2 da v1.11, a etapa independente pré-artefato
+encontrou uma lacuna determinística de capacidade: uma classe válida do corpus
+não tinha verificador comportamental registrado. Duas tentativas foram
+preservadas com cleanup completo, zero transitórios, zero clusters e nenhum
+rótulo revelado. Depois de explicar a fronteira metodológica, o pesquisador
+autorizou explicitamente a v1.12 e o reinício integral da coleta sob a nova
+versão. A emenda
+[`amendments/oracle-v1.12-preartifact-capability.json`](./amendments/oracle-v1.12-preartifact-capability.json)
+adiciona o verificador isolado e fail-closed, sem alterar operadores, espaços de
+parâmetros, estimando, teto ou regras de cleanup. Aprovações e corpus v1.11
+foram retirados somente da área ativa candidata; continuam verificáveis no
+commit congelado anterior.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "confirmatory-preartifact-capability-regression-v1.11-20261126",
+  "recorded_at": "2026-11-26T01:34:59Z",
+  "repository": "omatheu/microservices-demo",
+  "frozen_revision": "0810bb51fc886daa5896f4c7963c23a93fd586e4",
+  "protocol_id": "checkout-pdt-comparison-v1.11",
+  "affected_stage": "independent-preartifact-verification",
+  "outcome": "deterministic-capability-gap",
+  "root_cause": "One valid blinded preartifact class had no registered independent behavioral verifier in the frozen evaluator, so the fail-closed dispatcher rejected it before adjudication.",
+  "reproduction": {
+    "same_frozen_source": true,
+    "same_sealed_case": true,
+    "repeat_without_version_change_would_recur": true,
+    "protected_case_details_redacted": true
+  },
+  "preservation": {
+    "failed_runs_backed_up_privately": 2,
+    "logs_and_artifacts_preserved": true,
+    "oracle_labels_revealed": 0,
+    "prior_results_reinterpreted": false
+  },
+  "cleanup": {
+    "variables_disabled_in_repository_and_environment": true,
+    "protected_labels_removed": true,
+    "persistent_resources_preserved": 25,
+    "transient_resources_remaining": 0,
+    "clusters_in_state": 0,
+    "clusters_in_cloud": 0
+  },
+  "authorized_correction": {
+    "new_protocol_version_required": true,
+    "independent_behavioral_verifier_required": true,
+    "intended_label_must_not_be_an_input": true,
+    "tool_failure_must_be_invalid_not_harmful": true,
+    "new_approvals_freeze_key_and_corpus_required": true,
+    "restart_collection_without_mixing_v1_11_results": true
+  },
+  "engineering_validation": {
+    "candidate_behavior_detected": true,
+    "baseline_behavior_rejected": true,
+    "containerized_immutable_runtime_passed": true,
+    "sensitive_observations_redacted": true,
+    "confirmatory_observation": false
+  },
+  "financial_context": {
+    "observation_mode": "read-only",
+    "gross_cost_brl": 1878.231920,
+    "incremental_from_v1_11_baseline_brl": 35.978621,
+    "remaining_to_absolute_cap_brl": 621.768080,
+    "absolute_cap_brl": 2500.0
+  },
+  "cloud_mutation_performed": false,
+  "confirmatory_observation": false
+}
