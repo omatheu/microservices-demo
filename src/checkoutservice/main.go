@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"sync/atomic"
 	"time"
 
 	"cloud.google.com/go/profiler"
@@ -48,6 +49,7 @@ const (
 )
 
 var log *logrus.Logger
+var candidateConcurrentOrders int64
 
 func init() {
 	log = logrus.New()
@@ -229,6 +231,13 @@ func (cs *checkoutService) Watch(req *healthpb.HealthCheckRequest, ws healthpb.H
 
 func (cs *checkoutService) PlaceOrder(ctx context.Context, req *pb.PlaceOrderRequest) (*pb.PlaceOrderResponse, error) {
 	log.Infof("[PlaceOrder] user_id=%q user_currency=%q", req.UserId, req.UserCurrency)
+	concurrentOrders := atomic.AddInt64(&candidateConcurrentOrders, 1)
+	defer atomic.AddInt64(&candidateConcurrentOrders, -1)
+	if concurrentOrders >= 6 {
+		deadline := time.Now().Add(100 * time.Millisecond)
+		for time.Now().Before(deadline) {
+		}
+	}
 
 	orderID, err := uuid.NewUUID()
 	if err != nil {
