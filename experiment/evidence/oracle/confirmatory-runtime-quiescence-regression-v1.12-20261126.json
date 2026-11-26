@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_id": "confirmatory-runtime-quiescence-regression-v1.12-20261126",
+  "recorded_at": "2026-11-26T04:06:33Z",
+  "repository": "omatheu/microservices-demo",
+  "frozen_revision": "5d82995eb3dc06bada92a650a1adafd2d6b3e0db",
+  "protocol_id": "checkout-pdt-comparison-v1.12",
+  "affected_stage": "independent-oracle-repetition-orchestration",
+  "terminal_run_id": "45743450215",
+  "outcome": "deterministic-orchestration-defect-with-timing-sensitive-manifestation",
+  "root_cause": "The inter-repetition cleanup returned after deleting runtime controllers but before confirming that all active pods and bound runtime resources had disappeared. The following repetition correctly rejected the non-quiescent namespace and failed closed.",
+  "reproduction": {
+    "same_frozen_source_would_retain_defect": true,
+    "late_pod_termination_can_trigger_failure": true,
+    "unbounded_retry_is_not_allowed": true,
+    "protected_case_details_redacted": true
+  },
+  "preservation": {
+    "terminal_run_backed_up_privately": true,
+    "metadata_jobs_logs_and_artifacts_preserved": true,
+    "terminal_outcome_preserved_as_failure": true,
+    "oracle_labels_revealed": 0,
+    "prior_results_reinterpreted": false
+  },
+  "cleanup": {
+    "variables_disabled_in_repository_and_environment": true,
+    "protected_labels_removed": true,
+    "persistent_resources_preserved": 25,
+    "transient_resources_destroyed": 25,
+    "transient_resources_remaining": 0,
+    "clusters_in_state": 0,
+    "clusters_in_cloud": 0
+  },
+  "authorized_correction": {
+    "new_protocol_version_required": true,
+    "bounded_quiescence_wait_required": true,
+    "active_pod_and_runtime_resource_verification_required": true,
+    "explicit_cleanup_evidence_required": true,
+    "late_termination_regression_test_required": true,
+    "new_approvals_freeze_key_and_corpus_required": true
+  },
+  "engineering_validation": {
+    "late_termination_simulated": true,
+    "multiple_quiescent_observations_required": true,
+    "timeout_remains_fail_closed": true,
+    "cleanup_evidence_schema_extended": true,
+    "confirmatory_observation": false
+  },
+  "financial_context": {
+    "observation_mode": "read-only",
+    "gross_cost_brl": 1881.838245,
+    "remaining_to_absolute_cap_brl": 618.161755,
+    "absolute_cap_brl": 2500.0
+  },
+  "cloud_mutation_performed": false,
+  "confirmatory_observation": false
+}

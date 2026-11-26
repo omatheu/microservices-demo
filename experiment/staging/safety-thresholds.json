@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "status": "frozen",
-  "frozen_at": "2026-11-24T02:50:00Z",
+  "frozen_at": "2026-11-26T04:17:46Z",
   "method": "predeclared-safe-staging-calibration",
   "decision_values": [
     "PASS",

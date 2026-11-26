@@ -1,13 +1,12 @@
 # Protocolo comparativo CI/CD convencional × CI/CD com PDT
 
-> **Status:** a emenda v1.12 foi aprovada e congelada em
-> `2026-11-26T01:46:00Z`, após auditoria 17/17. A chave e o corpus v1.12 foram
-> rotacionados sem exposição; a coleta permanece operacionalmente bloqueada
-> até a publicação e validação do congelamento no branch protegido. A
-> v1.11 permanece preservada no commit `0810bb51`, sem reinterpretação nem
-> mistura com a futura análise primária v1.12. A leitura Billing pré-freeze
-> observou R$1.881,838245 brutos, deixando R$618,161755 até o teto de
-> R$2.500; variáveis e labels estão desarmados e não há cluster.
+> **Status:** a v1.13 foi aprovada e congelada em `2026-11-26T04:19:31Z`, após
+> auditoria 17/17 e 427 testes. A chave e o corpus foram rotacionados sem
+> exposição e permanecem desarmados até a publicação do congelamento no branch
+> protegido. A v1.12 continua preservada no commit `5d82995e`, sem reexecução
+> nem mistura com a análise primária v1.13. A leitura Billing somente em leitura
+> permanece em R$1.881,838245 brutos, deixando R$618,161755 até o teto de
+> R$2.500; não há cluster e nenhuma nova coleta foi iniciada.
 >
 > O protocolo só muda para `frozen` depois que tamanho do corpus, orçamento de
 > execução, sementes, suítes e análise estatística estiverem definidos sem usar
@@ -185,6 +184,17 @@ adiciona o verificador isolado e fail-closed, sem alterar operadores, espaços d
 parâmetros, estimando, teto ou regras de cleanup. Aprovações e corpus v1.11
 foram retirados somente da área ativa candidata; continuam verificáveis no
 commit congelado anterior.
+
+No segundo caso do bloco 1 da v1.12, o cleanup interno removeu os controladores
+de runtime, mas podia retornar antes de todos os pods em encerramento e recursos
+vinculados desaparecerem. A repetição seguinte encontrou corretamente o
+namespace ainda ativo e abortou. O resultado terminal continua registrado como
+`failure`, com backup integral e cleanup externo concluído. A emenda
+[`amendments/orchestration-v1.13-oracle-quiescence.json`](./amendments/orchestration-v1.13-oracle-quiescence.json)
+adiciona espera limitada por quiescência completa, exige observações estáveis
+consecutivas, registra evidência antes/depois e inclui regressão com encerramento
+tardio simulado. A v1.12 e seu corpus permanecem históricos; não haverá
+reexecução nem mistura com a análise primária v1.13.
 
 Em 5 de outubro de 2026, a primeira validação Oracle de engenharia encontrou,
 antes da coleta, uma incompatibilidade da NetworkPolicy com o NodeLocal DNS do

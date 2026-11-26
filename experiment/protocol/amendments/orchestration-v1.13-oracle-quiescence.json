@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "orchestration-v1.13-oracle-quiescence",
+  "status": "implemented-awaiting-freeze",
+  "authorization_recorded_at": "2026-11-26T04:06:33Z",
+  "authorization_source": "explicit instruction attached to the recommended v1.13 remediation plan in the current researcher chat",
+  "authorization_literal": "aplique esse plano",
+  "authorization_sha256": "a7a1c991ab89ffc6b0a5bb0bad74e0f5b90acf8c39d50bcc72928f0ad11e31f0",
+  "reason": "The frozen v1.12 inter-repetition cleanup could return before all terminating pods and bound runtime resources disappeared, allowing the next repetition to encounter a non-quiescent namespace and fail closed.",
+  "superseded_freeze": {
+    "git_commit": "5d82995eb3dc06bada92a650a1adafd2d6b3e0db",
+    "protocol_id": "checkout-pdt-comparison-v1.12",
+    "protocol_sha256": "e5aa17eb29aa7c880676f74641f9a29c30e5cabe4e213dd121797ea8d2302ed5",
+    "frozen_at": "2026-11-26T01:46:00Z",
+    "corpus_id": "corpus-vxyxlfspk77ls",
+    "public_corpus_sha256": "bd9aa3734e72a13d24fc2b8cc13c2bbdcc2c926112043f8272b196d18cd2300f"
+  },
+  "preserved_prior_collection": {
+    "candidate_flows_started_before_amendment": 2,
+    "complete_decision_pairs_before_amendment": 1,
+    "oracle_adjudications_before_amendment": 1,
+    "oracle_labels_revealed_before_amendment": 0,
+    "v1_12_unique_candidates_started": 2,
+    "v1_12_completed_cases": 1,
+    "v1_12_failed_cases": 1,
+    "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
+    "carry_forward_into_v1_13_primary_analysis": false
+  },
+  "incident_evidence": {
+    "path": "experiment/evidence/oracle/confirmatory-runtime-quiescence-regression-v1.12-20261126.json",
+    "sha256": "b93e009a540a6e264e96e635ab21473fd5cd4b584d9cf7f367ffa2fc6dd47914"
+  },
+  "authorized_changes": [
+    "Wait for complete runtime quiescence between Oracle repetitions with a finite timeout.",
+    "Verify both active pods and all runtime-manifest resources across consecutive stable observations.",
+    "Record before, after, observation-count and bounded-timing cleanup evidence without protected case content.",
+    "Add an executable regression test that simulates delayed pod and resource termination.",
+    "Preserve the v1.12 failure and all earlier evidence without rerun or reinterpretation.",
+    "Invalidate active v1.12 approvals and corpus, renew all affected hashes and approvals, freeze v1.13, rotate the blinding key and generate a new opaque corpus."
+  ],
+  "explicitly_unchanged": [
+    "research question and primary estimand",
+    "candidate count, three repetitions, six blocks and majority repetition rule",
+    "mutation operators and parameter spaces",
+    "PDT model thresholds and deployable alternatives",
+    "Oracle functional and performance classification rules",
+    "absolute gross project budget of R$2500",
+    "human gate and cloud authorization controls",
+    "published runtime image digests"
+  ],
+  "financial_guardrail": {
+    "absolute_project_budget_brl": 2500.0,
+    "frozen_v1_12_baseline_gross_cost_brl": 1881.838245,
+    "latest_read_only_gross_cost_brl": 1881.838245,
+    "latest_incremental_cost_brl": 0.0,
+    "latest_remaining_gross_envelope_brl": 618.161755,
+    "cost_evidence": {
+      "path": "experiment/evidence/finance/cost-window-20260919-20261126-v1.13-pre-freeze.json",
+      "sha256": "812f16f790eb7b4cdc1ae5a9b42e3aef73f74825c9d74363ded48273c74e80dc"
+    },
+    "billing_reconciliation_mode": "asynchronous-after-block-explicit-risk-acceptance",
+    "new_financial_review_required_before_freeze": true,
+    "absolute_budget_increased": false
+  },
+  "runtime_publication_required": false,
+  "security_policy_weakened": false,
+  "cloud_execution_authorized": false,
+  "protocol_freeze_authorized": true,
+  "key_rotation_authorized": true,
+  "corpus_generation_authorized": true,
+  "pull_request_publication_authorized": true,
+  "merge_authorized": true
+}

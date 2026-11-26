@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "mechanism": "blinded-corpus-rotation",
+  "protocol_id": "checkout-pdt-comparison-v1.13",
+  "protocol_sha256": "146261a8216268e80d733f199c99a47d42e8bcf239cae5b1d6e5066953c038f8",
+  "corpus_id": "corpus-ifgygnajs3xwa",
+  "public_corpus_path": "experiment/protocol/corpus/public-corpus.json",
+  "public_corpus_sha256": "0aa95e80495dd8b081b81225e166f2bedf2a5c7f47e8a61077c9a5a9eb3ce346",
+  "generated_at": "2026-11-26T04:20:32.241718Z",
+  "candidate_count": 18,
+  "technical_repetitions_per_candidate": 3,
+  "block_count": 6,
+  "block_size": 3,
+  "confirmatory_eligible": true,
+  "oracle_manifest_commitment_sha256": "f71961e5230a412510313ece11d97eff34bfd590512acdf24c9c6f4a9b437b88",
+  "public_corpus_oracle_fields_exposed": false,
+  "private_key_mode": "0600",
+  "private_oracle_manifest_mode": "0600",
+  "private_artifacts_versioned": false,
+  "github_secret": {
+    "protected_environment_scope": true,
+    "updated_at": "2026-11-26T04:20:47Z",
+    "value_exposed": false
+  },
+  "kill_switches": {
+    "cost_review": false,
+    "oracle_execution": false,
+    "runtime_publication": false
+  },
+  "financial_guardrail": {
+    "project_gross_cap_brl": 2500.0,
+    "baseline_gross_cost_brl": 1881.838245,
+    "incremental_envelope_brl": 618.161755,
+    "billing_reconciliation_mode": "asynchronous-after-block-explicit-risk-acceptance"
+  },
+  "cloud_execution_authorized": false,
+  "cloud_execution_performed": false,
+  "gcp_mutation_performed": false,
+  "github_secret_mutation_performed": true
+}

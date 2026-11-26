@@ -68,7 +68,7 @@ class PrepareResearcherApprovalTests(unittest.TestCase):
         self.clock.stop()
         self.repository.close()
 
-    def test_active_v112_freeze_cannot_be_reapproved_as_candidate(self):
+    def test_active_v113_freeze_cannot_be_reapproved_as_candidate(self):
         result = MODULE.prepare(REPO_ROOT)
 
         self.assertFalse(result["eligible_for_researcher_approval"])

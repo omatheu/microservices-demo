@@ -196,8 +196,14 @@ como Partial Digital Twin.
   após duas tentativas preservadas e cleanup completo, sem abrir rótulos.
 - [x] Emenda v1.12 autorizada e implementada localmente com verificação
   comportamental independente, runtime imutável e evidência redigida.
-- [ ] Renovar hashes, revisão financeira, aprovação, auditoria 17/17,
-  congelamento, chave e corpus v1.12 antes de reiniciar a coleta integral.
+- [x] v1.12 congelada, auditada e iniciada com chave e corpus rotacionados; o
+  primeiro caso foi concluído e o segundo falhou na orquestração entre
+  repetições, com preservação integral e cleanup completo.
+- [x] Corrida de quiescência v1.12 classificada e corrigida na candidata v1.13
+  com espera limitada, verificação de pods/recursos, evidência de cleanup e
+  regressão que simula encerramento tardio.
+- [x] Hashes, revisão financeira, aprovação, auditoria 17/17, congelamento,
+  chave e corpus v1.13 renovados; a coleta continua desarmada até publicação.
 - [x] Standard usage cost export ativo para o dataset protegido, com consulta
   real limitada a 100 MB e baseline financeiro registrado.
 - [x] Overlay Kustomize do ambiente operacional.
@@ -245,10 +251,11 @@ execução autorizada em cloud ou análise dos resultados.
 - [ ] consolidação estatística e análise dos resultados;
 - [ ] pacote reproduzível de evidências do TCC.
 
-O ciclo v1.11 permanece preservado no commit congelado e não será misturado à
-análise primária sucessora. A v1.12 mantém o teto de R$2.500 e a reconciliação
-somente em leitura; antes de qualquer cloud ainda faltam os novos bindings,
-aprovações, auditoria, congelamento, chave e corpus.
+Os ciclos v1.11 e v1.12 permanecem preservados nos respectivos commits
+congelados e não serão misturados à análise primária sucessora. A candidata
+v1.13 mantém o teto de R$2.500 e a reconciliação somente em leitura; antes de
+qualquer cloud ainda faltam os novos bindings, aprovações, auditoria,
+congelamento, chave e corpus.
 
 ### Caminho crítico atual — 24/11/2026
 

@@ -1,27 +1,27 @@
 {
   "schema_version": "1.0.0",
-  "protocol_id": "checkout-pdt-comparison-v1.12",
+  "protocol_id": "checkout-pdt-comparison-v1.13",
   "status": "frozen",
   "confirmatory_collection_allowed": true,
-  "frozen_at": "2026-11-26T01:46:00Z",
+  "frozen_at": "2026-11-26T04:19:31Z",
   "amendment": {
-    "amendment_id": "oracle-v1.12-preartifact-capability",
-    "authorized_at": "2026-11-26T01:30:00Z",
-    "previous_protocol_id": "checkout-pdt-comparison-v1.11",
-    "previous_protocol_sha256": "e44d987d3520c836b44fb18374864c5d2cde2282e145b5fca71d99bf2328b8af",
-    "previous_freeze_commit": "0810bb51fc886daa5896f4c7963c23a93fd586e4",
-    "confirmatory_observations_before_amendment": 13,
-    "complete_decision_pairs_before_amendment": 5,
-    "oracle_adjudications_before_amendment": 3,
+    "amendment_id": "orchestration-v1.13-oracle-quiescence",
+    "authorized_at": "2026-11-26T04:06:33Z",
+    "previous_protocol_id": "checkout-pdt-comparison-v1.12",
+    "previous_protocol_sha256": "e5aa17eb29aa7c880676f74641f9a29c30e5cabe4e213dd121797ea8d2302ed5",
+    "previous_freeze_commit": "5d82995eb3dc06bada92a650a1adafd2d6b3e0db",
+    "confirmatory_observations_before_amendment": 2,
+    "complete_decision_pairs_before_amendment": 1,
+    "oracle_adjudications_before_amendment": 1,
     "oracle_labels_revealed_before_amendment": 0,
     "prior_evidence_disposition": "preserved-incomplete-without-reexecution-or-reinterpretation",
     "scope": [
-      "add the missing independent preartifact behavioral verifier without using intended labels",
-      "preserve all v1.11 evidence without carry-forward into v1.12 primary analysis",
-      "retain fail-closed invalid classification for verifier or runtime failures",
-      "renew input hashes, approvals, protocol freeze and blinded corpus rotation before any v1.12 execution"
+      "wait for complete bounded runtime quiescence between independent repetitions",
+      "verify active pods and bound runtime resources across consecutive stable observations",
+      "preserve all v1.12 evidence without carry-forward into v1.13 primary analysis",
+      "renew input hashes, approvals, protocol freeze and blinded corpus rotation before any v1.13 execution"
     ],
-    "record": "experiment/protocol/amendments/oracle-v1.12-preartifact-capability.json"
+    "record": "experiment/protocol/amendments/orchestration-v1.13-oracle-quiescence.json"
   },
   "twin_object": "checkoutservice",
   "research_design": {
@@ -41,7 +41,7 @@
     "sample_size_rationale": "Fixed feasibility corpus sized before evaluation results; estimates use exact intervals and no minimum-effect claim."
   },
   "randomization": {
-    "public_seed_label": "checkout-pdt-v1.12-fixed-before-corpus",
+    "public_seed_label": "checkout-pdt-v1.13-fixed-before-corpus",
     "algorithm": "HMAC-SHA256 keyed deterministic sampling and Fisher-Yates order",
     "candidate_identifier_prefix": "cand-",
     "blinding_key_minimum_bytes": 32,
@@ -325,7 +325,7 @@
   "frozen_inputs": {
     "ci_policy": {
       "path": "experiment/ci/policy.json",
-      "sha256": "c0bcb7288a151c6d56f0213916d93fe954b0edccfcfcf49eaef0b2821b07e666"
+      "sha256": "eefa553e11ecf94d3a4b0dd0ac33b75342086161780dca522af1723f8366fdd0"
     },
     "conventional_workflow_outcome_validator": {
       "path": "experiment/scripts/validate-conventional-workflow-outcome.py",
@@ -417,7 +417,7 @@
     },
     "protocol_input_validator": {
       "path": "experiment/scripts/validate-protocol-inputs.py",
-      "sha256": "a8ced3ea90a87a0731da9c25032d5be2c57124faa95903da9fab64c61d9b362f"
+      "sha256": "4bdb966bf388a83a723f842e2218f94b99bab4c423c9eda5bc0672c6235c3ba7"
     },
     "pull_request_workflow": {
       "path": ".github/workflows/tcc-pr-ci.yaml",
@@ -453,7 +453,7 @@
     },
     "validity_threat_register": {
       "path": "docs/tcc-validity-threats.md",
-      "sha256": "03a4ee8ae2681aee342937ec0650430de3f1a99a66acbb86c90ba22fd535016a"
+      "sha256": "8d038393ba60b31f3f7b9f8e6999cdfd63f985a44c2fcfb7f7bb68f4702493ce"
     },
     "confirmatory_orchestration_incident": {
       "path": "experiment/evidence/ci-cd/confirmatory-orchestration-regression-pr21-20261118.json",
@@ -474,6 +474,10 @@
     "confirmatory_preartifact_capability_incident": {
       "path": "experiment/evidence/oracle/confirmatory-preartifact-capability-regression-v1.11-20261126.json",
       "sha256": "b660f80b43df51af588795a191fbd3c323139c3492ae2a43a5562680b7ebfaaa"
+    },
+    "confirmatory_runtime_quiescence_incident": {
+      "path": "experiment/evidence/oracle/confirmatory-runtime-quiescence-regression-v1.12-20261126.json",
+      "sha256": "b93e009a540a6e264e96e635ab21473fd5cd4b584d9cf7f367ffa2fc6dd47914"
     },
     "baseline_evidence_validator": {
       "path": "experiment/scripts/validate-baseline-evidence.py",
@@ -501,11 +505,11 @@
     },
     "staging_thresholds": {
       "path": "experiment/staging/safety-thresholds.json",
-      "sha256": "e0713ddd60460e389b671de3b41c47146bb18149a7359b06c36ef2d21d889cf5"
+      "sha256": "591c74da6c0f4c0c22b2437094018e119f0405632ae699790073d0d7c051afe0"
     },
     "pdt_model_policy": {
       "path": "experiment/pdt/model-policy.json",
-      "sha256": "5eb6c774fcc7e654056dbff7bb495a6f1d6fb92cd2ef0e789f852dfdcd481e6b"
+      "sha256": "3bfb4039e2d0135238ab3840df10e1c5166d587aa3d3d44cbb72c301e353574b"
     },
     "pdt_source_capture": {
       "path": "experiment/scripts/capture-pdt-source-state.sh",
@@ -521,19 +525,19 @@
     },
     "pdt_runtime_manifest": {
       "path": "experiment/pdt/runtime-manifest.json",
-      "sha256": "96f670833ad2401acb5e37b063b93e4336d20c751b645a299a9af6e0551e176c"
+      "sha256": "99bfa198365d9c09a8c38cb7959e90fd54b169738755737d074aae9ce7f9c802"
     },
     "mutation_registry": {
       "path": "experiment/mutations/registry.json",
-      "sha256": "018d623379b1254033524be54eaad531dd333656ac5fae1b8d45ee23da8ce741"
+      "sha256": "d67fd596fd90f525ae396e679256ccfe5f061b70cc266a36feafc5fc98b41692"
     },
     "blinded_corpus_manager": {
       "path": "experiment/scripts/manage-blinded-corpus.py",
       "sha256": "303da77e3cd804f24e89c95fa22cf487c393a7a4800d02e4eb717d09c825ea97"
     },
     "protocol_amendment_record": {
-      "path": "experiment/protocol/amendments/oracle-v1.12-preartifact-capability.json",
-      "sha256": "78de6f20c8370b06aeaa342d6cdab180c4350a69acd82e43b1900a9b2146d3dd"
+      "path": "experiment/protocol/amendments/orchestration-v1.13-oracle-quiescence.json",
+      "sha256": "7e02c809abf84a09b4d11827be4c1c42a2e08efbc15e3890bca4cbe19ef6c39f"
     },
     "promotional_credit_observation": {
       "path": "experiment/evidence/finance/promotion-credit-balance-20261109-v1.4-review.json",
@@ -541,11 +545,15 @@
     },
     "oracle_suite_manifest": {
       "path": "experiment/oracle/suite-manifest.json",
-      "sha256": "db07975088eed4a6215b54a80cb0c89cbbfd489f58429e20028f6db120f183b9"
+      "sha256": "e861f5f6124848f55a153112c1cec61872d90b114817671ad7f4fb9957dbe504"
     },
     "oracle_repetition_runner": {
       "path": "experiment/scripts/run-oracle-repetition.sh",
-      "sha256": "aee42299d683266f6e226cff7ef1ae69cbee07a09cd92bff321d0ae4acc174a4"
+      "sha256": "be2538eeab4b49d5c9b7fa0f8bd9cfb89164f61133915c32b1d0550540a717c8"
+    },
+    "oracle_runtime_quiescence": {
+      "path": "experiment/scripts/lib/oracle-runtime-quiescence.sh",
+      "sha256": "2263993de1481fe0a847fdb2636145173da15b6506ab645c8f6a03ea89b4fd90"
     },
     "terraform_cluster_financial_guard": {
       "path": "infra/terraform/main.tf",
@@ -577,6 +585,7 @@
     "runtime-security-regression-pr24-20261119",
     "confirmatory-cleanup-rbac-regression-v1.9-20261123",
     "confirmatory-probe-oracle-regression-v1.10-20261124",
-    "confirmatory-preartifact-capability-regression-v1.11-20261126"
+    "confirmatory-preartifact-capability-regression-v1.11-20261126",
+    "confirmatory-runtime-quiescence-regression-v1.12-20261126"
   ]
 }
