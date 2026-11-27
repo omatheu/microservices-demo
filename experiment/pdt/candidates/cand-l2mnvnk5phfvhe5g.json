@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "candidate_id": "cand-l2mnvnk5phfvhe5g",
+  "evidence_classification": "confirmatory-candidate",
+  "confirmatory_eligibility": true,
+  "twin_object": "checkoutservice",
+  "alternatives": [
+    {
+      "id": "deploy-as-is",
+      "action": "deploy",
+      "configuration_changes": [
+        {
+          "deployment": "checkoutservice",
+          "patch": {
+            "spec": {
+              "replicas": 0
+            }
+          }
+        }
+      ],
+      "change_cost": 0
+    },
+    {
+      "id": "restore-baseline-replicas",
+      "action": "deploy",
+      "configuration_changes": [
+        {
+          "deployment": "checkoutservice",
+          "patch": {
+            "spec": {
+              "replicas": 1
+            }
+          }
+        }
+      ],
+      "change_cost": 1
+    },
+    {
+      "id": "block",
+      "action": "block",
+      "configuration_changes": [],
+      "change_cost": 10
+    }
+  ]
+}
