@@ -40,7 +40,7 @@ spec:
             capabilities:
               drop:
                 - ALL
-            privileged: false
+            privileged: true
             readOnlyRootFilesystem: true
           image: us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/checkoutservice:v0.10.7
           ports:
