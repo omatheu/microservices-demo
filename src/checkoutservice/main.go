@@ -92,7 +92,7 @@ func main() {
 		initTracing()
 
 	} else {
-		log.Info("Tracing disabled.")
+		log.Info("Tracing disabled for this process.")
 	}
 
 	if os.Getenv("ENABLE_PROFILER") == "1" {
